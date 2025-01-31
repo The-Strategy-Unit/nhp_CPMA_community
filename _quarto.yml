@@ -1,0 +1,35 @@
+project:
+  type: book
+
+book:
+  title: "NHP Community Mitigators"
+  author: "Anya Ferguson and Sarah Lucas"
+  date: last-modified
+  date-format: "YYYY-MM-DD"
+  chapters:
+    - index.qmd
+
+title-block-banner: "#f9bf07"
+title-block-banner-color: "#333739"
+format:
+  html:
+    # embed-resources: true
+    smooth-scroll: true
+    theme: cosmo
+    fontcolor: black
+    toc: true
+    toc-location: left
+    toc-title: Summary
+    toc-depth: 3
+    grid:
+      sidebar-width: 250px
+      body-width: 1050px
+      margin-width: 0px
+      gutter-width: 1.5rem
+  # pdf:
+  #   documentclass: scrreprt
+execute: 
+  echo: false
+  warning: false
+css: styles.css
+
