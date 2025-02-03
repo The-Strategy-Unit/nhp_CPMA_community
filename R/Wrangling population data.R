@@ -1,4 +1,6 @@
 
+library(targets)
+
 # Local Authority population data (https://www.ons.gov.uk/peoplepopulationandcommunity/populationandmigration/populationestimates/datasets/estimatesofthepopulationforenglandandwales)
 
 wrangling_la_population_data<-function(data){
@@ -90,7 +92,7 @@ extract_and_format_icb_population_data_by_yr<-function(data, sheet_name, year){
                                age>=85 & age<=89 ~ "85-89",
                                age>=90 ~ "90+")
     )|>
-    summarise(population_number=sum(population_number), .by=c(icb_2024_code, icb_2024_name, age_range, sex))|>
+    summarise(icb_population=sum(population_number), .by=c(icb_2024_code, icb_2024_name, age_range, sex))|>
     mutate(fyear=year)|>
     mutate(sex=case_when(sex=="m"~ 1,
                          sex=="f" ~ 2))
@@ -100,7 +102,7 @@ extract_and_format_icb_population_data_by_yr<-function(data, sheet_name, year){
 }
 
 #Function to merge data for all years and impute 2023/24 data
-wrangling_icb_population_data<-function(data){
+wrangling_icb_population_data<-function(data, data2){
   
   icb_population_2015<-extract_and_format_icb_population_data_by_yr(data,"Mid-2015 ICB 2024", "2015/16")
   icb_population_2016<-extract_and_format_icb_population_data_by_yr(data,"Mid-2016 ICB 2024", "2016/17")
@@ -126,7 +128,20 @@ wrangling_icb_population_data<-function(data){
                              icb_population_2022,
                              icb_population_2023)
   
+  icb_codes_names<-read.csv(data2)|>
+    clean_names()
+  
+  icb_population_data<-icb_population_data|>
+    left_join(icb_codes_names[,c("icb24cd", "icb24cdh")], 
+              by=c("icb_2024_code"="icb24cd") )|>
+    select(icb24cdh, icb_2024_code, icb_2024_name, fyear, age_range, sex, icb_population)
+  
 }
 
+library(janitor)
 a<-tar_read(la_population_data)
 b<-tar_read(icb_population_data)
+
+
+
+  
