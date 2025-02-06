@@ -1,6 +1,4 @@
 
-library(targets)
-
 # Local Authority population data (https://www.ons.gov.uk/peoplepopulationandcommunity/populationandmigration/populationestimates/datasets/estimatesofthepopulationforenglandandwales)
 
 wrangling_la_population_data<-function(data){
@@ -138,9 +136,6 @@ wrangling_icb_population_data<-function(data, data2){
   
 }
 
-library(janitor)
-a<-tar_read(la_population_data)
-b<-tar_read(icb_population_data)
 
 
 
