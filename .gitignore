@@ -84,6 +84,9 @@ ENV/
 env.bak/
 venv.bak/
 /.quarto/
+renv/
+renv.lock
+.virtualenvs/
 
 # ignore folders
 _book/*
