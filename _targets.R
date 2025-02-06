@@ -6,7 +6,13 @@ library(targets)
 
 # Set target options:
 tar_option_set(
-  packages = c("tibble", "dplyr", "tidyr", "janitor","readxl") 
+  packages = c("dbplyr", 
+               "dplyr",
+               "janitor", 
+               "readxl", 
+               "sparklyr",
+               "tibble", 
+               "tidyr") 
 )
 
 # Run the R scripts in the R/ folder with your custom functions:
