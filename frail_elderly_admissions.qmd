@@ -1,6 +1,62 @@
 # Frail Elderly Admissions
 
-## Descriptive Analysis of Mitigatable Activity
+```{r}
+library("flextable")
+
+source("R/general.R")
+source("R/descriptive_analyses.R")
+```
+
+## Descriptive Analysis of Mitigable Activity
+
+### Age
+
+```{r}
+#| label: tbl-perc_frail_age
+#| tbl-cap: Mitigable activity for Frail and Elderly Admissions in 22-23 by age.
+targets::tar_read(perc_episodes_frail_age) |>
+  get_perc_table() 
+```
+
+```{r}
+#| label: fig-perc_frail_age
+#| fig-cap: Mitigable activity for Frail and Elderly Admissions in 22-23 by age.
+targets::tar_read(perc_episodes_frail_age) |>
+  get_perc_episodes_by_group_plot("age_range")
+```
+
+### Ethnicity
+
+```{r}
+#| label: tbl-perc_frail_ethnicity
+#| tbl-cap: Mitigable activity for Frail and Elderly Admissions in 22-23 by ethnic category.
+targets::tar_read(perc_episodes_frail_ethnicity) |>
+  get_perc_table() 
+```
+
+```{r}
+#| label: fig-perc_frail_ethnicity
+#| fig-cap: Mitigable activity for Frail and Elderly Admissions in 22-23 by ethnic category.
+targets::tar_read(perc_episodes_frail_ethnicity) |>
+  get_perc_episodes_by_group_plot("Ethnic_Category")
+```
+
+### Sex
+
+```{r}
+#| label: tbl-perc_frail_sex
+#| tbl-cap: Mitigable activity for Frail and Elderly Admissions in 22-23 by sex.
+targets::tar_read(perc_episodes_frail_sex) |>
+  get_perc_table() 
+```
+
+```{r}
+#| label: fig-perc_frail_sex
+#| fig-cap: Mitigable activity for Frail and Elderly Admissions in 22-23 by sex.
+targets::tar_read(perc_episodes_frail_sex) |>
+  get_perc_episodes_by_group_plot("sex")
+```
+
 
 ## Trend Analysis
 
