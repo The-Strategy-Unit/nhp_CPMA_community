@@ -45,12 +45,11 @@ list(
     )
   ),
   
-  # Descriptive analyses -------------------------------------------------------
+  # Data from Databricks -------------------------------------------------------
+  tar_target(age,
+             get_perc_episodes_by_group("age", "age_range")),
   tar_target(sex,
-             dplyr::tbl(
-               sc,
-               dbplyr::in_catalog("strategyunit", "default", "sl_af_describing_mitigators_final_2223_sex")
-             )),
-  tar_target(perc_episodes_by_sex,
-             get_perc_episodes_by_group(sex, "sex"))
+             get_perc_episodes_by_group("sex", "sex"))
+  
+
 )

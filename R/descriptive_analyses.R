@@ -1,6 +1,12 @@
-get_perc_episodes_by_group <- function(data, group) {
+get_perc_episodes_by_group <- function(category, group, connection = sc) {
   
-  summary <- data |>
+  summary <- dplyr::tbl(
+    connection,
+    dbplyr::in_catalog("strategyunit", 
+                       "default", 
+                       paste0("sl_af_describing_mitigators_final_2223_", 
+                              category))
+  ) |>
     dplyr::filter(frail_elderly_high == 1) |>
     dplyr::summarise(episodes = sum(episodes), 
                      .by = {{group}}) |>
