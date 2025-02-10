@@ -50,11 +50,7 @@ list(
              dplyr::tbl(
                sc,
                dbplyr::in_catalog("strategyunit", "default", "sl_af_describing_mitigators_final_2223_sex")
-             ) |>
-               dplyr::mutate(sex = dplyr::case_when(sex == 1 ~ "Male",
-                                                    sex == 2 ~ "Female",
-                                                    .default = "NULL")
-               )),
+             )),
   tar_target(perc_episodes_by_sex,
              get_perc_episodes_by_group(sex, "sex"))
 )
