@@ -21,7 +21,7 @@ sc <- sparklyr::spark_connect(
   cluster_id = Sys.getenv("DATABRICKS_CLUSTER_ID"),
   token      = Sys.getenv("DATABRICKS_TOKEN"),
   method     = "databricks_connect",
-  envname    = "r-reticulate" # "r-sparklyr-databricks-15.4" #
+  envname    = "r-sparklyr-databricks-15.4" # "r-reticulate" # 
 )
 
 # Run the R scripts in the R/ folder with your custom functions:
@@ -47,7 +47,9 @@ list(
   
   # Data from Databricks -------------------------------------------------------
   tarchetypes::tar_map(
-    list(category = c("age", "sex")),
+    list(category = c("age", 
+                      "ethnicity",
+                      "sex")),
     tar_target(perc_episodes_frail,
                get_perc_episodes_by_group(category, "frail_elderly_high == 1"))
   )

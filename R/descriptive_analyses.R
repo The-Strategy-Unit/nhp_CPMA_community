@@ -2,8 +2,10 @@ get_perc_episodes_by_group <- function(category,
                                        cond,
                                        connection = sc) {
   
-  group <- if(category == "age") {
+  group <- if (category == "age") {
     "age_range"
+  } else if (category == "ethnicity") {
+    "Ethnic_Category"
   } else {
     category
   }
