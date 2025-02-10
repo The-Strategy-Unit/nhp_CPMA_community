@@ -27,7 +27,8 @@ get_table <- function(data) {
 get_perc_table <- function(data) {
   
   table <- data |>
-    dplyr::rename_with(~stringr::str_to_title(.x)) |>
+    dplyr::rename_with(~ stringr::str_replace(., "_", " ") |>
+                         stringr::str_to_title()) |>
     dplyr::rename("Percentage" = "Perc") |>
     get_table() |>
     flextable::delete_part(part = "footer")

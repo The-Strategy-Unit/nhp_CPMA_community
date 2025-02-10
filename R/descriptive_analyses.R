@@ -20,7 +20,9 @@ get_perc_episodes_by_group <- function(category, group, connection = sc) {
 }
 
 get_perc_episodes_by_group_plot <- function(data, group) {
-  group_title <- stringr::str_to_title(group)
+  group_title <- group |> 
+    stringr::str_replace("_", " ") |>
+    stringr::str_to_title()
   
   plot <- data |>
     ggplot2::ggplot(ggplot2::aes(!!rlang::sym(group), 
