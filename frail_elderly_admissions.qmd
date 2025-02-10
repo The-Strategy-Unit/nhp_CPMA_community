@@ -7,8 +7,9 @@ source("R/general.R")
 source("R/descriptive_analyses.R")
 ```
 
-
 ## Descriptive Analysis of Mitigable Activity
+
+### Sex
 
 ```{r}
 #| label: tbl-perc_frail_sex
