@@ -1,6 +1,29 @@
 # Frail Elderly Admissions
 
-## Descriptive Analysis of Mitigatable Activity
+```{r}
+library("flextable")
+
+source("R/general.R")
+source("R/descriptive_analyses.R")
+```
+
+
+## Descriptive Analysis of Mitigable Activity
+
+```{r}
+#| label: tbl-perc_frail_sex
+#| tbl-cap: Mitigable activity for Frail and Elderly Admissions in 22-23 by sex.
+targets::tar_read(perc_episodes_by_sex) |>
+  get_perc_table() 
+```
+
+```{r}
+#| label: fig-perc_frail_sex
+#| fig-cap: Mitigable activity for Frail and Elderly Admissions in 22-23 by sex.
+get_perc_episodes_by_group_plot(targets::tar_read(perc_episodes_by_sex), "sex")
+
+```
+
 
 ## Trend Analysis
 

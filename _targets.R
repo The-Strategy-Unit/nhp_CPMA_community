@@ -21,7 +21,7 @@ sc <- sparklyr::spark_connect(
   cluster_id = Sys.getenv("DATABRICKS_CLUSTER_ID"),
   token      = Sys.getenv("DATABRICKS_TOKEN"),
   method     = "databricks_connect",
-  envname    = "r-sparklyr-databricks-15.4" # "r-reticulate"
+  envname    = "r-reticulate" # "r-sparklyr-databricks-15.4" #
 )
 
 # Run the R scripts in the R/ folder with your custom functions:
@@ -43,6 +43,18 @@ list(
       "Z:/Strategic Analytics/Projects 2025/Describing and Quantifying the NHP mitigators/population_data/sapeicb202420112022.xlsx",
       "Z:/Strategic Analytics/Projects 2025/Describing and Quantifying the NHP mitigators/population_data/Integrated_Care_Boards_(December_2024)_Names_and_Codes_in_EN.csv"
     )
-  )
+  ),
   
+  # Descriptive analyses -------------------------------------------------------
+  tar_target(sex,
+             dplyr::tbl(
+               sc,
+               dbplyr::in_catalog("strategyunit", "default", "sl_af_describing_mitigators_final_2223_sex")
+             ) |>
+               dplyr::mutate(sex = dplyr::case_when(sex == 1 ~ "Male",
+                                                    sex == 2 ~ "Female",
+                                                    .default = "NULL")
+               )),
+  tar_target(perc_episodes_by_sex,
+             get_perc_episodes_by_group(sex, "sex"))
 )
