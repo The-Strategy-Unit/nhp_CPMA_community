@@ -1,4 +1,12 @@
-get_perc_episodes_by_group <- function(category, group, connection = sc) {
+get_perc_episodes_by_group <- function(category, 
+                                       cond,
+                                       connection = sc) {
+  
+  group <- if(category == "age") {
+    "age_range"
+  } else {
+    category
+  }
   
   summary <- dplyr::tbl(
     connection,
@@ -7,7 +15,7 @@ get_perc_episodes_by_group <- function(category, group, connection = sc) {
                        paste0("sl_af_describing_mitigators_final_2223_", 
                               category))
   ) |>
-    dplyr::filter(frail_elderly_high == 1) |>
+    dplyr::filter(!!rlang::parse_expr(cond)) |>
     dplyr::summarise(episodes = sum(episodes), 
                      .by = {{group}}) |>
     sparklyr::collect() |>
