@@ -21,7 +21,7 @@ sc <- sparklyr::spark_connect(
   cluster_id = Sys.getenv("DATABRICKS_CLUSTER_ID"),
   token      = Sys.getenv("DATABRICKS_TOKEN"),
   method     = "databricks_connect",
-  envname    = "r-reticulate" # "r-sparklyr-databricks-15.4" # 
+  envname    = Sys.getenv("DATABRICKS_ENVNAME")
 )
 
 # Run the R scripts in the R/ folder with your custom functions:
