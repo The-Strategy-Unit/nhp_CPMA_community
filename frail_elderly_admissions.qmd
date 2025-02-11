@@ -9,6 +9,10 @@ source("R/descriptive_analyses.R")
 
 ## Descriptive Analysis of Mitigable Activity
 
+### Patient Characteristics
+
+::: panel-tabset
+
 ### Age
 
 ```{r}
@@ -74,6 +78,7 @@ targets::tar_read(perc_episodes_frail_sex) |>
   get_perc_episodes_by_group_plot("sex")
 ```
 
+:::
 
 ## Trend Analysis
 
