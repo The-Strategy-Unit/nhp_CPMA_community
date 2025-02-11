@@ -47,12 +47,13 @@ list(
   
   # Data from Databricks -------------------------------------------------------
   tarchetypes::tar_map(
-    list(category = c("age", 
+    list(group = c("age", 
                       "ethnicity",
                       "icb",
                       "imd",
+                      "los",
                       "sex")),
     tar_target(perc_episodes_frail,
-               get_perc_episodes_by_group(category, "frail_elderly_high == 1"))
+               get_perc_episodes_by_group(group, "frail_elderly_high == 1"))
   )
 )
