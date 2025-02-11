@@ -1,4 +1,4 @@
-#' Formats data into a table.
+#' Formats data into a standard table.
 #'
 #' @param data A dataframe.
 #'
@@ -24,6 +24,17 @@ get_table <- function(data) {
   return(table)
 }
 
+#' Formats percentage data into a table.
+#'
+#' @param data A dataframe of percentage data.
+#'
+#' @return A table.
+#' 
+#' @examples
+#' \dontrun{
+#' targets::tar_read(perc_episodes_frail_age) |> 
+#'   get_perc_table()}
+#' 
 get_perc_table <- function(data) {
   
   table <- data |>
