@@ -17,6 +17,8 @@ get_perc_episodes_by_group <- function(category, condition, connection = sc) {
     "age_range"
   } else if (category == "ethnicity") {
     "Ethnic_Category"
+  } else if (category == "imd") {
+    "imd19_decile"
   } else {
     category
   }

@@ -41,6 +41,23 @@ targets::tar_read(perc_episodes_frail_ethnicity) |>
   get_perc_episodes_by_group_plot("Ethnic_Category")
 ```
 
+### IMD
+
+```{r}
+#| label: tbl-perc_frail_imd
+#| tbl-cap: Mitigable activity for Frail and Elderly Admissions in 22-23 by IMD decile.
+targets::tar_read(perc_episodes_frail_imd) |>
+  get_table_perc() 
+```
+
+```{r}
+#| label: fig-perc_frail_imd
+#| fig-cap: Mitigable activity for Frail and Elderly Admissions in 22-23 by IMD decile.
+targets::tar_read(perc_episodes_frail_imd) |>
+  dplyr::mutate(imd19_decile = factor(imd19_decile)) |>
+  get_perc_episodes_by_group_plot("imd19_decile")
+```
+
 ### Sex
 
 ```{r}
