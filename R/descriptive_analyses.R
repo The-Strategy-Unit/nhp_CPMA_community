@@ -1,32 +1,4 @@
-# Functions used to complete the descriptive analyses. Functions are used in
-# targets or the quarto report.
-
-#' Get the column name from the group.
-#' 
-#' In Databricks, the grouped tables have a suffix to indicate the group, but 
-#' this does not always match the name of the column that indicates which group 
-#' the row belongs to. For example, the table split by age has the suffix "age",
-#' but the column name is "age_range". This function is to get the associated 
-#' column name from the group so in other functions only the group needs to be 
-#' provided.
-#'
-#' @param group A string of the group that the table is for.
-#'
-#' @return A string.
-get_col_name_from_group <- function(group) {
-  col_name <- if (group == "age") {
-    "age_range"
-  } else if (group == "ethnicity") {
-    "
-Ethnic_Category"
-  } else if (group == "imd") {
-    "imd19_decile"
-  } else {
-    group
-  }
-  
-  return(col_name)
-}
+# Functions used to complete the descriptive analyses.
 
 #' Get the percentage of mitigable episodes by a group.
 #' 
@@ -70,8 +42,7 @@ get_perc_episodes_by_group <- function(group, condition, connection = sc) {
 #' @return A plot.
 get_perc_episodes_by_group_plot <- function(data, col_name) {
   col_name_title <- col_name |>
-    stringr::str_replace("_", " ") |>
-    stringr::str_to_title()
+    format_as_title()
   
   plot <- data |>
     ggplot2::ggplot(ggplot2::aes(!!rlang::sym(col_name), 
