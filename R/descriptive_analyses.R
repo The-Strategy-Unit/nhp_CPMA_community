@@ -1,37 +1,56 @@
+#' Get the column name from the group.
+#' 
+#' In Databricks, the grouped tables have a suffix to indicate the group, but 
+#' this does not always match the name of the column that indicates which group 
+#' the row belongs to. For example, the table split by age has the suffix "age",
+#' but the column name is "age_range". This function is to get the associated 
+#' column name from the group so in other functions only the group needs to be 
+#' provided.
+#'
+#' @param group A string of the group that the table is for.
+#'
+#' @return A string.
+get_col_name_from_group <- function(group) {
+  col_name <- if (group == "age") {
+    "age_range"
+  } else if (group == "ethnicity") {
+    "
+Ethnic_Category"
+  } else if (group == "imd") {
+    "imd19_decile"
+  } else {
+    group
+  }
+  
+  return(col_name)
+}
+
 #' Get the percentage of mitigable episodes by a group.
 #' 
-#' Given a `category` (for example, `sex` or `age`), this function will get the 
+#' Given a `group` (for example, `sex` or `age`), this function will get the 
 #' table from Databricks, filter to the mitigator or set of mitigators using 
 #' the `condition` provided and calculate the number and percentage of mitigable 
 #' episodes by group.
 #'
-#' @param category A string of the category that the table is for.
+#' @param group A string of the group that the table is for.
 #' @param condition An string containing the expression needed to filter for a 
 #' mitigator or set of mitigators. 
 #' @param connection The Databricks connection.
 #'
 #' @return A dataframe of the number and percentage of mitigable episodes by 
 #' group.
-get_perc_episodes_by_group <- function(category, condition, connection = sc) {
-  group <- if (category == "age") {
-    "age_range"
-  } else if (category == "ethnicity") {
-    "Ethnic_Category"
-  } else if (category == "imd") {
-    "imd19_decile"
-  } else {
-    category
-  }
+get_perc_episodes_by_group <- function(group, condition, connection = sc) {
+  col_name <- get_col_name_from_group(group)
   
   summary <- dplyr::tbl(connection,
                         dbplyr::in_catalog(
                           "strategyunit",
                           "default",
                           paste0("sl_af_describing_mitigators_final_2223_", 
-                                 category)
+                                 group)
                         )) |>
     dplyr::filter(!!rlang::parse_expr(condition)) |>
-    dplyr::summarise(episodes = sum(episodes), .by = {{group}}) |>
+    dplyr::summarise(episodes = sum(episodes), .by = {{col_name}}) |>
     sparklyr::collect() |>
     dplyr::mutate(perc = janitor::round_half_up(episodes * 100 /
                                                   sum(episodes), 2)) |>
@@ -46,21 +65,21 @@ get_perc_episodes_by_group <- function(category, condition, connection = sc) {
 #' @param group The group that the data is split by.
 #'
 #' @return A plot.
-get_perc_episodes_by_group_plot <- function(data, group) {
-  group_title <- group |>
+get_perc_episodes_by_group_plot <- function(data, col_name) {
+  col_name_title <- col_name |>
     stringr::str_replace("_", " ") |>
     stringr::str_to_title()
   
   plot <- data |>
-    ggplot2::ggplot(ggplot2::aes(!!rlang::sym(group), 
+    ggplot2::ggplot(ggplot2::aes(!!rlang::sym(col_name), 
                                  perc, 
-                                 fill = !!rlang::sym(group))) +
+                                 fill = !!rlang::sym(col_name))) +
     ggplot2::geom_col() +
     StrategyUnitTheme::su_theme() +
     StrategyUnitTheme::scale_fill_su() +
-    ggplot2::labs(x = group_title, 
+    ggplot2::labs(x = col_name_title, 
                   y = "Percentage of mitigable episodes", 
-                  fill = group_title)
+                  fill = col_name_title)
   
   return(plot)
 }
