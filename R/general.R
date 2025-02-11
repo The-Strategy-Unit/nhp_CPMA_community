@@ -34,6 +34,8 @@ get_col_name_from_group <- function(group) {
     "Ethnic_Category"
   } else if (group == "imd") {
     "imd19_decile"
+  } else if (group == "los") {
+    "los_range"
   } else {
     group
   }
@@ -86,4 +88,28 @@ get_table_perc <- function(data) {
     flextable::delete_part(part = "footer")
   
   return(table)
+}
+
+#' Scrape excel data from URL.
+#'
+#' @param url The URL where the excel file is.
+#' @param sheet Default is to read sheet 1 but can specify other sheet number.
+#' @param skip Default is to read all rows, but can specify number of rows to 
+#' skip.
+#'
+#' @return A dataframe.
+scrape_xls <- function(url, sheet = 1, skip = 0) {
+  tmp <- tempfile(fileext = "")
+  
+  download.file(url = url,
+                destfile = tmp,
+                mode = "wb")
+  
+  data <- readxl::read_excel(path = tmp,
+                             sheet = sheet,
+                             skip = skip) |>
+    janitor::clean_names()
+  
+  return(data)
+  
 }
