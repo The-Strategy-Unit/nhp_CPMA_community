@@ -1,3 +1,6 @@
+# Functions used to complete the descriptive analyses. Functions are used in
+# targets or the quarto report.
+
 #' Get the column name from the group.
 #' 
 #' In Databricks, the grouped tables have a suffix to indicate the group, but 

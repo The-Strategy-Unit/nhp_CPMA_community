@@ -1,3 +1,6 @@
+# Functions used for general tasks, like creating tables. These functions are 
+# mostly used in the quarto report, not targets.
+
 #' Formats data into a standard table.
 #'
 #' @param data A dataframe.
