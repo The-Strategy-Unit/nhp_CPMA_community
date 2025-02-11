@@ -33,9 +33,8 @@ get_table <- function(data) {
 #' @examples
 #' \dontrun{
 #' targets::tar_read(perc_episodes_frail_age) |> 
-#'   get_perc_table()}
-#' 
-get_perc_table <- function(data) {
+#'   get_table_perc()} 
+get_table_perc <- function(data) {
   
   table <- data |>
     dplyr::rename_with(~ stringr::str_replace(., "_", " ") |>

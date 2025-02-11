@@ -15,7 +15,7 @@ source("R/descriptive_analyses.R")
 #| label: tbl-perc_frail_age
 #| tbl-cap: Mitigable activity for Frail and Elderly Admissions in 22-23 by age.
 targets::tar_read(perc_episodes_frail_age) |>
-  get_perc_table() 
+  get_table_perc() 
 ```
 
 ```{r}
@@ -31,7 +31,7 @@ targets::tar_read(perc_episodes_frail_age) |>
 #| label: tbl-perc_frail_ethnicity
 #| tbl-cap: Mitigable activity for Frail and Elderly Admissions in 22-23 by ethnic category.
 targets::tar_read(perc_episodes_frail_ethnicity) |>
-  get_perc_table() 
+  get_table_perc() 
 ```
 
 ```{r}
@@ -47,7 +47,7 @@ targets::tar_read(perc_episodes_frail_ethnicity) |>
 #| label: tbl-perc_frail_sex
 #| tbl-cap: Mitigable activity for Frail and Elderly Admissions in 22-23 by sex.
 targets::tar_read(perc_episodes_frail_sex) |>
-  get_perc_table() 
+  get_table_perc() 
 ```
 
 ```{r}
