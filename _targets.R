@@ -47,12 +47,23 @@ list(
   
   # Data from Databricks -------------------------------------------------------
   tarchetypes::tar_map(
-    list(category = c("age", 
-                      "ethnicity",
-                      "icb",
-                      "imd",
-                      "sex")),
-    tar_target(perc_episodes_frail,
-               get_perc_episodes_by_group(category, "frail_elderly_high == 1"))
-  )
+    list(
+      group = c("age", 
+                "ethnicity", 
+                "icb", 
+                "imd", 
+                "los", 
+                "mainspef", 
+                "sex")
+    ),
+    tar_target(
+      perc_episodes_frail,
+      get_perc_episodes_by_group(group, "frail_elderly_high == 1")
+    )
+  ),
+  tar_target(specialty_url,
+             r"{https://digital.nhs.uk/binaries/content/assets/website-assets/isce/dcb0028/0028452019codelistspecificationv1.2.xlsx}"),
+  tar_target(specialty_key,
+             scrape_xls(specialty_url,
+                        sheet = 3))
 )

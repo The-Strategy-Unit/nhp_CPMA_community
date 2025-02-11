@@ -109,7 +109,52 @@ icb_23_shp |>
   # using 2023 icb shapefile
 ```
 
-### LOS and Specialty
+### LOS
+
+```{r}
+#| label: tbl-perc_frail_los
+#| tbl-cap: Mitigable activity for Frail and Elderly Admissions in 22-23 by length of stay.
+frail_los <- targets::tar_read(perc_episodes_frail_los) |>
+  dplyr::mutate(los_range = factor(los_range,
+                                   levels = c("0", 
+                                              "1",
+                                              "2",
+                                              "3",
+                                              "4-7",
+                                              "8-14",
+                                              "15-21",
+                                              "22+"))) |>
+  dplyr::arrange(los_range) 
+
+frail_los |>
+  get_table_perc() 
+```
+
+```{r}
+#| label: fig-perc_frail_los
+#| fig-cap: Mitigable activity for Frail and Elderly Admissions in 22-23 by length of stay.
+frail_los |>
+  get_perc_episodes_by_group_plot("los_range")
+```
+
+### Specialty
+
+```{r}
+#| label: tbl-perc_frail_mainspecf
+#| tbl-cap: Top 10 specialties of mitigable activity for Frail and Elderly Admissions in 22-23.
+specialty_key <- targets::tar_read(specialty_key) |>
+  dplyr::rename(specialty = main_specialty_title,
+                specialty_group = group)
+
+frail_specialties <- targets::tar_read(perc_episodes_frail_mainspef) |>
+  dplyr::left_join(specialty_key, by = c("mainspef" = "dd_code"))
+
+frail_specialties |>
+  dplyr::arrange(desc(episodes)) |>
+  dplyr::slice(1:10) |>
+  dplyr::select(specialty, episodes, perc) |>
+  get_table_perc() 
+```
 
 ## Trend Analysis
 
