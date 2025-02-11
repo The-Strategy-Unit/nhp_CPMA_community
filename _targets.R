@@ -49,6 +49,7 @@ list(
   tarchetypes::tar_map(
     list(category = c("age", 
                       "ethnicity",
+                      "icb",
                       "imd",
                       "sex")),
     tar_target(perc_episodes_frail,
