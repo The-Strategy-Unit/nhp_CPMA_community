@@ -65,5 +65,10 @@ list(
              r"{https://digital.nhs.uk/binaries/content/assets/website-assets/isce/dcb0028/0028452019codelistspecificationv1.2.xlsx}"),
   tar_target(specialty_key,
              scrape_xls(specialty_url,
-                        sheet = 3))
+                        sheet = 3)),
+  
+  tar_target(
+    total_cohort_numbers, 
+    Formatting_data_for_cohort_overlap("sl_af_describing_mitigators_final_2324_sex")
+  )
 )
