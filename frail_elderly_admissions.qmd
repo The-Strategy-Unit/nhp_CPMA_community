@@ -2,9 +2,20 @@
 
 ```{r}
 library("flextable")
+library("tidyr")
+library("dplyr")
+library("ggplot2")
+library("StrategyUnitTheme")
+library("forcats")
+library("ComplexUpset")
+library("scales")
+library("targets")
 
 source("R/general.R")
 source("R/descriptive_analyses.R")
+source("R/Functions for cohort overlap.R")
+
+options(scipen = 999)
 ```
 
 ## Descriptive Analysis of Mitigable Activity
@@ -160,5 +171,34 @@ frail_specialties |>
 
 ## Comparative Analysis
 
+## Cohort overlap
+
+### Proportion included in other mitigatable activity cohorts
+```{r, fig.width=10, fig.height=6 }
+#| label: fig-prop_other_cohorts_frail
+#| fig-cap: The number and proportion of the Frail Elderly admissions that are included in each of the other cohorts (2023/24).
+
+total_cohort_numbers<-targets::tar_read(total_cohort_numbers)|>
+  filter(frail_elderly_high==1)
 
 
+plotting_barchart_summary_of_overlaps(total_cohort_numbers,"frail_elderly_high", episodes)
+
+```
+
+### Most common cohort overlaps
+
+```{r, fig.width=10, fig.height=6}
+#| label: fig-upset_plot_frail
+#| fig-cap: The 15 most common mitigator cohort overlaps for the Frail Elderly admissions (2023/24).
+plot_upset_plot(total_cohort_numbers, episodes)
+
+```
+
+### Proportion within multiple cohorts
+```{r, fig.width=4, fig.height=4}
+#| label: fig-number_of_cohorts
+#| fig-cap: The number and percentage of mitigator cohorts that the Frail Elderly admissions are a part of (2023/24).
+
+plotting_barchart_number_of_cohorts(total_cohort_numbers, episodes)
+```
