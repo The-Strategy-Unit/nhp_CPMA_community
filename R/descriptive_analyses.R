@@ -35,7 +35,9 @@ get_perc_spells_by_group <- function(group, condition, connection = sc) {
     sparklyr::collect() |>
     dplyr::mutate(perc = janitor::round_half_up(spells * 100 /
                                                   sum(spells), 2),
-                  dplyr::across(1, ~stringr::str_to_title(.))) |>
+                  dplyr::across(1, ~stringr::str_to_title(.))
+                  ) |>
+    order_levels_of_factors() |>
     dplyr::arrange(dplyr::across(1))
   
   return(summary)

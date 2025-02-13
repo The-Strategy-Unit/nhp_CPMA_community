@@ -99,8 +99,6 @@ targets::tar_read(perc_spells_frail_sex) |>
 
 data <- targets::tar_read(perc_spells_frail_icb) |>
   dplyr::mutate(icb = stringr::str_to_upper(icb))
-    # Although the column is called episodes, each row is the last episode in a 
-    # spell. So renaming as spells here to avoid confusion later.
 
 icb_pop <- targets::tar_read(icb_population_data) |>
   dplyr::filter(fyear == "2023/24") |>
@@ -128,17 +126,17 @@ icb_23_shp |>
 ```{r}
 #| label: tbl-perc_frail_los
 #| tbl-cap: Mitigable activity for Frail and Elderly Admissions in 23-24 by length of stay.
-frail_los <- targets::tar_read(perc_spells_frail_los) |>
-  dplyr::mutate(los_range = factor(los_range,
-                                   levels = c("0", 
-                                              "1",
-                                              "2",
-                                              "3",
-                                              "4-7",
-                                              "8-14",
-                                              "15-21",
-                                              "22+"))) |>
-  dplyr::arrange(los_range) 
+frail_los <- targets::tar_read(perc_spells_frail_los) #|>
+  # dplyr::mutate(los_range = factor(los_range,
+  #                                  levels = c("0", 
+  #                                             "1",
+  #                                             "2",
+  #                                             "3",
+  #                                             "4-7",
+  #                                             "8-14",
+  #                                             "15-21",
+  #                                             "22+"))) |>
+  # dplyr::arrange(los_range) 
 
 frail_los |>
   get_table_perc() 

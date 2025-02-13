@@ -90,6 +90,53 @@ get_table_perc <- function(data) {
   return(table)
 }
 
+#' Order the levels of factor variables.
+#' 
+#' If a dataframe contains one a column for imd19_decile, age_range or 
+#' los_range, that column will be converted to a factor with the levels ordered
+#' as below.
+#'
+#' @param data A dataframe.
+#'
+#' @return A dataframe.
+order_levels_of_factors <- function(data) {
+  wrangled <- data |>
+    dplyr::mutate(
+      dplyr::across(
+        dplyr::any_of("imd19_decile"),
+        ~ factor(., levels = as.character(1:10))
+      ),
+      dplyr::across(dplyr::any_of("los_range"), ~ factor(
+        ., levels = c("0", "1", "2", "3", "4-7", "8-14", "15-21", "22+")
+      )),
+      dplyr::across(dplyr::any_of("age_range"), ~ factor(
+        .,
+        levels = c(
+          "0-4",
+          "5-9",
+          "10-14",
+          "15-19",
+          "20-24",
+          "24-30",
+          "34-39",
+          "40-44",
+          "45-49",
+          "50-54",
+          "55-59",
+          "60-64",
+          "65-69",
+          "70-74",
+          "75-79",
+          "80-84",
+          "85-89",
+          "90+"
+        )
+      ))
+    )
+  
+  return(wrangled)
+}
+
 #' Scrape excel data from URL.
 #'
 #' @param url The URL where the excel file is.
