@@ -21,7 +21,7 @@ get_perc_episodes_by_group <- function(group, condition, connection = sc) {
                         dbplyr::in_catalog(
                           "strategyunit",
                           "default",
-                          paste0("sl_af_describing_mitigators_final_2223_", 
+                          paste0("sl_af_describing_mitigators_final_2324_", 
                                  group)
                         )) |>
     dplyr::filter(!!rlang::parse_expr(condition)) |>

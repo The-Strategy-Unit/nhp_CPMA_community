@@ -28,14 +28,14 @@ options(scipen = 999)
 
 ```{r}
 #| label: tbl-perc_frail_age
-#| tbl-cap: Mitigable activity for Frail and Elderly Admissions in 22-23 by age.
+#| tbl-cap: Mitigable activity for Frail and Elderly Admissions in 23-24 by age.
 targets::tar_read(perc_episodes_frail_age) |>
   get_table_perc() 
 ```
 
 ```{r}
 #| label: fig-perc_frail_age
-#| fig-cap: Mitigable activity for Frail and Elderly Admissions in 22-23 by age.
+#| fig-cap: Mitigable activity for Frail and Elderly Admissions in 23-24 by age.
 targets::tar_read(perc_episodes_frail_age) |>
   get_perc_episodes_by_group_plot("age_range")
 ```
@@ -44,14 +44,14 @@ targets::tar_read(perc_episodes_frail_age) |>
 
 ```{r}
 #| label: tbl-perc_frail_ethnicity
-#| tbl-cap: Mitigable activity for Frail and Elderly Admissions in 22-23 by ethnic category.
+#| tbl-cap: Mitigable activity for Frail and Elderly Admissions in 23-24 by ethnic category.
 targets::tar_read(perc_episodes_frail_ethnicity) |>
   get_table_perc() 
 ```
 
 ```{r}
 #| label: fig-perc_frail_ethnicity
-#| fig-cap: Mitigable activity for Frail and Elderly Admissions in 22-23 by ethnic category.
+#| fig-cap: Mitigable activity for Frail and Elderly Admissions in 23-24 by ethnic category.
 targets::tar_read(perc_episodes_frail_ethnicity) |>
   get_perc_episodes_by_group_plot("Ethnic_Category")
 ```
@@ -60,14 +60,14 @@ targets::tar_read(perc_episodes_frail_ethnicity) |>
 
 ```{r}
 #| label: tbl-perc_frail_imd
-#| tbl-cap: Mitigable activity for Frail and Elderly Admissions in 22-23 by IMD decile.
+#| tbl-cap: Mitigable activity for Frail and Elderly Admissions in 23-24 by IMD decile.
 targets::tar_read(perc_episodes_frail_imd) |>
   get_table_perc() 
 ```
 
 ```{r}
 #| label: fig-perc_frail_imd
-#| fig-cap: Mitigable activity for Frail and Elderly Admissions in 22-23 by IMD decile.
+#| fig-cap: Mitigable activity for Frail and Elderly Admissions in 23-24 by IMD decile.
 targets::tar_read(perc_episodes_frail_imd) |>
   dplyr::mutate(imd19_decile = factor(imd19_decile)) |>
   get_perc_episodes_by_group_plot("imd19_decile")
@@ -77,14 +77,14 @@ targets::tar_read(perc_episodes_frail_imd) |>
 
 ```{r}
 #| label: tbl-perc_frail_sex
-#| tbl-cap: Mitigable activity for Frail and Elderly Admissions in 22-23 by sex.
+#| tbl-cap: Mitigable activity for Frail and Elderly Admissions in 23-24 by sex.
 targets::tar_read(perc_episodes_frail_sex) |>
   get_table_perc() 
 ```
 
 ```{r}
 #| label: fig-perc_frail_sex
-#| fig-cap: Mitigable activity for Frail and Elderly Admissions in 22-23 by sex.
+#| fig-cap: Mitigable activity for Frail and Elderly Admissions in 23-24 by sex.
 targets::tar_read(perc_episodes_frail_sex) |>
   get_perc_episodes_by_group_plot("sex")
 ```
@@ -95,12 +95,12 @@ targets::tar_read(perc_episodes_frail_sex) |>
 
 ```{r}
 #| label: fig-perc_frail_icb
-#| fig-cap: Mitigable activity for Frail and Elderly Admissions in 22-23 by icb.
+#| fig-cap: Mitigable activity for Frail and Elderly Admissions in 23-24 by icb.
 
 data <- targets::tar_read(perc_episodes_frail_icb)
 
 icb_pop <- targets::tar_read(icb_population_data) |>
-  dplyr::filter(fyear == "2022/23") |>
+  dplyr::filter(fyear == "2023/24") |>
   dplyr::summarise(pop = sum(icb_population), .by = c(icb24cdh, icb_2024_code))
 
 icb_23_shp <- sf::st_read("https://services1.arcgis.com/ESMARspQHYMw9BZ9/arcgis/rest/services/Integrated_Care_Boards_April_2023_EN_BGC/FeatureServer/0/query?outFields=*&where=1%3D1&f=geojson") |>
@@ -124,7 +124,7 @@ icb_23_shp |>
 
 ```{r}
 #| label: tbl-perc_frail_los
-#| tbl-cap: Mitigable activity for Frail and Elderly Admissions in 22-23 by length of stay.
+#| tbl-cap: Mitigable activity for Frail and Elderly Admissions in 23-24 by length of stay.
 frail_los <- targets::tar_read(perc_episodes_frail_los) |>
   dplyr::mutate(los_range = factor(los_range,
                                    levels = c("0", 
@@ -143,7 +143,7 @@ frail_los |>
 
 ```{r}
 #| label: fig-perc_frail_los
-#| fig-cap: Mitigable activity for Frail and Elderly Admissions in 22-23 by length of stay.
+#| fig-cap: Mitigable activity for Frail and Elderly Admissions in 23-24 by length of stay.
 frail_los |>
   get_perc_episodes_by_group_plot("los_range")
 ```
@@ -152,7 +152,7 @@ frail_los |>
 
 ```{r}
 #| label: tbl-perc_frail_mainspecf
-#| tbl-cap: Top 10 specialties of mitigable activity for Frail and Elderly Admissions in 22-23.
+#| tbl-cap: Top 10 specialties of mitigable activity for Frail and Elderly Admissions in 23-24.
 specialty_key <- targets::tar_read(specialty_key) |>
   dplyr::rename(specialty = main_specialty_title,
                 specialty_group = group)
