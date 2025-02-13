@@ -30,7 +30,8 @@ get_perc_episodes_by_group <- function(group, condition, connection = sc) {
     dplyr::summarise(episodes = sum(episodes), .by = {{col_name}}) |>
     sparklyr::collect() |>
     dplyr::mutate(perc = janitor::round_half_up(episodes * 100 /
-                                                  sum(episodes), 2)) |>
+                                                  sum(episodes), 2),
+                  dplyr::across(1, ~stringr::str_to_title(.))) |>
     dplyr::arrange(dplyr::across(1))
   
   return(summary)
