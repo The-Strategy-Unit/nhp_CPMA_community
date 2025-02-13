@@ -1,20 +1,20 @@
 # Functions used to complete the descriptive analyses.
 
-#' Get the percentage of mitigable episodes by a group.
+#' Get the percentage of mitigable spells by a group.
 #' 
 #' Given a `group` (for example, `sex` or `age`), this function will get the 
 #' table from Databricks, filter to the mitigator or set of mitigators using 
 #' the `condition` provided and calculate the number and percentage of mitigable 
-#' episodes by group.
+#' spells by group.
 #'
 #' @param group A string of the group that the table is for.
 #' @param condition An string containing the expression needed to filter for a 
 #' mitigator or set of mitigators. 
 #' @param connection The Databricks connection.
 #'
-#' @return A dataframe of the number and percentage of mitigable episodes by 
+#' @return A dataframe of the number and percentage of mitigable spells by 
 #' group.
-get_perc_episodes_by_group <- function(group, condition, connection = sc) {
+get_perc_spells_by_group <- function(group, condition, connection = sc) {
   col_name <- get_col_name_from_group(group)
   
   summary <- dplyr::tbl(connection,
@@ -27,23 +27,27 @@ get_perc_episodes_by_group <- function(group, condition, connection = sc) {
     dplyr::filter(!!rlang::parse_expr(condition),
                   !is.na(!!rlang::sym(col_name)) # exclude NULLs
                   ) |>
-    dplyr::summarise(episodes = sum(episodes), .by = {{col_name}}) |>
+    dplyr::rename(spells = episodes) |> 
+    # Although the column is called episodes, each row is the last episode in a 
+    # spell. So renaming as spells here to avoid confusion later.
+    dplyr::summarise(spells = sum(spells), 
+                     .by = {{col_name}}) |>
     sparklyr::collect() |>
-    dplyr::mutate(perc = janitor::round_half_up(episodes * 100 /
-                                                  sum(episodes), 2),
+    dplyr::mutate(perc = janitor::round_half_up(spells * 100 /
+                                                  sum(spells), 2),
                   dplyr::across(1, ~stringr::str_to_title(.))) |>
     dplyr::arrange(dplyr::across(1))
   
   return(summary)
 }
 
-#' Plot the percentage of mitigable episodes by a group.
+#' Plot the percentage of mitigable spells by a group.
 #'
-#' @param data The output of `get_perc_episodes_by_group()`.
+#' @param data The output of `get_perc_spells_by_group()`.
 #' @param group The group that the data is split by.
 #'
 #' @return A plot.
-get_perc_episodes_by_group_plot <- function(data, col_name) {
+get_perc_spells_by_group_plot <- function(data, col_name) {
   col_name_title <- col_name |>
     format_as_title()
   
@@ -55,7 +59,7 @@ get_perc_episodes_by_group_plot <- function(data, col_name) {
     StrategyUnitTheme::su_theme() +
     StrategyUnitTheme::scale_fill_su() +
     ggplot2::labs(x = col_name_title, 
-                  y = "Percentage of mitigable episodes", 
+                  y = "Percentage of mitigable spells", 
                   fill = col_name_title)
   
   return(plot)
