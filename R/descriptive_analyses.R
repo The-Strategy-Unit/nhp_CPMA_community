@@ -1,6 +1,54 @@
 # Functions used to complete the descriptive analyses.
 
-#' Get the percentage of mitigable spells by a group.
+#' Get the percentage of mitigable spells for a mitigator.
+#'
+#' @param activity_type Either `"emergency"` or `"elective"`.
+#' @param condition An string containing the expression needed to filter for a 
+#' mitigator or set of mitigators. 
+#' @param totals A dataframe containing the total beddays and episodes for 2023-24.
+#' @param connection The Databricks connection.
+#'
+#' @return A dataframe.
+get_perc_spells_beddays <- function(activity_type,
+                                    condition,
+                                    totals = total_beddays_episodes,
+                                    connection = sc) {
+  totals <- totals |>
+    dplyr::filter(type == activity_type) |>
+    dplyr::select(metric, total)
+  
+  mitigator_totals <- dplyr::tbl(
+    connection,
+    dbplyr::in_catalog(
+      "strategyunit",
+      "default",
+      "sl_af_describing_mitigators_final_2324_sex"
+    )
+  ) |>
+    dplyr::filter(!!rlang::parse_expr(condition)) |>
+    dplyr::summarise(episodes = sum(episodes),
+                     beddays = sum(beddays)) |>
+    sparklyr::collect() |>
+    tidyr::pivot_longer(
+      cols = c(episodes, beddays),
+      names_to = "metric",
+      values_to = "number"
+    )
+  
+  summary <- mitigator_totals |>
+    dplyr::left_join(totals, "metric") |>
+    dplyr::mutate(
+      perc = janitor::round_half_up(number * 100 / total, 2),
+      metric = metric |>
+        stringr::str_replace("episodes", "Spells") |>
+        stringr::str_to_sentence()
+    ) |>
+    dplyr::arrange(dplyr::across(1))
+  
+  return(summary)
+}
+
+#' Get the percentage of mitigable spells for a mitigator by a group.
 #' 
 #' Given a `group` (for example, `sex` or `age`), this function will get the 
 #' table from Databricks, filter to the mitigator or set of mitigators using 
@@ -43,7 +91,7 @@ get_perc_spells_by_group <- function(group, condition, connection = sc) {
   return(summary)
 }
 
-#' Plot the percentage of mitigable spells by a group.
+#' Plot the percentage of mitigable spells for a mitigator by a group.
 #'
 #' @param data The output of `get_perc_spells_by_group()`.
 #' @param group The group that the data is split by.

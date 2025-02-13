@@ -48,27 +48,49 @@ list(
   # Data from Databricks -------------------------------------------------------
   tarchetypes::tar_map(
     list(
-      group = c("age", 
-                "ethnicity", 
-                "icb", 
-                "imd", 
-                "los", 
-                "mainspef", 
-                "sex")
+      group = c("age", "ethnicity", "icb", "imd", "los", "mainspef", "sex")
     ),
     tar_target(
       perc_spells_frail,
       get_perc_spells_by_group(group, "frail_elderly_high == 1")
     )
   ),
-  tar_target(specialty_url,
-             r"{https://digital.nhs.uk/binaries/content/assets/website-assets/isce/dcb0028/0028452019codelistspecificationv1.2.xlsx}"),
-  tar_target(specialty_key,
-             scrape_xls(specialty_url,
-                        sheet = 3)),
+  tar_target(
+    specialty_url,
+    r"{https://digital.nhs.uk/binaries/content/assets/website-assets/isce/dcb0028/0028452019codelistspecificationv1.2.xlsx}"
+  ),
+  tar_target(specialty_key, scrape_xls(specialty_url, sheet = 3)),
+  tar_target(
+    total_beddays_episodes,
+    dplyr::tbl(
+      sc,
+      dbplyr::in_catalog(
+        "strategyunit",
+        "default",
+        "sl_af_describing_mitigators_final_2324_sex"
+      )
+    ) |>
+      dplyr::select(dplyr::starts_with("total")) |>
+      dplyr::distinct() |>
+      dplyr::summarise(dplyr::across(dplyr::everything(), ~ sum(.))) |>
+      sparklyr::collect() |>
+      tidyr::pivot_longer(
+        cols = dplyr::everything(),
+        names_to = "metric_type",
+        values_to = "total"
+      ) |>
+      tidyr::separate_wider_delim(metric_type, 
+                                  "_", 
+                                  names = c("a", "metric", "type"))
+  ),
+  tar_target(total_beddays_episodes_frail,
+             get_perc_spells_beddays("emergency", 
+                                     "frail_elderly_high == 1", 
+                                     total_beddays_episodes)),
+  
   
   tar_target(
-    total_cohort_numbers, 
+    total_cohort_numbers,
     Formatting_data_for_cohort_overlap("sl_af_describing_mitigators_final_2324_sex")
   )
 )
