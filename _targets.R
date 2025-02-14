@@ -124,8 +124,15 @@ list(
                dplyr::summarise(pop = sum(august_2022), .by = imd_decile) |>
                dplyr::rename(imd19_decile = imd_decile)),
   
-  
-  
+
+  tar_target(rates_per_pop_age_frail,
+             get_rates_per_pop("age", "frail_elderly_high == 1", pop_by_age)),
+  tar_target(rates_per_pop_ethnicity_frail,
+             get_rates_per_pop("ethnicity", "frail_elderly_high == 1", pop_by_ethnicity)),
+  tar_target(rates_per_pop_imd_frail,
+             get_rates_per_pop("imd", "frail_elderly_high == 1", pop_by_imd)),
+  tar_target(rates_per_pop_sex_frail,
+             get_rates_per_pop("sex", "frail_elderly_high == 1", pop_by_sex)),
   
   
   

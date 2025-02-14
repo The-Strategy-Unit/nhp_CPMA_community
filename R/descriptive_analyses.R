@@ -114,3 +114,71 @@ get_perc_spells_by_group_plot <- function(data, col_name) {
   
   return(plot)
 }
+
+
+
+get_rates_per_pop <- function(group, condition, population, connection = sc) {
+  
+  col_name <- get_col_name_from_group(group)
+  
+  summary <- dplyr::tbl(connection,
+                        dbplyr::in_catalog(
+                          "strategyunit",
+                          "default",
+                          paste0("sl_af_describing_mitigators_final_2324_", 
+                                 group)
+                        )) |>
+    dplyr::filter(!!rlang::parse_expr(condition),
+                  !is.na(!!rlang::sym(col_name)) # exclude NULLs
+    ) |>
+    dplyr::rename(spells = episodes) |> 
+    # Although the column is called episodes, each row is the last episode in a 
+    # spell. So renaming as spells here to avoid confusion later.
+    dplyr::summarise(spells = sum(spells), 
+                     .by = {{col_name}}) |>
+    sparklyr::collect() |>
+    dplyr::left_join(population, {{col_name}}) |>
+    PHEindicatormethods::phe_rate(
+      x = spells,
+      n = pop,
+      confidence = 0.95,
+      multiplier = 100000
+    ) |>
+    order_levels_of_factors() |>
+    dplyr::arrange(dplyr::across(1)) |>
+    dplyr::mutate(value = janitor::round_half_up(value, 2),
+                  dplyr::across(1, ~stringr::str_to_title(.))) |>
+    dplyr::select({{col_name}}, spells, pop, value, lowercl, uppercl)
+  
+  return(summary)
+}
+
+get_rates_per_pop_plot <- function(data, col_name) {
+  col_name_title <- col_name |>
+    format_as_title()
+  
+  plot <- data |>
+    ggplot2::ggplot(ggplot2::aes(!!rlang::sym(col_name),
+                                 value, 
+                                 fill = !!rlang::sym(col_name))) +
+    ggplot2::geom_col() +
+    StrategyUnitTheme::su_theme() +
+    StrategyUnitTheme::scale_fill_su() +
+    ggplot2::geom_errorbar(ggplot2::aes(ymin = lowercl, ymax = uppercl), 
+                           position = "dodge", 
+                           width = 0.25)  +
+    ggplot2::labs(x = col_name_title, 
+                  y = "Rate per 100,000 population", 
+                  fill = col_name_title)
+  
+  return(plot)
+}
+
+get_rates_per_pop_table <- function(data){
+  table <- data |>
+    dplyr::rename_with(~format_as_title(.)) |>
+    get_table() |>
+    flextable::delete_part(part = "footer")
+  
+  return(table)
+}
