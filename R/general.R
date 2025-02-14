@@ -72,27 +72,6 @@ get_table <- function(data) {
   return(table)
 }
 
-#' Formats percentage data into a table.
-#'
-#' @param data A dataframe of percentage data.
-#'
-#' @return A table.
-#' 
-#' @examples
-#' \dontrun{
-#' targets::tar_read(perc_episodes_frail_age) |> 
-#'   get_table_perc()} 
-get_table_perc <- function(data) {
-  
-  table <- data |>
-    dplyr::rename_with(~format_as_title(.)) |>
-    dplyr::rename("Percentage" = "Perc") |>
-    get_table() |>
-    flextable::delete_part(part = "footer")
-  
-  return(table)
-}
-
 #' Order the levels of factor variables.
 #' 
 #' If a dataframe contains one a column for imd19_decile, age_range or 

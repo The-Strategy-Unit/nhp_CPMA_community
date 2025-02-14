@@ -188,61 +188,19 @@ targets::tar_read(rates_per_pop_sex_frail) |>
 
 :::
 
-### ICB
-
-```{r}
-#| label: fig-perc_frail_icb
-#| fig-cap: Mitigable activity for Frail and Elderly Admissions in 2023-24 by icb.
-
-data <- targets::tar_read(perc_spells_frail_icb) |>
-  dplyr::mutate(icb = stringr::str_to_upper(icb))
-
-icb_pop <- targets::tar_read(icb_population_data) |>
-  dplyr::filter(fyear == "2023/24") |>
-  dplyr::summarise(pop = sum(icb_population), .by = c(icb24cdh, icb_2024_code))
-
-icb_23_shp <- sf::st_read("https://services1.arcgis.com/ESMARspQHYMw9BZ9/arcgis/rest/services/Integrated_Care_Boards_April_2023_EN_BGC/FeatureServer/0/query?outFields=*&where=1%3D1&f=geojson") |>
-  janitor::clean_names()
-
-icb_23_shp |>
-  dplyr::left_join(icb_pop, by = c("icb23cd" = "icb_2024_code")) |>
-  dplyr::left_join(data, by = c("icb24cdh" = "icb")) |>
-  dplyr::mutate(value = janitor::round_half_up(spells * 100 /
-                                                  pop, 2)) |>
-  ggplot2::ggplot() +
-  ggplot2::geom_sf(ggplot2::aes(fill = value)) +
-  ggplot2::theme_void()
-
-# notes
-  # value = number spells at icb * 100 / population at icb
-  # using 2023 icb shapefile
-```
-
 ### LOS
 
 ```{r}
 #| label: tbl-perc_frail_los
 #| tbl-cap: Mitigable activity for Frail and Elderly Admissions in 2023-24 by length of stay.
-frail_los <- targets::tar_read(perc_spells_frail_los) #|>
-  # dplyr::mutate(los_range = factor(los_range,
-  #                                  levels = c("0", 
-  #                                             "1",
-  #                                             "2",
-  #                                             "3",
-  #                                             "4-7",
-  #                                             "8-14",
-  #                                             "15-21",
-  #                                             "22+"))) |>
-  # dplyr::arrange(los_range) 
-
-frail_los |>
+targets::tar_read(perc_spells_frail_los) |>
   get_table_perc() 
 ```
 
 ```{r}
 #| label: fig-perc_frail_los
 #| fig-cap: Mitigable activity for Frail and Elderly Admissions in 2023-24 by length of stay.
-frail_los |>
+targets::tar_read(perc_spells_frail_los) |>
   get_perc_spells_by_group_plot("los_range")
 ```
 
@@ -268,6 +226,38 @@ frail_specialties |>
 ## Trend Analysis
 
 ## Comparative Analysis
+
+### ICB
+
+```{r}
+#| output: false
+data <- targets::tar_read(perc_spells_frail_icb) |>
+  dplyr::mutate(icb = stringr::str_to_upper(icb))
+
+icb_pop <- targets::tar_read(icb_population_data) |>
+  dplyr::filter(fyear == "2023/24") |>
+  dplyr::summarise(pop = sum(icb_population), .by = c(icb24cdh, icb_2024_code))
+
+icb_23_shp <- sf::st_read("https://services1.arcgis.com/ESMARspQHYMw9BZ9/arcgis/rest/services/Integrated_Care_Boards_April_2023_EN_BGC/FeatureServer/0/query?outFields=*&where=1%3D1&f=geojson") |>
+  janitor::clean_names()
+
+# notes
+  # value = number spells at icb * 100 / population at icb
+  # using 2023 icb shapefile
+```
+
+```{r}
+#| label: fig-perc_frail_icb
+#| fig-cap: Mitigable activity for Frail and Elderly Admissions in 2023-24 by icb.
+icb_23_shp |>
+  dplyr::left_join(icb_pop, by = c("icb23cd" = "icb_2024_code")) |>
+  dplyr::left_join(data, by = c("icb24cdh" = "icb")) |>
+  dplyr::mutate(value = janitor::round_half_up(spells * 100 /
+                                                  pop, 2)) |>
+  ggplot2::ggplot() +
+  ggplot2::geom_sf(ggplot2::aes(fill = value)) +
+  ggplot2::theme_void()
+```
 
 ## Cohort overlap
 

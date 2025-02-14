@@ -1,5 +1,6 @@
 # Functions used to complete the descriptive analyses.
 
+# Percentage breakdowns --------------------------------------------------------
 #' Get the percentage of mitigable spells for a mitigator.
 #'
 #' @param activity_type Either `"emergency"` or `"elective"`.
@@ -94,7 +95,7 @@ get_perc_spells_by_group <- function(group, condition, connection = sc) {
 #' Plot the percentage of mitigable spells for a mitigator by a group.
 #'
 #' @param data The output of `get_perc_spells_by_group()`.
-#' @param group The group that the data is split by.
+#' @param col_name The col_name that the data is split by.
 #'
 #' @return A plot.
 get_perc_spells_by_group_plot <- function(data, col_name) {
@@ -115,8 +116,37 @@ get_perc_spells_by_group_plot <- function(data, col_name) {
   return(plot)
 }
 
+#' Formats percentage data into a table.
+#'
+#' @param data A dataframe of percentage data.
+#'
+#' @return A table.
+#' 
+#' @examples
+#' \dontrun{
+#' targets::tar_read(perc_episodes_frail_age) |> 
+#'   get_table_perc()} 
+get_table_perc <- function(data) {
+  
+  table <- data |>
+    dplyr::rename_with(~format_as_title(.)) |>
+    dplyr::rename("Percentage" = "Perc") |>
+    get_table() |>
+    flextable::delete_part(part = "footer")
+  
+  return(table)
+}
 
-
+# Rates per 100,000 ------------------------------------------------------------
+#' Get rates per population of spells per group.
+#'
+#' #' @param group A string of the group that the table is for.
+#' @param condition An string containing the expression needed to filter for a 
+#' mitigator or set of mitigators. 
+#' @param population A dataframe of the population by group.
+#' @param connection The Databricks connection.
+#'
+#' @return
 get_rates_per_pop <- function(group, condition, population, connection = sc) {
   
   col_name <- get_col_name_from_group(group)
@@ -153,6 +183,12 @@ get_rates_per_pop <- function(group, condition, population, connection = sc) {
   return(summary)
 }
 
+#' Plot the rates per population of spells per group.
+#'
+#' @param data The output of `get_rates_per_pop()`.
+#' @param col_name The col_name that the data is split by.
+#'
+#' @return A plot.
 get_rates_per_pop_plot <- function(data, col_name) {
   col_name_title <- col_name |>
     format_as_title()
@@ -174,6 +210,16 @@ get_rates_per_pop_plot <- function(data, col_name) {
   return(plot)
 }
 
+#' Formats rates per 100,000 data into a table.
+#'
+#' @param data A dataframe of rates per 100,000 data.
+#'
+#' @return A table.
+#' 
+#' @examples
+#' \dontrun{
+#' targets::tar_read(rates_per_pop_age_frail) |>
+#' get_rates_per_pop_table()}
 get_rates_per_pop_table <- function(data){
   table <- data |>
     dplyr::rename_with(~format_as_title(.)) |>
