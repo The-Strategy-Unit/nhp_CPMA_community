@@ -88,6 +88,46 @@ list(
                                      "frail_elderly_high == 1", 
                                      total_beddays_episodes)),
   
+  tar_target(pop_by_sex,
+             icb_population_data |>
+               dplyr::filter(fyear == "2023/24") |>
+               dplyr::summarise(pop = sum(icb_population), .by = sex) |>
+               dplyr::mutate(sex = dplyr::case_when(sex == 2 ~ "female",
+                                                    sex == 1 ~ "male",
+                                                    .default = NULL))),
+  tar_target(pop_by_age,
+             icb_population_data |>
+               dplyr::filter(fyear == "2023/24") |>
+               dplyr::summarise(pop = sum(icb_population), .by = age_range)),
+  
+  tarchetypes::tar_file(pop_by_ethnicity_url, 
+             r"{Z:\Strategic Analytics\Projects 2025\Describing and Quantifying the NHP mitigators\population_data\ethnicity_by_icb_2021.xlsx}"),
+  tar_target(pop_by_ethnicity,
+             readxl::read_xlsx(pop_by_ethnicity_url) |>
+               janitor::clean_names() |>
+               dplyr::filter(integrated_care_boards != "Does not apply: Wales") |>
+               dplyr::mutate(Ethnic_Category = dplyr::case_when(
+                 ethnic_group_20_categories_code %in% c(1, 3:5) ~ "asian",
+                 ethnic_group_20_categories_code %in% c(6:8) ~ "black",
+                 ethnic_group_20_categories_code %in% c(9:12) ~ "mixed",
+                 ethnic_group_20_categories_code %in% c(2, 18, 19) ~ "other",
+                 ethnic_group_20_categories_code %in% c(13:17) ~ "white",
+                 .default = "NULL")) |>
+               dplyr::summarise(pop = sum(observation), .by = Ethnic_Category) |>
+               dplyr::filter(Ethnic_Category != "NULL")),
+  
+  tar_target(pop_by_imd_url,
+             r"{https://www.ons.gov.uk/file?uri=/peoplepopulationandcommunity/populationandmigration/populationprojections/adhocs/15363monthlypopulationsbyindexofmultipledeprivationimddecileenglandjanuary2019toaugust2022/monthlyimdpopulations.xlsx}"),
+  tar_target(pop_by_imd,
+             scrape_xls(pop_by_imd_url,
+                        sheet = "1", skip = 3) |>
+               dplyr::summarise(pop = sum(august_2022), .by = imd_decile) |>
+               dplyr::rename(imd19_decile = imd_decile)),
+  
+  
+  
+  
+  
   
   tar_target(
     total_cohort_numbers,
