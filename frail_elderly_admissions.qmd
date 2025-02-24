@@ -225,6 +225,7 @@ frail_specialties |>
 
 ## Trend Analysis
 
+
 ## Comparative Analysis
 
 ### ICB
@@ -261,10 +262,14 @@ icb_23_shp |>
 
 ## Cohort overlap
 
-### Proportion included in other mitigatable activity cohorts
+### Number and proportion included in other mitigatable activity cohorts
+
+::: panel-tabset
+
+#### Spells
 ```{r, fig.width=10, fig.height=6 }
-#| label: fig-prop_other_cohorts_frail
-#| fig-cap: The number and proportion of the Frail Elderly admissions that are included in each of the other cohorts (2023/24).
+#| label: fig-prop_other_cohorts_frail_spells
+#| fig-cap: The number and proportion of Frail Elderly spells that are included in each of the other cohorts (2023/24).
 
 total_cohort_numbers<-targets::tar_read(total_cohort_numbers)|>
   filter(frail_elderly_high==1)
@@ -274,19 +279,59 @@ plotting_barchart_summary_of_overlaps(total_cohort_numbers,"frail_elderly_high",
 
 ```
 
-### Most common cohort overlaps
+#### Beddays
+```{r, fig.width=10, fig.height=6 }
+#| label: fig-prop_other_cohorts_frail_beddays
+#| fig-cap: The number and proportion of Frail Elderly beddays that are included in each of the other cohorts (2023/24).
 
+
+plotting_barchart_summary_of_overlaps(total_cohort_numbers,"frail_elderly_high", beddays)
+
+```
+:::
+
+
+### Most common cohort overlaps
+::: panel-tabset
+
+#### Spells
 ```{r, fig.width=10, fig.height=6}
-#| label: fig-upset_plot_frail
-#| fig-cap: The 15 most common mitigator cohort overlaps for the Frail Elderly admissions (2023/24).
+#| label: fig-upset_plot_frail_spells
+#| fig-cap: The 15 most common mitigator cohort overlaps for Frail Elderly spells (2023/24).
 plot_upset_plot(total_cohort_numbers, episodes)
 
 ```
 
-### Proportion within multiple cohorts
+#### Beddays
+```{r, fig.width=10, fig.height=6}
+#| label: fig-upset_plot_frail_beddays
+#| fig-cap: The 15 most common mitigator cohort overlaps for Frail Elderly beddays (2023/24).
+plot_upset_plot(total_cohort_numbers, beddays)
+
+```
+
+:::
+
+### Number and proportion within multiple cohorts
+
+::: panel-tabset
+
+#### Spells
 ```{r, fig.width=4, fig.height=4}
-#| label: fig-number_of_cohorts
-#| fig-cap: The number and percentage of mitigator cohorts that the Frail Elderly admissions are a part of (2023/24).
+#| label: fig-number_of_cohorts_spells
+#| fig-cap: The number and percentage of mitigator cohorts that the Frail Elderly spells are a part of (2023/24).
 
 plotting_barchart_number_of_cohorts(total_cohort_numbers, episodes)
 ```
+
+
+#### Beddays
+```{r, fig.width=4, fig.height=4}
+#| label: fig-number_of_cohorts_beddays
+#| fig-cap: The number and percentage of mitigator cohorts that the Frail Elderly beddays are a part of (2023/24).
+
+plotting_barchart_number_of_cohorts(total_cohort_numbers, beddays)
+```
+
+:::
+

@@ -104,7 +104,7 @@ plot_upset_plot<-function(dataset, activity_type){
                           intersection_size(
                             text_mapping=aes(
                               label=paste0(round(!!get_size_mode('exclusive_intersection')/(all_mitigatable_activity) * 100, 1), '%', '\n ', scales::comma(!!size) )  ) , 
-                            text=list(size=3.3),
+                            text=list(size=2.8),
                             bar_number_threshold = 1,
                             mapping=aes(fill='bars_color'))+
                             theme(axis.title.y = element_text(size=14, vjust=-24),
@@ -132,7 +132,7 @@ plotting_barchart_summary_of_overlaps<-function(data, cohort_name, activity_type
     group_by(cohort)|>
     summarise(number=sum(number))|>
     mutate(percentage=round(((number/max(number))*100),1))|>
-    arrange(desc(percentage))|>
+    arrange(desc(number))|>
     mutate(cohort=factor(cohort, unique(cohort)))|>
     ggplot(aes(x=fct_relevel(cohort, cohort_name), y=number))+
     geom_bar(stat="identity", fill="#f9bf07")+
@@ -142,7 +142,7 @@ plotting_barchart_summary_of_overlaps<-function(data, cohort_name, activity_type
     labs(y="Number",
          x=NULL,
          title=NULL)+ 
-    geom_text(aes(label=paste0(scales::comma(number), ' (',percentage, '%)')), hjust=-0.05)+
+    geom_text(aes(label=paste0(scales::comma(number), ' (',percentage, '%)')), hjust=-0.05, size=3)+
     scale_y_continuous(limits=c(0, cohort_total$total*1.25), expand=c(0,0), labels = label_comma())+
     coord_flip()+
     scale_x_discrete(limits=rev)
