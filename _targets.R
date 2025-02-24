@@ -145,5 +145,20 @@ list(
   tar_target(
     total_cohort_numbers,
     Formatting_data_for_cohort_overlap("sl_af_describing_mitigators_final_2324_sex")
-  )
+  ),
+
+ # Trends analysis -------------------------------------------------------------
+
+tar_target(
+  numbers_over_time,
+  Formatting_data_for_trends_analysis( "sl_af_describing_mitigators_fyear" )
+),
+
+
+tar_target(
+  denominator_over_time,
+  Formatting_data_for_trends_analysis_denominator( "sl_af_total_elective_emergency_activity" )
+)
+
+
 )
