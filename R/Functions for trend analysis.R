@@ -13,6 +13,7 @@ denominator<-dplyr::tbl(
             total_beddays_emergency=sum(total_beddays_emergency),
             total_episodes_elective=sum(total_episodes_elective),
             total_beddays_elective=sum(total_beddays_elective))|>
+  mutate(year=paste0(stringr::str_sub(fyear, 1, 4), "/", stringr::str_sub(fyear, 5, 6)))|>
   collect()|>
   as.data.frame()
 
@@ -38,6 +39,7 @@ Formatting_data_for_trends_analysis<-function(table){
              cohorts)|>
     summarise(episodes=sum(episodes),
               beddays=sum(beddays))|>
+    mutate(year=paste0(stringr::str_sub(fyear, 1, 4), "/", stringr::str_sub(fyear, 5, 6)))|>
     ungroup()
   
   return(numbers_over_time)
@@ -49,9 +51,8 @@ plot_of_number_over_time<-function(data, mitigator, activity_type){
   
   data|>
     filter(cohorts==mitigator)|>
-    group_by(fyear)|>
+    group_by(year)|>
     summarise(activity=sum({{activity_type}}))|>
-    mutate(year=paste0(stringr::str_sub(fyear, 1, 4), "/", stringr::str_sub(fyear, 5, 6)))|>
     ggplot()+
     geom_line(aes(y=activity, x=year, group=1), linewidth=1.4)+
     su_theme()+
@@ -64,3 +65,35 @@ plot_of_number_over_time<-function(data, mitigator, activity_type){
   
   
 }
+
+
+
+plot_of_percentage_over_time<-function(data1, data2, mitigator, activity_type, denominator_type){
+  
+  
+ denominator_data<-data1|>
+    group_by(fyear)|>
+    summarise(total_activity=sum({{denominator_type}}))
+  
+data2|>
+    filter(cohorts==mitigator)|>
+    group_by(fyear, year)|>
+    summarise(activity=sum({{activity_type}}))|>
+    left_join( denominator_data, by=c("fyear"))|>
+    mutate(percentage=round((activity/total_activity)*100,1))|>
+    ggplot()+
+    geom_line(aes(y=percentage, x=year, group=1), linewidth=1.4)+
+    su_theme()+
+    theme(axis.text=element_text(size=12),
+          axis.title.y=element_text(size=14))+
+    labs(y="Percentage",
+         x=NULL,
+         title=NULL)+ 
+    scale_y_continuous(expand=c(0,0), limits=c(0,NA), labels = label_comma())
+  
+  
+  
+}
+
+
+
