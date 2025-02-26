@@ -125,7 +125,7 @@ plotting_barchart_summary_of_overlaps<-function(data, cohort_name, activity_type
   cohort_total<- data|>
     summarise(total=sum({{activity_type}}))
   
-  data|>
+  data2<-data|>
     mutate(across(everything(), ~ .x* {{activity_type}}, .names = "{.col}"))|>
     select(-episodes, -beddays)|>
     gather(key="cohort", value="number")|>
@@ -133,9 +133,11 @@ plotting_barchart_summary_of_overlaps<-function(data, cohort_name, activity_type
     summarise(number=sum(number))|>
     mutate(percentage=round(((number/max(number))*100),1))|>
     arrange(desc(number))|>
-    mutate(cohort=factor(cohort, unique(cohort)))|>
+    mutate(cohort=factor(cohort, unique(cohort)))
+  
+  data2|>
     ggplot(aes(x=fct_relevel(cohort, cohort_name), y=number))+
-    geom_bar(stat="identity", fill="#f9bf07")+
+    geom_bar(stat="identity", fill=factor(ifelse(data2$cohort==cohort_name,"#686f73","#f9bf07")))+
     su_theme()+
     theme(axis.text=element_text(size=11),
           axis.title.y=element_text(size=16))+
@@ -156,7 +158,7 @@ plotting_barchart_number_of_cohorts<-function(data, activity_type){
     mutate(number_of_cohorts = rowSums(pick(1:29), na.rm = TRUE))|>
     mutate(number_of_cohorts=number_of_cohorts-1)|>
     mutate(number_of_cohorts=ifelse(number_of_cohorts>4, "5+", number_of_cohorts))|>
-    summarise(activity=sum(episodes), .by=c(number_of_cohorts))
+    summarise(activity=sum({{activity_type}}), .by=c(number_of_cohorts))
   
   data2<-  if(!0 %in% data2$number_of_cohorts){
     add_row(data2, number_of_cohorts="0", activity=0)
@@ -168,14 +170,14 @@ plotting_barchart_number_of_cohorts<-function(data, activity_type){
 
   data2|>
     ggplot(aes(x=number_of_cohorts, y=activity))+
-    geom_bar(stat="identity", fill="#f9bf07")+
+    geom_bar(stat="identity" , fill=factor(ifelse(data2$number_of_cohorts=="0","#686f73","#f9bf07")))+
     su_theme()+
     theme(axis.text=element_text(size=11),
           axis.title=element_text(size=12))+
     labs(y="Number",
          x="Number of Cohorts",
          title=NULL)+
-    geom_text(aes(label=paste0(scales::comma(activity), ' \n(',percentage, '%)')), vjust=-0.2, size=3)+
+    geom_text(aes(label=paste0(scales::comma(activity), ' \n(',percentage, '%)')), vjust=-0.2, size=2.7)+
     scale_y_continuous(limits=c(0, max(data2$activity)*1.2), expand=c(0,0), labels = label_comma())
   
   
