@@ -192,7 +192,11 @@ targets::tar_read(rates_per_pop_sex_frail) |>
 
 :::
 
-### LOS
+### Admission Characteristics
+
+:::panel-tabset
+
+#### LOS
 
 ```{r}
 #| label: tbl-perc_frail_los
@@ -208,7 +212,7 @@ targets::tar_read(perc_spells_frail_los) |>
   get_perc_spells_by_group_plot("los_range")
 ```
 
-### Specialty
+#### Specialty
 
 ```{r}
 #| label: tbl-perc_frail_mainspecf
@@ -226,6 +230,8 @@ frail_specialties |>
   dplyr::select(specialty, spells, perc) |>
   get_table_perc() 
 ```
+
+:::
 
 ## Cohort overlap
 
