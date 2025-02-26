@@ -4,7 +4,7 @@
 #' Get the percentage of mitigable spells for a mitigator.
 #'
 #' @param activity_type Either `"emergency"` or `"elective"`.
-#' @param condition An string containing the expression needed to filter for a 
+#' @param condition A string containing the expression needed to filter for a 
 #' mitigator or set of mitigators. 
 #' @param totals A dataframe containing the total beddays and episodes for 2023-24.
 #' @param connection The Databricks connection.
@@ -57,7 +57,7 @@ get_perc_spells_beddays <- function(activity_type,
 #' spells by group.
 #'
 #' @param group A string of the group that the table is for.
-#' @param condition An string containing the expression needed to filter for a 
+#' @param condition A string containing the expression needed to filter for a 
 #' mitigator or set of mitigators. 
 #' @param connection The Databricks connection.
 #'
@@ -105,14 +105,14 @@ get_perc_spells_by_group_plot <- function(data, col_name) {
   plot <- data |>
     order_levels_of_factors() |>
     ggplot2::ggplot(ggplot2::aes(!!rlang::sym(col_name), 
-                                 perc, 
-                                 fill = !!rlang::sym(col_name))) +
+                                 perc,
+                                 fill = 'bars_color')) +
     ggplot2::geom_col() +
+    ggplot2::scale_fill_manual(values = c('bars_color' = "#f9bf07"), 
+                               guide = 'none') +
     StrategyUnitTheme::su_theme() +
-    StrategyUnitTheme::scale_fill_su() +
     ggplot2::labs(x = col_name_title, 
-                  y = "Percentage of mitigable spells", 
-                  fill = col_name_title)
+                  y = "Percentage of mitigable spells")
   
   return(plot)
 }
@@ -142,7 +142,7 @@ get_table_perc <- function(data) {
 #' Get rates per population of spells per group.
 #'
 #' #' @param group A string of the group that the table is for.
-#' @param condition An string containing the expression needed to filter for a 
+#' @param condition A string containing the expression needed to filter for a 
 #' mitigator or set of mitigators. 
 #' @param population A dataframe of the population by group.
 #' @param connection The Databricks connection.
@@ -197,17 +197,17 @@ get_rates_per_pop_plot <- function(data, col_name) {
   plot <- data |>
     order_levels_of_factors() |>
     ggplot2::ggplot(ggplot2::aes(!!rlang::sym(col_name),
-                                 value, 
-                                 fill = !!rlang::sym(col_name))) +
+                                 value,
+                                 fill = 'bars_color')) +
     ggplot2::geom_col() +
+    ggplot2::scale_fill_manual(values = c('bars_color' = "#f9bf07"), 
+                               guide = 'none') +
     StrategyUnitTheme::su_theme() +
-    StrategyUnitTheme::scale_fill_su() +
     ggplot2::geom_errorbar(ggplot2::aes(ymin = lowercl, ymax = uppercl), 
                            position = "dodge", 
                            width = 0.25)  +
     ggplot2::labs(x = col_name_title, 
-                  y = "Rate per 100,000 population", 
-                  fill = col_name_title)
+                  y = "Rate per 100,000 population")
   
   return(plot)
 }
@@ -229,4 +229,20 @@ get_rates_per_pop_table <- function(data){
     flextable::delete_part(part = "footer")
   
   return(table)
+}
+
+# Top ten specialties ----------------------------------------------------------
+#' Get the top ten specialties for a mitigator.
+#'
+#' @param condition A string containing the expression needed to filter for a 
+#' mitigator or set of mitigators. 
+#' @param key The specialty key.
+#'
+#' @return A dataframe.
+get_top_ten_specialties <- function(condition, key) {
+  get_perc_spells_by_group("mainspef", condition) |>
+    dplyr::left_join(key, by = c("mainspef" = "dd_code")) |>
+    dplyr::arrange(desc(spells)) |>
+    dplyr::slice(1:10) |>
+    dplyr::select(specialty, spells, perc)
 }
