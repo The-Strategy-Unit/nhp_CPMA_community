@@ -105,11 +105,12 @@ get_perc_spells_by_group_plot <- function(data, col_name) {
   plot <- data |>
     order_levels_of_factors() |>
     ggplot2::ggplot(ggplot2::aes(!!rlang::sym(col_name), 
-                                 perc, 
-                                 fill = !!rlang::sym(col_name))) +
+                                 perc,
+                                 fill = 'bars_color')) +
     ggplot2::geom_col() +
+    ggplot2::scale_fill_manual(values = c('bars_color' = "#f9bf07"), 
+                               guide = 'none') +
     StrategyUnitTheme::su_theme() +
-    StrategyUnitTheme::scale_fill_su() +
     ggplot2::labs(x = col_name_title, 
                   y = "Percentage of mitigable spells", 
                   fill = col_name_title)
@@ -197,11 +198,12 @@ get_rates_per_pop_plot <- function(data, col_name) {
   plot <- data |>
     order_levels_of_factors() |>
     ggplot2::ggplot(ggplot2::aes(!!rlang::sym(col_name),
-                                 value, 
-                                 fill = !!rlang::sym(col_name))) +
+                                 value,
+                                 fill = 'bars_color')) +
     ggplot2::geom_col() +
+    ggplot2::scale_fill_manual(values = c('bars_color' = "#f9bf07"), 
+                               guide = 'none') +
     StrategyUnitTheme::su_theme() +
-    StrategyUnitTheme::scale_fill_su() +
     ggplot2::geom_errorbar(ggplot2::aes(ymin = lowercl, ymax = uppercl), 
                            position = "dodge", 
                            width = 0.25)  +
