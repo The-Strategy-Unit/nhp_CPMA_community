@@ -88,6 +88,11 @@ list(
                dplyr::summarise(pop = sum(august_2022), .by = imd_decile) |>
                dplyr::rename(imd19_decile = imd_decile)),
   
+  tar_target(age_sex_standardised_rates,
+             generating_age_sex_standardised_rates(numbers_over_time, icb_population_data, standard_england_pop_2021_census)
+               ),
+  
+  
   # Descriptive analysis -------------------------------------------------------
   
   ## Overview of mitigator -----------------------------------------------------
