@@ -116,7 +116,7 @@ plot_of_standardised_rates_over_time<-function(data, mitigator){
     labs(y="Standardised rate per 100,000",
          x=NULL,
          title=NULL)+ 
-    scale_y_continuous(expand=c(0,0), limits=c(0,max(tdata1$value)*1.05), labels = label_comma())
+    scale_y_continuous(expand=c(0,0), limits=c(0,max(data1$value)*1.05), labels = label_comma())
   
   
   }

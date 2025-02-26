@@ -12,7 +12,11 @@ tar_option_set(packages = c(
   "readxl",
   "sparklyr",
   "tibble",
-  "tidyr"
+  "tidyr",
+  "ComplexUpset",
+  "forcats",
+  "plotly",
+ "scales"
 ))
 
 # Connection to Databricks
@@ -167,7 +171,18 @@ list(
     total_cohort_numbers,
     Formatting_data_for_cohort_overlap("sl_af_describing_mitigators_final_2324_sex")
   ),
+ 
+ tar_target(
+   upset_plot_frail_elderly_high_episodes,
+   plot_upset_plot(total_cohort_numbers, episodes)
+ ),
 
+ 
+ tar_target(
+   upset_plot_frail_elderly_high_beddays,
+   plot_upset_plot(total_cohort_numbers, beddays)
+ ),
+ 
  # Trends analysis -------------------------------------------------------------
 
 tar_target(
