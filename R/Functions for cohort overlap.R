@@ -154,9 +154,11 @@ plotting_barchart_number_of_cohorts<-function(data, activity_type){
   
   data2<-data|>
     mutate(number_of_cohorts = rowSums(pick(1:29), na.rm = TRUE))|>
+    mutate(number_of_cohorts=number_of_cohorts-1)|>
     mutate(number_of_cohorts=ifelse(number_of_cohorts>4, "5+", number_of_cohorts))|>
     summarise(activity=sum({{activity_type}}), .by=c(number_of_cohorts))|>
-    mutate(percentage=round(activity/(sum(activity))*100),1)
+    mutate(percentage=round(activity/(sum(activity))*100),1)|>
+    add_row()
   
 
   data2|>

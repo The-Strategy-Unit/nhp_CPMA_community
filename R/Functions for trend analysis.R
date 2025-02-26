@@ -98,25 +98,22 @@ data2|>
 }
 
 
-plot_of_number_over_time_icb<-function(data, mitigator, activity_type){
+plot_of_number_over_time_icb<-function(data, mitigator, activity_type, pop_data){
   
   data|>
     filter(cohorts==mitigator)|>
     filter(fyear!=201415)|>
-    group_by(year, icb)|>
-    summarise(activity=sum({{activity_type}}))|>
-  plot_ly(data, x = ~year, y = ~activity, type = 'scatter', mode = 'lines',
-            line = list(color = 'rgb(205, 12, 24)', width = 4)) 
-    
-    ggplot()+
-    geom_line(aes(y=activity, x=year, group=icb), linewidth=1.4)+
-    su_theme()+
-    theme(axis.text=element_text(size=12),
-          axis.title.y=element_text(size=14))+
-    labs(y="Number",
-         x=NULL,
-         title=NULL)+ 
-    scale_y_continuous(expand=c(0,0), limits=c(0,NA), labels = label_comma())
+    group_by( icb, year)|>
+    summarise(activity=sum(activity_type))|>
+    left_join(pop_data[,c("icb24cdh", "icb_2024_name")], by=c("icb"="icb24cdh"))|>
+    group_by(icb_2024_name)|>
+    highlight_key(~icb_2024_name) |>
+    plot_ly( x = ~year, y = ~activity, type = 'scatter',  mode = 'lines', text=~icb_2024_name,  line = list(color = "#686f73",  width = 1.5))|>
+    highlight(~icb_2024_name, on = "plotly_click", off="plotly_doubleclick", dynamic=TRUE)|>
+    layout(
+      xaxis = list(title=list(text='Year', font = list(size = 20), standoff = 25), showticklabels = TRUE, showline = TRUE, showgrid = F , linewidth=2),
+      yaxis = list(title = 'Number', showline = TRUE, showgrid = F , linewidth=2 ,zeroline = FALSE, tickformat = "digits")
+    )
   
   
 }

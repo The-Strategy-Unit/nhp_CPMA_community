@@ -229,8 +229,8 @@ frail_specialties |>
 
 ## Cohort overlap
 
-### Number and proportion within multiple cohorts
-This gives the number and proportion of the Frail Elderly High admissions/beddays that are included in multiple mitigatable cohorts. Due to the definition of this mitgator all of those in this cohort are also in the Emergency Elderly cohort. Half of this cohort are included 5 or more additional mitigator cohorts.
+### Number and proportion within multiple other cohorts
+This gives the number and proportion of the Frail Elderly High admissions/beddays that are included in other multiple mitigatable cohorts. Due to the definition of this mitigator all of those in this cohort are also in the Emergency Elderly cohort, and therefore the number included in no other cohorts is zero. One quarter of this cohort are included 5 or more additional mitigator cohorts.
 
 ::: panel-tabset
 
@@ -259,8 +259,8 @@ plotting_barchart_number_of_cohorts(total_cohort_numbers, beddays)
 
 
 
-### Number and proportion included in other mitigatable activity cohorts
-This shows the numbers and proportion of Elderly Frail High admissions/beddays, which are also found in each of the other mitgator cohorts. For example all the Elderly Frail High cohort are also in the Emergency Elderly cohort, and 63% of this cohort are in the Alcohol Partially Attributable Chronic cohort.
+### Inclusion within other mitigatable activity cohorts
+This shows whether the activity within the Elderly Frail High activity is also included in other mitigator cohorts, including the number and precentage of Elderly Frail High activity that is also within the other mitigator cohorts. For example, Elderly Frail High cohort  overlaps with nearly all of the other mitigator cohorts, all the Elderly Frail High cohort activity is also included in the Emergency Elderly cohort, and 63% of this cohort are in the Alcohol Partially Attributable Chronic cohort.
 
 ::: panel-tabset
 
@@ -321,7 +321,7 @@ plot_upset_plot(total_cohort_numbers, beddays)
 ::: panel-tabset
 
 #### Admissions
-```{r, fig.width=9, fig.height=5}
+```{r, fig.width=8, fig.height=4}
 #| label: fig-number_trends_spells_england
 #| fig-cap: The total number of admissions for the Frail Elderly High mitigatable activity cohort in England over the last 10 years. 
 numbers_over_time<-tar_read(numbers_over_time)
@@ -331,7 +331,7 @@ plot_of_number_over_time(numbers_over_time, "frail_elderly_high", episodes)
 ```
 #### Beddays
 
-```{r, fig.width=9, fig.height=5}
+```{r, fig.width=8, fig.height=4}
 #| label: fig-number_trends_beddays_england
 #| fig-cap: The total number of beddays for the Frail Elderly High mitigatable activity cohort in England over the last 10 years. 
 plot_of_number_over_time(numbers_over_time, "frail_elderly_high", beddays)
@@ -342,7 +342,7 @@ plot_of_number_over_time(numbers_over_time, "frail_elderly_high", beddays)
 #### By proportion of emergency activity 
 ::: panel-tabset
 #### Admissions
-```{r, fig.width=9, fig.height=5}
+```{r, fig.width=8, fig.height=4}
 #| label: fig-percent_trends_spells_england
 #| fig-cap: The percentage of total emergency admissions that are for Frail Elderly High potentially mitigatable activity in England over the last 10 years. 
 
@@ -352,7 +352,7 @@ plot_of_percentage_over_time(denominator_over_time, numbers_over_time, "frail_el
 
 ```
 #### Beddays
-```{r, fig.width=9, fig.height=5}
+```{r, fig.width=8, fig.height=4}
 #| label: fig-percent_trends_beddays_england
 #| fig-cap: The percentage of total emergency beddays that are for Frail Elderly High potentially mitigatable activity in England over the last 10 years. 
 
@@ -368,7 +368,7 @@ plot_of_percentage_over_time(denominator_over_time, numbers_over_time, "frail_el
 ::: panel-tabset
 
 #### Admissions
-```{r}
+```{r, fig.width=8, fig.height=4}
 
 
 
@@ -388,12 +388,15 @@ plot_of_percentage_over_time(denominator_over_time, numbers_over_time, "frail_el
 ::: panel-tabset
 
 #### Admissions
-```{r, fig.width=9, fig.height=5}
+```{r, fig.width=8, fig.height=4}
 #| label: fig-number_trends_spells_icb
 #| fig-cap: The number of admissions for the Frail Elderly High mitigatable activity cohort by ICB over the last 9 years. 
 
+icb_population_data<-tar_read(icb_population_data)
+
 numbers_over_time|>
     filter(cohorts=="frail_elderly_high")|>
+    filter(fyear!=201415)|>
     group_by( icb, year)|>
     summarise(activity=sum(episodes))|>
   left_join(tar_read(icb_population_data)[,c("icb24cdh", "icb_2024_name")], by=c("icb"="icb24cdh"))|>
@@ -403,14 +406,14 @@ plot_ly( x = ~year, y = ~activity, type = 'scatter',  mode = 'lines', text=~icb_
   highlight(~icb_2024_name, on = "plotly_click", off="plotly_doubleclick", dynamic=TRUE)|>
    layout(
          xaxis = list(title=list(text='Year', font = list(size = 20), standoff = 25), showticklabels = TRUE, showline = TRUE, showgrid = F , linewidth=2),
-         yaxis = list(title = 'Number', showline = TRUE, showgrid = F , linewidth=2 ,zeroline = FALSE, tickformat = "digits")
+         yaxis = list(title = 'Number', showline = TRUE, showgrid = F , linewidth=2 ,zeroline = FALSE, tickformat = "digits", anchor="free", shift=100)
          )
 
 
 ```
 #### Beddays
 
-```{r, fig.width=9, fig.height=5}
+```{r, fig.width=8, fig.height=4}
 #| label: fig-number_trends_beddays_icb
 #| fig-cap: The number of beddays for the Frail Elderly High mitigatable activity cohort by ICB over the last 9 years. 
 
@@ -421,14 +424,14 @@ plot_ly( x = ~year, y = ~activity, type = 'scatter',  mode = 'lines', text=~icb_
 #### By proportion of emergency activity 
 ::: panel-tabset
 #### Admissions
-```{r, fig.width=9, fig.height=5}
+```{r, fig.width=8, fig.height=4}
 #| label: fig-percent_trends_spells_icb
 #| fig-cap: The percentage of total emergency admissions that are for Frail Elderly High potentially mitigatable activity by ICB over the last 9 years. 
 
 
 ```
 #### Beddays
-```{r, fig.width=9, fig.height=5}
+```{r, fig.width=8, fig.height=4}
 #| label: fig-percent_trends_beddays_icb
 #| fig-cap: The percentage of total emergency beddays that are for Frail Elderly High potentially mitigatable activity by ICB over the last 9 years. 
 
