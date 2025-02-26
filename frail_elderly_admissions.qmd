@@ -309,7 +309,8 @@ These are the most common cohort combinations for the Elderly Frail High cohort.
 ```{r, fig.width=10, fig.height=6}
 #| label: fig-upset_plot_frail_spells
 #| fig-cap: The 15 most common mitigator cohort overlaps for Frail Elderly spells (2023/24).
-tar_read(upset_plot_frail_elderly_high_episodes)
+
+plot_upset_plot(total_cohort_numbers, episodes)
 
 ```
 
@@ -317,8 +318,8 @@ tar_read(upset_plot_frail_elderly_high_episodes)
 ```{r, fig.width=10, fig.height=6}
 #| label: fig-upset_plot_frail_beddays
 #| fig-cap: The 15 most common mitigator cohort overlaps for Frail Elderly beddays (2023/24).
-tar_read(upset_plot_frail_elderly_high_beddays)
 
+plot_upset_plot(total_cohort_numbers, beddays)
 ```
 
 :::
