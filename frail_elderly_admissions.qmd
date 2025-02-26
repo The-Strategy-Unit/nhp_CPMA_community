@@ -224,11 +224,28 @@ specialty_key <- targets::tar_read(specialty_key) |>
 frail_specialties <- targets::tar_read(perc_spells_frail_mainspef) |>
   dplyr::left_join(specialty_key, by = c("mainspef" = "dd_code"))
 
-frail_specialties |>
+frail_specialties_top_ten <- frail_specialties |>
   dplyr::arrange(desc(spells)) |>
   dplyr::slice(1:10) |>
-  dplyr::select(specialty, spells, perc) |>
+  dplyr::select(specialty, spells, perc) 
+
+frail_specialties_top_ten |>
   get_table_perc() 
+```
+
+```{r}
+#| label: fig-perc_frail_mainspecf
+#| fig-cap: Top 10 specialties of mitigable activity for Frail and Elderly Admissions in 2023-24.
+frail_specialties_top_ten |>
+  ggplot2::ggplot(ggplot2::aes(perc, 
+                               reorder(specialty, perc),
+                               fill = 'bars_color')) + 
+  ggplot2::geom_col() +
+  ggplot2::scale_fill_manual(values = c('bars_color' = "#f9bf07"), 
+                             guide = 'none') +
+  StrategyUnitTheme::su_theme() +
+    ggplot2::labs(x = "Percentage of mitigable spells", 
+                  y = "Specialty")
 ```
 
 :::
