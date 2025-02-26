@@ -90,7 +90,7 @@ plot_upset_plot<-function(dataset, activity_type){
   size = get_size_mode('exclusive_intersection')
   
   
-  ComplexUpset::upset(upset_plot_data, cohorts, name='Cohorts', 
+  plot<-ComplexUpset::upset(upset_plot_data, cohorts, name='Cohorts', 
                       width_ratio=0.1, n_intersections=15,
                       set_sizes=FALSE,
                       keep_empty_groups=FALSE,
@@ -114,7 +114,7 @@ plot_upset_plot<-function(dataset, activity_type){
                             scale_fill_manual(values=c('bars_color'="#f9bf07"), guide='none')+
                             scale_y_continuous(limits=c(0,max_value$max*1.2), labels = label_comma()
                             ))))
-  
+  return(plot)
   
 }
 
@@ -175,7 +175,7 @@ plotting_barchart_number_of_cohorts<-function(data, activity_type){
     theme(axis.text=element_text(size=11),
           axis.title=element_text(size=12))+
     labs(y="Number",
-         x="Number of Cohorts",
+         x="Number of other cohorts the activity is part of",
          title=NULL)+
     geom_text(aes(label=paste0(scales::comma(activity), ' \n(',percentage, '%)')), vjust=-0.2, size=2.7)+
     scale_y_continuous(limits=c(0, max(data2$activity)*1.2), expand=c(0,0), labels = label_comma())

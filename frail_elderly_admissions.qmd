@@ -240,8 +240,10 @@ targets::tar_read(frail_specialties_top_ten) |>
 
 ## Cohort overlap
 
+Many of the spells and beddays recorded include activity which falls into more than one mitigator cohort. Therefore we aim to understand which cohorts the Frail Elderly High cohort overlaps with and the extend of that overlap.
+
 ### Number and proportion within multiple other cohorts
-This gives the number and proportion of the Frail Elderly High admissions/beddays that are included in other multiple mitigatable cohorts. Due to the definition of this mitigator all of those in this cohort are also in the Emergency Elderly cohort, and therefore the number included in no other cohorts is zero. One quarter of this cohort are included 5 or more additional mitigator cohorts.
+For the Frail Elderly High activity we show how much of the activity is included in mulitple other mitigable cohorts. Due to the definition of this mitigator all of those in this cohort are also in the Emergency Elderly cohort, so none of this group are solely in the Frail Elderly High cohort. One quarter of this cohort are included 5 or more additional mitigator cohorts.
 
 ::: panel-tabset
 
@@ -271,7 +273,9 @@ plotting_barchart_number_of_cohorts(total_cohort_numbers, beddays)
 
 
 ### Inclusion within other mitigatable activity cohorts
-This shows whether the activity within the Elderly Frail High activity is also included in other mitigator cohorts, including the number and precentage of Elderly Frail High activity that is also within the other mitigator cohorts. For example, Elderly Frail High cohort  overlaps with nearly all of the other mitigator cohorts, all the Elderly Frail High cohort activity is also included in the Emergency Elderly cohort, and 63% of this cohort are in the Alcohol Partially Attributable Chronic cohort.
+This shows whether the activity within the Elderly Frail High activity is also included in other mitigator cohorts, including where this occurs the number and percentage of Elderly Frail High activity that is also included within other mitigator cohorts. 
+
+For example, Elderly Frail High cohort overlaps with all but 2 of the other mitigator cohorts. All the Elderly Frail High cohort activity is also included in the Emergency Elderly cohort, and 63% of this cohort are in the Alcohol Partially Attributable Chronic cohort.
 
 ::: panel-tabset
 
@@ -305,7 +309,7 @@ These are the most common cohort combinations for the Elderly Frail High cohort.
 ```{r, fig.width=10, fig.height=6}
 #| label: fig-upset_plot_frail_spells
 #| fig-cap: The 15 most common mitigator cohort overlaps for Frail Elderly spells (2023/24).
-plot_upset_plot(total_cohort_numbers, episodes)
+tar_read(upset_plot_frail_elderly_high_episodes)
 
 ```
 
@@ -313,14 +317,11 @@ plot_upset_plot(total_cohort_numbers, episodes)
 ```{r, fig.width=10, fig.height=6}
 #| label: fig-upset_plot_frail_beddays
 #| fig-cap: The 15 most common mitigator cohort overlaps for Frail Elderly beddays (2023/24).
-plot_upset_plot(total_cohort_numbers, beddays)
+tar_read(upset_plot_frail_elderly_high_beddays)
 
 ```
 
 :::
-
-
-
 
 
 ## Trend Analysis
@@ -380,12 +381,26 @@ plot_of_percentage_over_time(denominator_over_time, numbers_over_time, "frail_el
 
 #### Admissions
 ```{r, fig.width=8, fig.height=4}
+#| label: fig-stardardised_trends_spells_england
+#| fig-cap: Age and sex standardised rate of admissions for Frail Elderly High potentially mitigatable activity in England over the last 10 years. 
 
+age_sex_standardised_rates_episodes<-tar_read(age_sex_standardised_rates_episodes)
 
+plot_of_standardised_rates_over_time(age_sex_standardised_rates_episodes,"frail_elderly_high")
 
 ```
 
 #### Beddays
+```{r, fig.width=8, fig.height=4}
+#| label: fig-stardardised_trends_beddays_england
+#| fig-cap: Age and sex standardised rate of beddays for Frail Elderly High potentially mitigatable activity in England over the last 10 years.
+
+age_sex_standardised_rates_beddays<-tar_read(age_sex_standardised_rates_beddays)
+
+plot_of_standardised_rates_over_time(age_sex_standardised_rates_beddays,"frail_elderly_high")
+
+```
+
 :::
 
 
