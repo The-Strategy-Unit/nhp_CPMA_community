@@ -156,9 +156,14 @@ plotting_barchart_number_of_cohorts<-function(data, activity_type){
     mutate(number_of_cohorts = rowSums(pick(1:29), na.rm = TRUE))|>
     mutate(number_of_cohorts=number_of_cohorts-1)|>
     mutate(number_of_cohorts=ifelse(number_of_cohorts>4, "5+", number_of_cohorts))|>
-    summarise(activity=sum({{activity_type}}), .by=c(number_of_cohorts))|>
-    mutate(percentage=round(activity/(sum(activity))*100),1)|>
-    add_row()
+    summarise(activity=sum(episodes), .by=c(number_of_cohorts))
+  
+  data2<-  if(!0 %in% data2$number_of_cohorts){
+    add_row(data2, number_of_cohorts="0", activity=0)
+  }
+  
+  data2<- data2 |>
+    mutate(percentage=round(activity/(sum(activity))*100,1))
   
 
   data2|>
