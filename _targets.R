@@ -45,6 +45,13 @@ list(
     )
   ),
   
+  tar_target(
+    standard_england_pop_2021_census,
+    formatting_standard_england_population(
+      "Z:/Strategic Analytics/Projects 2025/Describing and Quantifying the NHP mitigators/population_data/2021 census data for England.csv"
+    )
+  ),
+  
   tar_target(pop_by_sex,
              icb_population_data |>
                dplyr::filter(fyear == "2023/24") |>

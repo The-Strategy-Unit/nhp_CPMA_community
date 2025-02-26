@@ -132,11 +132,16 @@ wrangling_icb_population_data<-function(data, data2){
   icb_population_data<-icb_population_data|>
     left_join(icb_codes_names[,c("icb24cd", "icb24cdh")], 
               by=c("icb_2024_code"="icb24cd") )|>
-    select(icb24cdh, icb_2024_code, icb_2024_name, fyear, age_range, sex, icb_population)
+    select(icb24cdh, icb_2024_code, icb_2024_name, fyear, age_range, sex, icb_population)|>
+    mutate(sex=as.character(sex))
   
 }
 
 
+# Standard pop for England 2021 census https://www.ons.gov.uk/peoplepopulationandcommunity/populationandmigration/populationestimates/bulletins/populationandhouseholdestimatesenglandandwales/census2021
 
-
+formatting_standard_england_population<-function(data){
   
+  standard_england_pop_2021_census<-read.csv(data)
+  
+}  

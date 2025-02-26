@@ -10,6 +10,7 @@ library("forcats")
 library("ComplexUpset")
 library("scales")
 library("targets")
+library("plotly")
 
 source("R/general.R")
 source("R/descriptive_analyses.R")
@@ -323,7 +324,7 @@ plot_upset_plot(total_cohort_numbers, beddays)
 #### Admissions
 ```{r, fig.width=9, fig.height=5}
 #| label: fig-number_trends_spells_england
-#| fig-cap: The number of admissions for the Frail Elderly High mitigatable activity cohort over the last 10 years. 
+#| fig-cap: The total number of admissions for the Frail Elderly High mitigatable activity cohort in England over the last 10 years. 
 numbers_over_time<-tar_read(numbers_over_time)
 
 plot_of_number_over_time(numbers_over_time, "frail_elderly_high", episodes)
@@ -333,7 +334,7 @@ plot_of_number_over_time(numbers_over_time, "frail_elderly_high", episodes)
 
 ```{r, fig.width=9, fig.height=5}
 #| label: fig-number_trends_beddays_england
-#| fig-cap: The number of beddays for the Frail Elderly High mitigatable activity cohort over the last 10 years. 
+#| fig-cap: The total number of beddays for the Frail Elderly High mitigatable activity cohort in England over the last 10 years. 
 plot_of_number_over_time(numbers_over_time, "frail_elderly_high", beddays)
 
 ```
@@ -344,7 +345,7 @@ plot_of_number_over_time(numbers_over_time, "frail_elderly_high", beddays)
 #### Admissions
 ```{r, fig.width=9, fig.height=5}
 #| label: fig-percent_trends_spells_england
-#| fig-cap: The percentage of total emergency admissions that are for Frail Elderly High potentially mitigatable acitvity over the last 10 years. 
+#| fig-cap: The percentage of total emergency admissions that are for Frail Elderly High potentially mitigatable activity in England over the last 10 years. 
 
 denominator_over_time<-tar_read(denominator_over_time)
 
@@ -354,9 +355,95 @@ plot_of_percentage_over_time(denominator_over_time, numbers_over_time, "frail_el
 #### Beddays
 ```{r, fig.width=9, fig.height=5}
 #| label: fig-percent_trends_beddays_england
-#| fig-cap: The percentage of total emergency beddays that are for Frail Elderly High potentially mitigatable acitvity over the last 10 years. 
+#| fig-cap: The percentage of total emergency beddays that are for Frail Elderly High potentially mitigatable activity in England over the last 10 years. 
 
 plot_of_percentage_over_time(denominator_over_time, numbers_over_time, "frail_elderly_high", beddays, total_beddays_emergency)
+
+```
+
+:::
+
+
+#### Standardised rate over time
+
+::: panel-tabset
+
+#### Admissions
+```{r}
+
+test<-numbers_over_time|>
+  filter(fyear!=201415)|>
+  left_join(tar_read(icb_population_data), by=c("icb"="icb24cdh", "year"="fyear", "age_range", "sex"))|>
+  left_join(tar_read(standard_england_pop_2021_census), by=c("age_range", "sex"))
+  group_by(icb_2024_name) |>
+     PHEindicatormethods::phe_dsr(x = episodes,    # observed number of events
+                                  n = icb_population,  # non-standard pops for each stratum
+                                  stdpop = pop,     # standard populations for England for each stratum
+                                  stdpoptype = "field" ) #standard pop is in the data
+  
+
+```
+
+#### Beddays
+:::
+
+
+:::
+
+### ICB
+
+::: panel-tabset
+
+#### Number over time
+::: panel-tabset
+
+#### Admissions
+```{r, fig.width=9, fig.height=5}
+#| label: fig-number_trends_spells_icb
+#| fig-cap: The number of admissions for the Frail Elderly High mitigatable activity cohort by ICB over the last 9 years. 
+
+numbers_over_time|>
+    filter(cohorts=="frail_elderly_high")|>
+    group_by( icb, year)|>
+    summarise(activity=sum(episodes))|>
+  left_join(icb_population_data[,c("icb24cdh", "icb_2024_name")], by=c("icb"="icb24cdh"))|>
+ group_by(icb_2024_name)|>
+  highlight_key(~icb_2024_name) |>
+plot_ly( x = ~year, y = ~activity, type = 'scatter',  mode = 'lines', text=~icb_2024_name,  line = list(color = "#686f73",  width = 1.5))|>
+  highlight(~icb_2024_name, on = "plotly_click", off="plotly_doubleclick", dynamic=TRUE)|>
+   layout(
+         xaxis = list(title=list(text='Year', font = list(size = 20), standoff = 25), showticklabels = TRUE, showline = TRUE, showgrid = F , linewidth=2),
+         yaxis = list(title = 'Number', showline = TRUE, showgrid = F , linewidth=2 ,zeroline = FALSE, tickformat = "digits")
+         )
+
+
+```
+#### Beddays
+
+```{r, fig.width=9, fig.height=5}
+#| label: fig-number_trends_beddays_icb
+#| fig-cap: The number of beddays for the Frail Elderly High mitigatable activity cohort by ICB over the last 9 years. 
+plot_of_number_over_time_icb(numbers_over_time, "frail_elderly_high", beddays)
+
+```
+:::
+
+#### By proportion of emergency activity 
+::: panel-tabset
+#### Admissions
+```{r, fig.width=9, fig.height=5}
+#| label: fig-percent_trends_spells_icb
+#| fig-cap: The percentage of total emergency admissions that are for Frail Elderly High potentially mitigatable activity by ICB over the last 9 years. 
+
+plot_of_percentage_over_time_icb(denominator_over_time, numbers_over_time, "frail_elderly_high", episodes, total_episodes_emergency)
+
+```
+#### Beddays
+```{r, fig.width=9, fig.height=5}
+#| label: fig-percent_trends_beddays_icb
+#| fig-cap: The percentage of total emergency beddays that are for Frail Elderly High potentially mitigatable activity by ICB over the last 9 years. 
+
+plot_of_percentage_over_time_icb(denominator_over_time, numbers_over_time, "frail_elderly_high", beddays, total_beddays_emergency)
 
 ```
 
@@ -373,9 +460,7 @@ plot_of_percentage_over_time(denominator_over_time, numbers_over_time, "frail_el
 #### Beddays
 :::
 
-
 :::
-
 ## Comparative Analysis
 
 ### ICB
