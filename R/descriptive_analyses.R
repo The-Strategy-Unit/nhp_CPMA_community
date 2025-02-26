@@ -4,7 +4,7 @@
 #' Get the percentage of mitigable spells for a mitigator.
 #'
 #' @param activity_type Either `"emergency"` or `"elective"`.
-#' @param condition An string containing the expression needed to filter for a 
+#' @param condition A string containing the expression needed to filter for a 
 #' mitigator or set of mitigators. 
 #' @param totals A dataframe containing the total beddays and episodes for 2023-24.
 #' @param connection The Databricks connection.
@@ -57,7 +57,7 @@ get_perc_spells_beddays <- function(activity_type,
 #' spells by group.
 #'
 #' @param group A string of the group that the table is for.
-#' @param condition An string containing the expression needed to filter for a 
+#' @param condition A string containing the expression needed to filter for a 
 #' mitigator or set of mitigators. 
 #' @param connection The Databricks connection.
 #'
@@ -142,7 +142,7 @@ get_table_perc <- function(data) {
 #' Get rates per population of spells per group.
 #'
 #' #' @param group A string of the group that the table is for.
-#' @param condition An string containing the expression needed to filter for a 
+#' @param condition A string containing the expression needed to filter for a 
 #' mitigator or set of mitigators. 
 #' @param population A dataframe of the population by group.
 #' @param connection The Databricks connection.
@@ -229,4 +229,20 @@ get_rates_per_pop_table <- function(data){
     flextable::delete_part(part = "footer")
   
   return(table)
+}
+
+# Top ten specialties ----------------------------------------------------------
+#' Get the top ten specialties for a mitigator.
+#'
+#' @param condition A string containing the expression needed to filter for a 
+#' mitigator or set of mitigators. 
+#' @param key The specialty key.
+#'
+#' @return A dataframe.
+get_top_ten_specialties <- function(condition, key) {
+  get_perc_spells_by_group("mainspef", condition) |>
+    dplyr::left_join(key, by = c("mainspef" = "dd_code")) |>
+    dplyr::arrange(desc(spells)) |>
+    dplyr::slice(1:10) |>
+    dplyr::select(specialty, spells, perc)
 }

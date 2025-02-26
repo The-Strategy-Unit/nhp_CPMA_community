@@ -127,7 +127,7 @@ list(
   ## Percentage breakdowns ----------------------------------------------------- 
   tarchetypes::tar_map(
     list(
-      group = c("age", "ethnicity", "icb", "imd", "los", "mainspef", "sex")
+      group = c("age", "ethnicity", "icb", "imd", "los", "sex")
     ),
     tar_target(
       perc_spells_frail,
@@ -150,7 +150,12 @@ list(
     specialty_url,
     r"{https://digital.nhs.uk/binaries/content/assets/website-assets/isce/dcb0028/0028452019codelistspecificationv1.2.xlsx}"
   ),
-  tar_target(specialty_key, scrape_xls(specialty_url, sheet = 3)),
+  tar_target(specialty_key, 
+             scrape_xls(specialty_url, sheet = 3) |>
+               dplyr::rename(specialty = main_specialty_title,
+                             specialty_group = group)),
+  tar_target(frail_specialties_top_ten,
+             get_top_ten_specialties("frail_elderly_high == 1", specialty_key)),
   
   # Cohort analysis ------------------------------------------------------------
   
