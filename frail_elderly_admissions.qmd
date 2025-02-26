@@ -130,7 +130,6 @@ targets::tar_read(perc_spells_frail_imd) |>
 #| label: fig-perc_frail_imd
 #| fig-cap: Mitigable activity for Frail and Elderly Admissions in 2023-24 by IMD decile.
 targets::tar_read(perc_spells_frail_imd) |>
-  dplyr::mutate(imd19_decile = factor(imd19_decile)) |>
   get_perc_spells_by_group_plot("imd19_decile")
 ```
 

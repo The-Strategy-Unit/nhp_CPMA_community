@@ -103,6 +103,7 @@ get_perc_spells_by_group_plot <- function(data, col_name) {
     format_as_title()
   
   plot <- data |>
+    order_levels_of_factors() |>
     ggplot2::ggplot(ggplot2::aes(!!rlang::sym(col_name), 
                                  perc, 
                                  fill = !!rlang::sym(col_name))) +
@@ -194,6 +195,7 @@ get_rates_per_pop_plot <- function(data, col_name) {
     format_as_title()
   
   plot <- data |>
+    order_levels_of_factors() |>
     ggplot2::ggplot(ggplot2::aes(!!rlang::sym(col_name),
                                  value, 
                                  fill = !!rlang::sym(col_name))) +
