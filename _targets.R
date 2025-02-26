@@ -45,6 +45,13 @@ list(
     )
   ),
   
+  tar_target(
+    standard_england_pop_2021_census,
+    formatting_standard_england_population(
+      "Z:/Strategic Analytics/Projects 2025/Describing and Quantifying the NHP mitigators/population_data/2021 census data for England.csv"
+    )
+  ),
+  
   tar_target(pop_by_sex,
              icb_population_data |>
                dplyr::filter(fyear == "2023/24") |>
@@ -145,5 +152,20 @@ list(
   tar_target(
     total_cohort_numbers,
     Formatting_data_for_cohort_overlap("sl_af_describing_mitigators_final_2324_sex")
-  )
+  ),
+
+ # Trends analysis -------------------------------------------------------------
+
+tar_target(
+  numbers_over_time,
+  Formatting_data_for_trends_analysis( "sl_af_describing_mitigators_fyear" )
+),
+
+
+tar_target(
+  denominator_over_time,
+  Formatting_data_for_trends_analysis_denominator( "sl_af_total_elective_emergency_activity" )
+)
+
+
 )
