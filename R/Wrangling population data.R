@@ -142,6 +142,26 @@ wrangling_icb_population_data<-function(data, data2){
 
 formatting_standard_england_population<-function(data){
   
-  standard_england_pop_2021_census<-read.csv(data)
+  standard_england_pop_2021_census<-read.csv(data)|>
+    mutate(sex=as.character(sex))
   
 }  
+
+# Age standardised dataset
+
+generating_age_sex_standardised_rates<-function(numbers_over_time, icb_pop, standard_pop){
+  
+  numbers_over_time|>
+    filter(fyear!=201415)|>
+    left_join(icb_pop, by=c("icb"="icb24cdh", "year"="fyear", "age_range", "sex"))|>
+    left_join(standard_pop, by=c("age_range", "sex"))|>
+    filter(!is.na(icb))|>
+    filter(age_range!="NA")|>
+    group_by(icb_2024_name, year, cohorts) |>
+    PHEindicatormethods::calculate_dsr(x = episodes,    # observed number of events
+                                       n = icb_population,  # non-standard pops for each stratum
+                                       stdpop = pop)    # standard populations for England for each stratum
+  
+
+  
+}
