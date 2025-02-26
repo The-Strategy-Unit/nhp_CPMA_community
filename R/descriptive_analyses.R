@@ -112,8 +112,7 @@ get_perc_spells_by_group_plot <- function(data, col_name) {
                                guide = 'none') +
     StrategyUnitTheme::su_theme() +
     ggplot2::labs(x = col_name_title, 
-                  y = "Percentage of mitigable spells", 
-                  fill = col_name_title)
+                  y = "Percentage of mitigable spells")
   
   return(plot)
 }
@@ -208,8 +207,7 @@ get_rates_per_pop_plot <- function(data, col_name) {
                            position = "dodge", 
                            width = 0.25)  +
     ggplot2::labs(x = col_name_title, 
-                  y = "Rate per 100,000 population", 
-                  fill = col_name_title)
+                  y = "Rate per 100,000 population")
   
   return(plot)
 }
