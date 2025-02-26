@@ -1,0 +1,17 @@
+# Methods
+
+NOTE: This chapter is NOT in the book yet. We will need to add it the `_quarto.yml` file once ready to share.
+
+## Descriptive analysis
+
+- Weighting by population
+  - For age and gender, used the icb opulation file already had
+  - For IMD used: https://www.ons.gov.uk/peoplepopulationandcommunity/populationandmigration/populationprojections/adhocs/15363monthlypopulationsbyindexofmultipledeprivationimddecileenglandjanuary2019toaugust2022 
+  - For ethnicity used: 
+    - https://www.ons.gov.uk/peoplepopulationandcommunity/culturalidentity/ethnicity/bulletins/ethnicgroupenglandandwales/census2021
+    - https://www.ons.gov.uk/datasets/TS021/editions/2021/versions/1/filter-outputs/d5d755dd-baf8-4634-82cd-dedbb544e09f?f=get-data#get-data
+    - Had to recode into NHS ethnic categories
+
+- Excluded NULLs
+
+
