@@ -147,21 +147,39 @@ formatting_standard_england_population<-function(data){
   
 }  
 
-# Age standardised dataset
+# Age standardised dataset by ICB
 
-generating_age_sex_standardised_rates<-function(numbers_over_time, icb_pop, standard_pop){
+generating_age_sex_standardised_rates<-function(data, icb_pop, standard_pop, activity_type){
   
-  numbers_over_time|>
+  data|>
     filter(fyear!=201415)|>
     left_join(icb_pop, by=c("icb"="icb24cdh", "year"="fyear", "age_range", "sex"))|>
     left_join(standard_pop, by=c("age_range", "sex"))|>
     filter(!is.na(icb))|>
     filter(age_range!="NA")|>
     group_by(icb_2024_name, year, cohorts) |>
-    PHEindicatormethods::calculate_dsr(x = episodes,    # observed number of events
+    rename(activity={{activity_type}})|>
+    PHEindicatormethods::calculate_dsr(x =activity,    # observed number of events
                                        n = icb_population,  # non-standard pops for each stratum
                                        stdpop = pop)    # standard populations for England for each stratum
   
 
+  
+}
+
+generating_england_age_sex_standardised_rates<-function(data, icb_pop, standard_pop, activity_type){
+  
+  data|>
+    filter(fyear!=201415)|>
+    left_join(icb_pop, by=c("icb"="icb24cdh", "year"="fyear", "age_range", "sex"))|>
+    left_join(standard_pop, by=c("age_range", "sex"))|>
+    filter(!is.na(icb))|>
+    filter(age_range!="NA")|>
+    group_by(year, cohorts) |>
+    PHEindicatormethods::calculate_dsr(x = {{activity_type}},    # observed number of events
+                                       n = icb_population,  # non-standard pops for each stratum
+                                       stdpop = pop)    # standard populations for England for each stratum
+  
+  
   
 }
