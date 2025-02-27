@@ -60,7 +60,7 @@ plot_upset_plot<-function(dataset, activity_type, filename){
   max_value<-data_aggregated|>
     mutate(max=max({{activity_type}}))
   
-  # Count of all mitigatable activity and disaggregate data
+  # Count of all mitigable activity and disaggregate data
   if(activity=="episodes"){
     all_mitigatable_activity<-sum(dataset$episodes)
     
@@ -81,15 +81,16 @@ plot_upset_plot<-function(dataset, activity_type, filename){
   number_columns<-ncol(data)-1
   
   #Generating the upset plot
+  upset_plot_data<-data
   
-  cohorts = colnames(data)[1:number_columns]
+  cohorts = colnames(upset_plot_data)[1:number_columns]
   
-  data[cohorts] = data[cohorts] == 1
+  upset_plot_data[cohorts] = upset_plot_data[cohorts] == 1
   
   size = get_size_mode('exclusive_intersection')
   
   
-  plot<-ComplexUpset::upset(data, cohorts, name='Cohorts', 
+  ComplexUpset::upset(upset_plot_data, cohorts, name='Cohorts', 
                       width_ratio=0.1, n_intersections=15,
                       set_sizes=FALSE,
                       keep_empty_groups=FALSE,
@@ -114,7 +115,7 @@ plot_upset_plot<-function(dataset, activity_type, filename){
                             scale_y_continuous(limits=c(0,max_value$max*1.2), labels = label_comma()
                             ))))
   
-ggsave(filename, width=10, height=6, plot)
+ggsave(filename, width=10, height=6)
 
   
 }
@@ -142,7 +143,7 @@ plotting_barchart_summary_of_overlaps<-function(data, cohort_name, activity_type
     geom_bar(stat="identity", fill=factor(ifelse(data2$cohort==cohort_name,"#686f73","#f9bf07")))+
     su_theme()+
     theme(axis.text=element_text(size=11),
-          axis.title.y=element_text(size=16))+
+          axis.title.y=element_text(size=16, colour=data2$colour))+
     labs(y="Percentage included in each cohort",
          x=NULL,
          title=NULL)+ 
