@@ -1,7 +1,7 @@
 # Functions used to complete the descriptive analyses.
 
 # Percentage breakdowns --------------------------------------------------------
-#' Get the percentage of mitigable spells for a mitigator.
+#' Get the percentage of mitigable admissions for a mitigator.
 #'
 #' @param activity_type Either `"emergency"` or `"elective"`.
 #' @param condition A string containing the expression needed to filter for a 
@@ -10,7 +10,7 @@
 #' @param connection The Databricks connection.
 #'
 #' @return A dataframe.
-get_perc_spells_beddays <- function(activity_type,
+get_perc_admissions_beddays <- function(activity_type,
                                     condition,
                                     totals = total_beddays_episodes,
                                     connection = sc) {
@@ -41,7 +41,7 @@ get_perc_spells_beddays <- function(activity_type,
     dplyr::mutate(
       perc = janitor::round_half_up(number * 100 / total, 2),
       metric = metric |>
-        stringr::str_replace("episodes", "Spells") |>
+        stringr::str_replace("episodes", "admissions") |>
         stringr::str_to_sentence()
     ) |>
     dplyr::arrange(dplyr::across(1))
@@ -49,20 +49,20 @@ get_perc_spells_beddays <- function(activity_type,
   return(summary)
 }
 
-#' Get the percentage of mitigable spells for a mitigator by a group.
+#' Get the percentage of mitigable admissions for a mitigator by a group.
 #' 
 #' Given a `group` (for example, `sex` or `age`), this function will get the 
 #' table from Databricks, filter to the mitigator or set of mitigators using 
 #' the `condition` provided and calculate the number and percentage of mitigable 
-#' spells by group.
+#' admissions by group.
 #'
 #' @param group A string of the group that the table is for.
 #' @param condition A string containing the expression needed to filter for a 
 #' mitigator or set of mitigators. 
-#' @param type Either `"spells"` or `"beddays"`.
+#' @param type Either `"admissions"` or `"beddays"`.
 #' @param connection The Databricks connection.
 #'
-#' @return A dataframe of the number and percentage of mitigable spells by 
+#' @return A dataframe of the number and percentage of mitigable admissions by 
 #' group.
 get_number_by_group <- function(group, condition, type, connection = sc) {
   col_name <- get_col_name_from_group(group)
@@ -77,9 +77,9 @@ get_number_by_group <- function(group, condition, type, connection = sc) {
     dplyr::filter(!!rlang::parse_expr(condition),
                   !is.na(!!rlang::sym(col_name)) # exclude NULLs
                   ) |>
-    dplyr::rename(spells = episodes) |> 
+    dplyr::rename(admissions = episodes) |> 
     # Although the column is called episodes, each row is the last episode in a 
-    # spell. So renaming as spells here to avoid confusion later.
+    # spell. So renaming as admissions here to avoid confusion later.
     dplyr::summarise(number = sum(!!rlang::sym(type)), 
                      .by = {{col_name}}) |>
     sparklyr::collect()
@@ -100,9 +100,9 @@ get_perc_by_group <- function(group, condition, type, connection = sc){
   return(summary)
 }
 
-#' Plot the percentage of mitigable spells for a mitigator by a group.
+#' Plot the percentage of mitigable admissions for a mitigator by a group.
 #'
-#' @param data The output of `get_perc_spells_by_group()`.
+#' @param data The output of `get_perc_admissions_by_group()`.
 #' @param col_name The col_name that the data is split by.
 #'
 #' @return A plot.
@@ -120,7 +120,7 @@ get_perc_by_group_plot <- function(data, col_name) {
                                guide = 'none') +
     StrategyUnitTheme::su_theme() +
     ggplot2::labs(x = col_name_title, 
-                  y = "Percentage of mitigable spells")
+                  y = "Percentage of mitigable admissions")
   
   return(plot)
 }
@@ -147,7 +147,7 @@ get_table_perc <- function(data) {
 }
 
 # Rates per 100,000 ------------------------------------------------------------
-#' Get rates per population of spells per group.
+#' Get rates per population of admissions per group.
 #'
 #' #' @param group A string of the group that the table is for.
 #' @param condition A string containing the expression needed to filter for a 
@@ -177,7 +177,7 @@ get_rates_by_group <- function(group, condition, population, type, connection = 
   return(summary)
 }
 
-#' Plot the rates per population of spells per group.
+#' Plot the rates per population of admissions per group.
 #'
 #' @param data The output of `get_rates_per_pop()`.
 #' @param col_name The col_name that the data is split by.
