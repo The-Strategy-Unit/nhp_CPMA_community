@@ -63,7 +63,7 @@ get_perc_spells_beddays <- function(activity_type,
 #'
 #' @return A dataframe of the number and percentage of mitigable spells by 
 #' group.
-get_perc_spells_by_group <- function(group, condition, connection = sc) {
+get_perc_spells_by_group <- function(group, condition, type, connection = sc) {
   col_name <- get_col_name_from_group(group)
   
   summary <- dplyr::tbl(connection,
@@ -79,15 +79,16 @@ get_perc_spells_by_group <- function(group, condition, connection = sc) {
     dplyr::rename(spells = episodes) |> 
     # Although the column is called episodes, each row is the last episode in a 
     # spell. So renaming as spells here to avoid confusion later.
-    dplyr::summarise(spells = sum(spells), 
+    dplyr::summarise(number = sum(!!rlang::sym(type)), 
                      .by = {{col_name}}) |>
     sparklyr::collect() |>
-    dplyr::mutate(perc = janitor::round_half_up(spells * 100 /
-                                                  sum(spells), 2),
+    dplyr::mutate(perc = janitor::round_half_up(number * 100 /
+                                                  sum(number), 2),
                   dplyr::across(1, ~stringr::str_to_title(.))
                   ) |>
     order_levels_of_factors() |>
-    dplyr::arrange(dplyr::across(1))
+    dplyr::arrange(dplyr::across(1)) |>
+    dplyr::rename(!!rlang::sym(type) := number)
   
   return(summary)
 }
@@ -240,7 +241,7 @@ get_rates_per_pop_table <- function(data){
 #'
 #' @return A dataframe.
 get_top_ten_specialties <- function(condition, key) {
-  get_perc_spells_by_group("mainspef", condition) |>
+  get_perc_spells_by_group("mainspef", condition, "spells") |>
     dplyr::left_join(key, by = c("mainspef" = "dd_code")) |>
     dplyr::arrange(desc(spells)) |>
     dplyr::slice(1:10) |>

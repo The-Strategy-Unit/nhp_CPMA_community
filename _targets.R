@@ -135,11 +135,12 @@ list(
   ## Percentage breakdowns ----------------------------------------------------- 
   tarchetypes::tar_map(
     list(
-      group = c("age", "ethnicity", "icb", "imd", "los", "sex")
+      type = rep(c("spells", "beddays"), each = 6),
+      group = rep(c("age", "ethnicity", "icb", "imd", "los", "sex"), 2)
     ),
     tar_target(
-      perc_spells_frail,
-      get_perc_spells_by_group(group, "frail_elderly_high == 1")
+      perc_frail,
+      get_perc_spells_by_group(group, "frail_elderly_high == 1", type)
     )
   ),
   
@@ -178,10 +179,10 @@ list(
  ),
 
  
- tar_target(
-   upset_plot_frail_elderly_high_beddays,
-   plot_upset_plot(total_cohort_numbers, beddays)
- ),
+ # tar_target(
+ #   upset_plot_frail_elderly_high_beddays,
+ #   plot_upset_plot(total_cohort_numbers, beddays)
+ # ),
  
  # Trends analysis -------------------------------------------------------------
 
