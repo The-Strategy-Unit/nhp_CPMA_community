@@ -383,23 +383,23 @@ targets::tar_read(perc_frail_los_spells) |>
 ```{r}
 #| label: tbl-perc_frail_mainspecf_spells
 #| tbl-cap: Top ten specialties of mitigable activity for Frail and Elderly Admissions in 2023-24.
-# targets::tar_read(frail_specialties_top_ten) |>
-#   get_table_perc() 
+targets::tar_read(frail_specialties_top_ten_spells) |>
+  get_table_perc() 
 ```
 
 ```{r}
 #| label: fig-perc_frail_mainspecf_spells
 #| fig-cap: Top ten specialties of mitigable activity for Frail and Elderly Admissions in 2023-24.
-# targets::tar_read(frail_specialties_top_ten) |>
-#   ggplot2::ggplot(ggplot2::aes(perc, 
-#                                reorder(specialty, perc),
-#                                fill = 'bars_color')) + 
-#   ggplot2::geom_col() +
-#   ggplot2::scale_fill_manual(values = c('bars_color' = "#f9bf07"), 
-#                              guide = 'none') +
-#   StrategyUnitTheme::su_theme() +
-#   ggplot2::labs(x = "Percentage of mitigable spells", 
-#                 y = "Specialty")
+targets::tar_read(frail_specialties_top_ten_spells) |>
+  ggplot2::ggplot(ggplot2::aes(perc, 
+                               reorder(specialty, perc),
+                               fill = 'bars_color')) + 
+  ggplot2::geom_col() +
+  ggplot2::scale_fill_manual(values = c('bars_color' = "#f9bf07"), 
+                             guide = 'none') +
+  StrategyUnitTheme::su_theme() +
+  ggplot2::labs(x = "Percentage of mitigable spells", 
+                y = "Specialty")
 ```
 
 :::
@@ -429,23 +429,23 @@ targets::tar_read(perc_frail_los_beddays) |>
 ```{r}
 #| label: tbl-perc_frail_mainspecf_beddays
 #| tbl-cap: Top ten specialties of mitigable activity for Frail and Elderly Admissions in 2023-24.
-# targets::tar_read(frail_specialties_top_ten) |>
-#   get_table_perc() 
+targets::tar_read(frail_specialties_top_ten_beddays) |>
+  get_table_perc() 
 ```
 
 ```{r}
 #| label: fig-perc_frail_mainspecf_beddays
 #| fig-cap: Top ten specialties of mitigable activity for Frail and Elderly Admissions in 2023-24.
-# targets::tar_read(frail_specialties_top_ten) |>
-#   ggplot2::ggplot(ggplot2::aes(perc, 
-#                                reorder(specialty, perc),
-#                                fill = 'bars_color')) + 
-#   ggplot2::geom_col() +
-#   ggplot2::scale_fill_manual(values = c('bars_color' = "#f9bf07"), 
-#                              guide = 'none') +
-#   StrategyUnitTheme::su_theme() +
-#   ggplot2::labs(x = "Percentage of mitigable beddays", 
-#                 y = "Specialty")
+targets::tar_read(frail_specialties_top_ten_beddays) |>
+  ggplot2::ggplot(ggplot2::aes(perc, 
+                               reorder(specialty, perc),
+                               fill = 'bars_color')) + 
+  ggplot2::geom_col() +
+  ggplot2::scale_fill_manual(values = c('bars_color' = "#f9bf07"), 
+                             guide = 'none') +
+  StrategyUnitTheme::su_theme() +
+  ggplot2::labs(x = "Percentage of mitigable beddays", 
+                y = "Specialty")
 ```
 
 :::

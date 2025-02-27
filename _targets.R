@@ -160,9 +160,9 @@ list(
   
   ## Percentage breakdowns -----------------------------------------------------
   tarchetypes::tar_map(
-    list(group = rep(c("age", "ethnicity", "icb", "imd", "los", "sex"), 2),
-         type = rep(c("spells", "beddays"), each = 6)
-         ),
+    list(group = rep(
+      c("age", "ethnicity", "icb", "imd", "los", "sex"), 2
+    ), type = rep(c("spells", "beddays"), each = 6)),
     tar_target(
       perc_frail,
       get_perc_by_group(group, "frail_elderly_high == 1", type)
@@ -212,9 +212,14 @@ list(
     scrape_xls(specialty_url, sheet = 3) |>
       dplyr::rename(specialty = main_specialty_title, specialty_group = group)
   ),
-  # tar_target(frail_specialties_top_ten,
-  #            get_top_ten_specialties("frail_elderly_high == 1", specialty_key)),
-  #
+  tarchetypes::tar_map(
+    list(type = c("spells", "beddays")),
+    tar_target(
+      frail_specialties_top_ten,
+      get_top_ten_specialties("frail_elderly_high == 1", specialty_key, type)
+    )
+  ),
+  
   # Cohort analysis ------------------------------------------------------------
   
   tar_target(

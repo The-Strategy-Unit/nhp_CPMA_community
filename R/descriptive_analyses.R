@@ -232,10 +232,10 @@ get_rates_by_group_table <- function(data){
 #' @param key The specialty key.
 #'
 #' @return A dataframe.
-get_top_ten_specialties <- function(condition, key) {
-  get_perc_spells_by_group("mainspef", condition, "spells") |>
+get_top_ten_specialties <- function(condition, key, type) {
+  get_perc_by_group("mainspef", condition, type) |>
     dplyr::left_join(key, by = c("mainspef" = "dd_code")) |>
-    dplyr::arrange(desc(spells)) |>
+    dplyr::arrange(desc(perc)) |>
     dplyr::slice(1:10) |>
-    dplyr::select(specialty, spells, perc)
+    dplyr::select(specialty, {{type}}, perc)
 }
