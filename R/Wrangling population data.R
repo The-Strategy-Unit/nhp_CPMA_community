@@ -175,8 +175,9 @@ generating_england_age_sex_standardised_rates<-function(data, icb_pop, standard_
     left_join(standard_pop, by=c("age_range", "sex"))|>
     filter(!is.na(icb))|>
     filter(age_range!="NA")|>
+    rename(activity={{activity_type}})|>
     group_by(year, cohorts) |>
-    PHEindicatormethods::calculate_dsr(x = {{activity_type}},    # observed number of events
+    PHEindicatormethods::calculate_dsr(x = activity,    # observed number of events
                                        n = icb_population,  # non-standard pops for each stratum
                                        stdpop = pop)    # standard populations for England for each stratum
   

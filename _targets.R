@@ -128,7 +128,17 @@ list(
     )
   ),
   
-  
+ tar_target(england_age_sex_standardised_rates_episodes,
+            generating_england_age_sex_standardised_rates(numbers_over_time, icb_population_data, standard_england_pop_2021_census, episodes)
+ ),
+ 
+ tar_target(england_age_sex_standardised_rates_beddays,
+            generating_england_age_sex_standardised_rates(numbers_over_time, icb_population_data, standard_england_pop_2021_census, beddays)
+ ),
+ 
+ 
+
+ 
   # Descriptive analysis -------------------------------------------------------
   
   ## Overview of mitigator -----------------------------------------------------
@@ -226,30 +236,31 @@ list(
     total_cohort_numbers,
     Formatting_data_for_cohort_overlap("sl_af_describing_mitigators_final_2324_sex")
   ),
-  
-  tar_target(
-    upset_plot_frail_elderly_high_episodes,
-    plot_upset_plot(total_cohort_numbers, episodes)
-  ),
-  
-  
-  # tar_target(
-  #   upset_plot_frail_elderly_high_beddays,
-  #   plot_upset_plot(total_cohort_numbers, beddays)
-  # ),
-  
-  # Trends analysis -------------------------------------------------------------
-  
-  tar_target(
-    numbers_over_time,
-    Formatting_data_for_trends_analysis("sl_af_describing_mitigators_fyear")
-  ),
-  
-  
-  tar_target(
-    denominator_over_time,
-    Formatting_data_for_trends_analysis_denominator("sl_af_total_elective_emergency_activity")
-  )
-  
-  
+
+ tar_target(
+   upset_plot_frail_elderly_high_episodes,
+   plot_upset_plot(total_cohort_numbers, episodes, "_targets/objects/upset_frail_elderly_high_episodes.png"),
+   format="file"
+ ),
+
+ 
+ tar_target(
+   upset_plot_frail_elderly_high_beddays,
+   plot_upset_plot(total_cohort_numbers, beddays, "_targets/objects/upset_frail_elderly_high_beddays.png"),
+   format="file"
+ ),
+ 
+ # Trends analysis -------------------------------------------------------------
+
+tar_target(
+  numbers_over_time,
+  Formatting_data_for_trends_analysis( "sl_af_describing_mitigators_fyear" )
+),
+
+
+tar_target(
+  denominator_over_time,
+  Formatting_data_for_trends_analysis_denominator( "sl_af_total_elective_emergency_activity" )
+)
+
 )
