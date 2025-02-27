@@ -49,7 +49,7 @@ Formatting_data_for_cohort_overlap<-function(table){
 
 # Function to generate upset plot
 
-plot_upset_plot<-function(dataset, activity_type){
+plot_upset_plot<-function(dataset, activity_type, filename){
   
   activity<-deparse(substitute(activity_type))
   
@@ -81,16 +81,15 @@ plot_upset_plot<-function(dataset, activity_type){
   number_columns<-ncol(data)-1
   
   #Generating the upset plot
-  upset_plot_data<-data
   
   cohorts = colnames(data)[1:number_columns]
   
-  upset_plot_data[cohorts] = upset_plot_data[cohorts] == 1
+  data[cohorts] = data[cohorts] == 1
   
   size = get_size_mode('exclusive_intersection')
   
   
-  plot<-ComplexUpset::upset(upset_plot_data, cohorts, name='Cohorts', 
+  plot<-ComplexUpset::upset(data, cohorts, name='Cohorts', 
                       width_ratio=0.1, n_intersections=15,
                       set_sizes=FALSE,
                       keep_empty_groups=FALSE,
@@ -114,7 +113,9 @@ plot_upset_plot<-function(dataset, activity_type){
                             scale_fill_manual(values=c('bars_color'="#f9bf07"), guide='none')+
                             scale_y_continuous(limits=c(0,max_value$max*1.2), labels = label_comma()
                             ))))
-  return(plot)
+  
+ggsave(filename, width=10, height=6, plot)
+
   
 }
 
@@ -133,19 +134,20 @@ plotting_barchart_summary_of_overlaps<-function(data, cohort_name, activity_type
     summarise(number=sum(number))|>
     mutate(percentage=round(((number/max(number))*100),1))|>
     arrange(desc(number))|>
-    mutate(cohort=factor(cohort, unique(cohort)))
+    mutate(cohort=factor(cohort, unique(cohort)))|>
+    mutate(colour=ifelse(cohort==cohort_name, "#000000", ifelse(number>0, "#ec6555", "#686f73"  )))
   
   data2|>
-    ggplot(aes(x=fct_relevel(cohort, cohort_name), y=number))+
+    ggplot(aes(x=fct_relevel(cohort, cohort_name), y=percentage))+
     geom_bar(stat="identity", fill=factor(ifelse(data2$cohort==cohort_name,"#686f73","#f9bf07")))+
     su_theme()+
     theme(axis.text=element_text(size=11),
           axis.title.y=element_text(size=16))+
-    labs(y="Number",
+    labs(y="Percentage included in each cohort",
          x=NULL,
          title=NULL)+ 
-    geom_text(aes(label=paste0(scales::comma(number), ' (',percentage, '%)')), hjust=-0.05, size=3)+
-    scale_y_continuous(limits=c(0, cohort_total$total*1.25), expand=c(0,0), labels = label_comma())+
+    geom_text(aes(label=paste0(percentage,  '% (',scales::comma(number), ')')), hjust=-0.05, size=3)+
+    scale_y_continuous(limits=c(0, 124), expand=c(0,0), labels = label_comma())+
     coord_flip()+
     scale_x_discrete(limits=rev)
   
@@ -175,7 +177,7 @@ plotting_barchart_number_of_cohorts<-function(data, activity_type){
     theme(axis.text=element_text(size=11),
           axis.title=element_text(size=12))+
     labs(y="Number",
-         x="Number of other cohorts the activity is part of",
+         x="No. of other cohorts the activity is part of",
          title=NULL)+
     geom_text(aes(label=paste0(scales::comma(activity), ' \n(',percentage, '%)')), vjust=-0.2, size=2.7)+
     scale_y_continuous(limits=c(0, max(data2$activity)*1.2), expand=c(0,0), labels = label_comma())

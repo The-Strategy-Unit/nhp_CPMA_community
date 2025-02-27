@@ -59,8 +59,8 @@ plot_of_number_over_time<-function(data, mitigator, activity_type){
     ggplot()+
     geom_line(aes(y=activity, x=year, group=1), linewidth=1.4)+
     su_theme()+
-    theme(axis.text=element_text(size=12),
-          axis.title.y=element_text(size=14))+
+    theme(axis.text=element_text(size=10),
+          axis.title.y=element_text(size=12))+
     labs(y="Number",
          x=NULL,
          title=NULL)+ 
@@ -90,8 +90,8 @@ data3|>
     ggplot()+
     geom_line(aes(y=percentage, x=year, group=1), linewidth=1.4)+
     su_theme()+
-    theme(axis.text=element_text(size=12),
-          axis.title.y=element_text(size=14))+
+    theme(axis.text=element_text(size=10),
+          axis.title.y=element_text(size=12))+
     labs(y="Percentage",
          x=NULL,
          title=NULL)+ 
@@ -111,8 +111,8 @@ plot_of_standardised_rates_over_time<-function(data, mitigator){
     ggplot()+
     geom_line(aes(y=value, x=year, group=1), linewidth=1.4)+
     su_theme()+
-    theme(axis.text=element_text(size=12),
-          axis.title.y=element_text(size=14))+
+    theme(axis.text=element_text(size=10),
+          axis.title.y=element_text(size=12))+
     labs(y="Standardised rate per 100,000",
          x=NULL,
          title=NULL)+ 
@@ -161,8 +161,8 @@ plot_of_percentage_over_time_icb<-function(data1, data2, mitigator, activity_typ
     ggplot()+
     geom_line(aes(y=percentage, x=year, group=icb), linewidth=1.4)+
     su_theme()+
-    theme(axis.text=element_text(size=12),
-          axis.title.y=element_text(size=14))+
+    theme(axis.text=element_text(size=10),
+          axis.title.y=element_text(size=12))+
     labs(y="Percentage",
          x=NULL,
          title=NULL)+ 

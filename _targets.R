@@ -100,7 +100,17 @@ list(
             generating_age_sex_standardised_rates(numbers_over_time, icb_population_data, standard_england_pop_2021_census, beddays)
  ),
   
-  
+ tar_target(england_age_sex_standardised_rates_episodes,
+            generating_england_age_sex_standardised_rates(numbers_over_time, icb_population_data, standard_england_pop_2021_census, episodes)
+ ),
+ 
+ tar_target(england_age_sex_standardised_rates_beddays,
+            generating_england_age_sex_standardised_rates(numbers_over_time, icb_population_data, standard_england_pop_2021_census, beddays)
+ ),
+ 
+ 
+
+ 
   # Descriptive analysis -------------------------------------------------------
   
   ## Overview of mitigator -----------------------------------------------------
@@ -174,13 +184,15 @@ list(
  
  tar_target(
    upset_plot_frail_elderly_high_episodes,
-   plot_upset_plot(total_cohort_numbers, episodes)
+   plot_upset_plot(total_cohort_numbers, episodes, "_targets/objects/upset_frail_elderly_high_episodes.png"),
+   format="file"
  ),
 
  
  tar_target(
    upset_plot_frail_elderly_high_beddays,
-   plot_upset_plot(total_cohort_numbers, beddays)
+   plot_upset_plot(total_cohort_numbers, beddays, "_targets/objects/upset_frail_elderly_high_beddays.png"),
+   format="file"
  ),
  
  # Trends analysis -------------------------------------------------------------
