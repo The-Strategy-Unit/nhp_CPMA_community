@@ -699,7 +699,7 @@ plot_ly( x = ~year, y = ~activity, type = 'scatter',  mode = 'lines', text=~icb_
 
 ```{r}
 #| output: false
-data <- targets::tar_read(perc_spells_frail_icb) |>
+data <- targets::tar_read(perc_frail_icb_admissions) |>
   dplyr::mutate(icb = stringr::str_to_upper(icb))
 
 icb_pop <- targets::tar_read(icb_population_data) |>
@@ -710,7 +710,7 @@ icb_23_shp <- sf::st_read("https://services1.arcgis.com/ESMARspQHYMw9BZ9/arcgis/
   janitor::clean_names()
 
 # notes
-  # value = number spells at icb * 100 / population at icb
+  # value = number admissions at icb * 100 / population at icb
   # using 2023 icb shapefile
 ```
 
@@ -720,7 +720,7 @@ icb_23_shp <- sf::st_read("https://services1.arcgis.com/ESMARspQHYMw9BZ9/arcgis/
 icb_23_shp |>
   dplyr::left_join(icb_pop, by = c("icb23cd" = "icb_2024_code")) |>
   dplyr::left_join(data, by = c("icb24cdh" = "icb")) |>
-  dplyr::mutate(value = janitor::round_half_up(spells * 100 /
+  dplyr::mutate(value = janitor::round_half_up(admissions * 100 /
                                                   pop, 2)) |>
   ggplot2::ggplot() +
   ggplot2::geom_sf(ggplot2::aes(fill = value)) +
