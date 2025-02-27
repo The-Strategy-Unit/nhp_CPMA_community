@@ -59,11 +59,12 @@ get_perc_spells_beddays <- function(activity_type,
 #' @param group A string of the group that the table is for.
 #' @param condition A string containing the expression needed to filter for a 
 #' mitigator or set of mitigators. 
+#' @param type Either `"spells"` or `"beddays"`.
 #' @param connection The Databricks connection.
 #'
 #' @return A dataframe of the number and percentage of mitigable spells by 
 #' group.
-get_perc_spells_by_group <- function(group, condition, type, connection = sc) {
+get_number_by_group <- function(group, condition, type, connection = sc) {
   col_name <- get_col_name_from_group(group)
   
   summary <- dplyr::tbl(connection,
@@ -81,11 +82,17 @@ get_perc_spells_by_group <- function(group, condition, type, connection = sc) {
     # spell. So renaming as spells here to avoid confusion later.
     dplyr::summarise(number = sum(!!rlang::sym(type)), 
                      .by = {{col_name}}) |>
-    sparklyr::collect() |>
+    sparklyr::collect()
+  
+  return(summary)
+}
+
+get_perc_by_group <- function(group, condition, type, connection = sc){
+  summary <- get_number_by_group(group, condition, type, connection = sc) |>
     dplyr::mutate(perc = janitor::round_half_up(number * 100 /
                                                   sum(number), 2),
                   dplyr::across(1, ~stringr::str_to_title(.))
-                  ) |>
+    ) |>
     order_levels_of_factors() |>
     dplyr::arrange(dplyr::across(1)) |>
     dplyr::rename(!!rlang::sym(type) := number)
@@ -149,29 +156,14 @@ get_table_perc <- function(data) {
 #' @param connection The Databricks connection.
 #'
 #' @return
-get_rates_per_pop <- function(group, condition, population, connection = sc) {
+get_rates_by_group <- function(group, condition, population, type, connection = sc) {
   
   col_name <- get_col_name_from_group(group)
   
-  summary <- dplyr::tbl(connection,
-                        dbplyr::in_catalog(
-                          "strategyunit",
-                          "default",
-                          paste0("sl_af_describing_mitigators_final_2324_", 
-                                 group)
-                        )) |>
-    dplyr::filter(!!rlang::parse_expr(condition),
-                  !is.na(!!rlang::sym(col_name)) # exclude NULLs
-    ) |>
-    dplyr::rename(spells = episodes) |> 
-    # Although the column is called episodes, each row is the last episode in a 
-    # spell. So renaming as spells here to avoid confusion later.
-    dplyr::summarise(spells = sum(spells), 
-                     .by = {{col_name}}) |>
-    sparklyr::collect() |>
+  summary <- get_number_by_group(group, condition, type, connection = sc) |>
     dplyr::left_join(population, {{col_name}}) |>
     PHEindicatormethods::phe_rate(
-      x = spells,
+      x = number,
       n = pop,
       confidence = 0.95,
       multiplier = 100000
@@ -180,7 +172,7 @@ get_rates_per_pop <- function(group, condition, population, connection = sc) {
     dplyr::arrange(dplyr::across(1)) |>
     dplyr::mutate(value = janitor::round_half_up(value, 2),
                   dplyr::across(1, ~stringr::str_to_title(.))) |>
-    dplyr::select({{col_name}}, spells, pop, value, lowercl, uppercl)
+    dplyr::select({{col_name}}, number, pop, value, lowercl, uppercl)
   
   return(summary)
 }
@@ -191,7 +183,7 @@ get_rates_per_pop <- function(group, condition, population, connection = sc) {
 #' @param col_name The col_name that the data is split by.
 #'
 #' @return A plot.
-get_rates_per_pop_plot <- function(data, col_name) {
+get_rates_by_group_plot <- function(data, col_name) {
   col_name_title <- col_name |>
     format_as_title()
   
@@ -223,7 +215,7 @@ get_rates_per_pop_plot <- function(data, col_name) {
 #' \dontrun{
 #' targets::tar_read(rates_per_pop_age_frail) |>
 #' get_rates_per_pop_table()}
-get_rates_per_pop_table <- function(data){
+get_rates_by_group_table <- function(data){
   table <- data |>
     dplyr::rename_with(~format_as_title(.)) |>
     get_table() |>
