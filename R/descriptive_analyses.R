@@ -106,7 +106,7 @@ get_perc_by_group <- function(group, condition, type, connection = sc){
 #' @param col_name The col_name that the data is split by.
 #'
 #' @return A plot.
-get_perc_spells_by_group_plot <- function(data, col_name) {
+get_perc_by_group_plot <- function(data, col_name) {
   col_name_title <- col_name |>
     format_as_title()
   
