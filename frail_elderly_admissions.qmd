@@ -36,6 +36,10 @@ targets::tar_read(total_beddays_episodes_frail) |>
 
 ::: panel-tabset
 
+### Admissions
+
+::: panel-tabset
+
 ### Age
 
 ::: panel-tabset
@@ -43,33 +47,33 @@ targets::tar_read(total_beddays_episodes_frail) |>
 #### Perc
 
 ```{r}
-#| label: tbl-perc_frail_age
+#| label: tbl-perc_frail_age_admissions
 #| tbl-cap: Mitigable activity for Frail and Elderly Admissions in 2023-24 by age.
-targets::tar_read(perc_spells_frail_age) |>
+targets::tar_read(perc_frail_age_admissions) |>
   get_table_perc() 
 ```
 
 ```{r}
-#| label: fig-perc_frail_age
+#| label: fig-perc_frail_age_admissions
 #| fig-cap: Mitigable activity for Frail and Elderly Admissions in 2023-24 by age.
-targets::tar_read(perc_spells_frail_age) |>
-  get_perc_spells_by_group_plot("age_range")
+targets::tar_read(perc_frail_age_admissions) |>
+  get_perc_by_group_plot("age_range")
 ```
 
 #### Rates per 100,000
 
 ```{r}
-#| label: tbl-rate_frail_age
+#| label: tbl-rate_frail_age_admissions
 #| tbl-cap: Mitigable activity for Frail and Elderly Admissions in 2023-24 by age.
-targets::tar_read(rates_per_pop_age_frail) |>
-  get_rates_per_pop_table() 
+targets::tar_read(rates_frail_age_admissions) |>
+  get_rates_by_group_table() 
 ```
 
 ```{r}
-#| label: fig-rate_frail_age
+#| label: fig-rate_frail_age_admissions
 #| fig-cap: Mitigable activity for Frail and Elderly Admissions in 2023-24 by age.
-targets::tar_read(rates_per_pop_age_frail) |>
-  get_rates_per_pop_plot("age_range")
+targets::tar_read(rates_frail_age_admissions) |>
+  get_rates_by_group_plot("age_range")
 ```
 
 :::
@@ -81,33 +85,33 @@ targets::tar_read(rates_per_pop_age_frail) |>
 #### Perc
 
 ```{r}
-#| label: tbl-perc_frail_ethnicity
+#| label: tbl-perc_frail_ethnicity_admissions
 #| tbl-cap: Mitigable activity for Frail and Elderly Admissions in 2023-24 by ethnic category.
-targets::tar_read(perc_spells_frail_ethnicity) |>
+targets::tar_read(perc_frail_ethnicity_admissions) |>
   get_table_perc() 
 ```
 
 ```{r}
-#| label: fig-perc_frail_ethnicity
+#| label: fig-perc_frail_ethnicity_admissions
 #| fig-cap: Mitigable activity for Frail and Elderly Admissions in 2023-24 by ethnic category.
-targets::tar_read(perc_spells_frail_ethnicity) |>
-  get_perc_spells_by_group_plot("Ethnic_Category")
+targets::tar_read(perc_frail_ethnicity_admissions) |>
+  get_perc_by_group_plot("Ethnic_Category")
 ```
 
 #### Rates per 100,000
 
 ```{r}
-#| label: tbl-rate_frail_ethnicity
+#| label: tbl-rate_frail_ethnicity_admissions
 #| tbl-cap: Mitigable activity for Frail and Elderly Admissions in 2023-24 by ethnic category.
-targets::tar_read(rates_per_pop_ethnicity_frail) |>
-  get_rates_per_pop_table() 
+targets::tar_read(rates_frail_ethnicity_admissions) |>
+  get_rates_by_group_table() 
 ```
 
 ```{r}
-#| label: fig-rate_frail_ethnicity
+#| label: fig-rate_frail_ethnicity_admissions
 #| fig-cap: Mitigable activity for Frail and Elderly Admissions in 2023-24 by ethnic category.
-targets::tar_read(rates_per_pop_ethnicity_frail) |>
-  get_rates_per_pop_plot("Ethnic_Category")
+targets::tar_read(rates_frail_ethnicity_admissions) |>
+  get_rates_by_group_plot("Ethnic_Category")
 ```
 
 :::
@@ -118,35 +122,34 @@ targets::tar_read(rates_per_pop_ethnicity_frail) |>
 
 #### Perc
 
-
 ```{r}
-#| label: tbl-perc_frail_imd
+#| label: tbl-perc_frail_imd_admissions
 #| tbl-cap: Mitigable activity for Frail and Elderly Admissions in 2023-24 by IMD decile.
-targets::tar_read(perc_spells_frail_imd) |>
+targets::tar_read(perc_frail_imd_admissions) |>
   get_table_perc() 
 ```
 
 ```{r}
-#| label: fig-perc_frail_imd
+#| label: fig-perc_frail_imd_admissions
 #| fig-cap: Mitigable activity for Frail and Elderly Admissions in 2023-24 by IMD decile.
-targets::tar_read(perc_spells_frail_imd) |>
-  get_perc_spells_by_group_plot("imd19_decile")
+targets::tar_read(perc_frail_imd_admissions) |>
+  get_perc_by_group_plot("imd19_decile")
 ```
 
 #### Rates per 100,000
 
 ```{r}
-#| label: tbl-rate_frail_imd
+#| label: tbl-rate_frail_imd_admissions
 #| tbl-cap: Mitigable activity for Frail and Elderly Admissions in 2023-24 by IMD decile.
-targets::tar_read(rates_per_pop_imd_frail) |>
-  get_rates_per_pop_table() 
+targets::tar_read(rates_frail_imd_admissions) |>
+  get_rates_by_group_table() 
 ```
 
 ```{r}
-#| label: fig-rate_frail_imd
+#| label: fig-rate_frail_imd_admissions
 #| fig-cap: Mitigable activity for Frail and Elderly Admissions in 2023-24 by IMD decile.
-targets::tar_read(rates_per_pop_imd_frail) |>
-  get_rates_per_pop_plot("imd19_decile")
+targets::tar_read(rates_frail_imd_admissions) |>
+  get_rates_by_group_plot("imd19_decile")
 ```
 
 :::
@@ -157,36 +160,195 @@ targets::tar_read(rates_per_pop_imd_frail) |>
 
 #### Perc
 
-
 ```{r}
-#| label: tbl-perc_frail_sex
+#| label: tbl-perc_frail_sex_admissions
 #| tbl-cap: Mitigable activity for Frail and Elderly Admissions in 2023-24 by sex.
-targets::tar_read(perc_spells_frail_sex) |>
+targets::tar_read(perc_frail_sex_admissions) |>
   get_table_perc() 
 ```
 
 ```{r}
-#| label: fig-perc_frail_sex
+#| label: fig-perc_frail_sex_admissions
 #| fig-cap: Mitigable activity for Frail and Elderly Admissions in 2023-24 by sex.
-targets::tar_read(perc_spells_frail_sex) |>
-  get_perc_spells_by_group_plot("sex")
+targets::tar_read(perc_frail_sex_admissions) |>
+  get_perc_by_group_plot("sex")
 ```
 
 #### Rates per 100,000
 
 ```{r}
-#| label: tbl-rate_frail_sex
+#| label: tbl-rate_frail_sex_admissions
 #| tbl-cap: Mitigable activity for Frail and Elderly Admissions in 2023-24 by sex.
-targets::tar_read(rates_per_pop_sex_frail) |>
-  get_rates_per_pop_table() 
+targets::tar_read(rates_frail_sex_admissions) |>
+  get_rates_by_group_table() 
 ```
 
 ```{r}
-#| label: fig-rate_frail_sex
+#| label: fig-rate_frail_sex_admissions
 #| fig-cap: Mitigable activity for Frail and Elderly Admissions in 2023-24 by sex.
-targets::tar_read(rates_per_pop_sex_frail) |>
-  get_rates_per_pop_plot("sex")
+targets::tar_read(rates_frail_sex_admissions) |>
+  get_rates_by_group_plot("sex")
 ```
+
+:::
+
+:::
+
+### Beddays
+
+::: panel-tabset
+
+### Age
+
+::: panel-tabset
+
+#### Perc
+
+```{r}
+#| label: tbl-perc_frail_age_beddays
+#| tbl-cap: Mitigable activity for Frail and Elderly Admissions in 2023-24 by age.
+targets::tar_read(perc_frail_age_beddays) |>
+  get_table_perc() 
+```
+
+```{r}
+#| label: fig-perc_frail_age_beddays
+#| fig-cap: Mitigable activity for Frail and Elderly Admissions in 2023-24 by age.
+targets::tar_read(perc_frail_age_beddays) |>
+  get_perc_by_group_plot("age_range")
+```
+
+#### Rates per 100,000
+
+```{r}
+#| label: tbl-rate_frail_age_beddays
+#| tbl-cap: Mitigable activity for Frail and Elderly Admissions in 2023-24 by age.
+targets::tar_read(rates_frail_age_beddays) |>
+  get_rates_by_group_table() 
+```
+
+```{r}
+#| label: fig-rate_frail_age_beddays
+#| fig-cap: Mitigable activity for Frail and Elderly Admissions in 2023-24 by age.
+targets::tar_read(rates_frail_age_beddays) |>
+  get_rates_by_group_plot("age_range")
+```
+
+:::
+
+### Ethnicity
+
+::: panel-tabset
+
+#### Perc
+
+```{r}
+#| label: tbl-perc_frail_ethnicity_beddays
+#| tbl-cap: Mitigable activity for Frail and Elderly Admissions in 2023-24 by ethnic category.
+targets::tar_read(perc_frail_ethnicity_beddays) |>
+  get_table_perc() 
+```
+
+```{r}
+#| label: fig-perc_frail_ethnicity_beddays
+#| fig-cap: Mitigable activity for Frail and Elderly Admissions in 2023-24 by ethnic category.
+targets::tar_read(perc_frail_ethnicity_beddays) |>
+  get_perc_by_group_plot("Ethnic_Category")
+```
+
+#### Rates per 100,000
+
+```{r}
+#| label: tbl-rate_frail_ethnicity_beddays
+#| tbl-cap: Mitigable activity for Frail and Elderly Admissions in 2023-24 by ethnic category.
+targets::tar_read(rates_frail_ethnicity_beddays) |>
+  get_rates_by_group_table() 
+```
+
+```{r}
+#| label: fig-rate_frail_ethnicity_beddays
+#| fig-cap: Mitigable activity for Frail and Elderly Admissions in 2023-24 by ethnic category.
+targets::tar_read(rates_frail_ethnicity_beddays) |>
+  get_rates_by_group_plot("Ethnic_Category")
+```
+
+:::
+
+### IMD
+
+::: panel-tabset
+
+#### Perc
+
+```{r}
+#| label: tbl-perc_frail_imd_beddays
+#| tbl-cap: Mitigable activity for Frail and Elderly Admissions in 2023-24 by IMD decile.
+targets::tar_read(perc_frail_imd_beddays) |>
+  get_table_perc() 
+```
+
+```{r}
+#| label: fig-perc_frail_imd_beddays
+#| fig-cap: Mitigable activity for Frail and Elderly Admissions in 2023-24 by IMD decile.
+targets::tar_read(perc_frail_imd_beddays) |>
+  get_perc_by_group_plot("imd19_decile")
+```
+
+#### Rates per 100,000
+
+```{r}
+#| label: tbl-rate_frail_imd_beddays
+#| tbl-cap: Mitigable activity for Frail and Elderly Admissions in 2023-24 by IMD decile.
+targets::tar_read(rates_frail_imd_beddays) |>
+  get_rates_by_group_table() 
+```
+
+```{r}
+#| label: fig-rate_frail_imd_beddays
+#| fig-cap: Mitigable activity for Frail and Elderly Admissions in 2023-24 by IMD decile.
+targets::tar_read(rates_frail_imd_beddays) |>
+  get_rates_by_group_plot("imd19_decile")
+```
+
+:::
+
+### Sex
+
+::: panel-tabset
+
+#### Perc
+
+```{r}
+#| label: tbl-perc_frail_sex_beddays
+#| tbl-cap: Mitigable activity for Frail and Elderly Admissions in 2023-24 by sex.
+targets::tar_read(perc_frail_sex_beddays) |>
+  get_table_perc() 
+```
+
+```{r}
+#| label: fig-perc_frail_sex_beddays
+#| fig-cap: Mitigable activity for Frail and Elderly Admissions in 2023-24 by sex.
+targets::tar_read(perc_frail_sex_beddays) |>
+  get_perc_by_group_plot("sex")
+```
+
+#### Rates per 100,000
+
+```{r}
+#| label: tbl-rate_frail_sex_beddays
+#| tbl-cap: Mitigable activity for Frail and Elderly Admissions in 2023-24 by sex.
+targets::tar_read(rates_frail_sex_beddays) |>
+  get_rates_by_group_table() 
+```
+
+```{r}
+#| label: fig-rate_frail_sex_beddays
+#| fig-cap: Mitigable activity for Frail and Elderly Admissions in 2023-24 by sex.
+targets::tar_read(rates_frail_sex_beddays) |>
+  get_rates_by_group_plot("sex")
+```
+
+:::
 
 :::
 
@@ -196,35 +358,39 @@ targets::tar_read(rates_per_pop_sex_frail) |>
 
 :::panel-tabset
 
+### Admissions
+
+::: panel-tabset
+
 #### LOS
 
 ```{r}
-#| label: tbl-perc_frail_los
+#| label: tbl-perc_frail_los_admissions
 #| tbl-cap: Mitigable activity for Frail and Elderly Admissions in 2023-24 by length of stay.
-targets::tar_read(perc_spells_frail_los) |>
+targets::tar_read(perc_frail_los_admissions) |>
   get_table_perc() 
 ```
 
 ```{r}
-#| label: fig-perc_frail_los
+#| label: fig-perc_frail_los_admissions
 #| fig-cap: Mitigable activity for Frail and Elderly Admissions in 2023-24 by length of stay.
-targets::tar_read(perc_spells_frail_los) |>
-  get_perc_spells_by_group_plot("los_range")
+targets::tar_read(perc_frail_los_admissions) |>
+  get_perc_by_group_plot("los_range")
 ```
 
 #### Specialty
 
 ```{r}
-#| label: tbl-perc_frail_mainspecf
+#| label: tbl-perc_frail_mainspecf_admissions
 #| tbl-cap: Top ten specialties of mitigable activity for Frail and Elderly Admissions in 2023-24.
-targets::tar_read(frail_specialties_top_ten) |>
+targets::tar_read(frail_specialties_top_ten_admissions) |>
   get_table_perc() 
 ```
 
 ```{r}
-#| label: fig-perc_frail_mainspecf
+#| label: fig-perc_frail_mainspecf_admissions
 #| fig-cap: Top ten specialties of mitigable activity for Frail and Elderly Admissions in 2023-24.
-targets::tar_read(frail_specialties_top_ten) |>
+targets::tar_read(frail_specialties_top_ten_admissions) |>
   ggplot2::ggplot(ggplot2::aes(perc, 
                                reorder(specialty, perc),
                                fill = 'bars_color')) + 
@@ -232,9 +398,57 @@ targets::tar_read(frail_specialties_top_ten) |>
   ggplot2::scale_fill_manual(values = c('bars_color' = "#f9bf07"), 
                              guide = 'none') +
   StrategyUnitTheme::su_theme() +
-  ggplot2::labs(x = "Percentage of mitigable spells", 
+  ggplot2::labs(x = "Percentage of mitigable admissions", 
                 y = "Specialty")
 ```
+
+:::
+
+### Beddays
+
+::: panel-tabset
+
+#### LOS
+
+```{r}
+#| label: tbl-perc_frail_los_beddays
+#| tbl-cap: Mitigable activity for Frail and Elderly Admissions in 2023-24 by length of stay.
+targets::tar_read(perc_frail_los_beddays) |>
+  get_table_perc() 
+```
+
+```{r}
+#| label: fig-perc_frail_los_beddays
+#| fig-cap: Mitigable activity for Frail and Elderly Admissions in 2023-24 by length of stay.
+targets::tar_read(perc_frail_los_beddays) |>
+  get_perc_by_group_plot("los_range")
+```
+
+#### Specialty
+
+```{r}
+#| label: tbl-perc_frail_mainspecf_beddays
+#| tbl-cap: Top ten specialties of mitigable activity for Frail and Elderly Admissions in 2023-24.
+targets::tar_read(frail_specialties_top_ten_beddays) |>
+  get_table_perc() 
+```
+
+```{r}
+#| label: fig-perc_frail_mainspecf_beddays
+#| fig-cap: Top ten specialties of mitigable activity for Frail and Elderly Admissions in 2023-24.
+targets::tar_read(frail_specialties_top_ten_beddays) |>
+  ggplot2::ggplot(ggplot2::aes(perc, 
+                               reorder(specialty, perc),
+                               fill = 'bars_color')) + 
+  ggplot2::geom_col() +
+  ggplot2::scale_fill_manual(values = c('bars_color' = "#f9bf07"), 
+                             guide = 'none') +
+  StrategyUnitTheme::su_theme() +
+  ggplot2::labs(x = "Percentage of mitigable beddays", 
+                y = "Specialty")
+```
+
+:::
 
 :::
 
@@ -485,7 +699,7 @@ plot_ly( x = ~year, y = ~activity, type = 'scatter',  mode = 'lines', text=~icb_
 
 ```{r}
 #| output: false
-data <- targets::tar_read(perc_spells_frail_icb) |>
+data <- targets::tar_read(perc_frail_icb_admissions) |>
   dplyr::mutate(icb = stringr::str_to_upper(icb))
 
 icb_pop <- targets::tar_read(icb_population_data) |>
@@ -496,7 +710,7 @@ icb_23_shp <- sf::st_read("https://services1.arcgis.com/ESMARspQHYMw9BZ9/arcgis/
   janitor::clean_names()
 
 # notes
-  # value = number spells at icb * 100 / population at icb
+  # value = number admissions at icb * 100 / population at icb
   # using 2023 icb shapefile
 ```
 
@@ -506,7 +720,7 @@ icb_23_shp <- sf::st_read("https://services1.arcgis.com/ESMARspQHYMw9BZ9/arcgis/
 icb_23_shp |>
   dplyr::left_join(icb_pop, by = c("icb23cd" = "icb_2024_code")) |>
   dplyr::left_join(data, by = c("icb24cdh" = "icb")) |>
-  dplyr::mutate(value = janitor::round_half_up(spells * 100 /
+  dplyr::mutate(value = janitor::round_half_up(admissions * 100 /
                                                   pop, 2)) |>
   ggplot2::ggplot() +
   ggplot2::geom_sf(ggplot2::aes(fill = value)) +
