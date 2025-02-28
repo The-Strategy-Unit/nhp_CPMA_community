@@ -152,6 +152,8 @@ perc_frail_elderly_high_imd_admissions <- targets::tar_read(perc_frail_elderly_h
 rates_frail_elderly_high_imd_admissions <- targets::tar_read(rates_frail_elderly_high_imd_admissions)
 ```
 
+The percentage of 2023/24 mitigable admissions for the frail and elderly (high) cohort appear similar across the IMD deciles. Patients from areas with IMD deciles 7-9 have the highest rates of mitigable admission per 100,000 @tbl-rate_frail_elderly_high_imd_admissions. However, there is little difference between patients from the most deprived areas (decile 1) compared to those from the least deprived areas (decile 10).
+
 ::: panel-tabset
 
 #### Perc
@@ -195,7 +197,7 @@ perc_frail_elderly_high_sex_admissions <- targets::tar_read(perc_frail_elderly_h
 rates_frail_elderly_high_sex_admissions <- targets::tar_read(rates_frail_elderly_high_sex_admissions)
 ```
 
-The majority (`r perc_frail_elderly_high_sex_admissions |> dplyr::filter(sex == "Female") |> dplyr::pull(perc)`%) of mitigable admissions for the frail and elderly (high) cohort are for female patients. Females also have the higher rate per 100,000 at `r rates_frail_elderly_high_sex_admissions |> dplyr::filter(sex == "Female") |> dplyr::pull(value)` compared to `r rates_frail_elderly_high_sex_admissions |> dplyr::filter(sex == "Male") |> dplyr::pull(value)` for males.
+The majority (`r perc_frail_elderly_high_sex_admissions |> dplyr::filter(sex == "Female") |> dplyr::pull(perc)`%) of mitigable admissions for the frail and elderly (high) cohort are for female patients. Females also have the higher rate per 100,000 at `r rates_frail_elderly_high_sex_admissions |> dplyr::filter(sex == "Female") |> dplyr::pull(value)` compared to `r rates_frail_elderly_high_sex_admissions |> dplyr::filter(sex == "Male") |> dplyr::pull(value)` for males (@tbl-rate_frail_elderly_high_sex_admissions).
 
 ::: panel-tabset 
 
