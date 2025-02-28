@@ -110,7 +110,7 @@ get_perc_by_group <- function(group, condition, type, connection = sc){
 #' @param col_name The col_name that the data is split by.
 #'
 #' @return A plot.
-get_perc_by_group_plot <- function(data, col_name) {
+get_perc_by_group_plot <- function(data, col_name, type) {
   col_name_title <- col_name |>
     format_as_title()
   
@@ -124,7 +124,7 @@ get_perc_by_group_plot <- function(data, col_name) {
                                guide = 'none') +
     StrategyUnitTheme::su_theme() +
     ggplot2::labs(x = col_name_title, 
-                  y = "Percentage of mitigable admissions")
+                  y = glue::glue("Percentage of mitigable {type}"))
   
   return(plot)
 }
