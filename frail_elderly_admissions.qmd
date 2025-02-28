@@ -42,7 +42,7 @@ In 2023/24, `r frail_elderly_high_admissions_perc`% of all emergency admissions 
 
 ```{r}
 #| label: tbl-perc_frail_elderly_high
-#| tbl-cap: Percentage of mitigable activity for Frail and Elderly Admissions by emergency activity in 2023-24.
+#| tbl-cap: !expr get_caption_overview("Frail and Elderly (high)", "emergency")
 overview_frail_elderly_high |>
   get_table_perc()
 ```

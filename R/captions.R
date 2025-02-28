@@ -21,16 +21,28 @@ format_group_name_for_caption <- function(group) {
 #' Get a caption for the plots/tables of percentage/rates of mitigable admissions/beddays by group .
 #'
 #' @param metric Either `"Percentage"` or` "Rates per 100,000 population"`.
-#' @param cohort The mitigator.
-#' @param activity_type Either `"admissions"` or `"beddays"`.
+#' @param cohort A string for the mitigator cohort.
+#' @param type Either `"admissions"` or `"beddays"`.
 #' @param group The group the data is split by: `"age"`, `"ethnicity"`, `"imd"` or `"sex"`.
 #'
 #' @return A string.
-get_caption_by_group <- function(metric, cohort, activity_type, group) {
+get_caption_by_group <- function(metric, cohort, type, group) {
   group_formatted <- format_group_name_for_caption(group)
   
   caption <- glue::glue(
-    "{metric} of mitigable {activity_type} for the {cohort} cohort in 2023-24 by {group_formatted}."
+    "{metric} of mitigable {type} for the {cohort} cohort in 2023/24 by {group_formatted}."
   )
+  return(caption)
+}
+
+#' Get caption for the overview table by mitigator.
+#'
+#' @param cohort A string for the mitigator cohort.
+#' @param activity_type Either `"emergency"` or `"elective"`.
+#'
+#' @return A string.
+get_caption_overview <- function(cohort, activity_type) {
+  caption <- glue::glue("Percentage of mitigable admissions and beddays for the {cohort} cohort by {activity_type} activity in 2023/24.")
+  
   return(caption)
 }
