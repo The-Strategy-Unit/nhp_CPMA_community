@@ -10,6 +10,8 @@ format_group_name_for_caption <- function(group) {
     group_formatted <- "ethnic category"
   } else if (group == "imd") {
     group_formatted <- "Index of Multiple Deprivation (IMD) decile"
+  } else if (group == "los") {
+    group_formatted <- "Length of Stay (LOS) range"
   } else {
     group_formatted <- group
   }
@@ -43,6 +45,18 @@ get_caption_by_group <- function(metric, cohort, type, group) {
 #' @return A string.
 get_caption_overview <- function(cohort, activity_type) {
   caption <- glue::glue("Percentage of mitigable admissions and beddays for the {cohort} cohort by {activity_type} activity in 2023/24.")
+  
+  return(caption)
+}
+
+#' Get caption for the top ten specialties by mitigator tables and plots.
+#'
+#' @param cohort A string for the mitigator cohort.
+#' @param type Either `"admissions"` or `"beddays"`.
+#'
+#' @return A string.
+get_caption_top_ten_specialties <- function(cohort, type) {
+  caption <- glue::glue("Top ten specialties of mitigable {type} for the {cohort} cohort in 2023-24.")
   
   return(caption)
 }

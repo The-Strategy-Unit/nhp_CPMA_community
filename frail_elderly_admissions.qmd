@@ -49,7 +49,7 @@ overview_frail_elderly_high |>
 
 ### Patient Characteristics
 
-In this section, the number and percentage of mitigable activity for the frail and elderly (high) cohort are shown by age, ethnic category, IMD decile and sex. Rates per 100,000 population are also provided for context. 
+In this section, the number and percentage of mitigable activity for the frail and elderly (high) cohort are shown by patient characteristics: age, ethnic category, IMD decile and sex. Rates per 100,000 population are also provided for context. 
 
 Outputs are presented for both admissions and beddays, but patterns are broadly similar across the two.
 
@@ -82,8 +82,8 @@ perc_frail_elderly_high_age_admissions |>
 ```{r}
 #| label: fig-perc_frail_elderly_high_age_admissions
 #| fig-cap: !expr get_caption_by_group("Percentage", "Frail and Elderly (high)", "admissions", "age group")
-perc_frail_elderly_high_age_admissions|>
-  get_perc_by_group_plot("age_range")
+perc_frail_elderly_high_age_admissions |>
+  get_perc_by_group_plot("age_range", "admissions")
 ```
 
 #### Rates per 100,000
@@ -128,7 +128,7 @@ perc_frail_elderly_high_ethnicity_admissions |>
 #| label: fig-perc_frail_elderly_high_ethnicity_admissions
 #| fig-cap: !expr get_caption_by_group("Percentage", "Frail and Elderly (high)", "admissions", "ethnicity")
 perc_frail_elderly_high_ethnicity_admissions |>
-  get_perc_by_group_plot("Ethnic_Category")
+  get_perc_by_group_plot("Ethnic_Category", "admissions")
 ```
 
 #### Rates per 100,000
@@ -173,7 +173,7 @@ perc_frail_elderly_high_imd_admissions |>
 #| label: fig-perc_frail_elderly_high_imd_admissions
 #| fig-cap: !expr get_caption_by_group("Percentage", "Frail and Elderly (high)", "admissions", "imd")
 perc_frail_elderly_high_imd_admissions |>
-  get_perc_by_group_plot("imd19_decile")
+  get_perc_by_group_plot("imd19_decile", "admissions")
 ```
 
 #### Rates per 100,000
@@ -218,7 +218,7 @@ perc_frail_elderly_high_sex_admissions |>
 #| label: fig-perc_frail_elderly_high_sex_admissions
 #| fig-cap: !expr get_caption_by_group("Percentage", "Frail and Elderly (high)", "admissions", "sex")
 perc_frail_elderly_high_sex_admissions |>
-  get_perc_by_group_plot("sex")
+  get_perc_by_group_plot("sex", "admissions")
 ```
 
 #### Rates per 100,000
@@ -269,7 +269,7 @@ targets::tar_read(perc_frail_elderly_high_age_beddays) |>
 #| label: fig-perc_frail_elderly_high_age_beddays
 #| fig-cap: !expr get_caption_by_group("Percentage", "Frail and Elderly (high)", "beddays", "age group")
 targets::tar_read(perc_frail_elderly_high_age_beddays) |>
-  get_perc_by_group_plot("age_range")
+  get_perc_by_group_plot("age_range", "beddays")
 ```
 
 #### Rates per 100,000
@@ -314,7 +314,7 @@ targets::tar_read(perc_frail_elderly_high_ethnicity_beddays) |>
 #| label: fig-perc_frail_elderly_high_ethnicity_beddays
 #| fig-cap: !expr get_caption_by_group("Percentage", "Frail and Elderly (high)", "beddays", "ethnicity")
 targets::tar_read(perc_frail_elderly_high_ethnicity_beddays) |>
-  get_perc_by_group_plot("Ethnic_Category")
+  get_perc_by_group_plot("Ethnic_Category", "beddays")
 ```
 
 #### Rates per 100,000
@@ -359,7 +359,7 @@ targets::tar_read(perc_frail_elderly_high_imd_beddays) |>
 #| label: fig-perc_frail_elderly_high_imd_beddays
 #| fig-cap: !expr get_caption_by_group("Percentage", "Frail and Elderly (high)", "beddays", "imd")
 targets::tar_read(perc_frail_elderly_high_imd_beddays) |>
-  get_perc_by_group_plot("imd19_decile")
+  get_perc_by_group_plot("imd19_decile", "beddays")
 ```
 
 #### Rates per 100,000
@@ -404,7 +404,7 @@ targets::tar_read(perc_frail_elderly_high_sex_beddays) |>
 #| label: fig-perc_frail_elderly_high_sex_beddays
 #| fig-cap: !expr get_caption_by_group("Percentage", "Frail and Elderly (high)", "beddays", "sex")
 targets::tar_read(perc_frail_elderly_high_sex_beddays) |>
-  get_perc_by_group_plot("sex")
+  get_perc_by_group_plot("sex", "beddays")
 ```
 
 #### Rates per 100,000
@@ -431,40 +431,85 @@ targets::tar_read(rates_frail_elderly_high_sex_beddays) |>
 
 ### Admission Characteristics
 
+In this section, mitigable activity for the frail and elderly (high) cohort are shown by admission characteristics.
+
 :::panel-tabset
 
-### Admissions
+### LOS
 
 ::: panel-tabset
 
-#### LOS
+#### Admissions
+
+```{r}
+perc_frail_elderly_high_los_admissions <- targets::tar_read(perc_frail_elderly_high_los_admissions)
+
+perc_frail_elderly_high_los_admissions_weeks <- perc_frail_elderly_high_los_admissions |>
+  dplyr::mutate(weeks = dplyr::case_when(los_range == "0" ~ "1",
+                                         los_range == "1" ~ "1",
+                                         los_range == "2" ~ "1",
+                                         los_range == "3" ~ "1",
+                                         los_range == "4-7" ~ "1",
+                                         los_range == "8-14" ~ "2",
+                                         los_range == "15-21" ~ "3",
+                                         los_range == "22+" ~ "3+",
+                                         .default = "error")) |>
+  dplyr::summarise(number = sum(admissions), .by = weeks) |>
+  dplyr::mutate(perc_weeks = janitor::round_half_up(number / sum(number) * 100, 2))
+```
+
+Of the 2023/24 mitigable admissions for frail and elderly (high) cohort, most (`r perc_frail_elderly_high_los_admissions_weeks |> dplyr::filter(weeks == 1) |> dplyr::pull(perc_weeks)`%) length of stays are under 1 week and `r perc_frail_elderly_high_los_admissions |> dplyr::filter(los_range == 0) |> dplyr::pull(perc)`% are less than 1 day.  
 
 ```{r}
 #| label: tbl-perc_frail_elderly_high_los_admissions
-#| tbl-cap: Mitigable activity for Frail and Elderly Admissions in 2023-24 by length of stay.
-targets::tar_read(perc_frail_elderly_high_los_admissions) |>
+#| tbl-cap: !expr get_caption_by_group("Percentage", "Frail and Elderly (high)", "admissions", "los")
+perc_frail_elderly_high_los_admissions |>
   get_table_perc() 
 ```
 
 ```{r}
 #| label: fig-perc_frail_elderly_high_los_admissions
-#| fig-cap: Mitigable activity for Frail and Elderly Admissions in 2023-24 by length of stay.
-targets::tar_read(perc_frail_elderly_high_los_admissions) |>
-  get_perc_by_group_plot("los_range")
+#| fig-cap: !expr get_caption_by_group("Percentage", "Frail and Elderly (high)", "admissions", "los")
+perc_frail_elderly_high_los_admissions |>
+  get_perc_by_group_plot("los_range", "admissions")
 ```
 
-#### Specialty
+#### Beddays
+
+```{r}
+#| label: tbl-perc_frail_elderly_high_los_beddays
+#| tbl-cap: !expr get_caption_by_group("Percentage", "Frail and Elderly (high)", "beddays", "los")
+targets::tar_read(perc_frail_elderly_high_los_beddays) |>
+  get_table_perc() 
+```
+
+```{r}
+#| label: fig-perc_frail_elderly_high_los_beddays
+#| fig-cap: !expr get_caption_by_group("Percentage", "Frail and Elderly (high)", "beddays", "los")
+targets::tar_read(perc_frail_elderly_high_los_beddays) |>
+  get_perc_by_group_plot("los_range", "beddays")
+```
+
+:::
+
+### Specialty
+
+Across both admissions and beddays, the top two specialties of mitigable activity for the Frail and Elderly (high) cohort are Geriatric Medicine and General Internal General Internal Medicine.
+
+:::panel-tabset
+
+#### Admissions
 
 ```{r}
 #| label: tbl-perc_frail_elderly_high_mainspecf_admissions
-#| tbl-cap: Top ten specialties of mitigable activity for Frail and Elderly Admissions in 2023-24.
+#| tbl-cap: !expr get_caption_top_ten_specialties("Frail and Elderly (high)", "admissions")
 targets::tar_read(frail_elderly_high_specialties_top_ten_admissions) |>
   get_table_perc() 
 ```
 
 ```{r}
 #| label: fig-perc_frail_elderly_high_mainspecf_admissions
-#| fig-cap: Top ten specialties of mitigable activity for Frail and Elderly Admissions in 2023-24.
+#| fig-cap: !expr get_caption_top_ten_specialties("Frail and Elderly (high)", "admissions")
 targets::tar_read(frail_elderly_high_specialties_top_ten_admissions) |>
   ggplot2::ggplot(ggplot2::aes(perc, 
                                reorder(specialty, perc),
@@ -477,40 +522,18 @@ targets::tar_read(frail_elderly_high_specialties_top_ten_admissions) |>
                 y = "Specialty")
 ```
 
-:::
-
-### Beddays
-
-::: panel-tabset
-
-#### LOS
-
-```{r}
-#| label: tbl-perc_frail_elderly_high_los_beddays
-#| tbl-cap: Mitigable activity for Frail and Elderly Admissions in 2023-24 by length of stay.
-targets::tar_read(perc_frail_elderly_high_los_beddays) |>
-  get_table_perc() 
-```
-
-```{r}
-#| label: fig-perc_frail_elderly_high_los_beddays
-#| fig-cap: Mitigable activity for Frail and Elderly Admissions in 2023-24 by length of stay.
-targets::tar_read(perc_frail_elderly_high_los_beddays) |>
-  get_perc_by_group_plot("los_range")
-```
-
-#### Specialty
+#### Beddays
 
 ```{r}
 #| label: tbl-perc_frail_elderly_high_mainspecf_beddays
-#| tbl-cap: Top ten specialties of mitigable activity for Frail and Elderly Admissions in 2023-24.
+#| tbl-cap: !expr get_caption_top_ten_specialties("Frail and Elderly (high)", "beddays")
 targets::tar_read(frail_elderly_high_specialties_top_ten_beddays) |>
   get_table_perc() 
 ```
 
 ```{r}
 #| label: fig-perc_frail_elderly_high_mainspecf_beddays
-#| fig-cap: Top ten specialties of mitigable activity for Frail and Elderly Admissions in 2023-24.
+#| fig-cap: !expr get_caption_top_ten_specialties("Frail and Elderly (high)", "beddays")
 targets::tar_read(frail_elderly_high_specialties_top_ten_beddays) |>
   ggplot2::ggplot(ggplot2::aes(perc, 
                                reorder(specialty, perc),
