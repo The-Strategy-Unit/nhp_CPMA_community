@@ -13,7 +13,8 @@ format_as_title <- function(col_name) {
                                "Percentage" = "Perc",
                                "Pop" = "Population",
                                "Lowercl" = "Lower CL",
-                               "Uppercl" = "Upper CL"))
+                               "Uppercl" = "Upper CL",
+                               "Los Range" = "LOS Range"))
   
   return(title)
 }
