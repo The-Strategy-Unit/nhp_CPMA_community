@@ -23,13 +23,26 @@ options(scipen = 999)
 
 This cohort includes elderly patients with a high level of frailty, specifically, those 75 years of age or over with an emergency admission and a frailty score over 15. The frailty score is calculated from ICD-10 diagnoses recorded for admissions during the previous 2 years and using the risk scores in Gilbert et al (2018), Development and validation of a Hospital Frailty Risk Score focusing on older people in acute care settings using electronic hospital records: an observational study. The Lancet, 391(10132), pp.1775-1782.
 
-
 ## Descriptive Analysis of Mitigable Activity
 
 ```{r}
+overview_frail_elderly_high <- targets::tar_read(overview_frail_elderly_high)
+
+frail_elderly_high_admissions_perc <- overview_frail_elderly_high |>
+  dplyr::filter(metric == "Admissions") |>
+  dplyr::pull(perc)
+
+frail_elderly_high_beddays_perc <- overview_frail_elderly_high |>
+  dplyr::filter(metric == "Beddays") |>
+  dplyr::pull(perc)
+```
+
+In 2023/24, `r frail_elderly_high_admissions_perc`% of all emergency admissions and `r frail_elderly_high_beddays_perc`% of all emergency beddays fall under mitigable activity for the frail and elderly (high) cohort (@tbl-perc_frail_elderly_high).
+
+```{r}
 #| label: tbl-perc_frail_elderly_high
-#| tbl-cap: Mitigable activity for Frail and Elderly Admissions in 2023-24.
-targets::tar_read(overview_frail_elderly_high) |>
+#| tbl-cap: Percentage of mitigable activity for Frail and Elderly Admissions by emergency activity in 2023-24.
+overview_frail_elderly_high |>
   get_table_perc()
 ```
 
@@ -43,6 +56,13 @@ targets::tar_read(overview_frail_elderly_high) |>
 
 ### Age
 
+```{r}
+perc_frail_elderly_high_age_admissions <- targets::tar_read(perc_frail_elderly_high_age_admissions)
+rates_frail_elderly_high_age_admissions <- targets::tar_read(rates_frail_elderly_high_age_admissions)
+```
+
+Of 2023/24 mitigable admissions for the frail and elderly (high) cohort, most patients (`r perc_frail_elderly_high_age_admissions |> dplyr::filter(age_range == "85-89") |> dplyr::pull(perc)`%) are in the 85-89 year old age group (@tbl-perc_frail_elderly_high_age_admissions). Although the percentages for each age group are roughly similar, the rates of mitigable admissions per 100,000 population increases with age, with the 90+ age group having the highest rates at `r rates_frail_elderly_high_age_admissions |> dplyr::filter(age_range == "90+") |> dplyr::pull(value)` per 100,000 (@tbl-rate_frail_elderly_high_age_admissions).
+
 ::: panel-tabset
 
 #### Perc
@@ -50,14 +70,14 @@ targets::tar_read(overview_frail_elderly_high) |>
 ```{r}
 #| label: tbl-perc_frail_elderly_high_age_admissions
 #| tbl-cap: Mitigable activity for Frail and Elderly Admissions in 2023-24 by age.
-targets::tar_read(perc_frail_elderly_high_age_admissions) |>
+perc_frail_elderly_high_age_admissions |>
   get_table_perc() 
 ```
 
 ```{r}
 #| label: fig-perc_frail_elderly_high_age_admissions
 #| fig-cap: Mitigable activity for Frail and Elderly Admissions in 2023-24 by age.
-targets::tar_read(perc_frail_elderly_high_age_admissions) |>
+perc_frail_elderly_high_age_admissions|>
   get_perc_by_group_plot("age_range")
 ```
 
@@ -66,20 +86,27 @@ targets::tar_read(perc_frail_elderly_high_age_admissions) |>
 ```{r}
 #| label: tbl-rate_frail_elderly_high_age_admissions
 #| tbl-cap: Mitigable activity for Frail and Elderly Admissions in 2023-24 by age.
-targets::tar_read(rates_frail_elderly_high_age_admissions) |>
+rates_frail_elderly_high_age_admissions |>
   get_rates_by_group_table() 
 ```
 
 ```{r}
 #| label: fig-rate_frail_elderly_high_age_admissions
 #| fig-cap: Mitigable activity for Frail and Elderly Admissions in 2023-24 by age.
-targets::tar_read(rates_frail_elderly_high_age_admissions) |>
+rates_frail_elderly_high_age_admissions |>
   get_rates_by_group_plot("age_range")
 ```
 
 :::
 
 ### Ethnicity
+
+```{r}
+perc_frail_elderly_high_ethnicity_admissions <- targets::tar_read(perc_frail_elderly_high_ethnicity_admissions)
+rates_frail_elderly_high_ethnicity_admissions <- targets::tar_read(rates_frail_elderly_high_ethnicity_admissions)
+```
+
+Patients in the White ethnic group make up the majority (`r perc_frail_elderly_high_ethnicity_admissions |> dplyr::filter(Ethnic_Category == "White") |> dplyr::pull(perc)`%) of 2023-24 mitigable admissions for the frail and elderly (high) cohort and have the highest rates (`r rates_frail_elderly_high_ethnicity_admissions |> dplyr::filter(Ethnic_Category == "White") |> dplyr::pull(value)`) per 100,000 population.
 
 ::: panel-tabset
 
@@ -88,14 +115,14 @@ targets::tar_read(rates_frail_elderly_high_age_admissions) |>
 ```{r}
 #| label: tbl-perc_frail_elderly_high_ethnicity_admissions
 #| tbl-cap: Mitigable activity for Frail and Elderly Admissions in 2023-24 by ethnic category.
-targets::tar_read(perc_frail_elderly_high_ethnicity_admissions) |>
+perc_frail_elderly_high_ethnicity_admissions |>
   get_table_perc() 
 ```
 
 ```{r}
 #| label: fig-perc_frail_elderly_high_ethnicity_admissions
 #| fig-cap: Mitigable activity for Frail and Elderly Admissions in 2023-24 by ethnic category.
-targets::tar_read(perc_frail_elderly_high_ethnicity_admissions) |>
+perc_frail_elderly_high_ethnicity_admissions |>
   get_perc_by_group_plot("Ethnic_Category")
 ```
 
@@ -104,20 +131,27 @@ targets::tar_read(perc_frail_elderly_high_ethnicity_admissions) |>
 ```{r}
 #| label: tbl-rate_frail_elderly_high_ethnicity_admissions
 #| tbl-cap: Mitigable activity for Frail and Elderly Admissions in 2023-24 by ethnic category.
-targets::tar_read(rates_frail_elderly_high_ethnicity_admissions) |>
+rates_frail_elderly_high_ethnicity_admissions |>
   get_rates_by_group_table() 
 ```
 
 ```{r}
 #| label: fig-rate_frail_elderly_high_ethnicity_admissions
 #| fig-cap: Mitigable activity for Frail and Elderly Admissions in 2023-24 by ethnic category.
-targets::tar_read(rates_frail_elderly_high_ethnicity_admissions) |>
+rates_frail_elderly_high_ethnicity_admissions |>
   get_rates_by_group_plot("Ethnic_Category")
 ```
 
 :::
 
 ### IMD
+
+```{r}
+perc_frail_elderly_high_imd_admissions <- targets::tar_read(perc_frail_elderly_high_imd_admissions)
+rates_frail_elderly_high_imd_admissions <- targets::tar_read(rates_frail_elderly_high_imd_admissions)
+```
+
+
 
 ::: panel-tabset
 
@@ -126,14 +160,14 @@ targets::tar_read(rates_frail_elderly_high_ethnicity_admissions) |>
 ```{r}
 #| label: tbl-perc_frail_elderly_high_imd_admissions
 #| tbl-cap: Mitigable activity for Frail and Elderly Admissions in 2023-24 by IMD decile.
-targets::tar_read(perc_frail_elderly_high_imd_admissions) |>
+perc_frail_elderly_high_imd_admissions |>
   get_table_perc() 
 ```
 
 ```{r}
 #| label: fig-perc_frail_elderly_high_imd_admissions
 #| fig-cap: Mitigable activity for Frail and Elderly Admissions in 2023-24 by IMD decile.
-targets::tar_read(perc_frail_elderly_high_imd_admissions) |>
+perc_frail_elderly_high_imd_admissions |>
   get_perc_by_group_plot("imd19_decile")
 ```
 
@@ -142,14 +176,14 @@ targets::tar_read(perc_frail_elderly_high_imd_admissions) |>
 ```{r}
 #| label: tbl-rate_frail_elderly_high_imd_admissions
 #| tbl-cap: Mitigable activity for Frail and Elderly Admissions in 2023-24 by IMD decile.
-targets::tar_read(rates_frail_elderly_high_imd_admissions) |>
+rates_frail_elderly_high_imd_admissions |>
   get_rates_by_group_table() 
 ```
 
 ```{r}
 #| label: fig-rate_frail_elderly_high_imd_admissions
 #| fig-cap: Mitigable activity for Frail and Elderly Admissions in 2023-24 by IMD decile.
-targets::tar_read(rates_frail_elderly_high_imd_admissions) |>
+rates_frail_elderly_high_imd_admissions |>
   get_rates_by_group_plot("imd19_decile")
 ```
 
@@ -157,21 +191,28 @@ targets::tar_read(rates_frail_elderly_high_imd_admissions) |>
 
 ### Sex
 
-::: panel-tabset
+```{r}
+perc_frail_elderly_high_sex_admissions <- targets::tar_read(perc_frail_elderly_high_sex_admissions)
+rates_frail_elderly_high_sex_admissions <- targets::tar_read(rates_frail_elderly_high_sex_admissions)
+```
+
+The majority (`r perc_frail_elderly_high_sex_admissions |> dplyr::filter(sex == "Female") |> dplyr::pull(perc)`%) of mitigable admissions for the frail and elderly (high) cohort are for female patients. Females also have the higher rate per 100,000 at `r rates_frail_elderly_high_sex_admissions |> dplyr::filter(sex == "Female") |> dplyr::pull(value)` compared to `r rates_frail_elderly_high_sex_admissions |> dplyr::filter(sex == "Male") |> dplyr::pull(value)` for males.
+
+::: panel-tabset 
 
 #### Perc
 
 ```{r}
 #| label: tbl-perc_frail_elderly_high_sex_admissions
 #| tbl-cap: Mitigable activity for Frail and Elderly Admissions in 2023-24 by sex.
-targets::tar_read(perc_frail_elderly_high_sex_admissions) |>
+perc_frail_elderly_high_sex_admissions |>
   get_table_perc() 
 ```
 
 ```{r}
 #| label: fig-perc_frail_elderly_high_sex_admissions
 #| fig-cap: Mitigable activity for Frail and Elderly Admissions in 2023-24 by sex.
-targets::tar_read(perc_frail_elderly_high_sex_admissions) |>
+perc_frail_elderly_high_sex_admissions |>
   get_perc_by_group_plot("sex")
 ```
 
@@ -180,14 +221,14 @@ targets::tar_read(perc_frail_elderly_high_sex_admissions) |>
 ```{r}
 #| label: tbl-rate_frail_elderly_high_sex_admissions
 #| tbl-cap: Mitigable activity for Frail and Elderly Admissions in 2023-24 by sex.
-targets::tar_read(rates_frail_elderly_high_sex_admissions) |>
+rates_frail_elderly_high_sex_admissions |>
   get_rates_by_group_table() 
 ```
 
 ```{r}
 #| label: fig-rate_frail_elderly_high_sex_admissions
 #| fig-cap: Mitigable activity for Frail and Elderly Admissions in 2023-24 by sex.
-targets::tar_read(rates_frail_elderly_high_sex_admissions) |>
+rates_frail_elderly_high_sex_admissions |>
   get_rates_by_group_plot("sex")
 ```
 
