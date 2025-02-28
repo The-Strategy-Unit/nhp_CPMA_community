@@ -29,7 +29,7 @@ This cohort includes elderly patients with a high level of frailty, specifically
 ```{r}
 #| label: tbl-perc_frail_elderly_high
 #| tbl-cap: Mitigable activity for Frail and Elderly Admissions in 2023-24.
-targets::tar_read(total_beddays_episodes_frail_elderly_high) |>
+targets::tar_read(overview_frail_elderly_high) |>
   get_table_perc()
 ```
 

@@ -164,8 +164,8 @@ list(
       tidyr::separate_wider_delim(metric_type, "_", names = c("a", "metric", "type"))
   ),
   tar_target(
-    total_beddays_episodes_frail_elderly_high,
-    get_perc_admissions_beddays("emergency", "frail_elderly_high == 1", total_beddays_episodes)
+    overview_frail_elderly_high,
+    get_overview_of_mitigator("emergency", "frail_elderly_high == 1", total_beddays_episodes)
   ),
   
   ## Percentage breakdowns -----------------------------------------------------

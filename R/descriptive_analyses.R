@@ -1,7 +1,11 @@
 # Functions used to complete the descriptive analyses.
 
 # Percentage breakdowns --------------------------------------------------------
-#' Get the percentage of mitigable admissions for a mitigator.
+#' Get an overview of mitigable admissions for a mitigator.
+#' 
+#' That is, get the number of mitigable admissions and beddays for a mitigator 
+#' in 2023-24, get the total number of all emergency or elective admissions and 
+#' calculate the percentage.
 #'
 #' @param activity_type Either `"emergency"` or `"elective"`.
 #' @param condition A string containing the expression needed to filter for a 
@@ -10,9 +14,9 @@
 #' @param connection The Databricks connection.
 #'
 #' @return A dataframe.
-get_perc_admissions_beddays <- function(activity_type,
+get_overview_of_mitigator <- function(activity_type,
                                     condition,
-                                    totals = total_beddays_episodes,
+                                    totals,
                                     connection = sc) {
   totals <- totals |>
     dplyr::filter(type == activity_type) |>
