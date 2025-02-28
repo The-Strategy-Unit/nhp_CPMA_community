@@ -1,0 +1,831 @@
+# Frail Elderly Cohort (high frailty)
+
+```{r}
+library("flextable")
+library("tidyr")
+library("dplyr")
+library("ggplot2")
+library("StrategyUnitTheme")
+library("forcats")
+library("ComplexUpset")
+library("scales")
+library("targets")
+library("plotly")
+library("patchwork")
+
+source("R/captions.R")
+source("R/general.R")
+source("R/descriptive_analyses.R")
+source("R/Functions for cohort overlap.R")
+source("R/Functions for trend analysis.R")
+
+options(scipen = 999)
+```
+
+This cohort includes elderly patients with a high level of frailty, specifically, those 75 years of age or over with an emergency admission and a frailty score over 15. The frailty score is calculated from ICD-10 diagnoses recorded for admissions during the previous 2 years and using the risk scores in Gilbert et al (2018), Development and validation of a Hospital Frailty Risk Score focusing on older people in acute care settings using electronic hospital records: an observational study. The Lancet, 391(10132), pp.1775-1782.
+
+## Descriptive Analysis of Mitigable Activity
+
+```{r}
+overview_frail_elderly_high <- targets::tar_read(overview_frail_elderly_high)
+
+frail_elderly_high_admissions_perc <- overview_frail_elderly_high |>
+  dplyr::filter(metric == "Admissions") |>
+  dplyr::pull(perc)
+
+frail_elderly_high_beddays_perc <- overview_frail_elderly_high |>
+  dplyr::filter(metric == "Beddays") |>
+  dplyr::pull(perc)
+```
+
+In 2023/24, `r frail_elderly_high_admissions_perc`% of all emergency admissions and `r frail_elderly_high_beddays_perc`% of all emergency beddays fall under mitigable activity for the frail and elderly (high) cohort (@tbl-perc_frail_elderly_high).
+
+```{r}
+#| label: tbl-perc_frail_elderly_high
+#| tbl-cap: !expr get_caption_overview("Frail and Elderly (high)", "emergency")
+overview_frail_elderly_high |>
+  get_table_perc()
+```
+
+### Patient Characteristics
+
+In this section, the number and percentage of mitigable activity for the frail and elderly (high) cohort are shown by patient characteristics: age, ethnic category, IMD decile and sex. Rates per 100,000 population are also provided for context. 
+
+Outputs are presented for both admissions and beddays, but patterns are broadly similar across the two.
+
+::: panel-tabset
+
+### Admissions
+
+::: panel-tabset
+
+### Age
+
+```{r}
+perc_frail_elderly_high_age_admissions <- targets::tar_read(perc_frail_elderly_high_age_admissions)
+rates_frail_elderly_high_age_admissions <- targets::tar_read(rates_frail_elderly_high_age_admissions)
+```
+
+Of 2023/24 mitigable admissions for the frail and elderly (high) cohort, most patients (`r perc_frail_elderly_high_age_admissions |> dplyr::filter(age_range == "85-89") |> dplyr::pull(perc)`%) are in the 85-89 year old age group (@tbl-perc_frail_elderly_high_age_admissions). Although the percentages for each age group are roughly similar, the rates of mitigable admissions per 100,000 population increases with age, with the 90+ age group having the highest rates at `r rates_frail_elderly_high_age_admissions |> dplyr::filter(age_range == "90+") |> dplyr::pull(value) |> prettyNum(big.mark = ",")` per 100,000 (@tbl-rate_frail_elderly_high_age_admissions).
+
+::: panel-tabset
+
+#### Perc
+
+```{r}
+#| label: tbl-perc_frail_elderly_high_age_admissions
+#| tbl-cap: !expr get_caption_by_group("Percentage", "Frail and Elderly (high)", "admissions", "age group")
+perc_frail_elderly_high_age_admissions |>
+  get_table_perc() 
+```
+
+```{r}
+#| label: fig-perc_frail_elderly_high_age_admissions
+#| fig-cap: !expr get_caption_by_group("Percentage", "Frail and Elderly (high)", "admissions", "age group")
+perc_frail_elderly_high_age_admissions |>
+  get_perc_by_group_plot("age_range", "admissions")
+```
+
+#### Rates per 100,000
+
+```{r}
+#| label: tbl-rate_frail_elderly_high_age_admissions
+#| tbl-cap: !expr get_caption_by_group("Rates per 100,000 population", "Frail and Elderly (high)", "admissions", "age group")
+rates_frail_elderly_high_age_admissions |>
+  get_rates_by_group_table() 
+```
+
+```{r}
+#| label: fig-rate_frail_elderly_high_age_admissions
+#| fig-cap: !expr get_caption_by_group("Rates per 100,000 population", "Frail and Elderly (high)", "admissions", "age group")
+rates_frail_elderly_high_age_admissions |>
+  get_rates_by_group_plot("age_range")
+```
+
+:::
+
+### Ethnicity
+
+```{r}
+perc_frail_elderly_high_ethnicity_admissions <- targets::tar_read(perc_frail_elderly_high_ethnicity_admissions)
+rates_frail_elderly_high_ethnicity_admissions <- targets::tar_read(rates_frail_elderly_high_ethnicity_admissions)
+```
+
+Patients in the White ethnic group make up the majority (`r perc_frail_elderly_high_ethnicity_admissions |> dplyr::filter(Ethnic_Category == "White") |> dplyr::pull(perc)`%) of 2023-24 mitigable admissions for the frail and elderly (high) cohort and have the highest rates (`r rates_frail_elderly_high_ethnicity_admissions |> dplyr::filter(Ethnic_Category == "White") |> dplyr::pull(value) |> prettyNum(big.mark = ",")`) per 100,000 population.
+
+::: panel-tabset
+
+#### Perc
+
+```{r}
+#| label: tbl-perc_frail_elderly_high_ethnicity_admissions
+#| tbl-cap: !expr get_caption_by_group("Percentage", "Frail and Elderly (high)", "admissions", "ethnicity")
+perc_frail_elderly_high_ethnicity_admissions |>
+  get_table_perc() 
+```
+
+```{r}
+#| label: fig-perc_frail_elderly_high_ethnicity_admissions
+#| fig-cap: !expr get_caption_by_group("Percentage", "Frail and Elderly (high)", "admissions", "ethnicity")
+perc_frail_elderly_high_ethnicity_admissions |>
+  get_perc_by_group_plot("Ethnic_Category", "admissions")
+```
+
+#### Rates per 100,000
+
+```{r}
+#| label: tbl-rate_frail_elderly_high_ethnicity_admissions
+#| tbl-cap: !expr get_caption_by_group("Rates per 100,000 population", "Frail and Elderly (high)", "admissions", "ethnicity")
+rates_frail_elderly_high_ethnicity_admissions |>
+  get_rates_by_group_table() 
+```
+
+```{r}
+#| label: fig-rate_frail_elderly_high_ethnicity_admissions
+#| fig-cap: !expr get_caption_by_group("Rates per 100,000 population", "Frail and Elderly (high)", "admissions", "ethnicity")
+rates_frail_elderly_high_ethnicity_admissions |>
+  get_rates_by_group_plot("Ethnic_Category")
+```
+
+:::
+
+### IMD
+
+```{r}
+perc_frail_elderly_high_imd_admissions <- targets::tar_read(perc_frail_elderly_high_imd_admissions)
+rates_frail_elderly_high_imd_admissions <- targets::tar_read(rates_frail_elderly_high_imd_admissions)
+```
+
+The percentage of 2023/24 mitigable admissions for the frail and elderly (high) cohort appear similar across the IMD deciles. Patients from areas with IMD deciles 7-9 have the highest rates of mitigable admission per 100,000 (@tbl-rate_frail_elderly_high_imd_admissions). However, there is little difference between patients from the most deprived areas (decile 1) compared to those from the least deprived areas (decile 10).
+
+::: panel-tabset
+
+#### Perc
+
+```{r}
+#| label: tbl-perc_frail_elderly_high_imd_admissions
+#| tbl-cap: !expr get_caption_by_group("Percentage", "Frail and Elderly (high)", "admissions", "imd")
+perc_frail_elderly_high_imd_admissions |>
+  get_table_perc() 
+```
+
+```{r}
+#| label: fig-perc_frail_elderly_high_imd_admissions
+#| fig-cap: !expr get_caption_by_group("Percentage", "Frail and Elderly (high)", "admissions", "imd")
+perc_frail_elderly_high_imd_admissions |>
+  get_perc_by_group_plot("imd19_decile", "admissions")
+```
+
+#### Rates per 100,000
+
+```{r}
+#| label: tbl-rate_frail_elderly_high_imd_admissions
+#| tbl-cap: !expr get_caption_by_group("Rates per 100,000 population", "Frail and Elderly (high)", "admissions", "imd")
+rates_frail_elderly_high_imd_admissions |>
+  get_rates_by_group_table() 
+```
+
+```{r}
+#| label: fig-rate_frail_elderly_high_imd_admissions
+#| fig-cap: !expr get_caption_by_group("Rates per 100,000 population", "Frail and Elderly (high)", "admissions", "imd")
+rates_frail_elderly_high_imd_admissions |>
+  get_rates_by_group_plot("imd19_decile")
+```
+
+:::
+
+### Sex
+
+```{r}
+perc_frail_elderly_high_sex_admissions <- targets::tar_read(perc_frail_elderly_high_sex_admissions)
+rates_frail_elderly_high_sex_admissions <- targets::tar_read(rates_frail_elderly_high_sex_admissions)
+```
+
+The majority (`r perc_frail_elderly_high_sex_admissions |> dplyr::filter(sex == "Female") |> dplyr::pull(perc)`%) of mitigable admissions for the frail and elderly (high) cohort are for female patients. Females also have the higher rate per 100,000 at `r rates_frail_elderly_high_sex_admissions |> dplyr::filter(sex == "Female") |> dplyr::pull(value) |> prettyNum(big.mark = ",")` compared to `r rates_frail_elderly_high_sex_admissions |> dplyr::filter(sex == "Male") |> dplyr::pull(value) |> prettyNum(big.mark = ",")` for males (@tbl-rate_frail_elderly_high_sex_admissions).
+
+::: panel-tabset 
+
+#### Perc
+
+```{r}
+#| label: tbl-perc_frail_elderly_high_sex_admissions
+#| tbl-cap: !expr get_caption_by_group("Percentage", "Frail and Elderly (high)", "admissions", "sex")
+perc_frail_elderly_high_sex_admissions |>
+  get_table_perc() 
+```
+
+```{r}
+#| label: fig-perc_frail_elderly_high_sex_admissions
+#| fig-cap: !expr get_caption_by_group("Percentage", "Frail and Elderly (high)", "admissions", "sex")
+perc_frail_elderly_high_sex_admissions |>
+  get_perc_by_group_plot("sex", "admissions")
+```
+
+#### Rates per 100,000
+
+```{r}
+#| label: tbl-rate_frail_elderly_high_sex_admissions
+#| tbl-cap: !expr get_caption_by_group("Rates per 100,000 population", "Frail and Elderly (high)", "admissions", "sex")
+rates_frail_elderly_high_sex_admissions |>
+  get_rates_by_group_table() 
+```
+
+```{r}
+#| label: fig-rate_frail_elderly_high_sex_admissions
+#| fig-cap: !expr get_caption_by_group("Rates per 100,000 population", "Frail and Elderly (high)", "admissions", "sex")
+rates_frail_elderly_high_sex_admissions |>
+  get_rates_by_group_plot("sex")
+```
+
+:::
+
+:::
+
+### Beddays
+
+::: panel-tabset
+
+### Age
+
+```{r}
+perc_frail_elderly_high_age_beddays <- targets::tar_read(perc_frail_elderly_high_age_beddays)
+rates_frail_elderly_high_age_beddays <- targets::tar_read(rates_frail_elderly_high_age_beddays)
+```
+
+Of 2023/24 mitigable beddays for the frail and elderly (high) cohort, most patients (`r perc_frail_elderly_high_age_beddays |> dplyr::filter(age_range == "85-89") |> dplyr::pull(perc)`%) are in the 85-89 year old age group (@tbl-perc_frail_elderly_high_age_beddays). Although the percentages for each age group are roughly similar, the rates of mitigable beddays per 100,000 population increases with age, with the 90+ age group having the highest rates at `r rates_frail_elderly_high_age_beddays |> dplyr::filter(age_range == "90+") |> dplyr::pull(value) |> prettyNum(big.mark = ",")` per 100,000 (@tbl-rate_frail_elderly_high_age_beddays).
+
+::: panel-tabset
+
+#### Perc
+
+```{r}
+#| label: tbl-perc_frail_elderly_high_age_beddays
+#| tbl-cap: !expr get_caption_by_group("Percentage", "Frail and Elderly (high)", "beddays", "age group")
+targets::tar_read(perc_frail_elderly_high_age_beddays) |>
+  get_table_perc() 
+```
+
+```{r}
+#| label: fig-perc_frail_elderly_high_age_beddays
+#| fig-cap: !expr get_caption_by_group("Percentage", "Frail and Elderly (high)", "beddays", "age group")
+targets::tar_read(perc_frail_elderly_high_age_beddays) |>
+  get_perc_by_group_plot("age_range", "beddays")
+```
+
+#### Rates per 100,000
+
+```{r}
+#| label: tbl-rate_frail_elderly_high_age_beddays
+#| tbl-cap: !expr get_caption_by_group("Rates per 100,000 population", "Frail and Elderly (high)", "beddays", "age group")
+targets::tar_read(rates_frail_elderly_high_age_beddays) |>
+  get_rates_by_group_table() 
+```
+
+```{r}
+#| label: fig-rate_frail_elderly_high_age_beddays
+#| fig-cap: !expr get_caption_by_group("Rates per 100,000 population", "Frail and Elderly (high)", "beddays", "age group")
+targets::tar_read(rates_frail_elderly_high_age_beddays) |>
+  get_rates_by_group_plot("age_range")
+```
+
+:::
+
+### Ethnicity
+
+```{r}
+perc_frail_elderly_high_ethnicity_beddays <- targets::tar_read(perc_frail_elderly_high_ethnicity_beddays)
+rates_frail_elderly_high_ethnicity_beddays <- targets::tar_read(rates_frail_elderly_high_ethnicity_beddays)
+```
+
+Patients in the White ethnic group make up the majority (`r perc_frail_elderly_high_ethnicity_beddays |> dplyr::filter(Ethnic_Category == "White") |> dplyr::pull(perc)`%) of 2023-24 mitigable beddays for the frail and elderly (high) cohort and have the highest rates (`r rates_frail_elderly_high_ethnicity_beddays |> dplyr::filter(Ethnic_Category == "White") |> dplyr::pull(value) |> prettyNum(big.mark = ",")`) per 100,000 population.
+
+::: panel-tabset
+
+#### Perc
+
+```{r}
+#| label: tbl-perc_frail_elderly_high_ethnicity_beddays
+#| tbl-cap: !expr get_caption_by_group("Percentage", "Frail and Elderly (high)", "beddays", "ethnicity")
+targets::tar_read(perc_frail_elderly_high_ethnicity_beddays) |>
+  get_table_perc() 
+```
+
+```{r}
+#| label: fig-perc_frail_elderly_high_ethnicity_beddays
+#| fig-cap: !expr get_caption_by_group("Percentage", "Frail and Elderly (high)", "beddays", "ethnicity")
+targets::tar_read(perc_frail_elderly_high_ethnicity_beddays) |>
+  get_perc_by_group_plot("Ethnic_Category", "beddays")
+```
+
+#### Rates per 100,000
+
+```{r}
+#| label: tbl-rate_frail_elderly_high_ethnicity_beddays
+#| tbl-cap: !expr get_caption_by_group("Rates per 100,000 population", "Frail and Elderly (high)", "beddays", "ethnicity")
+targets::tar_read(rates_frail_elderly_high_ethnicity_beddays) |>
+  get_rates_by_group_table() 
+```
+
+```{r}
+#| label: fig-rate_frail_elderly_high_ethnicity_beddays
+#| fig-cap: !expr get_caption_by_group("Rates per 100,000 population", "Frail and Elderly (high)", "beddays", "ethnicity")
+targets::tar_read(rates_frail_elderly_high_ethnicity_beddays) |>
+  get_rates_by_group_plot("Ethnic_Category")
+```
+
+:::
+
+### IMD
+
+```{r}
+perc_frail_elderly_high_imd_beddays <- targets::tar_read(perc_frail_elderly_high_imd_beddays)
+rates_frail_elderly_high_imd_beddays <- targets::tar_read(rates_frail_elderly_high_imd_beddays)
+```
+
+The percentage of 2023/24 mitigable beddays for the frail and elderly (high) cohort appear similar across the IMD deciles. Patients from areas with IMD deciles 7-9 have the highest rates of mitigable admission per 100,000 @tbl-rate_frail_elderly_high_imd_beddays. However, there is little difference between patients from the most deprived areas (decile 1) compared to those from the least deprived areas (decile 10).
+
+::: panel-tabset
+
+#### Perc
+
+```{r}
+#| label: tbl-perc_frail_elderly_high_imd_beddays
+#| tbl-cap: !expr get_caption_by_group("Percentage", "Frail and Elderly (high)", "beddays", "imd")
+targets::tar_read(perc_frail_elderly_high_imd_beddays) |>
+  get_table_perc() 
+```
+
+```{r}
+#| label: fig-perc_frail_elderly_high_imd_beddays
+#| fig-cap: !expr get_caption_by_group("Percentage", "Frail and Elderly (high)", "beddays", "imd")
+targets::tar_read(perc_frail_elderly_high_imd_beddays) |>
+  get_perc_by_group_plot("imd19_decile", "beddays")
+```
+
+#### Rates per 100,000
+
+```{r}
+#| label: tbl-rate_frail_elderly_high_imd_beddays
+#| tbl-cap: !expr get_caption_by_group("Rates per 100,000 population", "Frail and Elderly (high)", "beddays", "imd")
+targets::tar_read(rates_frail_elderly_high_imd_beddays) |>
+  get_rates_by_group_table() 
+```
+
+```{r}
+#| label: fig-rate_frail_elderly_high_imd_beddays
+#| fig-cap: !expr get_caption_by_group("Rates per 100,000 population", "Frail and Elderly (high)", "beddays", "imd")
+targets::tar_read(rates_frail_elderly_high_imd_beddays) |>
+  get_rates_by_group_plot("imd19_decile")
+```
+
+:::
+
+### Sex
+
+```{r}
+perc_frail_elderly_high_sex_beddays <- targets::tar_read(perc_frail_elderly_high_sex_beddays)
+rates_frail_elderly_high_sex_beddays <- targets::tar_read(rates_frail_elderly_high_sex_beddays)
+```
+
+The majority (`r perc_frail_elderly_high_sex_beddays |> dplyr::filter(sex == "Female") |> dplyr::pull(perc)`%) of mitigable beddays for the frail and elderly (high) cohort are for female patients. Females also have the higher rate per 100,000 at `r rates_frail_elderly_high_sex_beddays |> dplyr::filter(sex == "Female") |> dplyr::pull(value) |> prettyNum(big.mark = ",")` compared to `r rates_frail_elderly_high_sex_beddays |> dplyr::filter(sex == "Male") |> dplyr::pull(value) |> prettyNum(big.mark = ",")` for males (@tbl-rate_frail_elderly_high_sex_beddays).
+
+::: panel-tabset
+
+#### Perc
+
+```{r}
+#| label: tbl-perc_frail_elderly_high_sex_beddays
+#| tbl-cap: !expr get_caption_by_group("Percentage", "Frail and Elderly (high)", "beddays", "sex")
+targets::tar_read(perc_frail_elderly_high_sex_beddays) |>
+  get_table_perc() 
+```
+
+```{r}
+#| label: fig-perc_frail_elderly_high_sex_beddays
+#| fig-cap: !expr get_caption_by_group("Percentage", "Frail and Elderly (high)", "beddays", "sex")
+targets::tar_read(perc_frail_elderly_high_sex_beddays) |>
+  get_perc_by_group_plot("sex", "beddays")
+```
+
+#### Rates per 100,000
+
+```{r}
+#| label: tbl-rate_frail_elderly_high_sex_beddays
+#| tbl-cap: !expr get_caption_by_group("Rates per 100,000 population", "Frail and Elderly (high)", "beddays", "sex")
+targets::tar_read(rates_frail_elderly_high_sex_beddays) |>
+  get_rates_by_group_table() 
+```
+
+```{r}
+#| label: fig-rate_frail_elderly_high_sex_beddays
+#| fig-cap: !expr get_caption_by_group("Rates per 100,000 population", "Frail and Elderly (high)", "beddays", "sex")
+targets::tar_read(rates_frail_elderly_high_sex_beddays) |>
+  get_rates_by_group_plot("sex")
+```
+
+:::
+
+:::
+
+:::
+
+### Admission Characteristics
+
+In this section, mitigable activity for the frail and elderly (high) cohort are shown by admission characteristics.
+
+:::panel-tabset
+
+### LOS
+
+::: panel-tabset
+
+#### Admissions
+
+```{r}
+perc_frail_elderly_high_los_admissions <- targets::tar_read(perc_frail_elderly_high_los_admissions)
+
+perc_frail_elderly_high_los_admissions_weeks <- perc_frail_elderly_high_los_admissions |>
+  dplyr::mutate(weeks = dplyr::case_when(los_range == "0" ~ "1",
+                                         los_range == "1" ~ "1",
+                                         los_range == "2" ~ "1",
+                                         los_range == "3" ~ "1",
+                                         los_range == "4-7" ~ "1",
+                                         los_range == "8-14" ~ "2",
+                                         los_range == "15-21" ~ "3",
+                                         los_range == "22+" ~ "3+",
+                                         .default = "error")) |>
+  dplyr::summarise(number = sum(admissions), .by = weeks) |>
+  dplyr::mutate(perc_weeks = janitor::round_half_up(number / sum(number) * 100, 2))
+```
+
+Of the 2023/24 mitigable admissions for frail and elderly (high) cohort, most (`r perc_frail_elderly_high_los_admissions_weeks |> dplyr::filter(weeks == 1) |> dplyr::pull(perc_weeks)`%) length of stays are under 1 week and `r perc_frail_elderly_high_los_admissions |> dplyr::filter(los_range == 0) |> dplyr::pull(perc)`% are less than 1 day.  
+
+```{r}
+#| label: tbl-perc_frail_elderly_high_los_admissions
+#| tbl-cap: !expr get_caption_by_group("Percentage", "Frail and Elderly (high)", "admissions", "los")
+perc_frail_elderly_high_los_admissions |>
+  get_table_perc() 
+```
+
+```{r}
+#| label: fig-perc_frail_elderly_high_los_admissions
+#| fig-cap: !expr get_caption_by_group("Percentage", "Frail and Elderly (high)", "admissions", "los")
+perc_frail_elderly_high_los_admissions |>
+  get_perc_by_group_plot("los_range", "admissions")
+```
+
+#### Beddays
+
+```{r}
+#| label: tbl-perc_frail_elderly_high_los_beddays
+#| tbl-cap: !expr get_caption_by_group("Percentage", "Frail and Elderly (high)", "beddays", "los")
+targets::tar_read(perc_frail_elderly_high_los_beddays) |>
+  get_table_perc() 
+```
+
+```{r}
+#| label: fig-perc_frail_elderly_high_los_beddays
+#| fig-cap: !expr get_caption_by_group("Percentage", "Frail and Elderly (high)", "beddays", "los")
+targets::tar_read(perc_frail_elderly_high_los_beddays) |>
+  get_perc_by_group_plot("los_range", "beddays")
+```
+
+:::
+
+### Specialty
+
+Across both admissions and beddays, the top two specialties of mitigable activity for the Frail and Elderly (high) cohort are Geriatric Medicine and General Internal General Internal Medicine.
+
+:::panel-tabset
+
+#### Admissions
+
+```{r}
+#| label: tbl-perc_frail_elderly_high_mainspecf_admissions
+#| tbl-cap: !expr get_caption_top_ten_specialties("Frail and Elderly (high)", "admissions")
+targets::tar_read(frail_elderly_high_specialties_top_ten_admissions) |>
+  get_table_perc() 
+```
+
+```{r}
+#| label: fig-perc_frail_elderly_high_mainspecf_admissions
+#| fig-cap: !expr get_caption_top_ten_specialties("Frail and Elderly (high)", "admissions")
+targets::tar_read(frail_elderly_high_specialties_top_ten_admissions) |>
+  ggplot2::ggplot(ggplot2::aes(perc, 
+                               reorder(specialty, perc),
+                               fill = 'bars_color')) + 
+  ggplot2::geom_col() +
+  ggplot2::scale_fill_manual(values = c('bars_color' = "#f9bf07"), 
+                             guide = 'none') +
+  StrategyUnitTheme::su_theme() +
+  ggplot2::labs(x = "Percentage of mitigable admissions", 
+                y = "Specialty")
+```
+
+#### Beddays
+
+```{r}
+#| label: tbl-perc_frail_elderly_high_mainspecf_beddays
+#| tbl-cap: !expr get_caption_top_ten_specialties("Frail and Elderly (high)", "beddays")
+targets::tar_read(frail_elderly_high_specialties_top_ten_beddays) |>
+  get_table_perc() 
+```
+
+```{r}
+#| label: fig-perc_frail_elderly_high_mainspecf_beddays
+#| fig-cap: !expr get_caption_top_ten_specialties("Frail and Elderly (high)", "beddays")
+targets::tar_read(frail_elderly_high_specialties_top_ten_beddays) |>
+  ggplot2::ggplot(ggplot2::aes(perc, 
+                               reorder(specialty, perc),
+                               fill = 'bars_color')) + 
+  ggplot2::geom_col() +
+  ggplot2::scale_fill_manual(values = c('bars_color' = "#f9bf07"), 
+                             guide = 'none') +
+  StrategyUnitTheme::su_theme() +
+  ggplot2::labs(x = "Percentage of mitigable beddays", 
+                y = "Specialty")
+```
+
+:::
+
+:::
+
+## Cohort overlap
+
+Many of the spells and beddays recorded include activity which falls into more than one mitigator cohort. Therefore we aim to understand which cohorts the Frail Elderly High cohort overlaps with and the extend of that overlap.
+
+### Number and proportion within multiple other cohorts
+For the Frail Elderly High activity we show how much of the activity is included in multiple other mitigable cohorts. Due to the definition of this mitigator all of those in this cohort are also in the Emergency Elderly cohort, so none of this group are solely in the Frail Elderly High cohort. One quarter of this cohort are included 5 or more additional mitigator cohorts.
+
+::: panel-tabset
+
+#### Admissions
+```{r, fig.width=4, fig.height=4}
+#| label: fig-number_of_cohorts_spells
+#| fig-cap: The number and percentage of mitigator cohorts that the Frail Elderly spells are a part of (2023/24).
+
+total_cohort_numbers<-targets::tar_read(total_cohort_numbers)|>
+  filter(frail_elderly_high==1)
+
+
+plotting_barchart_number_of_cohorts(total_cohort_numbers, episodes)
+```
+
+
+#### Beddays
+```{r, fig.width=4, fig.height=4}
+#| label: fig-number_of_cohorts_beddays
+#| fig-cap: The number and percentage of mitigator cohorts that the Frail Elderly beddays are a part of (2023/24).
+
+plotting_barchart_number_of_cohorts(total_cohort_numbers, beddays)
+```
+
+:::
+
+
+
+### Inclusion within other mitigable activity cohorts
+This shows whether the activity within the Elderly Frail High activity is also included in other mitigator cohorts, including where this occurs the number and percentage of Elderly Frail High activity that is also included within other mitigator cohorts. 
+
+For example, Elderly Frail High cohort overlaps with all but 2 of the other mitigator cohorts. All the Elderly Frail High cohort activity is also included in the Emergency Elderly cohort, and 63% of this cohort are in the Alcohol Partially Attributable Chronic cohort.
+
+::: panel-tabset
+
+#### Admissions
+```{r, fig.width=10, fig.height=6 }
+#| label: fig-prop_other_cohorts_frail_spells
+#| fig-cap: The number and proportion of Frail Elderly spells that are included in each of the other cohorts (2023/24).
+
+plotting_barchart_summary_of_overlaps(total_cohort_numbers,"frail_elderly_high", episodes)
+
+```
+
+#### Beddays
+```{r, fig.width=10, fig.height=6 }
+#| label: fig-prop_other_cohorts_frail_beddays
+#| fig-cap: The number and proportion of Frail Elderly beddays that are included in each of the other cohorts (2023/24).
+
+
+plotting_barchart_summary_of_overlaps(total_cohort_numbers,"frail_elderly_high", beddays)
+
+```
+:::
+
+
+### Most common cohort overlaps
+These are the most common cohort combinations for the Elderly Frail High cohort. For this cohort there are a very large number of different cohort combinations, so there are many smaller size cohort combinations that are not shown (all combinations together would add to 100%).
+
+::: panel-tabset
+
+#### Admissions
+
+```{r, fig.width=10, fig.height=6}
+#| label: upset_plot_frail_elderly_high_episodes
+#| fig-cap: The 15 most common mitigator cohort overlaps for Frail Elderly admissions (2023/24).
+
+plot_upset_plot(total_cohort_numbers, episodes)
+  
+```
+#### Beddays
+
+```{r, fig.width=10, fig.height=6}
+#| label: upset_plot_frail_elderly_high_bedday
+#| fig-cap: The 15 most common mitigator cohort overlaps for Frail Elderly beddays (2023/24).
+
+plot_upset_plot(total_cohort_numbers, beddays)
+```
+
+:::
+
+
+## Trend Analysis
+
+### England
+
+::: panel-tabset
+#### Number over time
+::: panel-tabset
+
+#### Admissions
+```{r, fig.width=7, fig.height=3}
+#| label: fig-number_trends_spells_england
+#| fig-cap: The total number of admissions for the Frail Elderly High mitigable activity cohort in England over the last 10 years. 
+numbers_over_time<-tar_read(numbers_over_time)
+
+plot_of_number_over_time(numbers_over_time, "frail_elderly_high", episodes)
+
+```
+#### Beddays
+
+```{r, fig.width=7, fig.height=3}
+#| label: fig-number_trends_beddays_england
+#| fig-cap: The total number of beddays for the Frail Elderly High mitigable activity cohort in England over the last 10 years. 
+plot_of_number_over_time(numbers_over_time, "frail_elderly_high", beddays)
+
+```
+:::
+
+#### By proportion of emergency activity 
+::: panel-tabset
+#### Admissions
+```{r, fig.width=7, fig.height=3}
+#| label: fig-percent_trends_spells_england
+#| fig-cap: The percentage of total emergency admissions that are for Frail Elderly High potentially mitigable activity in England over the last 10 years. 
+
+denominator_over_time<-tar_read(denominator_over_time)
+
+plot_of_percentage_over_time(denominator_over_time, numbers_over_time, "frail_elderly_high", episodes, total_episodes_emergency)
+
+```
+#### Beddays
+```{r, fig.width=7, fig.height=3}
+#| label: fig-percent_trends_beddays_england
+#| fig-cap: The percentage of total emergency beddays that are for Frail Elderly High potentially mitigable activity in England over the last 10 years. 
+
+plot_of_percentage_over_time(denominator_over_time, numbers_over_time, "frail_elderly_high", beddays, total_beddays_emergency)
+
+```
+
+:::
+
+
+#### Standardised rate over time
+
+::: panel-tabset
+
+#### Admissions
+```{r, fig.width=7, fig.height=3}
+#| label: fig-stardardised_trends_spells_england
+#| fig-cap: Age and sex standardised rate of admissions for Frail Elderly High potentially mitigable activity in England over the last 10 years. 
+
+england_age_sex_standardised_rates_episodes<-tar_read(england_age_sex_standardised_rates_episodes)
+
+plot_of_standardised_rates_over_time(england_age_sex_standardised_rates_episodes,"frail_elderly_high")
+
+```
+
+#### Beddays
+```{r, fig.width=7, fig.height=3}
+#| label: fig-stardardised_trends_beddays_england
+#| fig-cap: Age and sex standardised rate of beddays for Frail Elderly High potentially mitigable activity in England over the last 10 years.
+
+england_age_sex_standardised_rates_beddays<-tar_read(england_age_sex_standardised_rates_beddays)
+
+plot_of_standardised_rates_over_time(england_age_sex_standardised_rates_beddays,"frail_elderly_high")
+
+```
+
+:::
+
+
+:::
+
+### ICB
+
+::: panel-tabset
+
+#### Number over time
+::: panel-tabset
+
+#### Admissions
+```{r, fig.width=7, fig.height=3}
+#| label: fig-number_trends_spells_icb
+#| fig-cap: The number of admissions for the Frail Elderly High mitigable activity cohort by ICB over the last 9 years. 
+
+icb_population_data<-tar_read(icb_population_data)
+
+numbers_over_time|>
+    filter(cohorts=="frail_elderly_high")|>
+    filter(fyear!=201415)|>
+    group_by( icb, year)|>
+    summarise(activity=sum(episodes))|>
+  left_join(tar_read(icb_population_data)[,c("icb24cdh", "icb_2024_name")], by=c("icb"="icb24cdh"))|>
+ group_by(icb_2024_name)|>
+  highlight_key(~icb_2024_name) |>
+plot_ly( x = ~year, y = ~activity, type = 'scatter',  mode = 'lines', text=~icb_2024_name,  line = list(color = "#686f73",  width = 1.5))|>
+  highlight(~icb_2024_name, on = "plotly_click", off="plotly_doubleclick", dynamic=TRUE)|>
+   layout(
+         xaxis = list(title=list(text='Year', font = list(size = 20), standoff = 25), showticklabels = TRUE, showline = TRUE, showgrid = F , linewidth=2),
+         yaxis = list(title = 'Number', showline = TRUE, showgrid = F , linewidth=2 ,zeroline = FALSE, tickformat = "digits", anchor="free", shift=100)
+         )
+
+
+```
+#### Beddays
+
+```{r, fig.width=7, fig.height=3}
+#| label: fig-number_trends_beddays_icb
+#| fig-cap: The number of beddays for the Frail Elderly High mitigable activity cohort by ICB over the last 9 years. 
+
+
+```
+:::
+
+#### By proportion of emergency activity 
+::: panel-tabset
+#### Admissions
+```{r, fig.width=7, fig.height=3}
+#| label: fig-percent_trends_spells_icb
+#| fig-cap: The percentage of total emergency admissions that are for Frail Elderly High potentially mitigable activity by ICB over the last 9 years. 
+
+
+```
+#### Beddays
+```{r, fig.width=7, fig.height=3}
+#| label: fig-percent_trends_beddays_icb
+#| fig-cap: The percentage of total emergency beddays that are for Frail Elderly High potentially mitigable activity by ICB over the last 9 years. 
+
+
+```
+
+:::
+
+
+#### Standardised rate over time
+
+::: panel-tabset
+
+#### Admissions
+
+
+#### Beddays
+:::
+
+:::
+
+## Comparative Analysis
+
+This section will have a map of standardised rates to look at variation across ICBs. The map below is a placeholder only.
+
+### ICB
+
+```{r}
+#| output: false
+data <- targets::tar_read(perc_frail_elderly_high_icb_admissions) |>
+  dplyr::mutate(icb = stringr::str_to_upper(icb))
+
+icb_pop <- targets::tar_read(icb_population_data) |>
+  dplyr::filter(fyear == "2023/24") |>
+  dplyr::summarise(pop = sum(icb_population), .by = c(icb24cdh, icb_2024_code))
+
+icb_23_shp <- sf::st_read("https://services1.arcgis.com/ESMARspQHYMw9BZ9/arcgis/rest/services/Integrated_Care_Boards_April_2023_EN_BGC/FeatureServer/0/query?outFields=*&where=1%3D1&f=geojson") |>
+  janitor::clean_names()
+
+# notes
+  # value = number admissions at icb * 100 / population at icb
+  # using 2023 icb shapefile
+```
+
+```{r}
+#| label: fig-perc_frail_elderly_high_icb
+#| fig-cap: Mitigable activity for Frail and Elderly Admissions in 2023-24 by icb.
+icb_23_shp |>
+  dplyr::left_join(icb_pop, by = c("icb23cd" = "icb_2024_code")) |>
+  dplyr::left_join(data, by = c("icb24cdh" = "icb")) |>
+  dplyr::mutate(value = janitor::round_half_up(admissions * 100 /
+                                                  pop, 2)) |>
+  ggplot2::ggplot() +
+  ggplot2::geom_sf(ggplot2::aes(fill = value)) +
+  ggplot2::theme_void()
+```
+

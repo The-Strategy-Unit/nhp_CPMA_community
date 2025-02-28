@@ -1,7 +1,11 @@
 # Functions used to complete the descriptive analyses.
 
 # Percentage breakdowns --------------------------------------------------------
-#' Get the percentage of mitigable admissions for a mitigator.
+#' Get an overview of mitigable admissions for a mitigator.
+#' 
+#' That is, get the number of mitigable admissions and beddays for a mitigator 
+#' in 2023-24, get the total number of all emergency or elective admissions and 
+#' calculate the percentage.
 #'
 #' @param activity_type Either `"emergency"` or `"elective"`.
 #' @param condition A string containing the expression needed to filter for a 
@@ -10,9 +14,9 @@
 #' @param connection The Databricks connection.
 #'
 #' @return A dataframe.
-get_perc_admissions_beddays <- function(activity_type,
+get_overview_of_mitigator <- function(activity_type,
                                     condition,
-                                    totals = total_beddays_episodes,
+                                    totals,
                                     connection = sc) {
   totals <- totals |>
     dplyr::filter(type == activity_type) |>
@@ -106,7 +110,7 @@ get_perc_by_group <- function(group, condition, type, connection = sc){
 #' @param col_name The col_name that the data is split by.
 #'
 #' @return A plot.
-get_perc_by_group_plot <- function(data, col_name) {
+get_perc_by_group_plot <- function(data, col_name, type) {
   col_name_title <- col_name |>
     format_as_title()
   
@@ -120,7 +124,7 @@ get_perc_by_group_plot <- function(data, col_name) {
                                guide = 'none') +
     StrategyUnitTheme::su_theme() +
     ggplot2::labs(x = col_name_title, 
-                  y = "Percentage of mitigable admissions")
+                  y = glue::glue("Percentage of mitigable {type}"))
   
   return(plot)
 }

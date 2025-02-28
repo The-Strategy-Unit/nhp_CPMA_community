@@ -164,8 +164,8 @@ list(
       tidyr::separate_wider_delim(metric_type, "_", names = c("a", "metric", "type"))
   ),
   tar_target(
-    total_beddays_episodes_frail,
-    get_perc_admissions_beddays("emergency", "frail_elderly_high == 1", total_beddays_episodes)
+    overview_frail_elderly_high,
+    get_overview_of_mitigator("emergency", "frail_elderly_high == 1", total_beddays_episodes)
   ),
   
   ## Percentage breakdowns -----------------------------------------------------
@@ -174,7 +174,7 @@ list(
       c("age", "ethnicity", "icb", "imd", "los", "sex"), 2
     ), type = rep(c("admissions", "beddays"), each = 6)),
     tar_target(
-      perc_frail,
+      perc_frail_elderly_high,
       get_perc_by_group(group, "frail_elderly_high == 1", type)
     )
   ),
@@ -183,7 +183,7 @@ list(
   tarchetypes::tar_map(
     list(type = c("admissions", "beddays")),
     tar_target(
-      rates_frail_age,
+      rates_frail_elderly_high_age,
       get_rates_by_group("age", "frail_elderly_high == 1", pop_by_age, type)
     )
   ),
@@ -191,7 +191,7 @@ list(
   tarchetypes::tar_map(
     list(type = c("admissions", "beddays")),
     tar_target(
-      rates_frail_ethnicity,
+      rates_frail_elderly_high_ethnicity,
       get_rates_by_group("ethnicity", "frail_elderly_high == 1", pop_by_ethnicity, type)
     )
   ),
@@ -199,7 +199,7 @@ list(
   tarchetypes::tar_map(
     list(type = c("admissions", "beddays")),
     tar_target(
-      rates_frail_imd,
+      rates_frail_elderly_high_imd,
       get_rates_by_group("imd", "frail_elderly_high == 1", pop_by_imd, type)
     )
   ),
@@ -207,7 +207,7 @@ list(
   tarchetypes::tar_map(
     list(type = c("admissions", "beddays")),
     tar_target(
-      rates_frail_sex,
+      rates_frail_elderly_high_sex,
       get_rates_by_group("sex", "frail_elderly_high == 1", pop_by_sex, type)
     )
   ),
@@ -225,7 +225,7 @@ list(
   tarchetypes::tar_map(
     list(type = c("admissions", "beddays")),
     tar_target(
-      frail_specialties_top_ten,
+      frail_elderly_high_specialties_top_ten,
       get_top_ten_specialties("frail_elderly_high == 1", specialty_key, type)
     )
   ),
