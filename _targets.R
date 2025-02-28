@@ -237,19 +237,6 @@ list(
     Formatting_data_for_cohort_overlap("sl_af_describing_mitigators_final_2324_sex")
   ),
 
- tar_target(
-   upset_plot_frail_elderly_high_episodes,
-   plot_upset_plot(total_cohort_numbers, episodes, "_targets/objects/upset_frail_elderly_high_episodes.png"),
-   format="file"
- ),
-
- 
- tar_target(
-   upset_plot_frail_elderly_high_beddays,
-   plot_upset_plot(total_cohort_numbers, beddays, "_targets/objects/upset_frail_elderly_high_beddays.png"),
-   format="file"
- ),
- 
  # Trends analysis -------------------------------------------------------------
 
 tar_target(

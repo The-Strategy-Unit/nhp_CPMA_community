@@ -135,7 +135,7 @@ plot_of_number_over_time_icb<-function(data, mitigator, activity_type, pop_data)
     plot_ly( x = ~year, y = ~activity, type = 'scatter',  mode = 'lines', text=~icb_2024_name,  line = list(color = "#686f73",  width = 1.5))|>
     highlight(~icb_2024_name, on = "plotly_click", off="plotly_doubleclick", dynamic=TRUE)|>
     layout(
-      xaxis = list(title=list(text='Year', font = list(size = 20), standoff = 25), showticklabels = TRUE, showline = TRUE, showgrid = F , linewidth=2),
+      xaxis = list(title=list(text='Year', range=c(-10, 10), font = list(size = 20), standoff = 25), showticklabels = TRUE, showline = TRUE, showgrid = F , linewidth=2),
       yaxis = list(title = 'Number', showline = TRUE, showgrid = F , linewidth=2 ,zeroline = FALSE, tickformat = "digits")
     )
   
@@ -144,7 +144,7 @@ plot_of_number_over_time_icb<-function(data, mitigator, activity_type, pop_data)
 
 
 
-plot_of_percentage_over_time_icb<-function(data1, data2, mitigator, activity_type, denominator_type){
+plot_of_percentage_over_time_icb<-function(data1, data2, pop_data, mitigator, activity_type, denominator_type){
   
   
   denominator_data<-data1|>
@@ -158,6 +158,7 @@ plot_of_percentage_over_time_icb<-function(data1, data2, mitigator, activity_typ
     summarise(activity=sum({{activity_type}}))|>
     left_join( denominator_data, by=c("fyear", "icb"))|>
     mutate(percentage=round((activity/total_activity)*100,1))|>
+    #left_join(pop_data[,c("icb24cdh", "icb_2024_name")], by=c("icb"="icb24cdh"))|>
     ggplot()+
     geom_line(aes(y=percentage, x=year, group=icb), linewidth=1.4)+
     su_theme()+

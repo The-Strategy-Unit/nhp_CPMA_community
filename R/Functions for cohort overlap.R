@@ -49,76 +49,77 @@ Formatting_data_for_cohort_overlap<-function(table){
 
 # Function to generate upset plot
 
-plot_upset_plot<-function(dataset, activity_type, filename){
+plot_upset_plot<-function(dataset, activity_type){
   
-  activity<-deparse(substitute(activity_type))
+  data<-  dataset|>
+    rename(activity={{activity_type}})|>
+    mutate(total_activity=sum(activity))|>
+    mutate(percentage=round((activity/total_activity)*100,1))|>
+    slice_max(activity,n=15)|>
+    arrange(desc(activity))|>
+    mutate(id=row_number())
   
-  # Filter down to highest combinations
-  data_aggregated<-dataset|>
-    slice_max({{activity_type}},n=15)
-  
-  max_value<-data_aggregated|>
-    mutate(max=max({{activity_type}}))
-  
-  # Count of all mitigable activity and disaggregate data
-  if(activity=="episodes"){
-    all_mitigatable_activity<-sum(dataset$episodes)
-    
-    data<-data_aggregated|>
-      select(-beddays)|>
-      uncount(episodes)
-    
-  } else {
-    all_mitigatable_activity<-sum(dataset$beddays)
-    
-    data<-data_aggregated|>
-      select(-episodes)|>
-      uncount(beddays)
-    
-  }
-  
-  #Count of columns to feed into function
-  number_columns<-ncol(data)-1
-  
-  #Generating the upset plot
-  upset_plot_data<-data
-  
-  cohorts = colnames(upset_plot_data)[1:number_columns]
-  
-  upset_plot_data[cohorts] = upset_plot_data[cohorts] == 1
-  
-  size = get_size_mode('exclusive_intersection')
+  numbers_in_each_cohort<-dataset|>
+    gather(groups, values, -episodes, -beddays)|>
+    filter(values!=0)|>
+    group_by(groups)|>
+    summarise(episodes=sum(episodes),
+              beddays=sum(beddays))
   
   
-  ComplexUpset::upset(upset_plot_data, cohorts, name='Cohorts', 
-                      width_ratio=0.1, n_intersections=15,
-                      set_sizes=FALSE,
-                      keep_empty_groups=FALSE,
-                      themes=(upset_modify_themes(
-                        list(
-                          'intersections_matrix'=theme(text=element_text(size=13),
-                                                       axis.title.x=element_blank())
-                        ))),
-                      base_annotations = list(
-                        'Intersection size'=(
-                          intersection_size(
-                            text_mapping=aes(
-                              label=paste0(round(!!get_size_mode('exclusive_intersection')/(all_mitigatable_activity) * 100, 1), '%', '\n ', scales::comma(!!size) )  ) , 
-                            text=list(size=2.8),
-                            bar_number_threshold = 1,
-                            mapping=aes(fill='bars_color'))+
-                            theme(axis.title.y = element_text(size=14, vjust=-24),
-                                  axis.text.y=element_text(size=10),
-                                  panel.grid.minor = element_blank(),
-                                  panel.grid.major = element_blank())+
-                            scale_fill_manual(values=c('bars_color'="#f9bf07"), guide='none')+
-                            scale_y_continuous(limits=c(0,max_value$max*1.2), labels = label_comma()
-                            ))))
+  top_plot<-data|>
+    ggplot(aes(x=id, y=activity))+
+    geom_bar(stat="identity", fill="#f9bf07" )+
+    su_theme()+
+    theme(axis.text=element_text(size=11),
+          axis.title=element_text(size=12),
+          axis.text.x=element_blank(),
+          axis.ticks.x=element_blank(),
+          axis.title.y=element_text(vjust=-6))+
+    labs(y="Intersection size",
+         x=NULL,
+         title=NULL)+
+    geom_text(aes(label=paste0(scales::comma(activity), ' \n(',percentage, '%)')), vjust=-0.2, size=2.9)+
+    scale_y_continuous(limits=c(0,max(data$activity)*1.2), expand=c(0,0), labels = label_comma())+
+    scale_x_continuous(expand=c(0.01,0.01))
   
-ggsave(filename, width=10, height=6)
+  data2<- data|>
+    dplyr::select(1:29, activity, id)|>
+    dplyr::select(where(~ any(. != 0)))|>
+    gather(groups, value, -id, -activity) |>
+    mutate(value=as.character(value))|>
+    left_join(numbers_in_each_cohort, by=c("groups"))|>
+    arrange(id)|>
+    mutate(groups=reorder(groups, {{activity_type}}))
+  
+  data3<-data2|>
+    filter(value==1)
+  
+  bottom_plot<- data2|>
+    ggplot(aes(x = id, y = groups,  group=value)) +
+    geom_point(aes(color=value),size=4 , show.legend = FALSE)+ 
+    geom_line(data=data3, aes(group=id), linewidth=1)+ 
+    su_theme()+
+    theme(axis.text.x=element_blank(),
+          legend_position="none",
+          axis.title=element_blank(),
+          axis.ticks.x=element_blank(),
+          axis.line=element_blank(),
+          panel.background = element_rect(fill ='#EEEEEE', colour='#EEEEEE'))+
+    labs(x=NULL, y=NULL)+
+    scale_colour_manual(values=c("1"="black", "0"="white"))
 
+  layout <- c(
+    area(t = 0, l = 0, b = 24, r = 25),
+    area(t = 25, l = 0, b = 38, r = 25))
+  
+  # final plot arrangement
+  top_plot +  bottom_plot + plot_layout(design = layout)
   
 }
+
+
+
 
 # Summary barchart of percentage of overlap with different groups
 
