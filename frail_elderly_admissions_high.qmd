@@ -792,6 +792,7 @@ plot_ly( x = ~year, y = ~activity, type = 'scatter',  mode = 'lines', text=~icb_
 :::
 
 :::
+
 ## Comparative Analysis
 
 This section will have a map of standardised rates to look at variation across ICBs. The map below is a placeholder only.
