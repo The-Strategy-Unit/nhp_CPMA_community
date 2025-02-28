@@ -8,7 +8,7 @@ book:
   date-format: "YYYY-MM-DD"
   chapters:
     - index.qmd
-    - frail_elderly_admissions.qmd
+    - frail_elderly_admissions_high.qmd
 
 title-block-banner: "#f9bf07"
 title-block-banner-color: "#333739"
