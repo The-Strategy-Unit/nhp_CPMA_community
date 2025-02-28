@@ -49,6 +49,10 @@ overview_frail_elderly_high |>
 
 ### Patient Characteristics
 
+In this section, the number and percentage of mitigable activity for the frail and elderly (high) cohort are shown by age, ethnic category, IMD decile and sex. Rates per 100,000 population are also provided for context. 
+
+Outputs are presented for both admissions and beddays, but patterns are broadly similar across the two.
+
 ::: panel-tabset
 
 ### Admissions
@@ -62,7 +66,7 @@ perc_frail_elderly_high_age_admissions <- targets::tar_read(perc_frail_elderly_h
 rates_frail_elderly_high_age_admissions <- targets::tar_read(rates_frail_elderly_high_age_admissions)
 ```
 
-Of 2023/24 mitigable admissions for the frail and elderly (high) cohort, most patients (`r perc_frail_elderly_high_age_admissions |> dplyr::filter(age_range == "85-89") |> dplyr::pull(perc)`%) are in the 85-89 year old age group (@tbl-perc_frail_elderly_high_age_admissions). Although the percentages for each age group are roughly similar, the rates of mitigable admissions per 100,000 population increases with age, with the 90+ age group having the highest rates at `r rates_frail_elderly_high_age_admissions |> dplyr::filter(age_range == "90+") |> dplyr::pull(value)` per 100,000 (@tbl-rate_frail_elderly_high_age_admissions).
+Of 2023/24 mitigable admissions for the frail and elderly (high) cohort, most patients (`r perc_frail_elderly_high_age_admissions |> dplyr::filter(age_range == "85-89") |> dplyr::pull(perc)`%) are in the 85-89 year old age group (@tbl-perc_frail_elderly_high_age_admissions). Although the percentages for each age group are roughly similar, the rates of mitigable admissions per 100,000 population increases with age, with the 90+ age group having the highest rates at `r rates_frail_elderly_high_age_admissions |> dplyr::filter(age_range == "90+") |> dplyr::pull(value) |> prettyNum(big.mark = ",")` per 100,000 (@tbl-rate_frail_elderly_high_age_admissions).
 
 ::: panel-tabset
 
@@ -107,7 +111,7 @@ perc_frail_elderly_high_ethnicity_admissions <- targets::tar_read(perc_frail_eld
 rates_frail_elderly_high_ethnicity_admissions <- targets::tar_read(rates_frail_elderly_high_ethnicity_admissions)
 ```
 
-Patients in the White ethnic group make up the majority (`r perc_frail_elderly_high_ethnicity_admissions |> dplyr::filter(Ethnic_Category == "White") |> dplyr::pull(perc)`%) of 2023-24 mitigable admissions for the frail and elderly (high) cohort and have the highest rates (`r rates_frail_elderly_high_ethnicity_admissions |> dplyr::filter(Ethnic_Category == "White") |> dplyr::pull(value)`) per 100,000 population.
+Patients in the White ethnic group make up the majority (`r perc_frail_elderly_high_ethnicity_admissions |> dplyr::filter(Ethnic_Category == "White") |> dplyr::pull(perc)`%) of 2023-24 mitigable admissions for the frail and elderly (high) cohort and have the highest rates (`r rates_frail_elderly_high_ethnicity_admissions |> dplyr::filter(Ethnic_Category == "White") |> dplyr::pull(value) |> prettyNum(big.mark = ",")`) per 100,000 population.
 
 ::: panel-tabset
 
@@ -152,7 +156,7 @@ perc_frail_elderly_high_imd_admissions <- targets::tar_read(perc_frail_elderly_h
 rates_frail_elderly_high_imd_admissions <- targets::tar_read(rates_frail_elderly_high_imd_admissions)
 ```
 
-The percentage of 2023/24 mitigable admissions for the frail and elderly (high) cohort appear similar across the IMD deciles. Patients from areas with IMD deciles 7-9 have the highest rates of mitigable admission per 100,000 @tbl-rate_frail_elderly_high_imd_admissions. However, there is little difference between patients from the most deprived areas (decile 1) compared to those from the least deprived areas (decile 10).
+The percentage of 2023/24 mitigable admissions for the frail and elderly (high) cohort appear similar across the IMD deciles. Patients from areas with IMD deciles 7-9 have the highest rates of mitigable admission per 100,000 (@tbl-rate_frail_elderly_high_imd_admissions). However, there is little difference between patients from the most deprived areas (decile 1) compared to those from the least deprived areas (decile 10).
 
 ::: panel-tabset
 
@@ -197,7 +201,7 @@ perc_frail_elderly_high_sex_admissions <- targets::tar_read(perc_frail_elderly_h
 rates_frail_elderly_high_sex_admissions <- targets::tar_read(rates_frail_elderly_high_sex_admissions)
 ```
 
-The majority (`r perc_frail_elderly_high_sex_admissions |> dplyr::filter(sex == "Female") |> dplyr::pull(perc)`%) of mitigable admissions for the frail and elderly (high) cohort are for female patients. Females also have the higher rate per 100,000 at `r rates_frail_elderly_high_sex_admissions |> dplyr::filter(sex == "Female") |> dplyr::pull(value)` compared to `r rates_frail_elderly_high_sex_admissions |> dplyr::filter(sex == "Male") |> dplyr::pull(value)` for males (@tbl-rate_frail_elderly_high_sex_admissions).
+The majority (`r perc_frail_elderly_high_sex_admissions |> dplyr::filter(sex == "Female") |> dplyr::pull(perc)`%) of mitigable admissions for the frail and elderly (high) cohort are for female patients. Females also have the higher rate per 100,000 at `r rates_frail_elderly_high_sex_admissions |> dplyr::filter(sex == "Female") |> dplyr::pull(value) |> prettyNum(big.mark = ",")` compared to `r rates_frail_elderly_high_sex_admissions |> dplyr::filter(sex == "Male") |> dplyr::pull(value) |> prettyNum(big.mark = ",")` for males (@tbl-rate_frail_elderly_high_sex_admissions).
 
 ::: panel-tabset 
 
@@ -243,6 +247,13 @@ rates_frail_elderly_high_sex_admissions |>
 
 ### Age
 
+```{r}
+perc_frail_elderly_high_age_beddays <- targets::tar_read(perc_frail_elderly_high_age_beddays)
+rates_frail_elderly_high_age_beddays <- targets::tar_read(rates_frail_elderly_high_age_beddays)
+```
+
+Of 2023/24 mitigable beddays for the frail and elderly (high) cohort, most patients (`r perc_frail_elderly_high_age_beddays |> dplyr::filter(age_range == "85-89") |> dplyr::pull(perc)`%) are in the 85-89 year old age group (@tbl-perc_frail_elderly_high_age_beddays). Although the percentages for each age group are roughly similar, the rates of mitigable beddays per 100,000 population increases with age, with the 90+ age group having the highest rates at `r rates_frail_elderly_high_age_beddays |> dplyr::filter(age_range == "90+") |> dplyr::pull(value) |> prettyNum(big.mark = ",")` per 100,000 (@tbl-rate_frail_elderly_high_age_beddays).
+
 ::: panel-tabset
 
 #### Perc
@@ -280,6 +291,13 @@ targets::tar_read(rates_frail_elderly_high_age_beddays) |>
 :::
 
 ### Ethnicity
+
+```{r}
+perc_frail_elderly_high_ethnicity_beddays <- targets::tar_read(perc_frail_elderly_high_ethnicity_beddays)
+rates_frail_elderly_high_ethnicity_beddays <- targets::tar_read(rates_frail_elderly_high_ethnicity_beddays)
+```
+
+Patients in the White ethnic group make up the majority (`r perc_frail_elderly_high_ethnicity_beddays |> dplyr::filter(Ethnic_Category == "White") |> dplyr::pull(perc)`%) of 2023-24 mitigable beddays for the frail and elderly (high) cohort and have the highest rates (`r rates_frail_elderly_high_ethnicity_beddays |> dplyr::filter(Ethnic_Category == "White") |> dplyr::pull(value) |> prettyNum(big.mark = ",")`) per 100,000 population.
 
 ::: panel-tabset
 
@@ -319,6 +337,13 @@ targets::tar_read(rates_frail_elderly_high_ethnicity_beddays) |>
 
 ### IMD
 
+```{r}
+perc_frail_elderly_high_imd_beddays <- targets::tar_read(perc_frail_elderly_high_imd_beddays)
+rates_frail_elderly_high_imd_beddays <- targets::tar_read(rates_frail_elderly_high_imd_beddays)
+```
+
+The percentage of 2023/24 mitigable beddays for the frail and elderly (high) cohort appear similar across the IMD deciles. Patients from areas with IMD deciles 7-9 have the highest rates of mitigable admission per 100,000 @tbl-rate_frail_elderly_high_imd_beddays. However, there is little difference between patients from the most deprived areas (decile 1) compared to those from the least deprived areas (decile 10).
+
 ::: panel-tabset
 
 #### Perc
@@ -356,6 +381,13 @@ targets::tar_read(rates_frail_elderly_high_imd_beddays) |>
 :::
 
 ### Sex
+
+```{r}
+perc_frail_elderly_high_sex_beddays <- targets::tar_read(perc_frail_elderly_high_sex_beddays)
+rates_frail_elderly_high_sex_beddays <- targets::tar_read(rates_frail_elderly_high_sex_beddays)
+```
+
+The majority (`r perc_frail_elderly_high_sex_beddays |> dplyr::filter(sex == "Female") |> dplyr::pull(perc)`%) of mitigable beddays for the frail and elderly (high) cohort are for female patients. Females also have the higher rate per 100,000 at `r rates_frail_elderly_high_sex_beddays |> dplyr::filter(sex == "Female") |> dplyr::pull(value) |> prettyNum(big.mark = ",")` compared to `r rates_frail_elderly_high_sex_beddays |> dplyr::filter(sex == "Male") |> dplyr::pull(value) |> prettyNum(big.mark = ",")` for males (@tbl-rate_frail_elderly_high_sex_beddays).
 
 ::: panel-tabset
 
