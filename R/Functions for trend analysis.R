@@ -123,28 +123,33 @@ plot_of_standardised_rates_over_time<-function(data, cohort_name){
   }
   
 
-data_number_percentage_over_time_icb<-function(data1, data2, pop_data, mitigator, activity_type, denominator_type){
+data_number_percentage_over_time_icb<-function(data1, data2, pop_data, mitigator, denom1, denom2){
   
   denominator_data<-data1|>
     filter(fyear!=201415)|>
     filter(!is.na(icb))|>
-    summarise(total_activity=sum({{denominator_type}}), .by=c(fyear, icb))
+    summarise(total_episodes=sum({{denom1}}),
+              total_beddays=sum({{denom2}}),
+              .by=c(fyear, icb))
   
   data2|>
     filter(cohorts==mitigator)|>
     filter(fyear!=201415)|>
     filter(!is.na(icb))|>
-    summarise(number=sum({{activity_type}}), .by=c(icb, year, fyear))|>
+    summarise(episodes=sum(episodes),
+              beddays=sum(beddays),
+              .by=c(icb, year, fyear))|>
     left_join(denominator_data, by=c("fyear", "icb"))|>
-    mutate(percentage=round((number/total_activity)*100,1))|>
+    mutate(percentage_episodes=round((episodes/total_episodes)*100,1),
+           percentage_beddays=round((beddays/total_beddays)*100,1))|>
     left_join(pop_data[,c("icb24cdh", "icb_2024_name")], by=c("icb"="icb24cdh"), relationship="many-to-many")|>
-    distinct(year,number,percentage, icb_2024_name)|>
-    filter(!is.nan(percentage))|>
+    distinct(year,episodes, beddays,percentage_episodes, percentage_beddays, icb_2024_name)|>
+    filter(!is.nan(percentage_episodes)|!is.nan(percentage_beddays))|>
     as.data.frame()
 
 }
 
-plotting_icb_over_time<-function(data,axis_title){
+plotting_icb_over_time<-function(data, axis_title){
   
   data|>
     group_by(icb_2024_name)|>
@@ -156,5 +161,37 @@ plotting_icb_over_time<-function(data,axis_title){
       yaxis = list(title = axis_title, showline = TRUE, showgrid = F , linewidth=2 ,zeroline = FALSE, tickformat = "digits", anchor="free", shift=100)
     )
   
+  
+}
+
+#Plotting change over time
+
+plotting_percentage_change_over_time_by_icb<-function(data, values, min_adjustment, max_adjustment ){
+  
+  data1<-data|>
+    filter(year=="2019/20"| year=="2023/24")|>
+    pivot_wider(names_from = c(year), values_from = {{values}})|>
+    summarise(`2019/20`=max(`2019/20`, na.rm=TRUE),
+              `2023/24`=max(`2023/24`, na.rm=TRUE),
+              .by=c(icb_2024_name))|>
+    mutate(change=round(((`2023/24`-`2019/20`)/`2019/20`)*100,1))|>
+    filter(!is.nan(change))|>
+    filter(change!="-Inf")|>
+    arrange(change)|>
+    mutate(icb_2024_name=factor(icb_2024_name))
+  
+  
+  data1|>
+    ggplot(aes(x=change, y=fct_reorder(icb_2024_name, change)))+
+    geom_bar(stat="identity", fill=ifelse(data1$change<0,  "#129957", "#ec6555")) +
+    su_theme()+
+    theme(axis.text.y=element_text(size=7),
+          axis.title=element_text(size=11))+
+    labs(y=NULL,
+         x="Percentage change",
+         title=NULL)+
+    geom_text(aes(label=paste0(change, '%')), hjust=ifelse(data1$change<0, 1.1, -0.1), size=2.2)+
+    scale_x_continuous(expand=c(0.01,0.01), limits=c((min(data1$change)*min_adjustment),(max(data1$change)*max_adjustment)))
+
   
 }

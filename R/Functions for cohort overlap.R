@@ -139,7 +139,7 @@ plotting_barchart_summary_of_overlaps<-function(data, cohort_name, activity_type
     mutate(cohort=factor(cohort, unique(cohort)))|>
     mutate(cohort=fct_relevel(cohort,cohort_name ))|>
     arrange(cohort)|>
-    mutate(colour=ifelse(data2$cohort==cohort_name, "#000000", ifelse(data2$number==0, "#686f73" , "#ec6555" )))
+    mutate(colour=ifelse(cohort==cohort_name, "#000000", ifelse(number==0, "#686f73" , "#ec6555" )))
   
   data2|>
     ggplot(aes(x=cohort, y=percentage))+
