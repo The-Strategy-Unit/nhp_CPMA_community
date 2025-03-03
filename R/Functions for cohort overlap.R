@@ -137,21 +137,26 @@ plotting_barchart_summary_of_overlaps<-function(data, cohort_name, activity_type
     mutate(percentage=round(((number/max(number))*100),1))|>
     arrange(desc(number))|>
     mutate(cohort=factor(cohort, unique(cohort)))|>
-    mutate(colour=ifelse(cohort==cohort_name, "#000000", ifelse(number>0, "#ec6555", "#686f73"  )))
+    mutate(cohort=fct_relevel(cohort,cohort_name ))|>
+    arrange(cohort)|>
+    mutate(colour=ifelse(data2$cohort==cohort_name, "#000000", ifelse(data2$number==0, "#686f73" , "#ec6555" )))
   
   data2|>
-    ggplot(aes(x=fct_relevel(cohort, cohort_name), y=percentage))+
+    ggplot(aes(x=cohort, y=percentage))+
     geom_bar(stat="identity", fill=factor(ifelse(data2$cohort==cohort_name,"#686f73","#f9bf07")))+
+    scale_x_discrete(limits=rev)+
     su_theme()+
     theme(axis.text=element_text(size=11),
-          axis.title.y=element_text(size=16, colour=data2$colour))+
-    labs(y="Percentage included in each cohort",
+          axis.title=element_text(size=13),
+          axis.text.y=element_text(colour=rev(data2$colour)),
+          plot.caption=element_text(colour="#ec6555", size=11))+
+    labs(y=paste0("Percentage of ", cohort_name, " cohort in each of the other cohorts"),
+         caption = (paste0("Cohorts highlighted in red are those who overlap with the ",  "frail_elderly_high")),
          x=NULL,
          title=NULL)+ 
     geom_text(aes(label=paste0(percentage,  '% (',scales::comma(number), ')')), hjust=-0.05, size=3)+
     scale_y_continuous(limits=c(0, 124), expand=c(0,0), labels = label_comma())+
-    coord_flip()+
-    scale_x_discrete(limits=rev)
+    coord_flip()
   
 }
 
