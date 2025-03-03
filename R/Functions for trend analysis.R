@@ -41,17 +41,18 @@ Formatting_data_for_trends_analysis<-function(table){
     summarise(episodes=sum(episodes),
               beddays=sum(beddays))|>
     mutate(year=paste0(stringr::str_sub(fyear, 1, 4), "/", stringr::str_sub(fyear, 5, 6)))|>
-    ungroup()
+    ungroup()|>
+    as.data.frame()
   
   return(numbers_over_time)
   
 }
 
 
-plot_of_number_over_time<-function(data, mitigator, activity_type){
+plot_of_number_over_time<-function(data, cohort_name, activity_type){
   
   data2<-data|>
-    filter(cohorts==mitigator)|>
+    filter(cohorts==cohort_name)|>
     group_by(year)|>
     summarise(activity=sum({{activity_type}}))
   
@@ -71,7 +72,7 @@ plot_of_number_over_time<-function(data, mitigator, activity_type){
 
 
 
-plot_of_percentage_over_time<-function(data1, data2, mitigator, activity_type, denominator_type){
+plot_of_percentage_over_time<-function(data1, data2, cohort_name, activity_type, denominator_type){
   
   
  denominator_data<-data1|>
@@ -80,7 +81,7 @@ plot_of_percentage_over_time<-function(data1, data2, mitigator, activity_type, d
     summarise(total_activity=sum({{denominator_type}}))
   
 data3<-data2|>
-    filter(cohorts==mitigator)|>
+    filter(cohorts==cohort_name)|>
     group_by(fyear, year)|>
     summarise(activity=sum({{activity_type}}))|>
     left_join( denominator_data, by=c("fyear"))|>
@@ -102,10 +103,10 @@ data3|>
 }
 
 
-plot_of_standardised_rates_over_time<-function(data, mitigator){
+plot_of_standardised_rates_over_time<-function(data, cohort_name){
   
   data1<-data |>
-    filter(cohorts==mitigator)
+    filter(cohorts==cohort_name)
     
   data1|>
     ggplot()+
@@ -122,53 +123,38 @@ plot_of_standardised_rates_over_time<-function(data, mitigator){
   }
   
 
-plot_of_number_over_time_icb<-function(data, mitigator, activity_type, pop_data){
-  
-  data|>
-    filter(cohorts==mitigator)|>
-    filter(fyear!=201415)|>
-    group_by( icb, year)|>
-    summarise(activity=sum(activity_type))|>
-    left_join(pop_data[,c("icb24cdh", "icb_2024_name")], by=c("icb"="icb24cdh"))|>
-    group_by(icb_2024_name)|>
-    highlight_key(~icb_2024_name) |>
-    plot_ly( x = ~year, y = ~activity, type = 'scatter',  mode = 'lines', text=~icb_2024_name,  line = list(color = "#686f73",  width = 1.5))|>
-    highlight(~icb_2024_name, on = "plotly_click", off="plotly_doubleclick", dynamic=TRUE)|>
-    layout(
-      xaxis = list(title=list(text='Year', range=c(-10, 10), font = list(size = 20), standoff = 25), showticklabels = TRUE, showline = TRUE, showgrid = F , linewidth=2),
-      yaxis = list(title = 'Number', showline = TRUE, showgrid = F , linewidth=2 ,zeroline = FALSE, tickformat = "digits")
-    )
-  
-  
-}
-
-
-
-plot_of_percentage_over_time_icb<-function(data1, data2, pop_data, mitigator, activity_type, denominator_type){
-  
+data_number_percentage_over_time_icb<-function(data1, data2, pop_data, mitigator, activity_type, denominator_type){
   
   denominator_data<-data1|>
-    group_by(fyear, icb)|>
-    summarise(total_activity=sum({{denominator_type}}))
+    filter(fyear!=201415)|>
+    filter(!is.na(icb))|>
+    summarise(total_activity=sum({{denominator_type}}), .by=c(fyear, icb))
   
   data2|>
     filter(cohorts==mitigator)|>
     filter(fyear!=201415)|>
-    group_by(fyear, year, icb)|>
-    summarise(activity=sum({{activity_type}}))|>
-    left_join( denominator_data, by=c("fyear", "icb"))|>
-    mutate(percentage=round((activity/total_activity)*100,1))|>
-    #left_join(pop_data[,c("icb24cdh", "icb_2024_name")], by=c("icb"="icb24cdh"))|>
-    ggplot()+
-    geom_line(aes(y=percentage, x=year, group=icb), linewidth=1.4)+
-    su_theme()+
-    theme(axis.text=element_text(size=10),
-          axis.title.y=element_text(size=12))+
-    labs(y="Percentage",
-         x=NULL,
-         title=NULL)+ 
-    scale_y_continuous(expand=c(0,0), limits=c(0,NA), labels = label_comma())
+    filter(!is.na(icb))|>
+    summarise(number=sum({{activity_type}}), .by=c(icb, year, fyear))|>
+    left_join(denominator_data, by=c("fyear", "icb"))|>
+    mutate(percentage=round((number/total_activity)*100,1))|>
+    left_join(pop_data[,c("icb24cdh", "icb_2024_name")], by=c("icb"="icb24cdh"), relationship="many-to-many")|>
+    distinct(year,number,percentage, icb_2024_name)|>
+    filter(!is.nan(percentage))|>
+    as.data.frame()
+
+}
+
+plotting_icb_over_time<-function(data,axis_title){
   
+  data|>
+    group_by(icb_2024_name)|>
+    highlight_key(~icb_2024_name) |>
+    plot_ly( x = ~year, y = ~activity, type = 'scatter',  mode = 'lines', text=~icb_2024_name,  line = list(color = "#686f73",  width = 1.5))|>
+    highlight(~icb_2024_name, on = "plotly_click", off="plotly_doubleclick", dynamic=FALSE)|>
+    layout(
+      xaxis = list(title="", showticklabels = TRUE, showline = TRUE, showgrid = F , linewidth=2),
+      yaxis = list(title = axis_title, showline = TRUE, showgrid = F , linewidth=2 ,zeroline = FALSE, tickformat = "digits", anchor="free", shift=100)
+    )
   
   
 }

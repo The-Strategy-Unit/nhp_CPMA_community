@@ -734,21 +734,15 @@ plot_of_standardised_rates_over_time(england_age_sex_standardised_rates_beddays,
 
 icb_population_data<-tar_read(icb_population_data)
 
-numbers_over_time|>
-    filter(cohorts=="frail_elderly_high")|>
-    filter(fyear!=201415)|>
-    group_by( icb, year)|>
-    summarise(activity=sum(episodes))|>
-  left_join(tar_read(icb_population_data)[,c("icb24cdh", "icb_2024_name")], by=c("icb"="icb24cdh"))|>
- group_by(icb_2024_name)|>
-  highlight_key(~icb_2024_name) |>
-plot_ly( x = ~year, y = ~activity, type = 'scatter',  mode = 'lines', text=~icb_2024_name,  line = list(color = "#686f73",  width = 1.5))|>
-  highlight(~icb_2024_name, on = "plotly_click", off="plotly_doubleclick", dynamic=FALSE)|>
-   layout(
-         xaxis = list(title="", showticklabels = TRUE, showline = TRUE, showgrid = F , linewidth=2),
-         yaxis = list(title = 'Number', showline = TRUE, showgrid = F , linewidth=2 ,zeroline = FALSE, tickformat = "digits", anchor="free", shift=100)
-         )
 
+  data_number_percentage_over_time_icb(denominator_over_time, 
+                                       numbers_over_time, 
+                                       icb_population_data, 
+                                       "frail_elderly_high", 
+                                       episodes, 
+                                       total_episodes_emergency)|>
+        mutate(activity=number)|>
+plotting_icb_over_time(data, 'Number')
 
 ```
 #### Beddays
@@ -757,7 +751,14 @@ plot_ly( x = ~year, y = ~activity, type = 'scatter',  mode = 'lines', text=~icb_
 #| label: fig-number_trends_beddays_icb
 #| fig-cap: The number of beddays for the Frail Elderly High mitigable activity cohort by ICB over the last 9 years. 
 
-
+  data_number_percentage_over_time_icb(denominator_over_time, 
+                                       numbers_over_time, 
+                                       icb_population_data, 
+                                       "frail_elderly_high", 
+                                       beddays, 
+                                       total_beddays_emergency)|>
+        mutate(activity=number)|>
+plotting_icb_over_time(data, 'Number')
 ```
 :::
 
@@ -769,12 +770,43 @@ plot_ly( x = ~year, y = ~activity, type = 'scatter',  mode = 'lines', text=~icb_
 #| fig-cap: The percentage of total emergency admissions that are for Frail Elderly High potentially mitigable activity by ICB over the last 9 years. 
 
 
+ data_number_percentage_over_time_icb(denominator_over_time, 
+                                       numbers_over_time, 
+                                       icb_population_data, 
+                                       "frail_elderly_high", 
+                                       episodes, 
+                                       total_episodes_emergency)|>
+        mutate(activity=percentage)|>
+plotting_icb_over_time(data, 'Percentage')
+
 ```
+
+```{r}
+
+test<- data_number_percentage_over_time_icb(denominator_over_time, 
+                                       numbers_over_time, 
+                                       icb_population_data, 
+                                       "frail_elderly_high", 
+                                       episodes, 
+                                       total_episodes_emergency)|>
+  filter(year=="2019/20"| year=="2023/24")|>
+  spread(key=year, value=percentage)
+
+```
+
 #### Beddays
 ```{r, fig.width=7, fig.height=3}
 #| label: fig-percent_trends_beddays_icb
 #| fig-cap: The percentage of total emergency beddays that are for Frail Elderly High potentially mitigable activity by ICB over the last 9 years. 
 
+data_number_percentage_over_time_icb(denominator_over_time, 
+                                       numbers_over_time, 
+                                       icb_population_data, 
+                                       "frail_elderly_high", 
+                                       beddays, 
+                                       total_beddays_emergency)|>
+        mutate(activity=percentage)|>
+plotting_icb_over_time(data, 'Percentage')
 
 ```
 
@@ -786,9 +818,54 @@ plot_ly( x = ~year, y = ~activity, type = 'scatter',  mode = 'lines', text=~icb_
 ::: panel-tabset
 
 #### Admissions
+```{r}
 
+age_sex_standardised_rates_episodes<-tar_read(age_sex_standardised_rates_episodes)
+
+
+plotting_icb_over_time(
+  (age_sex_standardised_rates_episodes|> filter(cohorts=="frail_elderly_high")),
+  value)
+
+test2<-age_sex_standardised_rates_episodes|>
+  filter(cohorts=="frail_elderly_high")|>
+    mutate(activity=value)
+
+
+
+age_sex_standardised_rates_episodes|>
+  filter(cohorts=="frail_elderly_high")|>
+  group_by(icb_2024_name)|>
+    highlight_key(~icb_2024_name) |>
+    plot_ly( x = ~year, y = ~value, type = 'scatter',  mode = 'lines', text=~icb_2024_name,  line = list(color = "#686f73",  width = 1.5))|>
+    highlight(~icb_2024_name, on = "plotly_click", off="plotly_doubleclick", dynamic=FALSE)|>
+    layout(
+      xaxis = list(title="", showticklabels = TRUE, showline = TRUE, showgrid = F , linewidth=2),
+      yaxis = list(title = 'Standardised rate per 100,000', showline = TRUE, showgrid = F , linewidth=2 ,zeroline = FALSE, tickformat = "digits", anchor="free", shift=100)
+    )
+
+
+```
 
 #### Beddays
+```{r}
+
+age_sex_standardised_rates_beddays<-tar_read(age_sex_standardised_rates_beddays)
+
+
+age_sex_standardised_rates_beddays|>
+  filter(cohorts=="frail_elderly_high")|>
+  group_by(icb_2024_name)|>
+    highlight_key(~icb_2024_name) |>
+    plot_ly( x = ~year, y = ~value, type = 'scatter',  mode = 'lines', text=~icb_2024_name,  line = list(color = "#686f73",  width = 1.5))|>
+    highlight(~icb_2024_name, on = "plotly_click", off="plotly_doubleclick", dynamic=FALSE)|>
+    layout(
+      xaxis = list(title="", showticklabels = TRUE, showline = TRUE, showgrid = F , linewidth=2),
+      yaxis = list(title = 'Number', showline = TRUE, showgrid = F , linewidth=2 ,zeroline = FALSE, tickformat = "digits", anchor="free", shift=100)
+    )
+
+
+```
 :::
 
 :::
