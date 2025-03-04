@@ -868,7 +868,7 @@ plotting_percentage_change_over_time_by_icb(age_sex_standardised_rates_beddays, 
 
 ## Comparative Analysis
 
-This section will have a map of standardised rates to look at variation across ICBs. The map below is a placeholder only.
+This section is still a work in progress.
 
 ### ICB
 
