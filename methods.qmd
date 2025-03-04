@@ -14,4 +14,7 @@ NOTE: This chapter is NOT in the book yet. We will need to add it the `_quarto.y
 
 - Excluded NULLs
 
+## Comparative analysis
 
+- Using 2023 shapefile, but 2024 ICB codes/names
+  - https://services1.arcgis.com/ESMARspQHYMw9BZ9/arcgis/rest/services/Integrated_Care_Boards_April_2023_EN_BGC/FeatureServer/0/query?outFields=*&where=1%3D1&f=geojson
