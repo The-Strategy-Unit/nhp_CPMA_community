@@ -1,25 +1,25 @@
 # Functions used to complete the descriptive analyses.
 
 # Percentage breakdowns --------------------------------------------------------
-#' Get an overview of mitigable admissions for a mitigator.
-#' 
-#' That is, get the number of mitigable admissions and beddays for a mitigator 
-#' in 2023-24, get the total number of all emergency or elective admissions and 
+#' Get an overview of mitigable activity for a mitigator.
+#'
+#' That is, get the number of mitigable admissions and beddays for a mitigator
+#' in 2023-24, get the total number of all emergency or elective admissions and
 #' calculate the percentage.
 #'
-#' @param activity_type Either `"emergency"` or `"elective"`.
-#' @param condition A string containing the expression needed to filter for a 
-#' mitigator or set of mitigators. 
+#' @param treatment_type Either `"emergency"` or `"elective"`.
+#' @param condition A string containing the expression needed to filter for a
+#' mitigator or set of mitigators.
 #' @param totals A dataframe containing the total beddays and episodes for 2023-24.
 #' @param connection The Databricks connection.
 #'
 #' @return A dataframe.
-get_overview_of_mitigator <- function(activity_type,
-                                    condition,
-                                    totals,
-                                    connection = sc) {
+get_overview_of_mitigator <- function(treatment_type,
+                                      condition,
+                                      totals,
+                                      connection = sc) {
   totals <- totals |>
-    dplyr::filter(type == activity_type) |>
+    dplyr::filter(type == treatment_type) |>
     dplyr::select(metric, total)
   
   mitigator_totals <- dplyr::tbl(
@@ -53,53 +53,77 @@ get_overview_of_mitigator <- function(activity_type,
   return(summary)
 }
 
-#' Get the percentage of mitigable admissions for a mitigator by a group.
-#' 
-#' Given a `group` (for example, `sex` or `age`), this function will get the 
-#' table from Databricks, filter to the mitigator or set of mitigators using 
-#' the `condition` provided and calculate the number and percentage of mitigable 
+#' Get the number of mitigable admissions for a mitigator by a group.
+#'
+#' Given a `group` (for example, `sex` or `age`), this function will get the
+#' table from Databricks, filter to the mitigator or set of mitigators using
+#' the `condition` provided and calculate the number and percentage of mitigable
 #' admissions by group.
 #'
 #' @param group A string of the group that the table is for.
-#' @param condition A string containing the expression needed to filter for a 
-#' mitigator or set of mitigators. 
-#' @param type Either `"admissions"` or `"beddays"`.
+#' @param condition A string containing the expression needed to filter for a
+#' mitigator or set of mitigators.
+#' @param activity_type Either `"admissions"` or `"beddays"`.
 #' @param connection The Databricks connection.
 #'
-#' @return A dataframe of the number and percentage of mitigable admissions by 
-#' group.
-get_number_by_group <- function(group, condition, type, connection = sc) {
+#' @return A dataframe of the number of mitigable admissions by group.
+get_number_by_group <- function(group,
+                                condition,
+                                activity_type,
+                                connection = sc) {
   col_name <- get_col_name_from_group(group)
   
   summary <- dplyr::tbl(connection,
                         dbplyr::in_catalog(
                           "strategyunit",
                           "default",
-                          paste0("sl_af_describing_mitigators_final_2324_", 
-                                 group)
+                          paste0("sl_af_describing_mitigators_final_2324_", group)
                         )) |>
-    dplyr::filter(!!rlang::parse_expr(condition),
+    dplyr::filter(!!rlang::parse_expr(condition), 
                   !is.na(!!rlang::sym(col_name)) # exclude NULLs
                   ) |>
-    dplyr::rename(admissions = episodes) |> 
-    # Although the column is called episodes, each row is the last episode in a 
-    # spell. So renaming as admissions here to avoid confusion later.
-    dplyr::summarise(number = sum(!!rlang::sym(type)), 
-                     .by = {{col_name}}) |>
-    sparklyr::collect()
-  
-  return(summary)
-}
+                  dplyr::rename(admissions = episodes) |>
+                    # Although the column is called episodes, each row is the 
+                    # last episode in a spell. So renaming as admissions here to
+                    # avoid confusion later.
+                    dplyr::summarise(number = sum(!!rlang::sym(activity_type)), 
+                                     .by = {{col_name}}) |>
+                    sparklyr::collect()
+                  
+                  return(summary)
+                  }
 
-get_perc_by_group <- function(group, condition, type, connection = sc){
-  summary <- get_number_by_group(group, condition, type, connection = sc) |>
-    dplyr::mutate(perc = janitor::round_half_up(number * 100 /
-                                                  sum(number), 2),
-                  dplyr::across(1, ~stringr::str_to_title(.))
+#' Get the percentage of mitigable admissions for a mitigator by a group.
+#'
+#' Given a `group` (for example, `sex` or `age`), this function will use 
+#' `get_number_by_group()` to get the table from Databricks, filter to the 
+#' mitigator or set of mitigators using the `condition` provided and calculate 
+#' the number and percentage of mitigable admissions by group.
+#'
+#' @param group A string of the group that the table is for.
+#' @param condition A string containing the expression needed to filter for a
+#' mitigator or set of mitigators.
+#' @param activity_type Either `"admissions"` or `"beddays"`.
+#' @param connection The Databricks connection.
+#'
+#' @return A dataframe of the number and percentage of mitigable admissions by 
+#' group.
+get_perc_by_group <- function(group,
+                              condition,
+                              activity_type,
+                              connection = sc) {
+  summary <- get_number_by_group(group, 
+                                 condition, 
+                                 activity_type, 
+                                 connection = sc) |>
+    dplyr::mutate(
+      perc = janitor::round_half_up(number * 100 /
+                                      sum(number), 2),
+      dplyr::across(1, ~ stringr::str_to_title(.))
     ) |>
     order_levels_of_factors() |>
     dplyr::arrange(dplyr::across(1)) |>
-    dplyr::rename(!!rlang::sym(type) := number)
+    dplyr::rename(!!rlang::sym(activity_type) := number)
   
   return(summary)
 }
@@ -108,23 +132,22 @@ get_perc_by_group <- function(group, condition, type, connection = sc){
 #'
 #' @param data The output of `get_perc_admissions_by_group()`.
 #' @param col_name The col_name that the data is split by.
+#' @param activity_type Either `"admissions"` or `"beddays"`.
 #'
 #' @return A plot.
-get_perc_by_group_plot <- function(data, col_name, type) {
+get_perc_by_group_plot <- function(data, col_name, activity_type) {
   col_name_title <- col_name |>
     format_as_title()
   
   plot <- data |>
     order_levels_of_factors() |>
-    ggplot2::ggplot(ggplot2::aes(!!rlang::sym(col_name), 
-                                 perc,
-                                 fill = 'bars_color')) +
+    ggplot2::ggplot(ggplot2::aes(!!rlang::sym(col_name), perc, fill = 'bars_color')) +
     ggplot2::geom_col() +
-    ggplot2::scale_fill_manual(values = c('bars_color' = "#f9bf07"), 
+    ggplot2::scale_fill_manual(values = c('bars_color' = "#f9bf07"),
                                guide = 'none') +
     StrategyUnitTheme::su_theme() +
-    ggplot2::labs(x = col_name_title, 
-                  y = glue::glue("Percentage of mitigable {type}"))
+    ggplot2::labs(x = col_name_title,
+                  y = glue::glue("Percentage of mitigable {activity_type}"))
   
   return(plot)
 }
@@ -134,15 +157,14 @@ get_perc_by_group_plot <- function(data, col_name, type) {
 #' @param data A dataframe of percentage data.
 #'
 #' @return A table.
-#' 
+#'
 #' @examples
 #' \dontrun{
-#' targets::tar_read(perc_episodes_frail_age) |> 
-#'   get_table_perc()} 
+#' targets::tar_read(perc_episodes_frail_age) |>
+#'   get_table_perc()}
 get_table_perc <- function(data) {
-  
   table <- data |>
-    dplyr::rename_with(~format_as_title(.)) |>
+    dplyr::rename_with( ~ format_as_title(.)) |>
     dplyr::rename("Percentage" = "Perc") |>
     get_table() |>
     flextable::delete_part(part = "footer")
@@ -153,18 +175,25 @@ get_table_perc <- function(data) {
 # Rates per 100,000 ------------------------------------------------------------
 #' Get rates per population of admissions per group.
 #'
-#' #' @param group A string of the group that the table is for.
-#' @param condition A string containing the expression needed to filter for a 
-#' mitigator or set of mitigators. 
+#' @param group A string of the group that the table is for.
+#' @param condition A string containing the expression needed to filter for a
+#' mitigator or set of mitigators.
 #' @param population A dataframe of the population by group.
+#' @param activity_type Either `"admissions"` or `"beddays"`.
 #' @param connection The Databricks connection.
 #'
 #' @return
-get_rates_by_group <- function(group, condition, population, type, connection = sc) {
-  
+get_rates_by_group <- function(group,
+                               condition,
+                               population,
+                               activity_type,
+                               connection = sc) {
   col_name <- get_col_name_from_group(group)
   
-  summary <- get_number_by_group(group, condition, type, connection = sc) |>
+  summary <- get_number_by_group(group, 
+                                 condition, 
+                                 activity_type, 
+                                 connection = sc) |>
     dplyr::left_join(population, {{col_name}}) |>
     PHEindicatormethods::phe_rate(
       x = number,
@@ -175,7 +204,7 @@ get_rates_by_group <- function(group, condition, population, type, connection = 
     order_levels_of_factors() |>
     dplyr::arrange(dplyr::across(1)) |>
     dplyr::mutate(value = janitor::round_half_up(value, 2),
-                  dplyr::across(1, ~stringr::str_to_title(.))) |>
+                  dplyr::across(1, ~ stringr::str_to_title(.))) |>
     dplyr::select({{col_name}}, number, pop, value, lowercl, uppercl)
   
   return(summary)
@@ -193,18 +222,15 @@ get_rates_by_group_plot <- function(data, col_name) {
   
   plot <- data |>
     order_levels_of_factors() |>
-    ggplot2::ggplot(ggplot2::aes(!!rlang::sym(col_name),
-                                 value,
-                                 fill = 'bars_color')) +
+    ggplot2::ggplot(ggplot2::aes(!!rlang::sym(col_name), value, fill = 'bars_color')) +
     ggplot2::geom_col() +
-    ggplot2::scale_fill_manual(values = c('bars_color' = "#f9bf07"), 
+    ggplot2::scale_fill_manual(values = c('bars_color' = "#f9bf07"),
                                guide = 'none') +
     StrategyUnitTheme::su_theme() +
-    ggplot2::geom_errorbar(ggplot2::aes(ymin = lowercl, ymax = uppercl), 
-                           position = "dodge", 
+    ggplot2::geom_errorbar(ggplot2::aes(ymin = lowercl, ymax = uppercl),
+                           position = "dodge",
                            width = 0.25)  +
-    ggplot2::labs(x = col_name_title, 
-                  y = "Rate per 100,000 population")
+    ggplot2::labs(x = col_name_title, y = "Rate per 100,000 population")
   
   return(plot)
 }
@@ -214,14 +240,14 @@ get_rates_by_group_plot <- function(data, col_name) {
 #' @param data A dataframe of rates per 100,000 data.
 #'
 #' @return A table.
-#' 
+#'
 #' @examples
 #' \dontrun{
 #' targets::tar_read(rates_per_pop_age_frail) |>
 #' get_rates_per_pop_table()}
-get_rates_by_group_table <- function(data){
+get_rates_by_group_table <- function(data) {
   table <- data |>
-    dplyr::rename_with(~format_as_title(.)) |>
+    dplyr::rename_with( ~ format_as_title(.)) |>
     get_table() |>
     flextable::delete_part(part = "footer")
   
@@ -231,37 +257,41 @@ get_rates_by_group_table <- function(data){
 # Top ten specialties ----------------------------------------------------------
 #' Get the top ten specialties for a mitigator.
 #'
-#' @param condition A string containing the expression needed to filter for a 
-#' mitigator or set of mitigators. 
+#' @param condition A string containing the expression needed to filter for a
+#' mitigator or set of mitigators.
 #' @param key The specialty key.
+#' @param activity_type Either `"admissions"` or `"beddays"`.
 #'
 #' @return A dataframe.
-get_top_ten_specialties <- function(condition, key, type) {
-  get_perc_by_group("mainspef", condition, type) |>
+get_top_ten_specialties <- function(condition, key, activity_type) {
+  get_perc_by_group("mainspef", condition, activity_type) |>
     dplyr::left_join(key, by = c("mainspef" = "dd_code")) |>
     dplyr::arrange(desc(perc)) |>
     dplyr::slice(1:10) |>
-    dplyr::select(specialty, {{type}}, perc)
+    dplyr::select(specialty, {{activity_type}}, perc)
 }
 
 # Length of Stay ---------------------------------------------------------------
 
 #' Get the percentage of mitigable admissions for a mitigator by a group.
-#' 
-#' Using `get_perc_by_group` with `group = "los`, this function will get the 
-#' table from Databricks, filter to the mitigator or set of mitigators using 
-#' the `condition` provided and calculate the number and percentage of mitigable 
+#'
+#' Using `get_perc_by_group` with `group = "los`, this function will get the
+#' table from Databricks, filter to the mitigator or set of mitigators using
+#' the `condition` provided and calculate the number and percentage of mitigable
 #' admissions by length of stay (LOS).
 #'
-#' @param condition A string containing the expression needed to filter for a 
-#' mitigator or set of mitigators. 
-#' @param type Either `"admissions"` or `"beddays"`.
+#' @param condition A string containing the expression needed to filter for a
+#' mitigator or set of mitigators.
+#' @param activity_type Either `"admissions"` or `"beddays"`.
 #' @param connection The Databricks connection.
 #'
-#' @return A dataframe of the number and percentage of mitigable admissions by 
+#' @return A dataframe of the number and percentage of mitigable admissions by
 #' LOS.
-get_perc_by_los <- function(condition, type, connection = sc) {
-  data_weeks <- get_perc_by_group("los", condition, type, connection) |>
+get_perc_by_los <- function(condition, activity_type, connection = sc) {
+  data_weeks <- get_perc_by_group("los", 
+                                  condition, 
+                                  activity_type, 
+                                  connection) |>
     dplyr::mutate(
       weeks = dplyr::case_when(
         los_range == "0" ~ "1",
@@ -277,13 +307,14 @@ get_perc_by_los <- function(condition, type, connection = sc) {
     )
   
   summary <- data_weeks |>
-    dplyr::summarise(number_weeks = sum(!!rlang::sym(type)), .by = weeks) |>
-    dplyr::mutate(perc_weeks = janitor::round_half_up(number_weeks * 100 / 
+    dplyr::summarise(number_weeks = sum(!!rlang::sym(activity_type)), 
+                     .by = weeks) |>
+    dplyr::mutate(perc_weeks = janitor::round_half_up(number_weeks * 100 /
                                                         sum(number_weeks), 
                                                       2)) |>
     dplyr::right_join(data_weeks, "weeks") |>
     dplyr::select(los_range,
-                  !!rlang::sym(type),
+                  !!rlang::sym(activity_type),
                   perc,
                   weeks,
                   number_weeks,
@@ -292,13 +323,13 @@ get_perc_by_los <- function(condition, type, connection = sc) {
   return(summary)
 }
 
-#' Plot the percentage of mitigable admissions for a mitigator by LOS.
+#' Plot the percentage of mitigable activity for a mitigator by LOS.
 #'
-#' @param data The output of `get_perc_admissions_by_group()`.
-#' @param type Either `"admissions"` or `"beddays"`.
+#' @param data The output of `get_perc_by_group()`.
+#' @param activity_type Either `"admissions"` or `"beddays"`.
 #'
 #' @return A plot.
-get_perc_by_los_plot <- function(data, type) {
+get_perc_by_los_plot <- function(data, activity_type) {
   plot <- data |>
     ggplot2::ggplot(ggplot2::aes(weeks, perc, fill = los_range)) +
     ggplot2::geom_col() +
@@ -307,7 +338,7 @@ get_perc_by_los_plot <- function(data, type) {
     ggplot2::labs(
       fill = "Length of stay (days)",
       x = "Length of stay (weeks)",
-      y = glue::glue("Percentage of mitagable {type}")
+      y = glue::glue("Percentage of mitagable {activity_type}")
     )
   
   return(plot)
@@ -316,12 +347,12 @@ get_perc_by_los_plot <- function(data, type) {
 #' Formats the output of `get_perc_by_los` into a table.
 #'
 #' @param data The output of `get_perc_admissions_by_group()`.
-#' @param type Either `"admissions"` or `"beddays"`.
+#' @param activity_type Either `"admissions"` or `"beddays"`.
 #'
 #' @return A table.
-get_perc_by_los_table <- function(data, type) {
+get_perc_by_los_table <- function(data, activity_type) {
   table <- data |>
-    dplyr::select(los_range, !!rlang::sym(type), perc) |>
+    dplyr::select(los_range, !!rlang::sym(activity_type), perc) |>
     get_table_perc()
   
   return(table)
