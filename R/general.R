@@ -14,7 +14,12 @@ format_as_title <- function(col_name) {
                                "Pop" = "Population",
                                "Lowercl" = "Lower CL",
                                "Uppercl" = "Upper CL",
-                               "Los Range" = "LOS Range"))
+                               "Los Range" = "LOS Range",
+                               "Icb" = "ICB",
+                               "Total Episodes_emergency" = "Total Emergency Admissions",
+                               "Total Episodes_elective" = "Total Elective Admissions",
+                               "Total Beddays_emergency" = "Total Emergency Beddays",
+                               "Total Beddays_elective" = "Total Elective Beddays"))
   
   return(title)
 }
@@ -58,7 +63,7 @@ get_table <- function(data) {
   table <- data |>
     flextable::as_flextable(
       hide_grouplabel = TRUE,
-      max_row = 20,
+      max_row = 50,
       show_coltype = FALSE
     ) |>
     flextable::align(part = "header", align = "center") |>
