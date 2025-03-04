@@ -48,7 +48,9 @@ get_overview_of_mitigator <- function(treatment_type,
         stringr::str_replace("episodes", "admissions") |>
         stringr::str_to_sentence()
     ) |>
-    dplyr::arrange(dplyr::across(1))
+    dplyr::arrange(dplyr::across(1)) |>
+    dplyr::rename(!!rlang::sym(glue::glue("Total {treatment_type} activity")) := total,
+                  "Mitigable activity" = number)
   
   return(summary)
 }

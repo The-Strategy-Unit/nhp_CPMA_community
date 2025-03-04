@@ -872,6 +872,10 @@ This section will have a map of standardised rates to look at variation across I
 
 ### ICB
 
+:::panel-tabset
+
+### Admissions
+
 ```{r}
 #| output: false
 summary_frail_elderly_high_icb_admissions <- targets::tar_read(summary_frail_elderly_high_icb_admissions)
@@ -925,5 +929,9 @@ get_summary_by_icb_table(summary_frail_elderly_high_icb_admissions, "episodes", 
 
 :::
 
+### Beddays
 
+Coming soon. Want to get content right for admissions first.
+
+:::
 
