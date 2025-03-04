@@ -63,3 +63,45 @@ get_caption_top_ten_specialties <- function(cohort, activity_type) {
 
 
 
+# test targets and qmd - shapefile
+# then commit above first  correctiin types
+
+
+
+#' Title
+#'
+#' @param cohort A string for the mitigator cohort.
+#' @param metric Either `"number"`, `"perc"` or` "SR"`.
+#' @param activity_type Either `"admissions"` or `"beddays"`.
+#' @param treatment_type 
+#'
+#' @return
+get_caption_by_icb <- function(cohort, metric, activity_type, treatment_type = NULL) {
+  
+  by <- if(metric == "perc") {
+    glue::glue(" by {treatment_type} {activity_type}")
+  } else {
+    ""
+  }
+  
+  metric <- format_metric_for_captions(metric)
+  
+  caption <- glue::glue("{metric} of mitigable {activity_type}{by} for the {cohort} cohort for ICBs in 2023/24.")
+  
+  return(caption)
+}
+
+
+format_metric_for_captions <- function(metric) {
+  renamed <- if (metric == "perc") {
+    "Percentage"
+  } else if(metric == "SR") {
+    "Age and sex standardised rates per 100,000 population"
+  } else if (metric == "rate") {
+    "Rates per 100,000 population"
+  } else { 
+    stringr::str_to_title(metric)
+  }
+  
+  return(renamed)
+}
