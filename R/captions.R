@@ -58,7 +58,7 @@ format_metric_for_captions <- function(metric) {
   return(renamed)
 }
 
-#' Get a caption for the maps/tables of number/percentage/rates of mitigable admissions/beddays by mitigator.
+#' Get a caption for the tables of number/percentage/rates of mitigable admissions/beddays by mitigator by ICB.
 #'
 #' @param cohort A string for the mitigator cohort.
 #' @param metric Either `"number"`, `"perc"` or` "SR"`.
@@ -75,6 +75,20 @@ get_caption_by_icb <- function(cohort, metric, activity_type, treatment_type = N
   caption <- glue::glue("{metric} of mitigable {activity_type}{denominator} for the {cohort} cohort for ICBs in 2023/24.")
   
   return(caption)
+}
+
+#' Get a caption for the tables of number, percentage and rates of mitigable admissions/beddays by mitigator by ICB.
+#'
+#' @param cohort A string for the mitigator cohort.
+#' @param activity_type Either `"admissions"` or `"beddays"`.
+#' @param treatment_type 
+#'
+#' @return A string.
+get_caption_by_icb_table <- function(cohort, activity_type, treatment_type) {
+  caption <- glue::glue("The number of mitigable {activity_type}, the percentage by {treatment_type} admissions and the age and sex standardised rates per 100,000 population for the {cohort} cohort in 2023-24.")
+  
+  return(caption)
+  
 }
 
 #' Get a caption for the plots/tables of percentage/rates of mitigable admissions/beddays by group .

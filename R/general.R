@@ -1,5 +1,25 @@
 # Functions used for general tasks, like creating tables.
 
+create_dt <- function(x) {
+  DT::datatable(
+    x,
+    #extensions = "Buttons",
+    rownames = FALSE,
+    options = list(
+      dom = "Blfrtip",
+      lengthChange = FALSE,
+      autoWidth = TRUE,
+      searching = FALSE,
+      paging = FALSE,
+      bInfo = FALSE,
+      class = 'cell-border stripe',
+      #buttons = c("copy"),
+      columnDefs = list(list(className = 'dt-left', targets = 0)),
+      lengthMenu = list(c(10, 25, 50, -1), c(10, 25, 50, "All"))
+    )
+  )
+}
+
 #' Formats a string into a title for tables and plots.
 #'
 #' @param col_name A string.
@@ -19,7 +39,8 @@ format_as_title <- function(col_name) {
                                "Total Episodes_emergency" = "Total Emergency Admissions",
                                "Total Episodes_elective" = "Total Elective Admissions",
                                "Total Beddays_emergency" = "Total Emergency Beddays",
-                               "Total Beddays_elective" = "Total Elective Beddays"))
+                               "Total Beddays_elective" = "Total Elective Beddays",
+                               "Mitigable Episodes" = "Mitigable Admissions"))
   
   return(title)
 }
