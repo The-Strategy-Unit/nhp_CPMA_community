@@ -235,7 +235,7 @@ list(
    list(type = c("admissions", "beddays")),
    tar_target(
      perc_frail_elderly_high_los,
-     get_perc_by_los("los", "frail_elderly_high == 1", type)
+     get_perc_by_los("frail_elderly_high == 1", type)
    )
  ),
   

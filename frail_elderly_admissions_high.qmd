@@ -443,48 +443,42 @@ In this section, mitigable activity for the frail and elderly (high) cohort are 
 
 ```{r}
 perc_frail_elderly_high_los_admissions <- targets::tar_read(perc_frail_elderly_high_los_admissions)
-
-perc_frail_elderly_high_los_admissions_weeks <- perc_frail_elderly_high_los_admissions |>
-  get_perc_by_los_weeks("admissions")
 ```
 
-Of the 2023/24 mitigable admissions for frail and elderly (high) cohort, most (`r perc_frail_elderly_high_los_admissions_weeks |> dplyr::filter(weeks == 1) |> dplyr::pull(perc_weeks) |> purrr::pluck(1)`%) length of stays are under 1 week and `r perc_frail_elderly_high_los_admissions |> dplyr::filter(los_range == 0) |> dplyr::pull(perc)`% are less than 1 day.  
+Of the 2023/24 mitigable admissions for frail and elderly (high) cohort, most (`r perc_frail_elderly_high_los_admissions |> dplyr::filter(weeks == 1) |> dplyr::pull(perc_weeks) |> purrr::pluck(1)`%) length of stays are under 1 week and `r perc_frail_elderly_high_los_admissions |> dplyr::filter(los_range == 0) |> dplyr::pull(perc)`% are less than 1 day.  
 
 ```{r}
 #| label: tbl-perc_frail_elderly_high_los_admissions
 #| tbl-cap: !expr get_caption_by_group("Percentage", "Frail and Elderly (high)", "admissions", "los")
-perc_frail_elderly_high_los_admissions |>
-  get_table_perc() 
+targets::tar_read(perc_frail_elderly_high_los_admissions) |>
+  get_perc_by_los_table("admissions")
 ```
 
 ```{r}
 #| label: fig-perc_frail_elderly_high_los_admissions
 #| fig-cap: !expr get_caption_by_group("Percentage", "Frail and Elderly (high)", "admissions", "los")
-perc_frail_elderly_high_los_admissions_weeks |>
-  get_perc_by_los_weeks_plot("admissions")
+perc_frail_elderly_high_los_admissions |>
+  get_perc_by_los_plot("admissions")
 ```
 
 #### Beddays
 
 ```{r}
 perc_frail_elderly_high_los_beddays <- targets::tar_read(perc_frail_elderly_high_los_beddays)
-
-perc_frail_elderly_high_los_beddays_weeks <- perc_frail_elderly_high_los_beddays |>
-  get_perc_by_los_weeks("beddays")
 ```
 
 ```{r}
 #| label: tbl-perc_frail_elderly_high_los_beddays
 #| tbl-cap: !expr get_caption_by_group("Percentage", "Frail and Elderly (high)", "beddays", "los")
 targets::tar_read(perc_frail_elderly_high_los_beddays) |>
-  get_table_perc() 
+  get_perc_by_los_table("beddays")
 ```
 
 ```{r}
 #| label: fig-perc_frail_elderly_high_los_beddays
 #| fig-cap: !expr get_caption_by_group("Percentage", "Frail and Elderly (high)", "beddays", "los")
-perc_frail_elderly_high_los_beddays_weeks |>
-  get_perc_by_los_weeks_plot("beddays")
+perc_frail_elderly_high_los_beddays |>
+  get_perc_by_los_plot("beddays")
 ```
 
 :::

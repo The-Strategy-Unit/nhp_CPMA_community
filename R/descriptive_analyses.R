@@ -246,48 +246,83 @@ get_top_ten_specialties <- function(condition, key, type) {
 
 # Length of Stay ---------------------------------------------------------------
 
-get_perc_by_los <- function(group, condition, type, connection = sc) {
-  data_weeks <- get_perc_by_group(group, condition, type, connection) |>
-    dplyr::mutate(weeks = dplyr::case_when(los_range == "0" ~ "1",
-                                           los_range == "1" ~ "1",
-                                           los_range == "2" ~ "1",
-                                           los_range == "3" ~ "1",
-                                           los_range == "4-7" ~ "1",
-                                           los_range == "8-14" ~ "2",
-                                           los_range == "15-21" ~ "3",
-                                           los_range == "22+" ~ "3+",
-                                           .default = "error"))
+#' Get the percentage of mitigable admissions for a mitigator by a group.
+#' 
+#' Using `get_perc_by_group` with `group = "los`, this function will get the 
+#' table from Databricks, filter to the mitigator or set of mitigators using 
+#' the `condition` provided and calculate the number and percentage of mitigable 
+#' admissions by length of stay (LOS).
+#'
+#' @param condition A string containing the expression needed to filter for a 
+#' mitigator or set of mitigators. 
+#' @param type Either `"admissions"` or `"beddays"`.
+#' @param connection The Databricks connection.
+#'
+#' @return A dataframe of the number and percentage of mitigable admissions by 
+#' LOS.
+get_perc_by_los <- function(condition, type, connection = sc) {
+  data_weeks <- get_perc_by_group("los", condition, type, connection) |>
+    dplyr::mutate(
+      weeks = dplyr::case_when(
+        los_range == "0" ~ "1",
+        los_range == "1" ~ "1",
+        los_range == "2" ~ "1",
+        los_range == "3" ~ "1",
+        los_range == "4-7" ~ "1",
+        los_range == "8-14" ~ "2",
+        los_range == "15-21" ~ "3",
+        los_range == "22+" ~ "3+",
+        .default = "error"
+      )
+    )
   
   summary <- data_weeks |>
     dplyr::summarise(number_weeks = sum(!!rlang::sym(type)), .by = weeks) |>
-    dplyr::mutate(perc_weeks = janitor::round_half_up(number_weeks * 100 / sum(number_weeks), 2)) |>
-    dplyr::right_join(data_weeks, "weeks") |> 
-    dplyr::select(los_range, 
-                  !!rlang::sym(type), 
-                  perc, 
-                  weeks, 
-                  number_weeks, 
+    dplyr::mutate(perc_weeks = janitor::round_half_up(number_weeks * 100 / 
+                                                        sum(number_weeks), 
+                                                      2)) |>
+    dplyr::right_join(data_weeks, "weeks") |>
+    dplyr::select(los_range,
+                  !!rlang::sym(type),
+                  perc,
+                  weeks,
+                  number_weeks,
                   perc_weeks)
   
   return(summary)
 }
 
+#' Plot the percentage of mitigable admissions for a mitigator by LOS.
+#'
+#' @param data The output of `get_perc_admissions_by_group()`.
+#' @param type Either `"admissions"` or `"beddays"`.
+#'
+#' @return A plot.
 get_perc_by_los_plot <- function(data, type) {
   plot <- data |>
     ggplot2::ggplot(ggplot2::aes(weeks, perc, fill = los_range)) +
     ggplot2::geom_col() +
     StrategyUnitTheme::scale_fill_su() +
     StrategyUnitTheme::su_theme() +
-    ggplot2::labs(fill = "Length of stay (days)",
-                  x = "Length of stay (weeks)",
-                  y = glue::glue("Percentage of mitagable {type}"))
+    ggplot2::labs(
+      fill = "Length of stay (days)",
+      x = "Length of stay (weeks)",
+      y = glue::glue("Percentage of mitagable {type}")
+    )
   
   return(plot)
 }
 
+#' Formats the output of `get_perc_by_los` into a table.
+#'
+#' @param data The output of `get_perc_admissions_by_group()`.
+#' @param type Either `"admissions"` or `"beddays"`.
+#'
+#' @return A table.
 get_perc_by_los_table <- function(data, type) {
-  
   table <- data |>
     dplyr::select(los_range, !!rlang::sym(type), perc) |>
     get_table_perc()
+  
+  return(table)
 }
