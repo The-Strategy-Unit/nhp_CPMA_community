@@ -71,7 +71,7 @@ Of 2023/24 mitigable admissions for the frail and elderly (high) cohort, most pa
 
 ::: panel-tabset
 
-#### Perc
+#### Percentage of emergency activity
 
 ```{r}
 #| label: tbl-perc_frail_elderly_high_age_admissions
@@ -87,7 +87,7 @@ perc_frail_elderly_high_age_admissions |>
   get_perc_by_group_plot("age_range", "admissions")
 ```
 
-#### Rates per 100,000
+#### Rates per 100,000 population
 
 ```{r}
 #| label: tbl-rate_frail_elderly_high_age_admissions
@@ -116,7 +116,7 @@ Patients in the White ethnic group make up the majority (`r perc_frail_elderly_h
 
 ::: panel-tabset
 
-#### Perc
+#### Percentage of emergency activity
 
 ```{r}
 #| label: tbl-perc_frail_elderly_high_ethnicity_admissions
@@ -132,7 +132,7 @@ perc_frail_elderly_high_ethnicity_admissions |>
   get_perc_by_group_plot("Ethnic_Category", "admissions")
 ```
 
-#### Rates per 100,000
+#### Rates per 100,000 population
 
 ```{r}
 #| label: tbl-rate_frail_elderly_high_ethnicity_admissions
@@ -161,7 +161,7 @@ The percentage of 2023/24 mitigable admissions for the frail and elderly (high) 
 
 ::: panel-tabset
 
-#### Perc
+#### Percentage of emergency activity
 
 ```{r}
 #| label: tbl-perc_frail_elderly_high_imd_admissions
@@ -177,7 +177,7 @@ perc_frail_elderly_high_imd_admissions |>
   get_perc_by_group_plot("imd19_decile", "admissions")
 ```
 
-#### Rates per 100,000
+#### Rates per 100,000 population
 
 ```{r}
 #| label: tbl-rate_frail_elderly_high_imd_admissions
@@ -206,7 +206,7 @@ The majority (`r perc_frail_elderly_high_sex_admissions |> dplyr::filter(sex == 
 
 ::: panel-tabset 
 
-#### Perc
+#### Percentage of emergency activity
 
 ```{r}
 #| label: tbl-perc_frail_elderly_high_sex_admissions
@@ -222,7 +222,7 @@ perc_frail_elderly_high_sex_admissions |>
   get_perc_by_group_plot("sex", "admissions")
 ```
 
-#### Rates per 100,000
+#### Rates per 100,000 population
 
 ```{r}
 #| label: tbl-rate_frail_elderly_high_sex_admissions
@@ -257,7 +257,7 @@ Of 2023/24 mitigable beddays for the frail and elderly (high) cohort, most patie
 
 ::: panel-tabset
 
-#### Perc
+#### Percentage of emergency activity
 
 ```{r}
 #| label: tbl-perc_frail_elderly_high_age_beddays
@@ -273,7 +273,7 @@ targets::tar_read(perc_frail_elderly_high_age_beddays) |>
   get_perc_by_group_plot("age_range", "beddays")
 ```
 
-#### Rates per 100,000
+#### Rates per 100,000 population
 
 ```{r}
 #| label: tbl-rate_frail_elderly_high_age_beddays
@@ -302,7 +302,7 @@ Patients in the White ethnic group make up the majority (`r perc_frail_elderly_h
 
 ::: panel-tabset
 
-#### Perc
+#### Percentage of emergency activity
 
 ```{r}
 #| label: tbl-perc_frail_elderly_high_ethnicity_beddays
@@ -318,7 +318,7 @@ targets::tar_read(perc_frail_elderly_high_ethnicity_beddays) |>
   get_perc_by_group_plot("Ethnic_Category", "beddays")
 ```
 
-#### Rates per 100,000
+#### Rates per 100,000 population
 
 ```{r}
 #| label: tbl-rate_frail_elderly_high_ethnicity_beddays
@@ -347,7 +347,7 @@ The percentage of 2023/24 mitigable beddays for the frail and elderly (high) coh
 
 ::: panel-tabset
 
-#### Perc
+#### Percentage of emergency activity
 
 ```{r}
 #| label: tbl-perc_frail_elderly_high_imd_beddays
@@ -363,7 +363,7 @@ targets::tar_read(perc_frail_elderly_high_imd_beddays) |>
   get_perc_by_group_plot("imd19_decile", "beddays")
 ```
 
-#### Rates per 100,000
+#### Rates per 100,000 population
 
 ```{r}
 #| label: tbl-rate_frail_elderly_high_imd_beddays
@@ -392,7 +392,7 @@ The majority (`r perc_frail_elderly_high_sex_beddays |> dplyr::filter(sex == "Fe
 
 ::: panel-tabset
 
-#### Perc
+#### Percentage of emergency activity
 
 ```{r}
 #| label: tbl-perc_frail_elderly_high_sex_beddays
@@ -408,7 +408,7 @@ targets::tar_read(perc_frail_elderly_high_sex_beddays) |>
   get_perc_by_group_plot("sex", "beddays")
 ```
 
-#### Rates per 100,000
+#### Rates per 100,000 population
 
 ```{r}
 #| label: tbl-rate_frail_elderly_high_sex_beddays
@@ -891,7 +891,7 @@ rate_frail_elderly_high_icb_admissions <- summary_frail_elderly_high_icb_admissi
 
 :::panel-tabset
 
-#### Number
+#### Number of admissions
 
 ```{r}
 #| label: fig-number_frail_elderly_high_icb_admissions
@@ -899,7 +899,7 @@ rate_frail_elderly_high_icb_admissions <- summary_frail_elderly_high_icb_admissi
 number_frail_elderly_high_icb_admissions
 ```
 
-#### Perc
+#### Percentage of emergency activity
 
 ```{r}
 #| label: fig-perc_frail_elderly_high_icb_admissions
@@ -907,7 +907,7 @@ number_frail_elderly_high_icb_admissions
 perc_frail_elderly_high_icb_admissions
 ```
 
-#### SR
+#### Age and sex standardised rates per 100,000 population
 
 ```{r}
 #| label: fig-rate_frail_elderly_high_icb_admissions
