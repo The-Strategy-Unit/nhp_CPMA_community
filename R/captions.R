@@ -28,13 +28,16 @@ format_group_name_for_caption <- function(group) {
 #' @param group The group the data is split by: `"age"`, `"ethnicity"`, `"imd"` or `"sex"`.
 #'
 #' @return A string.
-get_caption_by_group <- function(metric, cohort, activity_type, group) {
+get_caption_by_group <- function(metric, cohort, activity_type, group, treatment_type = NULL) {
+  
+  by <- format_by_for_captions(metric, activity_type, treatment_type)
+  
   group_formatted <- format_group_name_for_caption(group)
   
   metric <- format_metric_for_captions(metric)
   
   caption <- glue::glue(
-    "{metric} of mitigable {activity_type} for the {cohort} cohort in 2023/24 by {group_formatted}."
+    "{metric} of mitigable {activity_type}{by} for the {cohort} cohort in 2023/24 by {group_formatted}."
   )
   return(caption)
 }
@@ -80,11 +83,7 @@ get_caption_top_ten_specialties <- function(cohort, activity_type) {
 #' @return
 get_caption_by_icb <- function(cohort, metric, activity_type, treatment_type = NULL) {
   
-  by <- if(metric == "perc") {
-    glue::glue(" by {treatment_type} {activity_type}")
-  } else {
-    ""
-  }
+  by <- format_by_for_captions(metric, activity_type, treatment_type)
   
   metric <- format_metric_for_captions(metric)
   
@@ -106,4 +105,14 @@ format_metric_for_captions <- function(metric) {
   }
   
   return(renamed)
+}
+
+format_by_for_captions <- function(metric, activity_type, treatment_type) {
+  by <- if(metric == "perc") {
+    glue::glue(" by {treatment_type} {activity_type}")
+  } else {
+    ""
+  }
+  
+  return(by)
 }
