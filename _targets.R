@@ -171,8 +171,8 @@ list(
   ## Percentage breakdowns -----------------------------------------------------
   tarchetypes::tar_map(
     list(group = rep(
-      c("age", "ethnicity", "icb", "imd", "sex"), 2
-    ), type = rep(c("admissions", "beddays"), each = 5)),
+      c("age", "ethnicity", "imd", "sex"), 2
+    ), type = rep(c("admissions", "beddays"), each = 4)),
     tar_target(
       perc_frail_elderly_high,
       get_perc_by_group(group, "frail_elderly_high == 1", type)
