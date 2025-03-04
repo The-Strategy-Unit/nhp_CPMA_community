@@ -164,8 +164,7 @@ get_perc_by_group_plot <- function(data, col_name, activity_type) {
 #'   get_table_perc()}
 get_table_perc <- function(data) {
   table <- data |>
-    dplyr::rename_with( ~ format_as_title(.)) |>
-    dplyr::rename("Percentage" = "Perc") |>
+    dplyr::rename_with( ~ format_as_title(.)) |> 
     get_table() |>
     flextable::delete_part(part = "footer")
   
