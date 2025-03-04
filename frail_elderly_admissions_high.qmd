@@ -16,6 +16,7 @@ library("patchwork")
 source("R/captions.R")
 source("R/general.R")
 source("R/descriptive_analyses.R")
+source("R/comparative_analyses.R")
 source("R/Functions for cohort overlap.R")
 source("R/Functions for trend analysis.R")
 
@@ -873,31 +874,50 @@ This section will have a map of standardised rates to look at variation across I
 
 ```{r}
 #| output: false
-data <- targets::tar_read(perc_frail_elderly_high_icb_admissions) |>
-  dplyr::mutate(icb = stringr::str_to_upper(icb))
-
-icb_pop <- targets::tar_read(icb_population_data) |>
-  dplyr::filter(fyear == "2023/24") |>
-  dplyr::summarise(pop = sum(icb_population), .by = c(icb24cdh, icb_2024_code))
+summary_frail_elderly_high_icb_admissions <- targets::tar_read(summary_frail_elderly_high_icb_admissions)
 
 icb_23_shp <- sf::st_read("https://services1.arcgis.com/ESMARspQHYMw9BZ9/arcgis/rest/services/Integrated_Care_Boards_April_2023_EN_BGC/FeatureServer/0/query?outFields=*&where=1%3D1&f=geojson") |>
   janitor::clean_names()
 
-# notes
-  # value = number admissions at icb * 100 / population at icb
-  # using 2023 icb shapefile
+number_frail_elderly_high_icb_admissions <- summary_frail_elderly_high_icb_admissions |>
+  get_summary_by_icb_plot(icb_23_shp, "total_count")
+
+perc_frail_elderly_high_icb_admissions <- summary_frail_elderly_high_icb_admissions |>
+  get_summary_by_icb_plot(icb_23_shp, "perc")
+
+rate_frail_elderly_high_icb_admissions <- summary_frail_elderly_high_icb_admissions |>
+  get_summary_by_icb_plot(icb_23_shp, "value")
 ```
 
+:::panel-tabset
+
+#### Number
+
 ```{r}
-#| label: fig-perc_frail_elderly_high_icb
-#| fig-cap: Mitigable activity for Frail and Elderly Admissions in 2023-24 by icb.
-icb_23_shp |>
-  dplyr::left_join(icb_pop, by = c("icb23cd" = "icb_2024_code")) |>
-  dplyr::left_join(data, by = c("icb24cdh" = "icb")) |>
-  dplyr::mutate(value = janitor::round_half_up(admissions * 100 /
-                                                  pop, 2)) |>
-  ggplot2::ggplot() +
-  ggplot2::geom_sf(ggplot2::aes(fill = value)) +
-  ggplot2::theme_void()
+#| label: fig-number_frail_elderly_high_icb_admissions
+#| fig-cap: h
+number_frail_elderly_high_icb_admissions
 ```
+
+#### Perc
+
+```{r}
+#| label: fig-perc_frail_elderly_high_icb_admissions
+#| fig-cap: h
+perc_frail_elderly_high_icb_admissions
+```
+
+#### SR
+
+```{r}
+#| label: fig-rate_frail_elderly_high_icb_admissions
+#| fig-cap: h
+rate_frail_elderly_high_icb_admissions
+```
+
+#### Table
+
+:::
+
+
 
