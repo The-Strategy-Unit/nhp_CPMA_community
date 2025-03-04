@@ -171,8 +171,8 @@ list(
   ## Percentage breakdowns -----------------------------------------------------
   tarchetypes::tar_map(
     list(group = rep(
-      c("age", "ethnicity", "icb", "imd", "los", "sex"), 2
-    ), type = rep(c("admissions", "beddays"), each = 6)),
+      c("age", "ethnicity", "icb", "imd", "sex"), 2
+    ), type = rep(c("admissions", "beddays"), each = 5)),
     tar_target(
       perc_frail_elderly_high,
       get_perc_by_group(group, "frail_elderly_high == 1", type)
@@ -229,6 +229,15 @@ list(
       get_top_ten_specialties("frail_elderly_high == 1", specialty_key, type)
     )
   ),
+ 
+ ## Length of Stay -------------------------------------------------------------
+ tarchetypes::tar_map(
+   list(type = c("admissions", "beddays")),
+   tar_target(
+     perc_frail_elderly_high_los,
+     get_perc_by_los("los", "frail_elderly_high == 1", type)
+   )
+ ),
   
   # Cohort analysis ------------------------------------------------------------
   
