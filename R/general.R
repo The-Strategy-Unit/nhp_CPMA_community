@@ -10,7 +10,7 @@ format_as_title <- function(col_name) {
     stringr::str_replace("_", " ") |>
     stringr::str_to_title() |>
     stringr::str_replace_all(c("Imd19" = "IMD",
-                               "Percentage" = "Perc",
+                               "Perc" = "Percentage",
                                "Pop" = "Population",
                                "Lowercl" = "Lower CL",
                                "Uppercl" = "Upper CL",
