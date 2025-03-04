@@ -22,7 +22,7 @@ format_group_name_for_caption <- function(group) {
 
 #' Get a caption for the plots/tables of percentage/rates of mitigable admissions/beddays by group .
 #'
-#' @param metric Either `"Percentage"` or` "Rates per 100,000 population"`.
+#' @param metric Either `"perc"` or` "rate"`.
 #' @param cohort A string for the mitigator cohort.
 #' @param activity_type Either `"admissions"` or `"beddays"`.
 #' @param group The group the data is split by: `"age"`, `"ethnicity"`, `"imd"` or `"sex"`.
@@ -30,6 +30,8 @@ format_group_name_for_caption <- function(group) {
 #' @return A string.
 get_caption_by_group <- function(metric, cohort, activity_type, group) {
   group_formatted <- format_group_name_for_caption(group)
+  
+  metric <- format_metric_for_captions(metric)
   
   caption <- glue::glue(
     "{metric} of mitigable {activity_type} for the {cohort} cohort in 2023/24 by {group_formatted}."
