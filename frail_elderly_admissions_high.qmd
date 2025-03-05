@@ -787,7 +787,7 @@ plotting_percentage_change_over_time_by_icb(number_percentage_over_time, percent
 #| label: fig-stardardised_trends_spells_icb
 #| fig-cap: Age and sex standardised rate of admissions for Frail Elderly High potentially mitigable activity by ICB over the last 9 years. 
 
-age_sex_standardised_rates_episodes<-tar_read(age_sex_standardised_rates_episodes)
+age_sex_standardised_rates_episodes<-tar_read(icb_age_sex_standardised_rates_episodes)
 
 plotting_icb_over_time(
   (age_sex_standardised_rates_episodes|> 
@@ -813,7 +813,7 @@ plotting_percentage_change_over_time_by_icb(age_sex_standardised_rates_episodes,
 #| label: fig-stardardised_trends_beddays_icb
 #| fig-cap: Age and sex standardised rate of beddays for Frail Elderly High potentially mitigable activity by ICB over the last 9 years.
 
-age_sex_standardised_rates_beddays<-tar_read(age_sex_standardised_rates_beddays)
+age_sex_standardised_rates_beddays<-tar_read(icb_age_sex_standardised_rates_beddays)
 
 plotting_icb_over_time(
   (age_sex_standardised_rates_beddays|> 

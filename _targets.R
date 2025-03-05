@@ -109,7 +109,7 @@ list(
   ),
   
   tar_target(
-    age_sex_standardised_rates_episodes,
+    icb_age_sex_standardised_rates_episodes,
     generating_age_sex_standardised_rates(
       numbers_over_time,
       icb_population_data,
@@ -119,7 +119,7 @@ list(
   ),
   
   tar_target(
-    age_sex_standardised_rates_beddays,
+    icb_age_sex_standardised_rates_beddays,
     generating_age_sex_standardised_rates(
       numbers_over_time,
       icb_population_data,
@@ -269,18 +269,20 @@ tar_target(
       ) |>
       dplyr::select(dplyr::starts_with("total"), icb) |>
       dplyr::distinct() |>
-      dplyr::summarise(dplyr::across(dplyr::starts_with("total"), ~ sum(.)), 
+      dplyr::summarise(dplyr::across(dplyr::starts_with("total"), ~ sum(.)),
                        .by = icb) |>
       sparklyr::collect()
   ),
-  tarchetypes::tar_map(
-    list(activity_type = c("admissions", "beddays")),
-    tar_target(summary_frail_elderly_high_icb,
-               get_summary_by_icb(numbers_over_time, 
-                                  "frail_elderly_high", 
-                                  icb_population_data, 
-                                  standard_england_pop_2021_census, 
-                                  total_beddays_episodes_by_icb, 
-                                  activity_type))
-  )
+  tar_target(summary_frail_elderly_high_icb_admissions,
+             get_summary_by_icb(icb_age_sex_standardised_rates_episodes,
+                                "frail_elderly_high",
+                                total_beddays_episodes_by_icb,
+                                "admissions",
+                                "emergency")),
+  tar_target(summary_frail_elderly_high_icb_beddays,
+           get_summary_by_icb(icb_age_sex_standardised_rates_beddays,
+                              "frail_elderly_high",
+                              total_beddays_episodes_by_icb,
+                              "beddays",
+                              "emergency"))
 )
