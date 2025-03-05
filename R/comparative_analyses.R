@@ -55,10 +55,24 @@ get_summary_by_icb_plot <- function(data, boundaries, fill) {
   
   plot <- boundaries |>
     dplyr::left_join(data, by = c("icb23cd" = "icb_2024_code")) |>
-    ggplot2::ggplot() +
-    ggplot2::geom_sf(ggplot2::aes(fill = !!rlang::sym(fill))) +
+    dplyr::rename(fill_colour = !!rlang::sym(fill)) |>
+    dplyr::rowwise() |>
+    dplyr::mutate(
+      fill_colour_label = ifelse(fill == "perc",
+                                 glue::glue("{fill_colour}%"),
+                                 prettyNum(fill_colour, big.mark = ",")),
+      icb_name = stringr::str_remove(icb_2024_name,
+                                      " Integrated Care Board"),
+      ICB = glue::glue("{icb_name} \n {fill_title}: {fill_colour_label}")) |>
+    dplyr::ungroup() |>
+    ggplot2::ggplot(ggplot2::aes(fill = fill_colour, 
+                                 tooltip = ICB)) +
+    ggplot2::geom_sf() +
     ggplot2::theme_void() +
     ggplot2::labs(fill = fill_title)
+    
+  plot <- plotly::ggplotly(plot, tooltip = "tooltip") |>
+      plotly::style(hoveron = "fills")
   
   return(plot)
 }
@@ -79,4 +93,4 @@ get_summary_by_icb_table <- function(data, activity_type, treatment_type) {
   
   return(table)
 }
-  
+
