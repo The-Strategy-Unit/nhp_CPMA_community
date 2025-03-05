@@ -3,17 +3,14 @@
 create_dt <- function(x) {
   DT::datatable(
     x,
-    #extensions = "Buttons",
     rownames = FALSE,
     options = list(
       dom = "Blfrtip",
       lengthChange = FALSE,
       autoWidth = TRUE,
-      searching = FALSE,
       paging = FALSE,
       bInfo = FALSE,
       class = 'cell-border stripe',
-      #buttons = c("copy"),
       columnDefs = list(list(className = 'dt-left', targets = 0)),
       lengthMenu = list(c(10, 25, 50, -1), c(10, 25, 50, "All"))
     )
