@@ -27,6 +27,10 @@ get_standardised_rate_by_icb <- function(data, standard_pop) {
 
 get_summary_by_icb <- function(data, cohort, icb_pop, standard_pop, total, activity_type) {
   
+  if(activity_type == "admissions") {
+    activity_type <- "episodes"
+  } 
+  
   wrangled <- data |>
     dplyr::filter(cohorts == cohort, 
                   fyear == "202324") |>

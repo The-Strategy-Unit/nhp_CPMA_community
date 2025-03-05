@@ -274,7 +274,7 @@ tar_target(
       sparklyr::collect()
   ),
   tarchetypes::tar_map(
-    list(activity_type = c("episodes", "beddays")),
+    list(activity_type = c("admissions", "beddays")),
     tar_target(summary_frail_elderly_high_icb,
                get_summary_by_icb(numbers_over_time, 
                                   "frail_elderly_high", 
