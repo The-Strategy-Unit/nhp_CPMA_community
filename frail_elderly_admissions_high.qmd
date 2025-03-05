@@ -518,7 +518,8 @@ targets::tar_read(frail_elderly_high_specialties_top_ten_beddays) |>
 
 ## Cohort overlap
 
-Many of the spells and beddays recorded include activity which falls into more than one mitigator cohort. Therefore we aim to understand which cohorts the Frail Elderly High cohort overlaps with and the extend of that overlap.
+Many admissions meet the criteria to be included in more than one mitigator cohort. Since these potential mitigator cohorts are not mutually exclusive there is a need to understand which cohorts overlap and the degree of overlap between the cohorts.
+
 
 ### Number and proportion within multiple other cohorts
 For the Frail Elderly High activity we show how much of the activity is included in multiple other mitigable cohorts. Due to the definition of this mitigator all of those in this cohort are also in the Emergency Elderly cohort, so none of this group are solely in the Frail Elderly High cohort. One quarter of this cohort are included 5 or more additional mitigator cohorts.
@@ -579,7 +580,10 @@ plotting_barchart_summary_of_overlaps(total_cohort_numbers,"frail_elderly_high",
 
 
 ### Most common cohort overlaps
-These are the most common cohort combinations for the Elderly Frail High cohort. For this cohort there are a very large number of different cohort combinations, so there are many smaller size cohort combinations that are not shown (all combinations together would add to 100%).
+
+Often overlap between a small number of groups can be visualised using Venn diagram. However, due to the large number of mitigator cohorts and therefore high numbers of potential combinations of overlaps we have used upset plots to show the largest overlaps between cohorts.
+
+The 15 most common cohort combinations for the Elderly Frail High cohort are shown. For this cohort there are a very large number of different cohort combinations, so there are many smaller size cohort combinations that are not shown (all combinations together would add to 100%).
 
 ::: panel-tabset
 
@@ -606,9 +610,15 @@ plot_upset_plot(total_cohort_numbers, beddays)
 
 ## Trend Analysis
 
-### England
+We aim to understand whether there have been decreases, or increases, in potentially mitigable Frail Elderly High activity over time. We have considered Frail Elderly High admissions and beddays over the past 9 years in England as a whole and for each ICB, including: 
+a) the absolute number of Frail Elderly High admissions/beddays,
+b) these admissions/beddays as a proportion of emergency admissions,
+c) the age and sex standardised rates of these admissions/beddays using the England 2021 census population.
 
-Text here
+To help understand the variability between ICBs we have calculated for each ICB the percentage change in proportion of emergency admissions and in standardised rates between 2019/20 and 2023/24.
+
+
+### England
 
 ::: panel-tabset
 #### Number over time
@@ -617,9 +627,10 @@ Text here
 #### Admissions
 ```{r, fig.width=7, fig.height=3}
 #| label: fig-number_trends_spells_england
-#| fig-cap: The total number of admissions for the Frail Elderly High mitigable activity cohort in England over the last 10 years. 
+#| fig-cap: The total number of admissions for the Frail Elderly High mitigable activity cohort in England over the last 9 years. 
 
-numbers_over_time<-tar_read(numbers_over_time)
+numbers_over_time<-tar_read(numbers_over_time)|>
+  filter(year!="2014/15")
 denominator_over_time<-tar_read(denominator_over_time)
 icb_population_data<-tar_read(icb_population_data)
 
@@ -637,7 +648,7 @@ plot_of_number_over_time(number_percentage_over_time, episodes)
 
 ```{r, fig.width=7, fig.height=3}
 #| label: fig-number_trends_beddays_england
-#| fig-cap: The total number of beddays for the Frail Elderly High mitigable activity cohort in England over the last 10 years. 
+#| fig-cap: The total number of beddays for the Frail Elderly High mitigable activity cohort in England over the last 9 years. 
 plot_of_number_over_time(number_percentage_over_time,  beddays)
 
 ```
@@ -648,7 +659,7 @@ plot_of_number_over_time(number_percentage_over_time,  beddays)
 #### Admissions
 ```{r, fig.width=7, fig.height=3}
 #| label: fig-percent_trends_spells_england
-#| fig-cap: The percentage of total emergency admissions that are for Frail Elderly High potentially mitigable activity in England over the last 10 years. 
+#| fig-cap: The percentage of total emergency admissions that are for Frail Elderly High potentially mitigable activity in England over the last 9 years. 
 
 plot_of_percentage_over_time(number_percentage_over_time, episodes, total_episodes)
 
@@ -656,7 +667,7 @@ plot_of_percentage_over_time(number_percentage_over_time, episodes, total_episod
 #### Beddays
 ```{r, fig.width=7, fig.height=3}
 #| label: fig-percent_trends_beddays_england
-#| fig-cap: The percentage of total emergency beddays that are for Frail Elderly High potentially mitigable activity in England over the last 10 years. 
+#| fig-cap: The percentage of total emergency beddays that are for Frail Elderly High potentially mitigable activity in England over the last 9 years. 
 
 plot_of_percentage_over_time(number_percentage_over_time,  beddays, total_beddays)
 
@@ -700,8 +711,6 @@ plot_of_standardised_rates_over_time(england_age_sex_standardised_rates_beddays)
 
 ### ICB
 
-Text here
-
 ::: panel-tabset
 
 #### Number over time
@@ -742,6 +751,8 @@ plotting_icb_over_time(number_percentage_over_time|>
 
 ```
 
+<br>
+
 ```{r, fig.height=6, fig.width=8}
 #| label: fig-percent_change_percent_spells
 #| fig-cap: The percentage change in the proportion emergency admissions that are Frail Elderly High admissions by ICB between 2019/20 and 2023/24. 
@@ -763,6 +774,8 @@ plotting_icb_over_time(number_percentage_over_time|>
         mutate(activity=percentage_beddays), 'Percentage')
 
 ```
+
+<br>
 
 
 ```{r, fig.height=6, fig.width=8}
@@ -787,15 +800,18 @@ plotting_percentage_change_over_time_by_icb(number_percentage_over_time, percent
 #| label: fig-stardardised_trends_spells_icb
 #| fig-cap: Age and sex standardised rate of admissions for Frail Elderly High potentially mitigable activity by ICB over the last 9 years. 
 
-age_sex_standardised_rates_episodes<-tar_read(icb_age_sex_standardised_rates_episodes)
+icb_age_sex_standardised_rates_episodes<-tar_read(icb_age_sex_standardised_rates_episodes)
 
 plotting_icb_over_time(
-  (age_sex_standardised_rates_episodes|> 
+  (icb_age_sex_standardised_rates_episodes|> 
      filter(cohorts=="frail_elderly_high")|>
      mutate(activity=value)),
   'Standardised rate per 100,000')
 
 ```
+
+
+<br>
 
 
 ```{r, fig.height=6, fig.width=8}
@@ -804,7 +820,7 @@ plotting_icb_over_time(
 
 england_average_standardised_episodes<-calculating_england_average_standardised(england_age_sex_standardised_rates_episodes)
 
-plotting_percentage_change_over_time_by_icb(age_sex_standardised_rates_episodes, value, england_average_standardised_episodes$change, 1.3, 1.7)
+plotting_percentage_change_over_time_by_icb(icb_age_sex_standardised_rates_episodes, value, england_average_standardised_episodes$change, 1.3, 1.7)
 
 ```
 
@@ -813,15 +829,18 @@ plotting_percentage_change_over_time_by_icb(age_sex_standardised_rates_episodes,
 #| label: fig-stardardised_trends_beddays_icb
 #| fig-cap: Age and sex standardised rate of beddays for Frail Elderly High potentially mitigable activity by ICB over the last 9 years.
 
-age_sex_standardised_rates_beddays<-tar_read(icb_age_sex_standardised_rates_beddays)
+icb_age_sex_standardised_rates_beddays<-tar_read(icb_age_sex_standardised_rates_beddays)
 
 plotting_icb_over_time(
-  (age_sex_standardised_rates_beddays|> 
+  (icb_age_sex_standardised_rates_beddays|> 
      filter(cohorts=="frail_elderly_high")|>
      mutate(activity=value)),
   'Standardised rate per 100,000')
 
 ```
+
+
+<br>
 
 
 ```{r, fig.height=6, fig.width=8}
@@ -831,7 +850,7 @@ plotting_icb_over_time(
 
 england_average_standardised_beddays<-calculating_england_average_standardised(england_age_sex_standardised_rates_beddays)
 
-plotting_percentage_change_over_time_by_icb(age_sex_standardised_rates_beddays, value, england_average_standardised_beddays$change, 1.4, 1.6)
+plotting_percentage_change_over_time_by_icb(icb_age_sex_standardised_rates_beddays, value, england_average_standardised_beddays$change, 1.4, 1.6)
 
 
 ```
