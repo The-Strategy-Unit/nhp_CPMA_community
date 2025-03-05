@@ -149,7 +149,7 @@ plotting_icb_over_time<-function(data, axis_title){
   data|>
     group_by(icb_2024_name)|>
     highlight_key(~icb_2024_name) |>
-    plot_ly( x = ~year, y = ~activity, type = 'scatter',  mode = 'lines', text=~icb_2024_name,  line = list(color = "#686f73"))|>
+    plot_ly( x = ~year, y = ~activity, type = 'scatter',  mode = 'lines', text=~icb_2024_name,  line = list(color = "#686f73"), width=695, height=332)|>
     highlight(~icb_2024_name, on = "plotly_click", off="plotly_doubleclick", dynamic=FALSE)|>
     layout(
       xaxis = list(title="", showticklabels = TRUE, showline = TRUE, showgrid = F , linewidth=2),
@@ -179,7 +179,7 @@ plotting_percentage_change_over_time_by_icb<-function(data, values, eng_average,
   
   data1|>
     ggplot(aes(x=change, y=fct_reorder(icb_2024_name, change)))+
-    geom_bar(stat="identity", fill=ifelse(data1$change<0,  "#129957", "#ec6555")) +
+    geom_bar(stat="identity", fill=ifelse(data1$change<0,  "#70C19A", "#F19388")) +
     geom_vline(xintercept=eng_average, linetype="dashed", 
                color = "#686f73"   , size=0.4 )+
     geom_text(aes(x=eng_average, label="England\naverage", y=nrow(data1)+3), colour="#686f73", vjust=1, hjust =-0.09, size=2.7)+
