@@ -149,8 +149,8 @@ plotting_icb_over_time<-function(data, axis_title){
   
   ifelse("lowercl" %in% names(data), 
          data2<-data|>
-           mutate(lower_ci=lowercl)|>
-           mutate(upper_ci=uppercl), 
+           mutate(lower_ci=round(lowercl,2))|>
+           mutate(upper_ci=round(uppercl,2)), 
          data2<-data|>
            mutate(lower_ci=NA)|>
            mutate(upper_ci=NA))
@@ -160,6 +160,7 @@ plotting_icb_over_time<-function(data, axis_title){
          footnote<-"")
   
   data2|>
+    mutate(activity=round(activity,2))|>
     group_by(icb_2024_name)|>
     highlight_key(~icb_2024_name) |>
     plot_ly( x = ~year, y = ~activity, type = 'scatter',  mode = 'lines', text=~icb_2024_name,  line = list(color = "#686f73"), width=660, height=300)|>
