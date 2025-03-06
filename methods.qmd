@@ -2,10 +2,27 @@
 
 NOTE: This chapter is NOT in the book yet. We will need to add it the `_quarto.yml` file once ready to share.
 
+## General
+
+ADD TABLE OF MITIGATORS
+
+Admissions and beddays are taken from the Hospital Episode Statistics dataset used for the New Hospitals Programme model. 
+
+ICB populations for each year are the Office of National Statistics mid year population estimates-  https://www.ons.gov.uk/peoplepopulationandcommunity/populationandmigration/populationestimates/datasets/clinicalcommissioninggroupmidyearpopulationestimates. As 2023/24 ICB population data was not available the 2022/23 data was used.
+
+The age and sex standardised rates are calculated using population data for England from the 2021 census as the standard population - https://www.ons.gov.uk/peoplepopulationandcommunity/populationandmigration/populationestimates/bulletins/populationandhouseholdestimatesenglandandwales/census2021.   In a small number of cases where age or sex is not recorded the data has been excluded from the standardised rates.
+
+Where the activity for the cohort is given as a percentage of total activity, the percentage of admissions for each cohort are calculated relative to the total number of emergency admissions or total number of elective and emergency admissions depending on whether the mitigator cohort is defined as being only emergency admissions or can be either elective or emergency admissions. (see table of mitigators)
+
+Where Index of Multiple Deprivation, IMD, deciles used these are the 2019 values.  
+The ICBs used are based on the 2024 ICBs.
+
+
+
 ## Descriptive analysis
 
 - Weighting by population
-  - For age and gender, used the icb opulation file already had
+  - For age and gender, used the icb population file already had
   - For IMD used: https://www.ons.gov.uk/peoplepopulationandcommunity/populationandmigration/populationprojections/adhocs/15363monthlypopulationsbyindexofmultipledeprivationimddecileenglandjanuary2019toaugust2022 
   - For ethnicity used: 
     - https://www.ons.gov.uk/peoplepopulationandcommunity/culturalidentity/ethnicity/bulletins/ethnicgroupenglandandwales/census2021
@@ -13,6 +30,7 @@ NOTE: This chapter is NOT in the book yet. We will need to add it the `_quarto.y
     - Had to recode into NHS ethnic categories
 
 - Excluded NULLs
+
 
 ## Comparative analysis
 
