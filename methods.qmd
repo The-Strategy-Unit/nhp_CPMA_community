@@ -1,11 +1,12 @@
 # Methods
 
+NOTE: This chapter is NOT in the book yet. We will need to add it the `_quarto.yml` file once ready to share.
+
 ## General
 
 ADD TABLE OF MITIGATORS
 
-The 2019 index of multiple deprivation deciles are used. 
-The ICBs used are based on the 2024 ICBs.
+Admissions and beddays are taken from the Hospital Episode Statistics dataset used for the New Hospitals Programme model. 
 
 ICB populations for each year are the Office of National Statistics mid year population estimates-  https://www.ons.gov.uk/peoplepopulationandcommunity/populationandmigration/populationestimates/datasets/clinicalcommissioninggroupmidyearpopulationestimates. As 2023/24 ICB population data was not available the 2022/23 data was used.
 
@@ -13,7 +14,10 @@ The age and sex standardised rates are calculated using population data for Engl
 
 Where the activity for the cohort is given as a percentage of total activity, the percentage of admissions for each cohort are calculated relative to the total number of emergency admissions or total number of elective and emergency admissions depending on whether the mitigator cohort is defined as being only emergency admissions or can be either elective or emergency admissions. (see table of mitigators)
 
-NOTE: This chapter is NOT in the book yet. We will need to add it the `_quarto.yml` file once ready to share.
+Where Index of Multiple Deprivation, IMD, deciles used these are the 2019 values.  
+The ICBs used are based on the 2024 ICBs.
+
+
 
 ## Descriptive analysis
 
