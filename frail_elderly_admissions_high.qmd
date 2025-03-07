@@ -874,27 +874,69 @@ rate_frail_elderly_high_icb_admissions_map <- summary_frail_elderly_high_icb_adm
 
 #### Number of admissions
 
+:::panel-tabset
+
+##### Bars
+
 ```{r}
-#| label: fig-number_frail_elderly_high_icb_admissions
+#| label: fig-number_frail_elderly_high_icb_admissions_bar
+#| fig-cap: !expr get_caption_by_icb("Frail Elderly (high)", "number", "admissions")
+get_summary_by_icb_bar(summary_frail_elderly_high_icb_admissions, "total_count")
+```
+
+##### Map
+
+```{r}
+#| label: fig-number_frail_elderly_high_icb_admissions_map
 #| fig-cap: !expr get_caption_by_icb("Frail Elderly (high)", "number", "admissions")
 number_frail_elderly_high_icb_admissions_map
 ```
 
+:::
+
 #### Percentage of emergency activity
 
+:::panel-tabset
+
+##### Bars
+
 ```{r}
-#| label: fig-perc_frail_elderly_high_icb_admissions
+#| label: fig-perc_frail_elderly_high_icb_admissions_bar
+#| fig-cap: !expr get_caption_by_icb("Frail Elderly (high)", "perc", "admissions")
+get_summary_by_icb_bar(summary_frail_elderly_high_icb_admissions, "perc")
+```
+
+##### Map
+
+```{r}
+#| label: fig-perc_frail_elderly_high_icb_admissions_map
 #| fig-cap: !expr get_caption_by_icb("Frail Elderly (high)", "perc", "admissions", "emergency")
 perc_frail_elderly_high_icb_admissions_map
 ```
 
+:::
+
 #### Age and sex standardised rates per 100,000 population
 
+:::panel-tabset
+
+##### Bars
+
 ```{r}
-#| label: fig-rate_frail_elderly_high_icb_admissions
+#| label: fig-rate_frail_elderly_high_icb_admissions_bar
+#| fig-cap: !expr get_caption_by_icb("Frail Elderly (high)", "SR", "admissions")
+get_summary_by_icb_bar(summary_frail_elderly_high_icb_admissions, "value")
+```
+
+##### Map
+
+```{r}
+#| label: fig-rate_frail_elderly_high_icb_admissions_map
 #| fig-cap: !expr get_caption_by_icb("Frail Elderly (high)", "SR", "admissions")
 rate_frail_elderly_high_icb_admissions_map
 ```
+
+:::
 
 #### Table
 

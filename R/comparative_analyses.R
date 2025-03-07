@@ -82,3 +82,34 @@ get_summary_by_icb_table <- function(data, activity_type, treatment_type) {
   return(table)
 }
 
+get_summary_by_icb_bar <- function(data, fill) {
+  
+  mean_value <- data |>
+    dplyr::summarise(mean = mean(!!rlang::sym(fill))) |>
+    dplyr::pull()
+  
+  fill_title <- get_fill_title(fill)
+  
+  plot <- data |>
+    get_icb_tooltip(fill) |>
+    ggplot2::ggplot() +
+    ggplot2::aes(x = reorder(icb_2024_name, fill_colour),
+                 y = fill_colour,
+                 fill = 'bars_color', 
+                 tooltip = ICB) +
+    ggplot2::geom_col() +
+    ggplot2::geom_hline(yintercept = mean_value, linetype = "dashed") +
+    ggplot2::scale_fill_manual(values = c('bars_color' = "#f9bf07"), 
+                               guide = 'none') +
+    ggplot2::labs(x = "Integrated Care Board", 
+                  y = "Number") +
+    StrategyUnitTheme::su_theme() +
+    ggplot2::theme(legend.position = "none") +
+    ggplot2::theme(axis.text.x = ggplot2::element_blank(),
+                   axis.ticks.x = ggplot2::element_blank())
+  
+  plot <- plotly::ggplotly(plot, tooltip = "tooltip")
+  
+  return(plot)
+  
+}
