@@ -158,10 +158,17 @@ list(
       sparklyr::collect() |>
       tidyr::pivot_longer(
         cols = dplyr::everything(),
-        names_to = "metric_type",
+        names_to = "activity_treatment",
         values_to = "total"
       ) |>
-      tidyr::separate_wider_delim(metric_type, "_", names = c("a", "metric", "type"))
+      tidyr::separate_wider_delim(activity_treatment, 
+                                  "_", 
+                                  names = c("a", 
+                                            "activity_type", 
+                                            "treatment_type")) |>
+      dplyr::mutate(activity_type = stringr::str_replace(activity_type,
+                                                         "episodes", 
+                                                         "admissions"))
   ),
   tar_target(
     overview_frail_elderly_high,

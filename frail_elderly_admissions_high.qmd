@@ -31,11 +31,11 @@ This cohort includes elderly patients with a high level of frailty, specifically
 overview_frail_elderly_high <- targets::tar_read(overview_frail_elderly_high)
 
 frail_elderly_high_admissions_perc <- overview_frail_elderly_high |>
-  dplyr::filter(metric == "Admissions") |>
+  dplyr::filter(activity_type == "Admissions") |>
   dplyr::pull(perc)
 
 frail_elderly_high_beddays_perc <- overview_frail_elderly_high |>
-  dplyr::filter(metric == "Beddays") |>
+  dplyr::filter(activity_type == "Beddays") |>
   dplyr::pull(perc)
 ```
 
