@@ -143,7 +143,7 @@ list(
   
   ## Overview of mitigator -----------------------------------------------------
   tar_target(
-    total_beddays_episodes,
+    total_beddays_admissions,
     dplyr::tbl(
       sc,
       dbplyr::in_catalog(
@@ -158,14 +158,21 @@ list(
       sparklyr::collect() |>
       tidyr::pivot_longer(
         cols = dplyr::everything(),
-        names_to = "metric_type",
+        names_to = "activity_treatment",
         values_to = "total"
       ) |>
-      tidyr::separate_wider_delim(metric_type, "_", names = c("a", "metric", "type"))
+      tidyr::separate_wider_delim(activity_treatment, 
+                                  "_", 
+                                  names = c("a", 
+                                            "activity_type", 
+                                            "treatment_type")) |>
+      dplyr::mutate(activity_type = stringr::str_replace(activity_type,
+                                                         "episodes", 
+                                                         "admissions"))
   ),
   tar_target(
     overview_frail_elderly_high,
-    get_overview_of_mitigator("emergency", "frail_elderly_high == 1", total_beddays_episodes)
+    get_overview_of_mitigator("emergency", "frail_elderly_high == 1", total_beddays_admissions)
   ),
   
   ## Percentage breakdowns -----------------------------------------------------
@@ -258,7 +265,7 @@ tar_target(
 
 # Comparative analysis ---------------------------------------------------------
   tar_target(
-    total_beddays_episodes_by_icb,
+    total_beddays_admissions_by_icb,
     dplyr::tbl(
       sc,
       dbplyr::in_catalog(
@@ -276,13 +283,13 @@ tar_target(
   tar_target(summary_frail_elderly_high_icb_admissions,
              get_summary_by_icb(icb_age_sex_standardised_rates_episodes,
                                 "frail_elderly_high",
-                                total_beddays_episodes_by_icb,
+                                total_beddays_admissions_by_icb,
                                 "admissions",
                                 "emergency")),
   tar_target(summary_frail_elderly_high_icb_beddays,
            get_summary_by_icb(icb_age_sex_standardised_rates_beddays,
                               "frail_elderly_high",
-                              total_beddays_episodes_by_icb,
+                              total_beddays_admissions_by_icb,
                               "beddays",
                               "emergency"))
 )

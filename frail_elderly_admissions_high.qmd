@@ -31,11 +31,11 @@ This cohort includes elderly patients with a high level of frailty, specifically
 overview_frail_elderly_high <- targets::tar_read(overview_frail_elderly_high)
 
 frail_elderly_high_admissions_perc <- overview_frail_elderly_high |>
-  dplyr::filter(metric == "Admissions") |>
+  dplyr::filter(activity_type == "Admissions") |>
   dplyr::pull(perc)
 
 frail_elderly_high_beddays_perc <- overview_frail_elderly_high |>
-  dplyr::filter(metric == "Beddays") |>
+  dplyr::filter(activity_type == "Beddays") |>
   dplyr::pull(perc)
 ```
 
@@ -910,9 +910,9 @@ number_frail_elderly_high_icb_admissions_map
 #| label: fig-perc_frail_elderly_high_icb_admissions_bar
 #| fig-cap: !expr get_caption_by_icb("Frail Elderly (high)", "perc", "admissions")
 england_value <- get_england_value("perc", 
-                                   data_perc = targets::tar_read(total_beddays_episodes),
-                                   activity_type = "episodes",
-                                   treatment_type = "emergency",
+                                   data_perc = targets::tar_read(total_beddays_admissions),
+                                   activity = "admissions",
+                                   treatment = "emergency",
                                    data_rate = england_age_sex_standardised_rates_episodes,
                                    cohort = "frail_elderly_high")
 

@@ -14,13 +14,13 @@
 #' @param connection The Databricks connection.
 #'
 #' @return A dataframe.
-get_overview_of_mitigator <- function(treatment_type,
+get_overview_of_mitigator <- function(treatment,
                                       condition,
                                       totals,
                                       connection = sc) {
   totals <- totals |>
-    dplyr::filter(type == treatment_type) |>
-    dplyr::select(metric, total)
+    dplyr::filter(treatment_type == treatment) |>
+    dplyr::select(activity_type, total)
   
   mitigator_totals <- dplyr::tbl(
     connection,
@@ -31,25 +31,24 @@ get_overview_of_mitigator <- function(treatment_type,
     )
   ) |>
     dplyr::filter(!!rlang::parse_expr(condition)) |>
-    dplyr::summarise(episodes = sum(episodes),
+    dplyr::summarise(admissions = sum(episodes),
                      beddays = sum(beddays)) |>
     sparklyr::collect() |>
     tidyr::pivot_longer(
-      cols = c(episodes, beddays),
-      names_to = "metric",
+      cols = c(admissions, beddays),
+      names_to = "activity_type",
       values_to = "number"
     )
   
   summary <- mitigator_totals |>
-    dplyr::left_join(totals, "metric") |>
+    dplyr::left_join(totals, "activity_type") |>
     dplyr::mutate(
       perc = janitor::round_half_up(number * 100 / total, 2),
-      metric = metric |>
-        stringr::str_replace("episodes", "admissions") |>
+      activity_type = activity_type |>
         stringr::str_to_sentence()
     ) |>
     dplyr::arrange(dplyr::across(1)) |>
-    dplyr::rename(!!rlang::sym(glue::glue("Total {treatment_type} activity")) := total,
+    dplyr::rename(!!rlang::sym(glue::glue("Total {treatment} activity")) := total,
                   "Mitigable activity" = number)
   
   return(summary)
