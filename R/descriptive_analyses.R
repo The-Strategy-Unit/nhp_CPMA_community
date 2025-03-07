@@ -332,13 +332,14 @@ get_perc_by_los <- function(condition, activity_type, connection = sc) {
 #' @return A plot.
 get_perc_by_los_plot <- function(data, activity_type) {
   plot <- data |>
-    ggplot2::ggplot(ggplot2::aes(weeks, perc, fill = los_range)) +
+    ggplot2::ggplot(ggplot2::aes(los_range, perc, fill = 'bars_color')) +
     ggplot2::geom_col() +
+    ggplot2::scale_fill_manual(values = c('bars_color' = "#f9bf07"),
+                               guide = 'none')  +
     StrategyUnitTheme::scale_fill_su() +
     StrategyUnitTheme::su_theme() +
     ggplot2::labs(
-      fill = "Length of stay (days)",
-      x = "Length of stay (weeks)",
+      x = "Length of stay range (days)",
       y = glue::glue("Percentage of mitagable {activity_type}")
     )
   
