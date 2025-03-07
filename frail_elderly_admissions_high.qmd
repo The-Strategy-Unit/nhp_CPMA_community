@@ -909,8 +909,9 @@ number_frail_elderly_high_icb_admissions_map
 ```{r}
 #| label: fig-perc_frail_elderly_high_icb_admissions_bar
 #| fig-cap: !expr get_caption_by_icb("Frail Elderly (high)", "perc", "admissions")
+total_beddays_admissions <- targets::tar_read(total_beddays_admissions)
+
 england_value <- get_england_value("perc", 
-                                   data_perc = targets::tar_read(total_beddays_admissions),
                                    activity = "admissions",
                                    treatment = "emergency",
                                    data_rate = england_age_sex_standardised_rates_episodes,
