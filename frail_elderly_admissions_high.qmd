@@ -448,14 +448,14 @@ Of the 2023/24 mitigable admissions for frail and elderly (high) cohort, most (`
 #| label: tbl-perc_frail_elderly_high_los
 #| tbl-cap: !expr get_caption_by_group("perc", "Frail and Elderly (high)", "admissions", "los", "emergency")
 targets::tar_read(perc_frail_elderly_high_los) |>
-  get_perc_by_los_table("admissions")
+  get_perc_by_los_table()
 ```
 
 ```{r}
 #| label: fig-perc_frail_elderly_high_los
 #| fig-cap: !expr get_caption_by_group("perc", "Frail and Elderly (high)", "admissions", "los", "emergency")
 perc_frail_elderly_high_los |>
-  get_perc_by_los_plot("admissions")
+  get_perc_by_los_plot()
 ```
 
 ### Specialty

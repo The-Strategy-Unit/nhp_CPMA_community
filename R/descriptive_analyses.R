@@ -283,15 +283,14 @@ get_top_ten_specialties <- function(condition, key, activity_type) {
 #'
 #' @param condition A string containing the expression needed to filter for a
 #' mitigator or set of mitigators.
-#' @param activity_type Either `"admissions"` or `"beddays"`.
 #' @param connection The Databricks connection.
 #'
 #' @return A dataframe of the number and percentage of mitigable admissions by
 #' LOS.
-get_perc_by_los <- function(condition, activity_type, connection = sc) {
+get_perc_by_los <- function(condition, connection = sc) {
   data_weeks <- get_perc_by_group("los", 
                                   condition, 
-                                  activity_type, 
+                                  "admissions",
                                   connection) |>
     dplyr::mutate(
       weeks = dplyr::case_when(
@@ -308,14 +307,14 @@ get_perc_by_los <- function(condition, activity_type, connection = sc) {
     )
   
   summary <- data_weeks |>
-    dplyr::summarise(number_weeks = sum(!!rlang::sym(activity_type)), 
+    dplyr::summarise(number_weeks = sum(admissions), 
                      .by = weeks) |>
     dplyr::mutate(perc_weeks = janitor::round_half_up(number_weeks * 100 /
                                                         sum(number_weeks), 
                                                       2)) |>
     dplyr::right_join(data_weeks, "weeks") |>
     dplyr::select(los_range,
-                  !!rlang::sym(activity_type),
+                  admissions,
                   perc,
                   weeks,
                   number_weeks,
@@ -327,21 +326,21 @@ get_perc_by_los <- function(condition, activity_type, connection = sc) {
 #' Plot the percentage of mitigable activity for a mitigator by LOS.
 #'
 #' @param data The output of `get_perc_by_group()`.
-#' @param activity_type Either `"admissions"` or `"beddays"`.
 #'
 #' @return A plot.
-get_perc_by_los_plot <- function(data, activity_type) {
+get_perc_by_los_plot <- function(data) {
   plot <- data |>
     ggplot2::ggplot(ggplot2::aes(los_range, perc, fill = 'bars_color')) +
     ggplot2::geom_col() +
     ggplot2::scale_fill_manual(values = c('bars_color' = "#f9bf07"),
                                guide = 'none')  +
-    StrategyUnitTheme::scale_fill_su() +
     StrategyUnitTheme::su_theme() +
     ggplot2::labs(
       x = "Length of stay range (days)",
-      y = glue::glue("Percentage of mitagable {activity_type}")
-    )
+      y = glue::glue("Percentage of mitagable admissions")
+    ) +
+    ggplot2::scale_fill_manual(values = c('bars_color' = "#f9bf07"),
+                               guide = 'none')
   
   return(plot)
 }
@@ -349,12 +348,11 @@ get_perc_by_los_plot <- function(data, activity_type) {
 #' Formats the output of `get_perc_by_los` into a table.
 #'
 #' @param data The output of `get_perc_admissions_by_group()`.
-#' @param activity_type Either `"admissions"` or `"beddays"`.
 #'
 #' @return A table.
-get_perc_by_los_table <- function(data, activity_type) {
+get_perc_by_los_table <- function(data) {
   table <- data |>
-    dplyr::select(los_range, !!rlang::sym(activity_type), perc) |>
+    dplyr::select(los_range, admissions, perc) |>
     get_table_perc()
   
   return(table)

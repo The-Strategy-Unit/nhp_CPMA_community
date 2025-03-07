@@ -233,7 +233,7 @@ list(
  ## Length of Stay -------------------------------------------------------------
  tar_target(
    perc_frail_elderly_high_los,
-   get_perc_by_los("frail_elderly_high == 1", "admissions")
+   get_perc_by_los("frail_elderly_high == 1")
  ),
   
   # Cohort analysis ------------------------------------------------------------
