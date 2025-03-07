@@ -18,26 +18,11 @@ get_summary_by_icb <- function(data, cohort, total, activity_type, treatment_typ
 
 get_summary_by_icb_plot <- function(data, boundaries, fill) {
   
-  fill_title <- if(fill == "total_count") {
-    "Number"
-  } else if (fill == "perc") {
-    "Percentage"
-  } else if (fill == "value") {
-    "Standardised Rate"
-  }
+  fill_title <- get_fill_title(fill)
   
   plot <- boundaries |>
     dplyr::left_join(data, by = c("icb23cd" = "icb_2024_code")) |>
-    dplyr::rename(fill_colour = !!rlang::sym(fill)) |>
-    dplyr::rowwise() |>
-    dplyr::mutate(
-      fill_colour_label = ifelse(fill == "perc",
-                                 glue::glue("{fill_colour}%"),
-                                 prettyNum(fill_colour, big.mark = ",")),
-      icb_name = stringr::str_remove(icb_2024_name,
-                                      " Integrated Care Board"),
-      ICB = glue::glue("{icb_name} \n {fill_title}: {fill_colour_label}")) |>
-    dplyr::ungroup() |>
+    get_icb_tooltip(fill) |>
     ggplot2::ggplot(ggplot2::aes(fill = fill_colour, 
                                  tooltip = ICB)) +
     ggplot2::geom_sf() +
@@ -49,6 +34,40 @@ get_summary_by_icb_plot <- function(data, boundaries, fill) {
   
   return(plot)
 }
+
+get_fill_title <- function(fill) {
+  title <- if(fill == "total_count") {
+    "Number"
+  } else if (fill == "perc") {
+    "Percentage"
+  } else if (fill == "value") {
+    "Standardised Rate"
+  }
+  
+  return(title)
+}
+
+get_icb_tooltip <- function(data, fill) {
+  fill_title <- get_fill_title(fill)
+  
+  wrangled <- data |>
+    dplyr::rename(fill_colour = !!rlang::sym(fill)) |>
+    dplyr::rowwise() |>
+    dplyr::mutate(
+      fill_colour_label = ifelse(fill == "perc",
+                                 glue::glue("{fill_colour}%"),
+                                 prettyNum(fill_colour, big.mark = ",")),
+      icb_name = stringr::str_remove(icb_2024_name,
+                                     " Integrated Care Board"),
+      ICB = glue::glue("{icb_name} \n {fill_title}: {fill_colour_label}")) |>
+    dplyr::ungroup() 
+  
+  return(wrangled)
+}
+
+
+
+
 
 get_summary_by_icb_table <- function(data, activity_type, treatment_type) {
   
