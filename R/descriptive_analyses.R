@@ -272,6 +272,12 @@ get_top_ten_specialties <- function(condition, key, activity_type) {
     dplyr::select(specialty, {{activity_type}}, perc)
 }
 
+#' Plot the top ten specialties for a mitigator.
+#'
+#' @param data The output of `get_top_ten_specialties()`.
+#' @param activity_type Either `"admissions"` or `"beddays"`.
+#'
+#' @return A plot.
 get_top_ten_specialties_plot <- function(data, activity_type) {
   
   plot <- data |>
