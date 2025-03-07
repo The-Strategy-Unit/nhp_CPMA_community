@@ -90,25 +90,30 @@ get_summary_by_icb_bar <- function(data, fill) {
   
   fill_title <- get_fill_title(fill)
   
+  symbol <- ifelse(fill == "perc", "%", "")
+  
+  max_value <- data |>
+    dplyr::summarise(max = max(!!rlang::sym(fill))) |>
+    dplyr::pull()
+  
   plot <- data |>
-    get_icb_tooltip(fill) |>
+    dplyr::mutate(fill_colour = janitor::round_half_up(!!rlang::sym(fill), 2)) |>
     ggplot2::ggplot() +
-    ggplot2::aes(x = reorder(icb_2024_name, fill_colour),
-                 y = fill_colour,
-                 fill = 'bars_color', 
-                 tooltip = ICB) +
+    ggplot2::aes(x = fill_colour,
+                 y = reorder(icb_2024_name, fill_colour),
+                 fill = 'bars_color') +
     ggplot2::geom_col() +
-    ggplot2::geom_hline(yintercept = mean_value, linetype = "dashed") +
+    ggplot2::geom_vline(xintercept = mean_value, linetype = "dashed") +
+    ggplot2::geom_text(ggplot2::aes(label = paste0(fill_colour, symbol)), 
+                       hjust = -0.05, 
+                       size = 2.3) +
     ggplot2::scale_fill_manual(values = c('bars_color' = "#f9bf07"), 
                                guide = 'none') +
-    ggplot2::labs(x = "Integrated Care Board", 
-                  y = "Number") +
+    ggplot2::scale_x_continuous(limits = c(0, (max_value * 1.05))) +
+    ggplot2::labs(x = "Number", 
+                  y = "") +
     StrategyUnitTheme::su_theme() +
-    ggplot2::theme(legend.position = "none") +
-    ggplot2::theme(axis.text.x = ggplot2::element_blank(),
-                   axis.ticks.x = ggplot2::element_blank())
-  
-  plot <- plotly::ggplotly(plot, tooltip = "tooltip")
+    ggplot2::theme(legend.position = "none")
   
   return(plot)
   
