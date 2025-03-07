@@ -141,7 +141,7 @@ get_summary_by_icb_bar <- function(data, fill, cohort, england_value) {
     ggplot2::scale_fill_manual(values = c('bars_color' = "#f9bf07"), 
                                guide = 'none') +
     ggplot2::scale_x_continuous(limits = c(0, (max_value * 1.2))) +
-    ggplot2::labs(x = "Number", 
+    ggplot2::labs(x = fill_title, 
                   y = "",
                   caption = get_note_on_dashed_line(fill_title, england_value)) +
     StrategyUnitTheme::su_theme() +
