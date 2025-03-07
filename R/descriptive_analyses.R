@@ -272,6 +272,28 @@ get_top_ten_specialties <- function(condition, key, activity_type) {
     dplyr::select(specialty, {{activity_type}}, perc)
 }
 
+#' Plot the top ten specialties for a mitigator.
+#'
+#' @param data The output of `get_top_ten_specialties()`.
+#' @param activity_type Either `"admissions"` or `"beddays"`.
+#'
+#' @return A plot.
+get_top_ten_specialties_plot <- function(data, activity_type) {
+  
+  plot <- data |>
+    ggplot2::ggplot(ggplot2::aes(perc, 
+                                 reorder(specialty, perc),
+                                 fill = 'bars_color')) + 
+    ggplot2::geom_col() +
+    ggplot2::scale_fill_manual(values = c('bars_color' = "#f9bf07"), 
+                               guide = 'none') +
+    StrategyUnitTheme::su_theme() +
+    ggplot2::labs(x = glue::glue("Percentage of mitigable {activity_type}"), 
+                  y = "Specialty")
+  
+  return(plot)
+}
+
 # Length of Stay ---------------------------------------------------------------
 
 #' Get the percentage of mitigable admissions for a mitigator by a group.
