@@ -85,8 +85,8 @@ get_summary_by_icb_table <- function(data, activity_type, treatment_type) {
 get_england_value <- function(fill,
                               data_number = NULL,
                               data_perc = NULL,
-                              activity_type = NULL,
-                              treatment_type = NULL,
+                              activity = NULL,
+                              treatment = NULL,
                               data_rate = NULL,
                               cohort = NULL) {
   if (fill == "total_count") {
@@ -101,7 +101,7 @@ get_england_value <- function(fill,
       dplyr::pull(total_count)
     
     denominator <- data_perc |>
-      dplyr::filter(metric == activity_type, type == treatment_type) |>
+      dplyr::filter(activity_type == activity, treatment_type == treatment) |>
       dplyr::pull(total)
     
     england_value <- numerator * 100 / denominator
