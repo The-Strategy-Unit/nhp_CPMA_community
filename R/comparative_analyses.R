@@ -16,7 +16,7 @@ get_summary_by_icb <- function(data, cohort, total, activity_type, treatment_typ
   return(wrangled)
 }
 
-get_summary_by_icb_plot <- function(data, boundaries, fill) {
+get_summary_by_icb_map <- function(data, boundaries, fill) {
   
   fill_title <- get_fill_title(fill)
   
@@ -64,10 +64,6 @@ get_icb_tooltip <- function(data, fill) {
   
   return(wrangled)
 }
-
-
-
-
 
 get_summary_by_icb_table <- function(data, activity_type, treatment_type) {
   
