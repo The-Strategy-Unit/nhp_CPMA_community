@@ -265,8 +265,8 @@ get_rates_by_group_table <- function(data) {
 #'
 #' @return A dataframe.
 get_top_ten_specialties <- function(condition, key, activity_type) {
-  get_perc_by_group("mainspef", condition, activity_type) |>
-    dplyr::left_join(key, by = c("mainspef" = "dd_code")) |>
+  get_perc_by_group("tretspef", condition, activity_type) |>
+    dplyr::left_join(key, by = c("tretspef" = "dd_code")) |>
     dplyr::arrange(desc(perc)) |>
     dplyr::slice(1:10) |>
     dplyr::select(specialty, {{activity_type}}, perc)

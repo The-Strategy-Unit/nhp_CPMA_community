@@ -219,8 +219,8 @@ list(
   ),
   tar_target(
     specialty_key,
-    scrape_xls(specialty_url, sheet = 3) |>
-      dplyr::rename(specialty = main_specialty_title, specialty_group = group)
+    scrape_xls(specialty_url, sheet = 2) |>
+      dplyr::rename(specialty = treatment_function_title, specialty_group = group)
   ),
   tarchetypes::tar_map(
     list(activity_type = c("admissions", "beddays")),
