@@ -13,7 +13,9 @@ Formatting_data_for_trends_analysis_denominator<-function(table, icb_pop){
     summarise(total_episodes_emergency=sum(total_episodes_emergency),
               total_beddays_emergency=sum(total_beddays_emergency),
               total_episodes_elective=sum(total_episodes_elective),
-              total_beddays_elective=sum(total_beddays_elective))|>
+              total_beddays_elective=sum(total_beddays_elective),
+              total_episodes_all=sum(total_episodes_elective)+sum(total_episodes_emergency),
+              total_beddays_all=sum(total_beddays_elective)+sum(total_beddays_emergency))|>
     mutate(year=paste0(stringr::str_sub(fyear, 1, 4), "/", stringr::str_sub(fyear, 5, 6)))|>
     collect()|>
     left_join(icb_pop[,c("icb24cdh", "icb_2024_name")]|>
@@ -205,7 +207,7 @@ plotting_icb_over_time<-function(data, axis_title){
     highlight(~icb_2024_name, on = "plotly_click", off="plotly_doubleclick", dynamic=FALSE)|>
     layout(
       xaxis = list(title="", showticklabels = TRUE, showline = TRUE, showgrid = F , linewidth=1.6),
-      yaxis = list(title = axis_title, showline = TRUE, showgrid = F , linewidth=1.6 ,zeroline = FALSE, tickformat = "digits", anchor="free", shift=100),
+      yaxis = list(title = axis_title, rangemode="tozero",showline = TRUE, showgrid = F , linewidth=1.6 ,zeroline = FALSE, tickformat = "digits", anchor="free", shift=100),
       annotations = 
         list(x = 1, y = -0.16, 
              text = footnote, 

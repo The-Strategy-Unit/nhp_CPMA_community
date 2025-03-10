@@ -135,8 +135,7 @@ list(
  tar_target(england_age_sex_standardised_rates_beddays,
             generating_england_age_sex_standardised_rates(numbers_over_time, icb_population_data, standard_england_pop_2021_census, beddays)
  ),
- 
- 
+
 
  
   # Descriptive analysis -------------------------------------------------------

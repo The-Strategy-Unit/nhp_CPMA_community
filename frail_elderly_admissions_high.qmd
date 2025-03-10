@@ -518,7 +518,6 @@ For the Frail Elderly High activity we show how much of the activity is included
 total_cohort_numbers_2324<-targets::tar_read(total_cohort_numbers_2324)|>
   filter(frail_elderly_high==1)
 
-
 plotting_barchart_number_of_cohorts(total_cohort_numbers_2324, episodes)
 ```
 
@@ -624,6 +623,7 @@ number_percentage_over_time<-  data_number_percentage_over_time_icb(denominator_
                                       total_beddays_emergency)
 
 plot_of_number_over_time(number_percentage_over_time, episodes)
+
 
 ```
 #### Beddays
