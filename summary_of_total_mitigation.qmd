@@ -1,0 +1,489 @@
+# Summary of total mitigation
+
+```{r}
+library("flextable")
+library("tidyr")
+library("dplyr")
+library("ggplot2")
+library("StrategyUnitTheme")
+library("forcats")
+library("ComplexUpset")
+library("scales")
+library("targets")
+library("plotly")
+library("patchwork")
+library("readxl")
+
+source("R/captions.R")
+source("R/general.R")
+source("R/descriptive_analyses.R")
+source("R/comparative_analyses.R")
+source("R/Functions for cohort overlap.R")
+source("R/Functions for trend analysis.R")
+
+options(scipen = 999)
+```
+
+## Mitigators included in this analysis
+
+Efficiency mitigators will only impact length of stay and therefore the number of beddays.
+
+Redirection/Substitution, Prevention and Relocation mitigators will affect both the number of admission and also therefore beddays as well.
+
+Virtual Wards mitigators are considered both a relocation mitigator and an efficiency mitigator. 
+
+
+```{r, fig.height=8, fig.width=10}
+
+mitigator_summary_table<-read_excel("summary_mitigators_table.xlsx")
+
+mitigator_summary_table|>
+  select(-mitigator_code, -activity_group)|>
+    flextable() |>
+    set_header_labels(mitigator_name="Mitigator name",
+                      mechanism="Mechanism of mitigation",
+                      type_of_admission="Type of admission")|>
+    align(part = "header", align = "left") |>
+    bg(bg = "#f9bf07", part = "header") |>
+    bg( part = "body",
+         i = ~ mechanism == "Redirection/Substitution",
+        bg="#FCEAAF") |>
+      bg( part = "body",
+         i = ~ mechanism == "Prevention",
+        bg="#FAD9D6" ) |>
+      bg( part = "body",
+         i = ~ mechanism == "Efficiencies",
+        bg="#CDDAEC") |>
+       bg( part = "body",
+         i = ~ mechanism == "Efficiencies & Relocation",
+        bg="#D8DBDC") |>
+    bold(bold = TRUE, part = "header") |>
+    fontsize(size = 11, part = "body") |>
+    fontsize(size = 12, part = "header") |>
+    padding(padding = 2,
+            part = "all",
+            padding.top = NULL) |>
+    autofit()
+  
+
+```
+
+
+
+## Total potential mitigation
+
+#### Admissions
+
+In 2023/24 in England there were .... admissions for potentially mitigable activity. 
+
+NUMBERS BY MECHANISM GROUPS
+
+#### Beddays
+
+In 2023/24 in England there were .... beddays for potentially mitigable activity. 
+
+NUMBERS BY MECHANISM GROUPS
+
+## Cohort overlap
+
+#### Admissions
+
+VENN DIAGRAM OF MECHANISM GROUPS
+
+
+#### Beddays
+
+VENN DIAGRAM OF MECHANISM GROUPS
+
+
+## Trend Analysis
+
+We aim to understand whether there have been decreases, or increases, in potentially mitigable activity over time. We have considered total mitigable admissions and beddays over the past 9 years in England as a whole and for each ICB, including: 
+a) the absolute number of admissions/beddays,
+b) the crude rate of admissions/beddays (i.e. as proportion of total admissions),
+c) the age and sex standardised rates of these admissions/beddays using the England 2021 census population.
+
+To help understand the variability between ICBs we have calculated for each ICB the percentage change between 2018/19 and 2023/24.
+
+
+### England
+
+::: panel-tabset
+#### Number over time
+::: panel-tabset
+
+#### Admissions
+```{r, fig.width=7, fig.height=3}
+#| label: fig-number_trends_spells_england
+#| fig-cap: The total number of admissions for the Frail Elderly High mitigable activity cohort in England over the last 9 years. 
+
+numbers_over_time<-tar_read(numbers_over_time)|>
+  filter(year!="2014/15")|>
+  left_join(mitigator_summary_table, by=c("cohorts"="mitigator_code"))
+denominator_over_time<-tar_read(denominator_over_time)
+icb_population_data<-tar_read(icb_population_data)
+
+number_percentage_over_time<-  data_number_percentage_over_time_icb(denominator_over_time, 
+                                       numbers_over_time, 
+                                       icb_population_data, 
+                                       "frail_elderly_high", 
+                                       total_episodes_emergency,
+                                       total_beddays_emergency)
+
+plot_of_number_over_time(number_percentage_over_time, episodes)
+
+```
+#### Beddays
+
+```{r, fig.width=7, fig.height=3}
+#| label: fig-number_trends_beddays_england
+#| fig-cap: The total number of beddays for the Frail Elderly High mitigable activity cohort in England over the last 9 years. 
+plot_of_number_over_time(number_percentage_over_time,  beddays)
+
+```
+:::
+
+#### By proportion of emergency activity 
+::: panel-tabset
+#### Admissions
+```{r, fig.width=7, fig.height=3}
+#| label: fig-percent_trends_spells_england
+#| fig-cap: The percentage of total emergency admissions that are for Frail Elderly High potentially mitigable activity in England over the last 9 years. 
+
+plot_of_percentage_over_time(number_percentage_over_time, episodes, total_episodes)
+
+```
+#### Beddays
+```{r, fig.width=7, fig.height=3}
+#| label: fig-percent_trends_beddays_england
+#| fig-cap: The percentage of total emergency beddays that are for Frail Elderly High potentially mitigable activity in England over the last 9 years. 
+
+plot_of_percentage_over_time(number_percentage_over_time,  beddays, total_beddays)
+
+```
+
+:::
+
+
+#### Standardised rate over time
+
+::: panel-tabset
+
+#### Admissions
+```{r, fig.width=7, fig.height=3}
+#| label: fig-stardardised_trends_spells_england
+#| fig-cap: Age and sex standardised rate of admissions for Frail Elderly High potentially mitigable activity in England over the last 9 years. 
+
+england_age_sex_standardised_rates_episodes<-tar_read(england_age_sex_standardised_rates_episodes)|>
+  filter(cohorts=="frail_elderly_high")
+
+plot_of_standardised_rates_over_time(england_age_sex_standardised_rates_episodes)
+
+```
+
+#### Beddays
+```{r, fig.width=7, fig.height=3}
+#| label: fig-stardardised_trends_beddays_england
+#| fig-cap: Age and sex standardised rate of beddays for Frail Elderly High potentially mitigable activity in England over the last 9 years.
+
+england_age_sex_standardised_rates_beddays<-tar_read(england_age_sex_standardised_rates_beddays)|>
+  filter(cohorts=="frail_elderly_high")
+
+plot_of_standardised_rates_over_time(england_age_sex_standardised_rates_beddays)
+
+```
+
+:::
+
+
+:::
+
+### ICB
+
+::: panel-tabset
+
+#### Number over time
+::: panel-tabset
+
+#### Admissions
+```{r, fig.width=5, fig.height=3}
+#| label: fig-number_trends_spells_icb
+#| fig-cap: The number of admissions for the Frail Elderly High mitigable activity cohort by ICB over the last 9 years. 
+
+
+
+plotting_icb_over_time(number_percentage_over_time|>
+        mutate(activity=episodes),
+        'Number')
+
+```
+#### Beddays
+
+```{r, fig.width=5, fig.height=3}
+#| label: fig-number_trends_beddays_icb
+#| fig-cap: The number of beddays for the Frail Elderly High mitigable activity cohort by ICB over the last 9 years. 
+
+plotting_icb_over_time(number_percentage_over_time|>
+        mutate(activity=beddays), 'Number')
+```
+:::
+
+#### By proportion of emergency activity 
+::: panel-tabset
+#### Admissions
+```{r, fig.width=5, fig.height=3}
+#| label: fig-percent_trends_spells_icb
+#| fig-cap: The percentage of total emergency admissions that are for Frail Elderly High potentially mitigable activity by ICB over the last 9 years. 
+
+plotting_icb_over_time(number_percentage_over_time|>
+        mutate(activity=percentage_episodes), 'Percentage')
+
+```
+
+<br>
+
+```{r, fig.height=6, fig.width=8}
+#| label: fig-percent_change_percent_spells
+#| fig-cap: The percentage change in the proportion emergency admissions that are Frail Elderly High admissions by ICB between 2019/20 and 2023/24. 
+
+england_average_percentage_episodes<-calculating_england_average_percentage(number_percentage_over_time, episodes, total_episodes)
+
+plotting_percentage_change_over_time_by_icb(number_percentage_over_time, percentage_episodes, england_average_percentage_episodes$change, 1.6, 1.3)
+
+
+```
+
+
+#### Beddays
+```{r, fig.width=5, fig.height=3}
+#| label: fig-percent_trends_beddays_icb
+#| fig-cap: The percentage of total emergency beddays that are for Frail Elderly High potentially mitigable activity by ICB over the last 9 years. 
+
+plotting_icb_over_time(number_percentage_over_time|>
+        mutate(activity=percentage_beddays), 'Percentage')
+
+```
+
+<br>
+
+
+```{r, fig.height=6, fig.width=8}
+#| label: fig-percent_change_percent_beddays
+#| fig-cap: The percentage change in the proportion emergency beddays that are Frail Elderly High beddays by ICB between 2019/20 and 2023/24. 
+
+england_average_percentage_beddays<-calculating_england_average_percentage(number_percentage_over_time, beddays, total_beddays)
+
+plotting_percentage_change_over_time_by_icb(number_percentage_over_time, percentage_beddays, england_average_percentage_beddays$change,  1.6, 1.3)
+
+```
+
+:::
+
+
+#### Standardised rate over time
+
+::: panel-tabset
+
+#### Admissions
+```{r, fig.width=5, fig.height=3}
+#| label: fig-stardardised_trends_spells_icb
+#| fig-cap: Age and sex standardised rate of admissions for Frail Elderly High potentially mitigable activity by ICB over the last 9 years. 
+
+icb_age_sex_standardised_rates_episodes<-tar_read(icb_age_sex_standardised_rates_episodes)
+
+plotting_icb_over_time(
+  (icb_age_sex_standardised_rates_episodes|> 
+     filter(cohorts=="frail_elderly_high")|>
+     mutate(activity=value)),
+  'Standardised rate per 100,000')
+
+```
+
+
+<br>
+
+
+```{r, fig.height=6, fig.width=8}
+#| label: fig-percent_change_standardised_spells
+#| fig-cap: The percentage change in the standardised rate of Frail Elderly High admissions by ICB between 2019/20 and 2023/24. 
+
+england_average_standardised_episodes<-calculating_england_average_standardised(england_age_sex_standardised_rates_episodes)
+
+plotting_percentage_change_over_time_by_icb(icb_age_sex_standardised_rates_episodes, value, england_average_standardised_episodes$change, 1.3, 1.7)
+
+```
+
+#### Beddays
+```{r, fig.width=5, fig.height=3}
+#| label: fig-stardardised_trends_beddays_icb
+#| fig-cap: Age and sex standardised rate of beddays for Frail Elderly High potentially mitigable activity by ICB over the last 9 years.
+
+icb_age_sex_standardised_rates_beddays<-tar_read(icb_age_sex_standardised_rates_beddays)
+
+plotting_icb_over_time(
+  (icb_age_sex_standardised_rates_beddays|> 
+     filter(cohorts=="frail_elderly_high")|>
+     mutate(activity=value)),
+  'Standardised rate per 100,000')
+
+```
+
+
+<br>
+
+
+```{r, fig.height=6, fig.width=8}
+#| label: fig-percent_change_standardised_beddays
+#| fig-cap: The percentage change in the standardised rate of Frail Elderly High beddays by ICB between 2019/20 and 2023/24. 
+
+
+england_average_standardised_beddays<-calculating_england_average_standardised(england_age_sex_standardised_rates_beddays)
+
+plotting_percentage_change_over_time_by_icb(icb_age_sex_standardised_rates_beddays, value, england_average_standardised_beddays$change, 1.4, 1.6)
+
+
+```
+
+:::
+
+:::
+
+## Comparative Analysis
+
+This section is still a work in progress.
+
+:::panel-tabset
+
+### Admissions
+
+```{r}
+#| output: false
+summary_frail_elderly_high_icb_admissions <- targets::tar_read(summary_frail_elderly_high_icb_admissions)
+
+icb_23_shp <- sf::st_read("https://services1.arcgis.com/ESMARspQHYMw9BZ9/arcgis/rest/services/Integrated_Care_Boards_April_2023_EN_BGC/FeatureServer/0/query?outFields=*&where=1%3D1&f=geojson") |>
+  janitor::clean_names()
+
+number_frail_elderly_high_icb_admissions_map <- summary_frail_elderly_high_icb_admissions |>
+  get_summary_by_icb_map(icb_23_shp, "total_count")
+
+perc_frail_elderly_high_icb_admissions_map <- summary_frail_elderly_high_icb_admissions |>
+  get_summary_by_icb_map(icb_23_shp, "perc")
+
+rate_frail_elderly_high_icb_admissions_map <- summary_frail_elderly_high_icb_admissions |>
+  get_summary_by_icb_map(icb_23_shp, "value")
+```
+
+:::panel-tabset
+
+#### Number of admissions
+
+:::panel-tabset
+
+##### Bars
+
+```{r}
+#| label: fig-number_frail_elderly_high_icb_admissions_bar
+#| fig-cap: !expr get_caption_by_icb("Frail Elderly (high)", "number", "admissions")
+england_value <- get_england_value("total_count", 
+                                   data_number = summary_frail_elderly_high_icb_admissions)
+
+get_summary_by_icb_bar(summary_frail_elderly_high_icb_admissions, 
+                       "total_count", 
+                       "frail_elderly_high",
+                       england_value)
+
+rm(england_value)
+```
+
+##### Map
+
+```{r}
+#| label: fig-number_frail_elderly_high_icb_admissions_map
+#| fig-cap: !expr get_caption_by_icb("Frail Elderly (high)", "number", "admissions")
+number_frail_elderly_high_icb_admissions_map
+```
+
+:::
+
+#### Percentage of emergency activity
+
+:::panel-tabset
+
+##### Bars
+
+```{r}
+#| label: fig-perc_frail_elderly_high_icb_admissions_bar
+#| fig-cap: !expr get_caption_by_icb("Frail Elderly (high)", "perc", "admissions")
+total_beddays_admissions <- targets::tar_read(total_beddays_admissions)
+
+england_value <- get_england_value("perc", 
+                                   activity = "admissions",
+                                   treatment = "emergency",
+                                   data_rate = england_age_sex_standardised_rates_episodes,
+                                   cohort = "frail_elderly_high")
+
+get_summary_by_icb_bar(summary_frail_elderly_high_icb_admissions, 
+                       "perc", 
+                       "frail_elderly_high",
+                       england_value)
+
+rm(england_value)
+```
+
+##### Map
+
+```{r}
+#| label: fig-perc_frail_elderly_high_icb_admissions_map
+#| fig-cap: !expr get_caption_by_icb("Frail Elderly (high)", "perc", "admissions", "emergency")
+perc_frail_elderly_high_icb_admissions_map
+```
+
+:::
+
+#### Age and sex standardised rates per 100,000 population
+
+:::panel-tabset
+
+##### Bars
+
+```{r}
+#| label: fig-rate_frail_elderly_high_icb_admissions_bar
+#| fig-cap: !expr get_caption_by_icb("Frail Elderly (high)", "SR", "admissions")
+england_value <- get_england_value("value",
+                                   data_rate = england_age_sex_standardised_rates_episodes,
+                                   cohort = "frail_elderly_high")
+
+get_summary_by_icb_bar(summary_frail_elderly_high_icb_admissions, 
+                       "value", 
+                       "frail_elderly_high",
+                       england_value)
+
+rm(england_value)
+```
+
+##### Map
+
+```{r}
+#| label: fig-rate_frail_elderly_high_icb_admissions_map
+#| fig-cap: !expr get_caption_by_icb("Frail Elderly (high)", "SR", "admissions")
+rate_frail_elderly_high_icb_admissions_map
+```
+
+:::
+
+#### Table
+
+```{r}
+#| label: tbl-rate_frail_elderly_high_icb_admissions
+#| tbl-cap: !expr get_caption_by_icb_table("Frail Elderly (high)", "admissions", "emergency")
+get_summary_by_icb_table(summary_frail_elderly_high_icb_admissions, "episodes", "emergency")
+```
+
+:::
+
+### Beddays
+
+Coming soon. Want to get content right for admissions first.
+
+:::
+
