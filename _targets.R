@@ -111,7 +111,7 @@ list(
   tar_target(
     icb_age_sex_standardised_rates_episodes,
     generating_age_sex_standardised_rates(
-      numbers_over_time,
+      numbers_over_time_cohorts,
       icb_population_data,
       standard_england_pop_2021_census,
       episodes
@@ -121,7 +121,7 @@ list(
   tar_target(
     icb_age_sex_standardised_rates_beddays,
     generating_age_sex_standardised_rates(
-      numbers_over_time,
+      numbers_over_time_cohorts,
       icb_population_data,
       standard_england_pop_2021_census,
       beddays
@@ -129,11 +129,11 @@ list(
   ),
   
  tar_target(england_age_sex_standardised_rates_episodes,
-            generating_england_age_sex_standardised_rates(numbers_over_time, icb_population_data, standard_england_pop_2021_census, episodes)
+            generating_england_age_sex_standardised_rates(numbers_over_time_cohorts, icb_population_data, standard_england_pop_2021_census, episodes)
  ),
  
  tar_target(england_age_sex_standardised_rates_beddays,
-            generating_england_age_sex_standardised_rates(numbers_over_time, icb_population_data, standard_england_pop_2021_census, beddays)
+            generating_england_age_sex_standardised_rates(numbers_over_time_cohorts, icb_population_data, standard_england_pop_2021_census, beddays)
  ),
  
  
@@ -246,22 +246,28 @@ list(
   # Cohort analysis ------------------------------------------------------------
   
   tar_target(
-    total_cohort_numbers,
-    Formatting_data_for_cohort_overlap("sl_af_describing_mitigators_final_2324_sex")
+    total_cohort_numbers_2324,
+    Formatting_data_for_cohort_overlap("sl_af_describing_mitigators_fyear")|>
+      filter(fyear=="202324")
   ),
 
  # Trends analysis -------------------------------------------------------------
 
 tar_target(
-  numbers_over_time,
-  Formatting_data_for_trends_analysis( "sl_af_describing_mitigators_fyear" )
+  numbers_over_time_cohorts,
+  Formatting_data_for_trends_analysis_cohorts( "sl_af_describing_mitigators_fyear" , icb_population_data)
 ),
-
 
 tar_target(
-  denominator_over_time,
-  Formatting_data_for_trends_analysis_denominator( "sl_af_total_elective_emergency_activity" )
+  numbers_over_time_total_mitigation,
+  Formatting_data_for_trends_analysis_total_mitigation( "sl_af_describing_mitigators_fyear", icb_population_data )
 ),
+
+
+#tar_target(
+#  denominator_over_time,
+#  Formatting_data_for_trends_analysis_denominator( "sl_af_total_elective_emergency_activity", icb_population_data )
+#),
 
 # Comparative analysis ---------------------------------------------------------
   tar_target(

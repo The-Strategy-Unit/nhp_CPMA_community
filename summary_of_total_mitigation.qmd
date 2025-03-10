@@ -114,21 +114,29 @@ To help understand the variability between ICBs we have calculated for each ICB 
 
 #### Admissions
 ```{r, fig.width=7, fig.height=3}
-#| label: fig-number_trends_spells_england
-#| fig-cap: The total number of admissions for the Frail Elderly High mitigable activity cohort in England over the last 9 years. 
+#| label: fig-number_trends_spells_england_all_mitigators
+#| fig-cap: The total number of admissions for all mitigable activity in England over the last 9 years. 
 
-numbers_over_time<-tar_read(numbers_over_time)|>
-  filter(year!="2014/15")|>
-  left_join(mitigator_summary_table, by=c("cohorts"="mitigator_code"))
+numbers_over_time_total_mitigation<-targets::tar_read(numbers_over_time_total_mitigation)|>
+  filter(fyear>"201415")
+
 denominator_over_time<-tar_read(denominator_over_time)
 icb_population_data<-tar_read(icb_population_data)
 
-number_percentage_over_time<-  data_number_percentage_over_time_icb(denominator_over_time, 
-                                       numbers_over_time, 
-                                       icb_population_data, 
-                                       "frail_elderly_high", 
-                                       total_episodes_emergency,
-                                       total_beddays_emergency)
+
+number_percentage_over_time<-numbers_over_time_total_mitigation|>
+      summarise(episodes=sum(episodes),
+              beddays=sum(beddays),
+              .by=c(icb_2024_name, year, fyear))|>
+      left_join(denominator_over_time|>
+                filter(fyear!=201415)|>
+                summarise(total_episodes=sum(total_episodes_all),
+                total_beddays=sum(total_beddays_all),
+                .by=c(fyear, icb_2024_name))
+      , by=c("fyear", "icb_2024_name"))|>
+    mutate(percentage_episodes=round((episodes/total_episodes)*100,1),
+           percentage_beddays=round((beddays/total_beddays)*100,1))|>
+    as.data.frame()
 
 plot_of_number_over_time(number_percentage_over_time, episodes)
 
@@ -136,21 +144,26 @@ plot_of_number_over_time(number_percentage_over_time, episodes)
 #### Beddays
 
 ```{r, fig.width=7, fig.height=3}
-#| label: fig-number_trends_beddays_england
-#| fig-cap: The total number of beddays for the Frail Elderly High mitigable activity cohort in England over the last 9 years. 
+#| label: fig-number_trends_beddays_england_all_mitigators
+#| fig-cap: The total number of beddays for all mitigable activity cohort in England over the last 9 years. 
 plot_of_number_over_time(number_percentage_over_time,  beddays)
+
 
 ```
 :::
 
-#### By proportion of emergency activity 
+#### Crude rate 
+
+Total mitigable activity as a percentage of total elective and emergency admissions/beddays.
+
 ::: panel-tabset
 #### Admissions
 ```{r, fig.width=7, fig.height=3}
 #| label: fig-percent_trends_spells_england
 #| fig-cap: The percentage of total emergency admissions that are for Frail Elderly High potentially mitigable activity in England over the last 9 years. 
 
-plot_of_percentage_over_time(number_percentage_over_time, episodes, total_episodes)
+plot_of_percentage_over_time(number_percentage_over_time|>
+                               filter(!is.na(percentage_episodes)), episodes, total_episodes)
 
 ```
 #### Beddays
@@ -158,7 +171,8 @@ plot_of_percentage_over_time(number_percentage_over_time, episodes, total_episod
 #| label: fig-percent_trends_beddays_england
 #| fig-cap: The percentage of total emergency beddays that are for Frail Elderly High potentially mitigable activity in England over the last 9 years. 
 
-plot_of_percentage_over_time(number_percentage_over_time,  beddays, total_beddays)
+plot_of_percentage_over_time(number_percentage_over_time|>
+                               filter(!is.na(percentage_beddays)),  beddays, total_beddays)
 
 ```
 
@@ -209,8 +223,6 @@ plot_of_standardised_rates_over_time(england_age_sex_standardised_rates_beddays)
 ```{r, fig.width=5, fig.height=3}
 #| label: fig-number_trends_spells_icb
 #| fig-cap: The number of admissions for the Frail Elderly High mitigable activity cohort by ICB over the last 9 years. 
-
-
 
 plotting_icb_over_time(number_percentage_over_time|>
         mutate(activity=episodes),
