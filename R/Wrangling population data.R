@@ -153,11 +153,11 @@ generating_age_sex_standardised_rates<-function(data, icb_pop, standard_pop, act
   
   data|>
     filter(fyear!=201415)|>
-    left_join(icb_pop, by=c("icb"="icb24cdh", "year"="fyear", "age_range", "sex"))|>
+    left_join(icb_pop, by=c("icb_2024_name", "year"="fyear", "age_range", "sex"))|>
     left_join(standard_pop, by=c("age_range", "sex"))|>
-    filter(!is.na(icb))|>
+    filter(!is.na(icb_2024_name))|>
     filter(age_range!="NA")|>
-    group_by(icb, icb_2024_name, icb_2024_code, year, cohorts) |>
+    group_by(icb_2024_name, icb, year, cohorts) |>
     rename(activity={{activity_type}})|>
     PHEindicatormethods::calculate_dsr(x =activity,    # observed number of events
                                        n = icb_population,  # non-standard pops for each stratum
@@ -171,9 +171,9 @@ generating_england_age_sex_standardised_rates<-function(data, icb_pop, standard_
   
   data|>
     filter(fyear!=201415)|>
-    left_join(icb_pop, by=c("icb"="icb24cdh", "year"="fyear", "age_range", "sex"))|>
+    left_join(icb_pop, by=c("icb_2024_name", "year"="fyear", "age_range", "sex"))|>
     left_join(standard_pop, by=c("age_range", "sex"))|>
-    filter(!is.na(icb))|>
+    filter(!is.na(icb_2024_name))|>
     filter(age_range!="NA")|>
     rename(activity={{activity_type}})|>
     group_by(year, cohorts) |>
@@ -184,3 +184,7 @@ generating_england_age_sex_standardised_rates<-function(data, icb_pop, standard_
   
   
 }
+
+
+
+
