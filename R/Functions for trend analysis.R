@@ -1,42 +1,54 @@
 
-Formatting_data_for_trends_analysis_denominator<-function(table){
+Formatting_data_for_trends_analysis_denominator<-function(table, icb_pop){
 
 denominator<-dplyr::tbl(
   sc,
-  dbplyr::in_catalog("strategyunit","default", table)
+  dbplyr::in_catalog("strategyunit","default", "sl_af_total_elective_emergency_activity")
 )|>    
-  filter(fyear>201314)|>
+  collect()
+  
+icb_population_data<-tar_read(icb_population_data
+                              )
+  denominator<-denominator|>
+    filter(fyear>201314)|> 
+  left_join(icb_population_data[,c("icb24cdh", "icb_2024_name")]|>
+              distinct(icb24cdh, icb_2024_name), by=c("icb"="icb24cdh"))|>
   group_by(age_range, 
            sex,
            fyear, 
-           icb)|>
+           icb,
+           icb_2024_name)|>
   summarise(total_episodes_emergency=sum(total_episodes_emergency),
             total_beddays_emergency=sum(total_beddays_emergency),
             total_episodes_elective=sum(total_episodes_elective),
-            total_beddays_elective=sum(total_beddays_elective))|>
+            total_beddays_elective=sum(total_beddays_elective),
+            total_episodes_all=sum(total_episodes_elective) + sum(total_episodes_emergency),
+            total_beddays_all=sum(total_beddays_elective) + sum(total_beddays_emergency))|>
   mutate(year=paste0(stringr::str_sub(fyear, 1, 4), "/", stringr::str_sub(fyear, 5, 6)))|>
-  collect()|>
+ 
   as.data.frame()
 
 }
 
 
-Formatting_data_for_trends_analysis<-function(table){
+Formatting_data_for_trends_analysis_cohorts<-function(table, icb_pop){
   
   numbers_over_time <- dplyr::tbl(
     sc,
-    dbplyr::in_catalog("strategyunit","default", "sl_af_describing_mitigators_fyear")
+    dbplyr::in_catalog("strategyunit","default", table)
   )|> collect()
   
-
   numbers_over_time<-as.data.frame(numbers_over_time)|>
     gather(key="cohorts", value="value", -fyear, -age_range, -sex, -icb, -episodes, -beddays)|>
     filter(value==1)|>
     filter(fyear>201314)|>
+    left_join(icb_pop[,c("icb24cdh", "icb_2024_name")]|>
+                distinct(icb24cdh, icb_2024_name), by=c("icb"="icb24cdh"))|>
     group_by(age_range, 
              sex,
              fyear,
              icb,
+             icb_2024_name,
              cohorts)|>
     summarise(episodes=sum(episodes),
               beddays=sum(beddays))|>
@@ -48,29 +60,63 @@ Formatting_data_for_trends_analysis<-function(table){
   
 }
 
+Formatting_data_for_trends_analysis_total_mitigation<-function(table, icb_pop){
+  
+  numbers_over_time <- dplyr::tbl(
+    sc,
+    dbplyr::in_catalog("strategyunit","default", "sl_af_describing_mitigators_fyear")
+  )|> collect()|>
+    filter(fyear>201314)|>
+    as.data.frame()
+  
+  
+  numbers_over_time<-  numbers_over_time|>
+    mutate(number_of_cohorts = rowSums(pick(5:33), na.rm = TRUE))|>
+    mutate(activity_group=ifelse(number_of_cohorts==1 &
+                                   (emergency_elderly==1 |
+                                      stroke_early_supported_discharge ==1|
+                                      raid_ip==1
+                                   ), "beddays",
+                                 "admissions&beddays" ))|>
+    mutate(episodes=ifelse(activity_group=="beddays", 0, episodes))|>   #avoid counting admissions for efficiency only activity
+    left_join(icb_pop[,c("icb24cdh", "icb_2024_name")]|>
+                distinct(icb24cdh, icb_2024_name), by=c("icb"="icb24cdh"))|>
+    group_by(age_range, 
+             sex,
+             fyear,
+             icb,
+             icb_2024_name)|>
+    summarise(episodes=sum(episodes),
+              beddays=sum(beddays))|>
+    mutate(year=paste0(stringr::str_sub(fyear, 1, 4), "/", stringr::str_sub(fyear, 5, 6)))|>
+    ungroup()|>
+    as.data.frame() 
+  
+  return(numbers_over_time)
+  
+}
+
+
 # Calculating numbers and percentages over time
 data_number_percentage_over_time_icb<-function(data1, data2, pop_data, mitigator, denom1, denom2){
   
   denominator_data<-data1|>
     filter(fyear!=201415)|>
-    filter(!is.na(icb))|>
     summarise(total_episodes=sum({{denom1}}),
               total_beddays=sum({{denom2}}),
-              .by=c(fyear, icb))
+              .by=c(fyear, icb_2024_name))
   
   data2|>
     filter(cohorts==mitigator)|>
     filter(fyear!=201415)|>
-    filter(!is.na(icb))|>
     summarise(episodes=sum(episodes),
               beddays=sum(beddays),
               .by=c(icb, year, fyear))|>
-    left_join(denominator_data, by=c("fyear", "icb"))|>
+    left_join(denominator_data, by=c("fyear", "icb_2024_name"))|>
     mutate(percentage_episodes=round((episodes/total_episodes)*100,1),
            percentage_beddays=round((beddays/total_beddays)*100,1))|>
-    left_join(pop_data[,c("icb24cdh", "icb_2024_name")], by=c("icb"="icb24cdh"), relationship="many-to-many")|>
-    distinct(year,episodes, beddays,percentage_episodes, percentage_beddays, total_episodes, total_beddays, icb_2024_name)|>
-    filter(!is.nan(percentage_episodes)|!is.nan(percentage_beddays))|>
+  mutate(percentage_episodes=ifelse(is.nan(percentage_episodes), NA, percentage_episodes))|>
+    mutate(percentage_beddays=ifelse(is.nan(percentage_beddays), NA, percentage_beddays))|>
     as.data.frame()
   
 }
