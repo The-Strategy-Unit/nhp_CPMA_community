@@ -157,7 +157,7 @@ generating_age_sex_standardised_rates<-function(data, icb_pop, standard_pop, act
     left_join(standard_pop, by=c("age_range", "sex"))|>
     filter(!is.na(icb_2024_name))|>
     filter(age_range!="NA")|>
-    group_by(icb_2024_name, icb_2024_code, year, cohorts) |>
+    group_by(icb_2024_name, icb, year, cohorts) |>
     rename(activity={{activity_type}})|>
     PHEindicatormethods::calculate_dsr(x =activity,    # observed number of events
                                        n = icb_population,  # non-standard pops for each stratum

@@ -613,14 +613,13 @@ To help understand the variability between ICBs we have calculated for each ICB 
 #| label: fig-number_trends_spells_england
 #| fig-cap: The total number of admissions for the Frail Elderly High mitigable activity cohort in England over the last 9 years. 
 
-numbers_over_time_cohorts<-tar_read(numbers_over_time_cohorts)|>
-  filter(year!="2014/15")
+numbers_over_time<-tar_read(numbers_over_time)|>filter(year!="2014/15")
+
 denominator_over_time<-tar_read(denominator_over_time)
 icb_population_data<-tar_read(icb_population_data)
 
 number_percentage_over_time<-  data_number_percentage_over_time_icb(denominator_over_time, 
-                                    numbers_over_time_cohorts,
-                                       icb_population_data, 
+                                    numbers_over_time,
                                        "frail_elderly_high",                                       total_episodes_emergency,
                                       total_beddays_emergency)
 
@@ -768,7 +767,8 @@ plotting_icb_over_time(number_percentage_over_time|>
 #| label: fig-percent_change_percent_beddays
 #| fig-cap: The percentage change in the proportion emergency beddays that are Frail Elderly High beddays by ICB between 2019/20 and 2023/24. 
 
-england_average_percentage_beddays<-calculating_england_average_percentage(number_percentage_over_time, beddays, total_beddays)
+england_average_percentage_beddays<-calculating_england_average_percentage(number_percentage_over_time|>
+          filter(!is.na(percentage_beddays)), beddays, total_beddays)
 
 plotting_percentage_change_over_time_by_icb(number_percentage_over_time, percentage_beddays, england_average_percentage_beddays$change,  1.6, 1.3)
 
