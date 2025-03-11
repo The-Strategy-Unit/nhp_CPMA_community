@@ -110,7 +110,7 @@ list(
   
   tar_target(
     icb_age_sex_standardised_rates_episodes,
-    generating_age_sex_standardised_rates(
+    generating_icb_age_sex_standardised_rates(
       numbers_over_time,
       icb_population_data,
       standard_england_pop_2021_census,
@@ -120,7 +120,7 @@ list(
   
   tar_target(
     icb_age_sex_standardised_rates_beddays,
-    generating_age_sex_standardised_rates(
+    generating_icb_age_sex_standardised_rates(
       numbers_over_time,
       icb_population_data,
       standard_england_pop_2021_census,

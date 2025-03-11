@@ -149,7 +149,7 @@ formatting_standard_england_population<-function(data){
 
 # Age standardised dataset by ICB
 
-generating_age_sex_standardised_rates<-function(data, icb_pop, standard_pop, activity_type){
+generating_icb_age_sex_standardised_rates<-function(data, icb_pop, standard_pop, activity_type){
   
   data|>
     filter(fyear!=201415)|>
