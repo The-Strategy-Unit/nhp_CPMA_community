@@ -81,7 +81,7 @@ get_caption_by_icb <- function(cohort, metric, activity_type, treatment_type = N
 #'
 #' @param cohort A string for the mitigator cohort.
 #' @param activity_type Either `"admissions"` or `"beddays"`.
-#' @param treatment_type 
+#' @param treatment_type Either `"emergency"` or `"elective"`.
 #'
 #' @return A string.
 get_caption_by_icb_table <- function(cohort, activity_type, treatment_type) {

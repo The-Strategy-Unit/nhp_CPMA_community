@@ -14,13 +14,13 @@
 #' @param connection The Databricks connection.
 #'
 #' @return A dataframe.
-get_overview_of_mitigator <- function(treatment_type,
+get_overview_of_mitigator <- function(treatment,
                                       condition,
                                       totals,
                                       connection = sc) {
   totals <- totals |>
-    dplyr::filter(type == treatment_type) |>
-    dplyr::select(metric, total)
+    dplyr::filter(treatment_type == treatment) |>
+    dplyr::select(activity_type, total)
   
   mitigator_totals <- dplyr::tbl(
     connection,
@@ -31,25 +31,24 @@ get_overview_of_mitigator <- function(treatment_type,
     )
   ) |>
     dplyr::filter(!!rlang::parse_expr(condition)) |>
-    dplyr::summarise(episodes = sum(episodes),
+    dplyr::summarise(admissions = sum(episodes),
                      beddays = sum(beddays)) |>
     sparklyr::collect() |>
     tidyr::pivot_longer(
-      cols = c(episodes, beddays),
-      names_to = "metric",
+      cols = c(admissions, beddays),
+      names_to = "activity_type",
       values_to = "number"
     )
   
   summary <- mitigator_totals |>
-    dplyr::left_join(totals, "metric") |>
+    dplyr::left_join(totals, "activity_type") |>
     dplyr::mutate(
       perc = janitor::round_half_up(number * 100 / total, 2),
-      metric = metric |>
-        stringr::str_replace("episodes", "admissions") |>
+      activity_type = activity_type |>
         stringr::str_to_sentence()
     ) |>
     dplyr::arrange(dplyr::across(1)) |>
-    dplyr::rename(!!rlang::sym(glue::glue("Total {treatment_type} activity")) := total,
+    dplyr::rename(!!rlang::sym(glue::glue("Total {treatment} activity")) := total,
                   "Mitigable activity" = number)
   
   return(summary)
@@ -270,6 +269,28 @@ get_top_ten_specialties <- function(condition, key, activity_type) {
     dplyr::arrange(desc(perc)) |>
     dplyr::slice(1:10) |>
     dplyr::select(specialty, {{activity_type}}, perc)
+}
+
+#' Plot the top ten specialties for a mitigator.
+#'
+#' @param data The output of `get_top_ten_specialties()`.
+#' @param activity_type Either `"admissions"` or `"beddays"`.
+#'
+#' @return A plot.
+get_top_ten_specialties_plot <- function(data, activity_type) {
+  
+  plot <- data |>
+    ggplot2::ggplot(ggplot2::aes(perc, 
+                                 reorder(specialty, perc),
+                                 fill = 'bars_color')) + 
+    ggplot2::geom_col() +
+    ggplot2::scale_fill_manual(values = c('bars_color' = "#f9bf07"), 
+                               guide = 'none') +
+    StrategyUnitTheme::su_theme() +
+    ggplot2::labs(x = glue::glue("Percentage of mitigable {activity_type}"), 
+                  y = "Specialty")
+  
+  return(plot)
 }
 
 # Length of Stay ---------------------------------------------------------------

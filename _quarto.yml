@@ -8,6 +8,7 @@ book:
   date-format: "YYYY-MM-DD"
   chapters:
     - index.qmd
+    - summary_of_total_mitigation.qmd
     - frail_elderly_admissions_high.qmd
 
 title-block-banner: "#f9bf07"
