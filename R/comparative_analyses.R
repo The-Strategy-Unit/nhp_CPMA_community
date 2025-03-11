@@ -189,7 +189,8 @@ get_summary_by_icb_map <- function(data, boundaries, metric) {
   metric_title <- get_metric_title(metric)
   
   plot <- boundaries |>
-    dplyr::left_join(data, by = c("icb23cd" = "icb_2024_code")) |>
+    dplyr::rename(icb_2024_name = icb23nm) |>
+    dplyr::left_join(data, by = "icb_2024_name") |>
     get_icb_tooltip(metric) |>
     ggplot2::ggplot(ggplot2::aes(fill = metric_colour, 
                                  tooltip = ICB)) +
