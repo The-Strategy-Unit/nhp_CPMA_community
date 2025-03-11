@@ -460,7 +460,7 @@ perc_frail_elderly_high_los |>
 
 ### Specialty
 
-Across both admissions and beddays, the top two specialties of mitigable activity for the Frail and Elderly (high) cohort are Geriatric Medicine and General Internal General Internal Medicine.
+Across both admissions and beddays, the largest two treatment functions for mitigable activity for the Frail and Elderly (high) cohort are Elderly Medicine Service and General Internal Medicine Service.
 
 :::panel-tabset
 
