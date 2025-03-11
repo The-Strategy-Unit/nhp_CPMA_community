@@ -853,6 +853,10 @@ This section is still a work in progress.
 
 ### Admissions
 
+::: panel-tabset
+
+### Integrated Care Board
+
 ```{r}
 #| output: false
 summary_frail_elderly_high_icb_admissions <- targets::tar_read(summary_frail_elderly_high_icb_admissions)
@@ -978,9 +982,142 @@ get_summary_by_icb_table(summary_frail_elderly_high_icb_admissions, "episodes", 
 
 :::
 
+### Local Authority
+
+```{r}
+#| output: false
+summary_frail_elderly_high_la_admissions <- targets::tar_read(summary_frail_elderly_high_la_admissions)
+
+la_23_shp <- sf::st_read("https://services1.arcgis.com/ESMARspQHYMw9BZ9/arcgis/rest/services/Local_Authority_Districts_December_2024_Boundaries_UK_BGC/FeatureServer/0/query?outFields=*&where=1%3D1&f=geojson") |>
+  janitor::clean_names() |>
+  dplyr::filter(startsWith(lad24cd, "E"))
+
+number_frail_elderly_high_la_admissions_map <- summary_frail_elderly_high_la_admissions |>
+  get_summary_by_la_map(la_23_shp, "total_count")
+
+perc_frail_elderly_high_la_admissions_map <- summary_frail_elderly_high_la_admissions |>
+  get_summary_by_la_map(la_23_shp, "perc")
+
+rate_frail_elderly_high_la_admissions_map <- summary_frail_elderly_high_la_admissions |>
+  get_summary_by_la_map(la_23_shp, "value")
+```
+
+:::panel-tabset
+
+#### Number of admissions
+
+:::panel-tabset
+
+##### Bars
+
+```{r}
+#| label: fig-number_frail_elderly_high_la_admissions_bar
+#| fig-cap: !expr get_caption_by_icb("Frail Elderly (high)", "number", "admissions")
+england_value <- get_england_value("total_count", 
+                                   data_number = summary_frail_elderly_high_la_admissions)
+
+get_summary_by_la_bar(summary_frail_elderly_high_la_admissions, 
+                       "total_count", 
+                       "frail_elderly_high",
+                       england_value)
+
+rm(england_value)
+```
+
+##### Map
+
+```{r}
+#| label: fig-number_frail_elderly_high_la_admissions_map
+#| fig-cap: !expr get_caption_by_icb("Frail Elderly (high)", "number", "admissions")
+number_frail_elderly_high_la_admissions_map
+```
+
+:::
+
+#### Percentage of emergency activity
+
+:::panel-tabset
+
+##### Bars
+
+```{r}
+#| label: fig-perc_frail_elderly_high_la_admissions_bar
+#| fig-cap: !expr get_caption_by_icb("Frail Elderly (high)", "perc", "admissions")
+total_beddays_admissions <- targets::tar_read(total_beddays_admissions)
+
+england_value <- get_england_value("perc", 
+                                   activity = "admissions",
+                                   treatment = "emergency",
+                                   data_rate = england_age_sex_standardised_rates_episodes,
+                                   cohort = "frail_elderly_high")
+
+get_summary_by_la_bar(summary_frail_elderly_high_la_admissions, 
+                       "perc", 
+                       "frail_elderly_high",
+                       england_value)
+
+rm(england_value)
+```
+
+##### Map
+
+```{r}
+#| label: fig-perc_frail_elderly_high_la_admissions_map
+#| fig-cap: !expr get_caption_by_icb("Frail Elderly (high)", "perc", "admissions", "emergency")
+perc_frail_elderly_high_la_admissions_map
+```
+
+:::
+
+#### Age and sex standardised rates per 100,000 population
+
+:::panel-tabset
+
+##### Bars
+
+```{r}
+#| label: fig-rate_frail_elderly_high_la_admissions_bar
+#| fig-cap: !expr get_caption_by_icb("Frail Elderly (high)", "SR", "admissions")
+england_value <- get_england_value("value",
+                                   data_rate = england_age_sex_standardised_rates_episodes,
+                                   cohort = "frail_elderly_high")
+
+get_summary_by_la_bar(summary_frail_elderly_high_la_admissions, 
+                       "value", 
+                       "frail_elderly_high",
+                       england_value)
+
+rm(england_value)
+```
+
+##### Map
+
+```{r}
+#| label: fig-rate_frail_elderly_high_la_admissions_map
+#| fig-cap: !expr get_caption_by_icb("Frail Elderly (high)", "SR", "admissions")
+rate_frail_elderly_high_la_admissions_map
+```
+
+:::
+
+#### Table
+
+```{r}
+#| label: tbl-rate_frail_elderly_high_la_admissions
+#| tbl-cap: !expr get_caption_by_icb_table("Frail Elderly (high)", "admissions", "emergency")
+get_summary_by_la_table(summary_frail_elderly_high_la_admissions, "episodes", "emergency")
+```
+
+:::
+
+:::
+
 ### Beddays
 
 Coming soon. Want to get content right for admissions first.
 
 :::
+
+
+
 

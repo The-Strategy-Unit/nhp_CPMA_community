@@ -149,7 +149,7 @@ formatting_standard_england_population<-function(data){
 
 # Age standardised dataset by ICB
 
-generating_age_sex_standardised_rates<-function(data, icb_pop, standard_pop, activity_type){
+generating_icb_age_sex_standardised_rates<-function(data, icb_pop, standard_pop, activity_type){
   
   data|>
     filter(fyear!=201415)|>
@@ -164,6 +164,24 @@ generating_age_sex_standardised_rates<-function(data, icb_pop, standard_pop, act
                                        stdpop = pop)    # standard populations for England for each stratum
   
 
+  
+}
+
+generating_la_age_sex_standardised_rates <- function(data, la_pop, standard_pop, activity_type) {
+  data |>
+    dplyr::left_join(la_pop, by = c("ladcode23", "age_range", "sex")) |>
+    dplyr::left_join(standard_pop, by = c("age_range", "sex")) |>
+    dplyr::filter(!is.na(ladcode23),
+                  startsWith(ladcode23, "E"),
+                  age_range != "NA") |>
+    dplyr::group_by(ladcode23, laname23, cohorts) |>
+    dplyr::rename(activity = {{activity_type}}) |>
+    dplyr::filter(!is.na(la_population)) |> #########################################################################
+    PHEindicatormethods::calculate_dsr(x = activity, # observed number of events
+                                       n = la_population, # non-standard pops for each stratum
+                                       stdpop = pop) |>   # standard populations for England for each stratum
+  dplyr::mutate(year = "2023/24")
+  
   
 }
 

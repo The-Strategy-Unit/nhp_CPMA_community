@@ -100,9 +100,13 @@ get_icb_tooltip <- function(data, metric) {
 #' @return A string.
 get_note_on_dashed_line <- function(metric_title, england_value) {
   
+  metric <- ifelse(metric_title == "Number",
+                   "average number",
+                   stringr::str_to_lower(metric_title))
+  
   symbol <- ifelse(metric_title == "Percentage", "%", "")
   
-  note <- glue::glue("Dashed line is the {stringr::str_to_lower(metric_title)} for England: {janitor::round_half_up(england_value, 2)}{symbol}.")
+  note <- glue::glue("Dashed line is the {metric} for England 2023/24: {janitor::round_half_up(england_value, 2)}{symbol}.")
   
   return(note)
 }
@@ -117,7 +121,7 @@ get_note_on_dashed_line <- function(metric_title, england_value) {
 #' @param treatment_type Either `"emergency"` or `"elective"`.
 #'
 #' @return A dataframe.
-get_summary_by_icb <- function(data, cohort, total, activity_type, treatment_type) {
+get_summary_by_icb <- function(data, cohort, total, activity_type, treatment_type, geography = "icb") {
   
   if(activity_type == "admissions") {
     activity_type <- "episodes"
@@ -128,7 +132,7 @@ get_summary_by_icb <- function(data, cohort, total, activity_type, treatment_typ
   wrangled <- data |>
     dplyr::filter(cohorts == cohort, 
                   year == "2023/24") |>
-    dplyr::left_join(total, "icb") |>
+    dplyr::left_join(total, geography) |>
     dplyr::mutate(perc = janitor::round_half_up(total_count * 100 / !!rlang::sym(denominator), 2))
   
   
@@ -221,3 +225,92 @@ get_summary_by_icb_table <- function(data, activity_type, treatment_type) {
   return(table)
 }
 
+get_la_tooltip <- function(data, metric) {
+  metric_title <- get_metric_title(metric)
+  
+  wrangled <- data |>
+    dplyr::rename(metric_colour = !!rlang::sym(metric)) |>
+    dplyr::rowwise() |>
+    dplyr::mutate(
+      metric_colour_label = ifelse(metric == "perc",
+                                   glue::glue("{metric_colour}%"),
+                                   prettyNum(metric_colour, big.mark = ",")),
+      LA = glue::glue("{laname23} \n {metric_title}: {metric_colour_label}")) |>
+    dplyr::ungroup() 
+  
+  return(wrangled)
+}
+
+
+get_summary_by_la_map <- function(data, boundaries, metric) {
+  
+  metric_title <- get_metric_title(metric)
+  
+  plot <- boundaries |>
+    dplyr::left_join(data, by = c("lad24cd" = "ladcode23")) |>
+    get_la_tooltip(metric) |>
+    ggplot2::ggplot(ggplot2::aes(fill = metric_colour, 
+                                 tooltip = LA
+    )) +
+    ggplot2::geom_sf() +
+    ggplot2::theme_void() +
+    ggplot2::labs(metric = metric_title)
+  
+  plot <- plotly::ggplotly(plot, tooltip = "tooltip"
+  ) |>
+    plotly::style(hoveron = "metrics")
+  
+  return(plot)
+}
+
+get_summary_by_la_bar <- function(data, metric, cohort, england_value) {
+  
+  metric_title <- get_metric_title(metric)
+  
+  symbol <- ifelse(metric == "perc", "%", "")
+  
+  max_value <- data |>
+    dplyr::summarise(max = max(!!rlang::sym(metric))) |>
+    dplyr::pull()
+  
+  plot <- data |>
+    dplyr::mutate(metric_colour = janitor::round_half_up(!!rlang::sym(metric), 2)) |>
+    ggplot2::ggplot() +
+    ggplot2::aes(x = metric_colour,
+                 y = reorder(laname23, metric_colour),
+                 fill = 'bars_color') +
+    ggplot2::geom_col() +
+    ggplot2::geom_vline(xintercept = england_value, linetype = "dashed") +
+    ggplot2::geom_text(ggplot2::aes(label = paste0(metric_colour, symbol)), 
+                       hjust = -0.05, 
+                       size = 2.3) +
+    ggplot2::scale_fill_manual(values = c('bars_color' = "#f9bf07"), 
+                               guide = 'none') +
+    ggplot2::scale_x_continuous(limits = c(0, (max_value * 1.2))) +
+    ggplot2::labs(x = metric_title, 
+                  y = "",
+                  caption = get_note_on_dashed_line(metric_title, england_value)) +
+    StrategyUnitTheme::su_theme() +
+    ggplot2::theme(legend.position = "none")
+  
+  return(plot)
+  
+}
+
+
+get_summary_by_la_table <- function(data, activity_type, treatment_type) {
+  
+  table <- data |> 
+    dplyr::select(local_authority = laname23,
+                  !!rlang::sym(glue::glue("mitigable {activity_type}")) := total_count,
+                  glue::glue("total_{activity_type}_{treatment_type}"),
+                  perc,
+                  total_pop,
+                  standardised_rate = value) |>
+    dplyr::arrange(local_authority) |>
+    dplyr::mutate(dplyr::across(is.numeric, ~prettyNum(., big.mark = ","))) |>
+    dplyr::rename_with( ~ format_as_title(.)) |>
+    create_dt()
+  
+  return(table)
+}
