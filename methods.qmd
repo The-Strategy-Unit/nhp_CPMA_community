@@ -34,5 +34,6 @@ The ICBs used are based on the 2024 ICBs.
 
 ## Comparative analysis
 
-- Using 2023 shapefile, but 2024 ICB codes/names
+- Using 2023 ICB shapefile, but 2024 ICB codes/names
   - https://services1.arcgis.com/ESMARspQHYMw9BZ9/arcgis/rest/services/Integrated_Care_Boards_April_2023_EN_BGC/FeatureServer/0/query?outFields=*&where=1%3D1&f=geojson
+- LA shapefile: https://geoportal.statistics.gov.uk/datasets/6a05f93297cf4a438d08e972099f54b9_0/explore

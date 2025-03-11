@@ -860,6 +860,9 @@ summary_frail_elderly_high_icb_admissions <- targets::tar_read(summary_frail_eld
 icb_23_shp <- sf::st_read("https://services1.arcgis.com/ESMARspQHYMw9BZ9/arcgis/rest/services/Integrated_Care_Boards_April_2023_EN_BGC/FeatureServer/0/query?outFields=*&where=1%3D1&f=geojson") |>
   janitor::clean_names()
 
+la_23_shp <- sf::st_read("https://services1.arcgis.com/ESMARspQHYMw9BZ9/arcgis/rest/services/Local_Authority_Districts_December_2024_Boundaries_UK_BGC/FeatureServer/0/query?outFields=*&where=1%3D1&f=geojson") |>
+  janitor::clean_names()
+
 number_frail_elderly_high_icb_admissions_map <- summary_frail_elderly_high_icb_admissions |>
   get_summary_by_icb_map(icb_23_shp, "total_count")
 
