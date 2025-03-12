@@ -585,7 +585,8 @@ To help understand the variability between ICBs we have calculated for each ICB 
 #| label: fig-number_trends_spells_england
 #| fig-cap: The total number of admissions for the Frail Older People (high frailty) mitigable activity cohort in England over the last 9 years. 
 
-numbers_over_time<-tar_read(numbers_over_time)|>filter(year!="2014/15")
+numbers_over_time<-tar_read(numbers_over_time)|>
+  filter(year!="2014/15")
 
 denominator_over_time<-tar_read(denominator_over_time)
 icb_population_data<-tar_read(icb_population_data)
@@ -672,6 +673,8 @@ plot_of_standardised_rates_over_time(england_age_sex_standardised_rates_beddays)
 
 ### ICB
 
+Note: Low numbers of admissions/beddays for Frimley ICB in 2022/23 reflect an issue with data submissions for this period. 
+
 ::: panel-tabset
 #### Number over time
 
@@ -697,7 +700,7 @@ plotting_icb_over_time(number_percentage_over_time|>
 england_average_numbers_episodes<-calculating_england_average_numbers(number_percentage_over_time, episodes)
 
 
-plotting_percentage_change_over_time_by_icb(number_percentage_over_time, episodes, england_average_numbers_episodes$change, 1.6, 1.3)
+plotting_percentage_change_over_time_by_icb(number_percentage_over_time|>filter(!is.na(icb_2024_name)), episodes, england_average_numbers_episodes$change, 1.6, 1.3)
 
 ```
 
@@ -721,7 +724,7 @@ plotting_icb_over_time(number_percentage_over_time|>
 england_average_numbers_beddays<-calculating_england_average_numbers(number_percentage_over_time, beddays)
 
 
-plotting_percentage_change_over_time_by_icb(number_percentage_over_time, beddays, england_average_numbers_beddays$change, 1.6, 1.3)
+plotting_percentage_change_over_time_by_icb(number_percentage_over_time|>filter(!is.na(icb_2024_name)), beddays, england_average_numbers_beddays$change, 1.6, 1.3)
 
 ```
 

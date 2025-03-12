@@ -17,7 +17,8 @@ tar_option_set(
     "ComplexUpset",
     "forcats",
     "plotly",
-    "scales"
+    "scales",
+    "ggVennDiagram"
   )
 )
 
@@ -323,6 +324,7 @@ list(
     Formatting_data_for_cohort_overlap("sl_af_describing_mitigators_fyear")|>
       filter(fyear=="202324")
   ),
+ 
 
  # Trends analysis -------------------------------------------------------------
 
