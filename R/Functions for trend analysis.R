@@ -234,10 +234,10 @@ plotting_percentage_change_over_time_by_icb<-function(data, values, eng_average,
   data1<-data|>
     filter(year=="2018/19"| year=="2023/24")|>
     pivot_wider(names_from = c(year), values_from = {{values}})|>
-    summarise(`2019/20`=max(`2019/20`, na.rm=TRUE),
+    summarise(`2018/19`=max(`2018/19`, na.rm=TRUE),
               `2023/24`=max(`2023/24`, na.rm=TRUE),
               .by=c(icb_2024_name))|>
-    mutate(change=round(((`2023/24`-`2019/20`)/`2019/20`)*100,1))|>
+    mutate(change=round(((`2023/24`-`2018/19`)/`2018/19`)*100,1))|>
     filter(!is.nan(change))|>
     filter(change!="-Inf")|>
     arrange(change)|>
