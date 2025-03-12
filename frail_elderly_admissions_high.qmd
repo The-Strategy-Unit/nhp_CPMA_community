@@ -688,6 +688,20 @@ plotting_icb_over_time(number_percentage_over_time|>
 
 ```
 
+<br>
+
+```{r, fig.height=6, fig.width=8}
+#| label: fig-percent_change_number_spells
+#| fig-cap: The percentage change in the number of Frail Older People (high frailty) admissions by ICB between 2018/19 and 2023/24. 
+
+england_average_numbers_episodes<-calculating_england_average_numbers(number_percentage_over_time, episodes)
+
+
+plotting_percentage_change_over_time_by_icb(number_percentage_over_time, episodes, england_average_numbers_episodes$change, 1.6, 1.3)
+
+```
+
+
 #### Beddays
 
 ```{r, fig.width=5, fig.height=3}
@@ -697,6 +711,20 @@ plotting_icb_over_time(number_percentage_over_time|>
 plotting_icb_over_time(number_percentage_over_time|>
         mutate(activity=beddays), 'Number')
 ```
+
+<br>
+
+```{r, fig.height=6, fig.width=8}
+#| label: fig-percent_change_number_beddays
+#| fig-cap: The percentage change in the number of Frail Older People (high frailty) beddays by ICB between 2018/19 and 2023/24. 
+
+england_average_numbers_beddays<-calculating_england_average_numbers(number_percentage_over_time, beddays)
+
+
+plotting_percentage_change_over_time_by_icb(number_percentage_over_time, beddays, england_average_numbers_beddays$change, 1.6, 1.3)
+
+```
+
 :::
 
 #### Crude rate

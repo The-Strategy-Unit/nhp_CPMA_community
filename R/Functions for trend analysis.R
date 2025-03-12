@@ -262,6 +262,24 @@ plotting_percentage_change_over_time_by_icb<-function(data, values, eng_average,
   
 }
 
+
+# England average numbers of emergency admissions
+
+calculating_england_average_numbers<-function(data, activity_type){
+  
+  data|>
+    filter(year=="2018/19"| year=="2023/24")|>
+    group_by(year)|>
+    summarise(number=sum({{activity_type}}))|>
+    pivot_wider(names_from = c(year), values_from = number)|>
+    summarise(`2018/19`=max(`2018/19`, na.rm=TRUE),
+              `2023/24`=max(`2023/24`, na.rm=TRUE))|>
+    mutate(change=round(((`2023/24`-`2018/19`)/`2018/19`)*100,1))
+  
+}
+
+
+
 # England average percentage of emergency admissions
 
 calculating_england_average_percentage<-function(data, activity_type, denominator){
@@ -273,9 +291,9 @@ data|>
               total_number=sum({{denominator}}))|>
     mutate(percentage=round((number/total_number)*100,1))|>
     pivot_wider(names_from = c(year), values_from = percentage)|>
-    summarise(`2019/20`=max(`2019/20`, na.rm=TRUE),
+    summarise(`2018/19`=max(`2018/19`, na.rm=TRUE),
               `2023/24`=max(`2023/24`, na.rm=TRUE))|>
-    mutate(change=round(((`2023/24`-`2019/20`)/`2019/20`)*100,1))
+    mutate(change=round(((`2023/24`-`2018/19`)/`2018/19`)*100,1))
 
 }
 
@@ -287,9 +305,9 @@ calculating_england_average_standardised<-function(data){
  data|>
     filter(year=="2018/19"| year=="2023/24")|>
     pivot_wider(names_from = c(year), values_from = value)|>
-    summarise(`2019/20`=max(`2019/20`, na.rm=TRUE),
+    summarise(`2018/19`=max(`2018/19`, na.rm=TRUE),
               `2023/24`=max(`2023/24`, na.rm=TRUE))|>
-    mutate(change=round(((`2023/24`-`2019/20`)/`2019/20`)*100,1))
+    mutate(change=round(((`2023/24`-`2018/19`)/`2018/19`)*100,1))
   
 }
 
