@@ -128,12 +128,56 @@ list(
     )
   ),
   
+  
+  tar_target(
+    icb_age_sex_standardised_rates_episodes_total_mitigation,
+    generating_icb_age_sex_standardised_rates(
+      numbers_over_time_total_mitigation|>
+        mutate(cohorts="all"),
+      icb_population_data,
+      standard_england_pop_2021_census,
+      episodes
+    )
+  ),
+  
+  tar_target(
+    icb_age_sex_standardised_rates_beddays_total_mitigation,
+    generating_icb_age_sex_standardised_rates(
+      numbers_over_time_total_mitigation|>
+        mutate(cohorts="all"),
+      icb_population_data,
+      standard_england_pop_2021_census,
+      beddays
+    )
+  ),
   tar_target(england_age_sex_standardised_rates_episodes,
-            generating_england_age_sex_standardised_rates(numbers_over_time, icb_population_data, standard_england_pop_2021_census, episodes)
+            generating_england_age_sex_standardised_rates(numbers_over_time, 
+                                                          icb_population_data, 
+                                                          standard_england_pop_2021_census, 
+                                                          episodes)
  ),
  
  tar_target(england_age_sex_standardised_rates_beddays,
-            generating_england_age_sex_standardised_rates(numbers_over_time, icb_population_data, standard_england_pop_2021_census, beddays)
+            generating_england_age_sex_standardised_rates(numbers_over_time, 
+                                                          icb_population_data, 
+                                                          standard_england_pop_2021_census, 
+                                                          beddays)
+ ),
+ 
+ tar_target(england_age_sex_standardised_rates_episodes_total_mitigation,
+            generating_england_age_sex_standardised_rates(numbers_over_time_total_mitigation|>
+                                                            mutate(cohorts="all"), 
+                                                          icb_population_data, 
+                                                          standard_england_pop_2021_census, 
+                                                          episodes)
+ ),
+ 
+ tar_target(england_age_sex_standardised_rates_beddays_total_mitigation,
+            generating_england_age_sex_standardised_rates(numbers_over_time_total_mitigation|>
+                                                            mutate(cohorts="all"), 
+                                                          icb_population_data, 
+                                                          standard_england_pop_2021_census, 
+                                                          beddays)
  ),
  
  # Local authority

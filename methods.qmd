@@ -31,6 +31,11 @@ The ICBs used are based on the 2024 ICBs.
 
 - Excluded NULLs
 
+## Trend analysis
+
+Crude rate is mitigable activity as a proportion of total emergency or total emergency and elective activity for the whole population.
+
+Standardised rates gives the rate in that population. So for total mitigable activity the whole population will be included. However, in for example the frail elderly cohorts where there are age criteria the standardised rate is for the population included in that group so over 75s.
 
 ## Comparative analysis
 
