@@ -232,7 +232,7 @@ plotting_percentage_change_over_time_by_icb<-function(data, values, eng_average,
  
 
   data1<-data|>
-    filter(year=="2019/20"| year=="2023/24")|>
+    filter(year=="2018/19"| year=="2023/24")|>
     pivot_wider(names_from = c(year), values_from = {{values}})|>
     summarise(`2019/20`=max(`2019/20`, na.rm=TRUE),
               `2023/24`=max(`2023/24`, na.rm=TRUE),
@@ -267,7 +267,7 @@ plotting_percentage_change_over_time_by_icb<-function(data, values, eng_average,
 calculating_england_average_percentage<-function(data, activity_type, denominator){
   
 data|>
-    filter(year=="2019/20"| year=="2023/24")|>
+    filter(year=="2018/19"| year=="2023/24")|>
     group_by(year)|>
         summarise(number=sum({{activity_type}}),
               total_number=sum({{denominator}}))|>
@@ -285,7 +285,7 @@ data|>
 calculating_england_average_standardised<-function(data){
   
  data|>
-    filter(year=="2019/20"| year=="2023/24")|>
+    filter(year=="2018/19"| year=="2023/24")|>
     pivot_wider(names_from = c(year), values_from = value)|>
     summarise(`2019/20`=max(`2019/20`, na.rm=TRUE),
               `2023/24`=max(`2023/24`, na.rm=TRUE))|>

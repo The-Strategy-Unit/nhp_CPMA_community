@@ -571,7 +571,7 @@ b\) these admissions/beddays as a proportion of emergency admissions,
 
 c\) the age and sex standardised rates of these admissions/beddays using the England 2021 census population.
 
-To help understand the variability between ICBs we have calculated for each ICB the percentage change in proportion of emergency admissions and in standardised rates between 2019/20 and 2023/24.
+To help understand the variability between ICBs we have calculated for each ICB the percentage change in proportion of emergency admissions and in standardised rates between 2018/19 and 2023/24.
 
 ### England
 
@@ -720,7 +720,7 @@ plotting_icb_over_time(number_percentage_over_time|>
 
 ```{r, fig.height=6, fig.width=8}
 #| label: fig-percent_change_percent_spells
-#| fig-cap: The percentage change in the proportion emergency admissions that are Frail Older People (high frailty) admissions by ICB between 2019/20 and 2023/24. 
+#| fig-cap: The percentage change in the proportion emergency admissions that are Frail Older People (high frailty) admissions by ICB between 2018/19 and 2023/24. 
 
 england_average_percentage_episodes<-calculating_england_average_percentage(number_percentage_over_time|> filter(!is.na(total_episodes)), episodes, total_episodes)
 
@@ -745,7 +745,7 @@ plotting_icb_over_time(number_percentage_over_time|>
 
 ```{r, fig.height=6, fig.width=8}
 #| label: fig-percent_change_percent_beddays
-#| fig-cap: The percentage change in the proportion emergency beddays that are Frail Older People (high frailty) beddays by ICB between 2019/20 and 2023/24. 
+#| fig-cap: The percentage change in the proportion emergency beddays that are Frail Older People (high frailty) beddays by ICB between 2018/19 and 2023/24. 
 
 england_average_percentage_beddays<-calculating_england_average_percentage(number_percentage_over_time|>
           filter(!is.na(percentage_beddays)), beddays, total_beddays)
@@ -778,7 +778,7 @@ plotting_icb_over_time(
 
 ```{r, fig.height=6, fig.width=8}
 #| label: fig-percent_change_standardised_spells
-#| fig-cap: The percentage change in the standardised rate of Frail Older People (high frailty) admissions by ICB between 2019/20 and 2023/24. 
+#| fig-cap: The percentage change in the standardised rate of Frail Older People (high frailty) admissions by ICB between 2018/19 and 2023/24. 
 
 england_average_standardised_episodes<-calculating_england_average_standardised(england_age_sex_standardised_rates_episodes)
 
@@ -806,7 +806,7 @@ plotting_icb_over_time(
 
 ```{r, fig.height=6, fig.width=8}
 #| label: fig-percent_change_standardised_beddays
-#| fig-cap: The percentage change in the standardised rate of Frail Older People (high frailty) beddays by ICB between 2019/20 and 2023/24. 
+#| fig-cap: The percentage change in the standardised rate of Frail Older People (high frailty) beddays by ICB between 2018/19 and 2023/24. 
 
 
 england_average_standardised_beddays<-calculating_england_average_standardised(england_age_sex_standardised_rates_beddays)
