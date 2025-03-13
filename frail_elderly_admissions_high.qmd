@@ -736,7 +736,7 @@ plot_of_percentage_over_time(number_percentage_over_time|>
 ```
 :::
 
-#### Standardised rate over time
+#### Age and sex standardised rates over time
 
 ::: panel-tabset
 #### Admissions
@@ -882,7 +882,7 @@ plotting_percentage_change_over_time_by_icb(number_percentage_over_time, percent
 ```
 :::
 
-#### Standardised rate over time
+#### Age and sex standardised rates over time
 
 ::: panel-tabset
 #### Admissions
