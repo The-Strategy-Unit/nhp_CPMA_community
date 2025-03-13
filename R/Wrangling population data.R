@@ -161,8 +161,8 @@ generating_icb_age_sex_standardised_rates<-function(data, icb_pop, standard_pop,
     rename(activity={{activity_type}})|>
     PHEindicatormethods::calculate_dsr(x =activity,    # observed number of events
                                        n = icb_population,  # non-standard pops for each stratum
-                                       stdpop = pop)    # standard populations for England for each stratum
-  
+                                       stdpop = pop) |>   # standard populations for England for each stratum
+   mutate(value=round(value,0))
 
   
 }
@@ -197,8 +197,8 @@ generating_england_age_sex_standardised_rates<-function(data, icb_pop, standard_
     group_by(year, cohorts) |>
     PHEindicatormethods::calculate_dsr(x = activity,    # observed number of events
                                        n = icb_population,  # non-standard pops for each stratum
-                                       stdpop = pop)    # standard populations for England for each stratum
-  
+                                       stdpop = pop) |>   # standard populations for England for each stratum
+    mutate(value=round(value,0))
   
   
 }
