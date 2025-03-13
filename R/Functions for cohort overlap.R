@@ -124,9 +124,11 @@ plot_upset_plot<-function(dataset, activity_type){
 
 # Summary barchart of percentage of overlap with different groups
 
-plotting_barchart_summary_of_overlaps<-function(data, cohort_name, activity_type){
+plotting_barchart_summary_of_overlaps<-function(data, cohort_name, activity_type, mitigator_table){
   
-  cohort_total<- data|>
+ name<-mitigator_table$mitigator_name[mitigator_table$mitigator_code==cohort_name]
+  
+   cohort_total<- data|>
     summarise(total=sum({{activity_type}}))
   
   data2<-data|>
@@ -136,21 +138,23 @@ plotting_barchart_summary_of_overlaps<-function(data, cohort_name, activity_type
     gather(key="cohort", value="number")|>
     group_by(cohort)|>
     summarise(number=sum(number))|>
-    mutate(percentage=round(((number/max(number))*100),1))|>
+    mutate(percentage=round(((number/max(number))*100),0))|>
+    left_join(mitigator_table[,c("mitigator_name", "mitigator_code", "mechanism")], by=c("cohort"="mitigator_code"))|>
     arrange(desc(number))|>
-    mutate(cohort=factor(cohort, unique(cohort)))|>
-    mutate(cohort=fct_relevel(cohort,cohort_name ))|>
-    arrange(cohort)|>
-    mutate(colour=ifelse(cohort==cohort_name, "#000000", ifelse(number==0, "#686f73" , "#ec6555" )))
+    mutate(mitigator_name=factor(mitigator_name, unique(mitigator_name)))|>
+    mutate(mitigator_name=fct_relevel(mitigator_name,name ))|>
+    arrange(mitigator_name)|>
+    mutate(colour=ifelse(mitigator_name==name, "#000000", ifelse(number==0, "#686f73" , "#ec6555" )))
   
   data2|>
-    ggplot(aes(x=cohort, y=percentage))+
+    ggplot(aes(x=mitigator_name, y=percentage))+
     geom_bar(stat="identity", fill=factor(ifelse(data2$cohort==cohort_name,"#686f73","#f9bf07")))+
     scale_x_discrete(limits=rev)+
     su_theme()+
     theme(axis.text=element_text(size=11),
           axis.title=element_text(size=13),
           axis.text.y=element_text(colour=rev(data2$colour)),
+         # strip.background = element_blank(),
           plot.caption=element_text(colour="#ec6555", size=11))+
     labs(y=paste0("Percentage of ", cohort_name, " cohort in each of the other cohorts"),
          caption = (paste0("Cohorts highlighted in red are those who overlap with the ",  "frail_elderly_high")),

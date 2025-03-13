@@ -212,9 +212,18 @@ list(
        episodes
      )
    ),
+ 
+  # Mitigator details-----------------------------------------------------------
+ 
+ tar_target(
+   mitigator_summary_table,
+   read_excel("summary_mitigators_table.xlsx")
+ ),
+
    
   # Descriptive analysis -------------------------------------------------------
-  
+
+ 
   ## Overview of mitigator -----------------------------------------------------
   tar_target(
     total_beddays_admissions,
