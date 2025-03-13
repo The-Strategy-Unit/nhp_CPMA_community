@@ -50,25 +50,92 @@ Formatting_data_for_cohort_overlap<-function(table){
 
 # Function to generate upset plot
 
-plot_upset_plot<-function(dataset, activity_type){
+plot_upset_plot<-function(dataset, mitigator_table, activity_type){
   
-  data<-  dataset|>
-    rename(activity={{activity_type}})|>
+  name<-deparse(substitute(activity_type))
+  
+  if(name=="episodes"){
+  data<- dataset|>
+  group_by(alcohol_partially_attributable_acute,
+           alcohol_partially_attributable_chronic,
+           alcohol_wholly_attributable,
+           ambulatory_care_conditions_acute,
+           ambulatory_care_conditions_chronic,
+           ambulatory_care_conditions_vaccine_preventable,
+           eol_care_2_days,
+           eol_care_3_to_14_days,
+           falls_related_admissions,
+           frail_elderly_high,
+           frail_elderly_intermediate,
+           intentional_self_harm,
+           medically_unexplained_related_admissions,
+           medicines_related_admissions_explicit,
+           medicines_related_admissions_implicit_anti_diabetics,
+           medicines_related_admissions_implicit_benzodiasepines,
+           medicines_related_admissions_implicit_diurectics,
+           medicines_related_admissions_implicit_nsaids,
+           obesity_related_admissions,
+           raid_ae,
+           readmission_within_28_days,
+           smoking,
+           virtual_wards_activity_avoidance_ari,
+           virtual_wards_activity_avoidance_heart_failure,
+           zero_los_no_procedure_adult,
+           zero_los_no_procedure_child)|>
+    summarise(activity=sum({{activity_type}}))|>
+    ungroup()
+  }
+  else{
+    data<-dataset|>
+      group_by(alcohol_partially_attributable_acute,
+               alcohol_partially_attributable_chronic,
+               alcohol_wholly_attributable,
+               ambulatory_care_conditions_acute,
+               ambulatory_care_conditions_chronic,
+               ambulatory_care_conditions_vaccine_preventable,
+               eol_care_2_days,
+               eol_care_3_to_14_days,
+               falls_related_admissions,
+               frail_elderly_high,
+               frail_elderly_intermediate,
+               intentional_self_harm,
+               medically_unexplained_related_admissions,
+               medicines_related_admissions_explicit,
+               medicines_related_admissions_implicit_anti_diabetics,
+               medicines_related_admissions_implicit_benzodiasepines,
+               medicines_related_admissions_implicit_diurectics,
+               medicines_related_admissions_implicit_nsaids,
+               obesity_related_admissions,
+               raid_ae,
+               readmission_within_28_days,
+               smoking,
+               virtual_wards_activity_avoidance_ari,
+               virtual_wards_activity_avoidance_heart_failure,
+               zero_los_no_procedure_adult,
+               zero_los_no_procedure_child,
+              emergency_elderly,
+               raid_ip,
+               stroke_early_supported_discharge)|>
+      summarise(activity=sum({{activity_type}}))|>
+      ungroup()
+  }
+  
+  
+  plot_data<-data|>
     mutate(total_activity=sum(activity))|>
-    mutate(percentage=round((activity/total_activity)*100,1))|>
+    mutate(percentage=round((activity/total_activity)*100,0))|>
     slice_max(activity,n=15)|>
     arrange(desc(activity))|>
     mutate(id=row_number())
   
-  numbers_in_each_cohort<-dataset|>
-    gather(groups, values, -episodes, -beddays)|>
+  numbers_in_each_cohort<-data|>
+    gather(groups, values, -activity)|>
     filter(values!=0)|>
     group_by(groups)|>
-    summarise(episodes=sum(episodes),
-              beddays=sum(beddays))
+    summarise(total_activity=sum(activity))
   
   
-  top_plot<-data|>
+  top_plot<-plot_data|>
     ggplot(aes(x=id, y=activity))+
     geom_bar(stat="identity", fill="#f9bf07" )+
     su_theme()+
@@ -80,24 +147,26 @@ plot_upset_plot<-function(dataset, activity_type){
     labs(y="Intersection size",
          x=NULL,
          title=NULL)+
-    geom_text(aes(label=paste0(scales::comma(activity), ' \n(',percentage, '%)')), vjust=-0.2, size=2.9)+
+    geom_text(aes(label=paste0(scales::comma(activity), ' \n(',percentage, '%)')), vjust=-0.2, size=2.6)+
     scale_y_continuous(limits=c(0,max(data$activity)*1.2), expand=c(0,0), labels = label_comma())+
     scale_x_continuous(expand=c(0.01,0.01))
   
-  data2<- data|>
-    dplyr::select(1:29, activity, id)|>
+  data2<- plot_data|>
+    select(-percentage, -total_activity)|>
     dplyr::select(where(~ any(. != 0)))|>
     gather(groups, value, -id, -activity) |>
     mutate(value=as.character(value))|>
     left_join(numbers_in_each_cohort, by=c("groups"))|>
+    left_join(mitigator_table[,c("mitigator_code", "mitigator_name")], by=c("groups"="mitigator_code"))|>
     arrange(id)|>
-    mutate(groups=reorder(groups, {{activity_type}}))
+    mutate(mitigator_name=reorder(mitigator_name, total_activity))
+  
   
   data3<-data2|>
     filter(value==1)
   
   bottom_plot<- data2|>
-    ggplot(aes(x = id, y = groups,  group=value)) +
+    ggplot(aes(x = id, y = mitigator_name,  group=value)) +
     geom_point(aes(color=value),size=4 , show.legend = FALSE)+ 
     geom_line(data=data3, aes(group=id), linewidth=1)+ 
     su_theme()+
@@ -146,18 +215,29 @@ plotting_barchart_summary_of_overlaps<-function(data, cohort_name, activity_type
     arrange(mitigator_name)|>
     mutate(colour=ifelse(mitigator_name==name, "#000000", ifelse(number==0, "#686f73" , "#ec6555" )))
   
+  name<-deparse(substitute(activity_type))
+  
+  if(name=="episodes"){
+     data2<-data2|>
+       filter(mechanism!="Efficiencies")
+  }
+  
+  else{
+    data2<-data2
+  }
+  
   data2|>
     ggplot(aes(x=mitigator_name, y=percentage))+
     geom_bar(stat="identity", fill=factor(ifelse(data2$cohort==cohort_name,"#686f73","#f9bf07")))+
     scale_x_discrete(limits=rev)+
     su_theme()+
-    theme(axis.text=element_text(size=11),
+    theme(axis.text=element_text(size=10),
           axis.title=element_text(size=13),
           axis.text.y=element_text(colour=rev(data2$colour)),
          # strip.background = element_blank(),
           plot.caption=element_text(colour="#ec6555", size=11))+
-    labs(y=paste0("Percentage of ", cohort_name, " cohort in each of the other cohorts"),
-         caption = (paste0("Cohorts highlighted in red are those who overlap with the ",  "frail_elderly_high")),
+    labs(y=paste0("Percentage of this cohort in each of the other cohorts"),
+         caption = (paste0("Cohorts highlighted in red are those who overlap with this cohort")),
          x=NULL,
          title=NULL)+ 
     geom_text(aes(label=paste0(percentage,  '% (',scales::comma(number), ')')), hjust=-0.05, size=3)+
@@ -169,20 +249,35 @@ plotting_barchart_summary_of_overlaps<-function(data, cohort_name, activity_type
 # Number of cohorts of which the admissions are part
 plotting_barchart_number_of_cohorts<-function(data, activity_type){
   
+  name<-deparse(substitute(activity_type))
+  
+  if(name=="episodes"){
+  
   data2<-data|>
-    mutate(number_of_cohorts = rowSums(pick(1:29), na.rm = TRUE))|>
+    select(-emergency_elderly, -stroke_early_supported_discharge, -raid_ip)|>
+    mutate(number_of_cohorts = rowSums(pick(1:26), na.rm = TRUE))|>
     mutate(number_of_cohorts=number_of_cohorts-1)|>
     mutate(number_of_cohorts=ifelse(number_of_cohorts>4, "5+", number_of_cohorts))|>
     summarise(activity=sum({{activity_type}}), .by=c(number_of_cohorts))
+  }
+  else{
+    data2<-data|>
+      mutate(number_of_cohorts = rowSums(pick(1:29), na.rm = TRUE))|>
+      mutate(number_of_cohorts=number_of_cohorts-1)|>
+      mutate(number_of_cohorts=ifelse(number_of_cohorts>4, "5+", number_of_cohorts))|>
+      summarise(activity=sum({{activity_type}}), .by=c(number_of_cohorts))
+  }
   
   data2<-  if(!0 %in% data2$number_of_cohorts){
     add_row(data2, number_of_cohorts="0", activity=0)
+  }
+  else{
+    data2<-data2
   }
   
   data2<- data2 |>
     mutate(percentage=round(activity/(sum(activity))*100,1))
   
-
   data2|>
     ggplot(aes(x=number_of_cohorts, y=activity))+
     geom_bar(stat="identity" , fill=factor(ifelse(data2$number_of_cohorts=="0","#686f73","#f9bf07")))+
@@ -217,7 +312,7 @@ identify_whether_bedday_or_admissions_or_both<-function(data){
 # Function to identify the mechanism group
 
 identify_mechanism_group<-function(data){
-  total_cohort_numbers_2324|>
+  data|>
     mutate(redirection=ifelse((ambulatory_care_conditions_acute==1|
                               ambulatory_care_conditions_chronic==1|
                               ambulatory_care_conditions_vaccine_preventable==1|
