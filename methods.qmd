@@ -4,7 +4,6 @@ NOTE: This chapter is NOT in the book yet. We will need to add it the `_quarto.y
 
 ## General
 
-ADD TABLE OF MITIGATORS
 
 Admissions and beddays are taken from the Hospital Episode Statistics dataset used for the New Hospitals Programme model. 
 
@@ -17,7 +16,7 @@ Where the activity for the cohort is given as a percentage of total activity, th
 Where Index of Multiple Deprivation, IMD, deciles used these are the 2019 values.  
 The ICBs used are based on the 2024 ICBs.
 
-
+The beddays for an admission are calculated based from the number of days between admission date and discharge date, so if a person was admitted and discharged on the same day the beddays for the admission would be zero.
 
 ## Descriptive analysis
 
