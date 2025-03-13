@@ -21,6 +21,12 @@ source("R/Functions for cohort overlap.R")
 source("R/Functions for trend analysis.R")
 
 options(scipen = 999)
+
+england_age_sex_standardised_rates_episodes<-tar_read(england_age_sex_standardised_rates_episodes)|>
+  filter(cohorts=="frail_elderly_high")
+
+england_age_sex_standardised_rates_beddays<-tar_read(england_age_sex_standardised_rates_beddays)|>
+  filter(cohorts=="frail_elderly_high")
 ```
 
 This cohort includes older patients with a high level of frailty, specifically, those 75 years of age or over with an emergency admission and a frailty score over 15. The frailty score is calculated from ICD-10 diagnoses recorded for admissions during the previous 2 years and using the risk scores in Gilbert et al (2018), Development and validation of a Hospital Frailty Risk Score focusing on older people in acute care settings using electronic hospital records: an observational study. The Lancet, 391(10132), pp.1775-1782.
@@ -552,99 +558,6 @@ The 15 most common cohort combinations for the Elderly Frail High cohort are sho
 
 plot_upset_plot(total_cohort_numbers_2324,  mitigator_summary_table, episodes)
 
- data<- total_cohort_numbers_2324|>
-  group_by(alcohol_partially_attributable_acute,
-           alcohol_partially_attributable_chronic,
-           alcohol_wholly_attributable,
-           ambulatory_care_conditions_acute,
-           ambulatory_care_conditions_chronic,
-           ambulatory_care_conditions_vaccine_preventable,
-           eol_care_2_days,
-           eol_care_3_to_14_days,
-           falls_related_admissions,
-           frail_elderly_high,
-           frail_elderly_intermediate,
-           intentional_self_harm,
-           medically_unexplained_related_admissions,
-           medicines_related_admissions_explicit,
-           medicines_related_admissions_implicit_anti_diabetics,
-           medicines_related_admissions_implicit_benzodiasepines,
-           medicines_related_admissions_implicit_diurectics,
-           medicines_related_admissions_implicit_nsaids,
-           obesity_related_admissions,
-           raid_ae,
-           readmission_within_28_days,
-           smoking,
-           virtual_wards_activity_avoidance_ari,
-           virtual_wards_activity_avoidance_heart_failure,
-           zero_los_no_procedure_adult,
-           zero_los_no_procedure_child)|>
-    summarise(activity=sum(episodes))|>
-   ungroup()
-  
-  
-  plot_data<-data|>
-    mutate(total_activity=sum(activity))|>
-    mutate(percentage=round((activity/total_activity)*100,1))|>
-    slice_max(activity,n=15)|>
-    arrange(desc(activity))|>
-    mutate(id=row_number())
-  
-  numbers_in_each_cohort<-data|>
-    gather(groups, values, -activity)|>
-    filter(values!=0)|>
-    group_by(groups)|>
-    summarise(total_activity=sum(activity))
-  
-   top_plot<-plot_data|>
-    ggplot(aes(x=id, y=activity))+
-    geom_bar(stat="identity", fill="#f9bf07" )+
-    su_theme()+
-    theme(axis.text=element_text(size=11),
-          axis.title=element_text(size=12),
-          axis.text.x=element_blank(),
-          axis.ticks.x=element_blank(),
-          axis.title.y=element_text(vjust=-6))+
-    labs(y="Intersection size",
-         x=NULL,
-         title=NULL)+
-    geom_text(aes(label=paste0(scales::comma(activity), ' \n(',percentage, '%)')), vjust=-0.2, size=2.9)+
-    scale_y_continuous(limits=c(0,max(data$activity)*1.2), expand=c(0,0), labels = label_comma())+
-    scale_x_continuous(expand=c(0.01,0.01))
-   
-    data2<- plot_data|>
-      select(-percentage, -total_activity)|>
-    dplyr::select(where(~ any(. != 0)))|>
-    gather(groups, value, -id, -activity) |>
-    mutate(value=as.character(value))|>
-    left_join(numbers_in_each_cohort, by=c("groups"))|>
-    arrange(id)|>
-    mutate(groups=reorder(groups, total_activity))
-  
-  data3<-data2|>
-    filter(value==1)
-  
-  bottom_plot<- data2|>
-    ggplot(aes(x = id, y = groups,  group=value)) +
-    geom_point(aes(color=value),size=4 , show.legend = FALSE)+ 
-    geom_line(data=data3, aes(group=id), linewidth=1)+ 
-    su_theme()+
-    theme(axis.text.x=element_blank(),
-          legend_position="none",
-          axis.title=element_blank(),
-          axis.ticks.x=element_blank(),
-          axis.line=element_blank(),
-          panel.background = element_rect(fill ='#EEEEEE', colour='#EEEEEE'))+
-    labs(x=NULL, y=NULL)+
-    scale_colour_manual(values=c("1"="black", "0"="white"))
-
-  layout <- c(
-    area(t = 0, l = 0, b = 24, r = 25),
-    area(t = 25, l = 0, b = 38, r = 25))
-  
-  # final plot arrangement
-  top_plot +  bottom_plot + plot_layout(design = layout)
-  
 ```
 
 #### Beddays
@@ -657,321 +570,7 @@ plot_upset_plot(total_cohort_numbers_2324,  mitigator_summary_table, beddays)
 ```
 :::
 
-## Trend Analysis
 
-We aim to understand whether there have been decreases, or increases, in potentially mitigable Frail Older People (high frailty) activity over time. We have considered Frail Older People (high frailty) admissions and beddays over the past 9 years in England as a whole and for each ICB, including:
-
-a\) the absolute number of Frail Older People (high frailty) admissions/beddays,
-
-b\) these admissions/beddays as a proportion of emergency admissions,
-
-c\) the age and sex standardised rates of these admissions/beddays using the England 2021 census population.
-
-To help understand the variability between ICBs we have calculated for each ICB the percentage change in proportion of emergency admissions and in standardised rates between 2018/19 and 2023/24.
-
-### England
-
-::: panel-tabset
-#### Number over time
-
-::: panel-tabset
-#### Admissions
-
-```{r, fig.width=7, fig.height=3}
-#| label: fig-number_trends_spells_england
-#| fig-cap: The total number of admissions for the Frail Older People (high frailty) mitigable activity cohort in England over the last 9 years. 
-
-numbers_over_time<-tar_read(numbers_over_time)|>
-  filter(year!="2014/15")
-
-denominator_over_time<-tar_read(denominator_over_time)
-icb_population_data<-tar_read(icb_population_data)
-
-number_percentage_over_time<-  data_number_percentage_over_time_icb(denominator_over_time, 
-                                    numbers_over_time,
-                                       "frail_elderly_high",                                       total_episodes_emergency,
-                                      total_beddays_emergency)
-
-plot_of_number_over_time(number_percentage_over_time, episodes)
-
-
-```
-
-#### Beddays
-
-```{r, fig.width=7, fig.height=3}
-#| label: fig-number_trends_beddays_england
-#| fig-cap: The total number of beddays for the Frail Older People (high frailty) mitigable activity cohort in England over the last 9 years. 
-plot_of_number_over_time(number_percentage_over_time,  beddays)
-
-```
-:::
-
-#### Crude rate
-
-Frail Older People (high frailty) activity as a percentage of total emergency activity.
-
-::: panel-tabset
-#### Admissions
-
-```{r, fig.width=7, fig.height=3}
-#| label: fig-percent_trends_spells_england
-#| fig-cap: The percentage of total emergency admissions that are for Frail Older People (high frailty) potentially mitigable activity in England over the last 9 years. 
-
-plot_of_percentage_over_time(number_percentage_over_time|>
-                               filter(!is.na(percentage_episodes)), 
-          episodes, total_episodes)
-
-```
-
-#### Beddays
-
-```{r, fig.width=7, fig.height=3}
-#| label: fig-percent_trends_beddays_england
-#| fig-cap: The percentage of total emergency beddays that are for Frail Older People (high frailty) potentially mitigable activity in England over the last 9 years. 
-
-plot_of_percentage_over_time(number_percentage_over_time|>
-                               filter(!is.na(percentage_beddays)),  beddays, total_beddays)
-
-```
-:::
-
-#### Age and sex standardised rates over time
-
-::: panel-tabset
-#### Admissions
-
-```{r, fig.width=7, fig.height=3}
-#| label: fig-stardardised_trends_spells_england
-#| fig-cap: Age and sex standardised rate of admissions for Frail Older People (high frailty) potentially mitigable activity in England over the last 9 years. 
-
-england_age_sex_standardised_rates_episodes<-tar_read(england_age_sex_standardised_rates_episodes)|>
-  filter(cohorts=="frail_elderly_high")
-
-plot_of_standardised_rates_over_time(england_age_sex_standardised_rates_episodes)
-
-```
-
-#### Beddays
-
-```{r, fig.width=7, fig.height=3}
-#| label: fig-stardardised_trends_beddays_england
-#| fig-cap: Age and sex standardised rate of beddays for Frail Older People (high frailty) potentially mitigable activity in England over the last 9 years.
-
-england_age_sex_standardised_rates_beddays<-tar_read(england_age_sex_standardised_rates_beddays)|>
-  filter(cohorts=="frail_elderly_high")
-
-plot_of_standardised_rates_over_time(england_age_sex_standardised_rates_beddays)
-
-```
-:::
-:::
-
-### ICB
-
-Note: Low numbers of admissions/beddays for Frimley ICB in 2022/23 reflect an issue with data submissions for this period. 
-
-::: panel-tabset
-#### Number over time
-
-::: panel-tabset
-#### Admissions
-
-```{r, fig.width=5, fig.height=3}
-#| label: fig-number_trends_spells_icb
-#| fig-cap: The number of admissions for the Frail Older People (high frailty) mitigable activity cohort by ICB over the last 9 years. 
-
-plotting_icb_over_time(number_percentage_over_time|>
-        mutate(activity=episodes),
-        'Number')
-
-```
-
-<br>
-
-```{r, fig.height=6, fig.width=8}
-#| label: fig-percent_change_number_spells
-#| fig-cap: The percentage change in the number of Frail Older People (high frailty) admissions by ICB between 2018/19 and 2023/24. 
-
-england_average_numbers_episodes<-calculating_england_average_numbers(number_percentage_over_time, episodes)
-
-
-plotting_percentage_change_over_time_by_icb(number_percentage_over_time|>filter(!is.na(icb_2024_name)), episodes, england_average_numbers_episodes$change, 1.6, 1.3)
-
-```
-
-
-#### Beddays
-
-```{r, fig.width=5, fig.height=3}
-#| label: fig-number_trends_beddays_icb
-#| fig-cap: The number of beddays for the Frail Older People (high frailty) mitigable activity cohort by ICB over the last 9 years. 
-
-plotting_icb_over_time(number_percentage_over_time|>
-        mutate(activity=beddays), 'Number')
-```
-
-<br>
-
-```{r, fig.height=6, fig.width=8}
-#| label: fig-percent_change_number_beddays
-#| fig-cap: The percentage change in the number of Frail Older People (high frailty) beddays by ICB between 2018/19 and 2023/24. 
-
-england_average_numbers_beddays<-calculating_england_average_numbers(number_percentage_over_time, beddays)
-
-
-plotting_percentage_change_over_time_by_icb(number_percentage_over_time|>filter(!is.na(icb_2024_name)), beddays, england_average_numbers_beddays$change, 1.6, 1.3)
-
-```
-
-:::
-
-#### Crude rate
-
-Frail Older People (high frailty) activity as a percentage of total emergency activity by ICB.
-
-::: panel-tabset
-#### Admissions
-
-```{r, fig.width=5, fig.height=3}
-#| label: fig-percent_trends_spells_icb
-#| fig-cap: The percentage of total emergency admissions that are for Frail Older People (high frailty) potentially mitigable activity by ICB over the last 9 years. 
-
-plotting_icb_over_time(number_percentage_over_time|>
-        mutate(activity=percentage_episodes)|>
-          filter(!is.na(activity)), 'Percentage')
-
-```
-
-<br>
-
-```{r, fig.height=6, fig.width=8}
-#| label: fig-percent_change_percent_spells
-#| fig-cap: The percentage change in the proportion emergency admissions that are Frail Older People (high frailty) admissions by ICB between 2018/19 and 2023/24. 
-
-england_average_percentage_episodes<-calculating_england_average_percentage(number_percentage_over_time|> filter(!is.na(total_episodes)), episodes, total_episodes)
-
-plotting_percentage_change_over_time_by_icb(number_percentage_over_time, percentage_episodes, england_average_percentage_episodes$change, 1.6, 1.3)
-
-
-```
-
-#### Beddays
-
-```{r, fig.width=5, fig.height=3}
-#| label: fig-percent_trends_beddays_icb
-#| fig-cap: The percentage of total emergency beddays that are for Frail Older People (high frailty) potentially mitigable activity by ICB over the last 9 years. 
-
-plotting_icb_over_time(number_percentage_over_time|>
-        mutate(activity=percentage_beddays)|>
-          filter(!is.na(activity)), 'Percentage')
-
-```
-
-<br>
-
-```{r, fig.height=6, fig.width=8}
-#| label: fig-percent_change_percent_beddays
-#| fig-cap: The percentage change in the proportion emergency beddays that are Frail Older People (high frailty) beddays by ICB between 2018/19 and 2023/24. 
-
-england_average_percentage_beddays<-calculating_england_average_percentage(number_percentage_over_time|>
-          filter(!is.na(percentage_beddays)), beddays, total_beddays)
-
-plotting_percentage_change_over_time_by_icb(number_percentage_over_time, percentage_beddays, england_average_percentage_beddays$change,  1.6, 1.3)
-
-```
-:::
-
-#### Age and sex standardised rates over time
-
-::: panel-tabset
-#### Admissions
-
-```{r, fig.width=5, fig.height=3}
-#| label: fig-stardardised_trends_spells_icb
-#| fig-cap: Age and sex standardised rate of admissions for Frail Older People (high frailty) potentially mitigable activity by ICB over the last 9 years. 
-
-icb_age_sex_standardised_rates_episodes<-tar_read(icb_age_sex_standardised_rates_episodes)
-
-plotting_icb_over_time(
-  (icb_age_sex_standardised_rates_episodes|> 
-     filter(cohorts=="frail_elderly_high")|>
-     mutate(activity=value)),
-  'Standardised rate per 100,000')
-
-```
-
-<br>
-
-```{r, fig.height=6, fig.width=8}
-#| label: fig-percent_change_standardised_spells
-#| fig-cap: The percentage change in the standardised rate of Frail Older People (high frailty) admissions by ICB between 2018/19 and 2023/24. 
-
-england_average_standardised_episodes<-calculating_england_average_standardised(england_age_sex_standardised_rates_episodes)
-
-plotting_percentage_change_over_time_by_icb(icb_age_sex_standardised_rates_episodes, value, england_average_standardised_episodes$change, 1.3, 1.7)
-
-```
-
-#### Beddays
-
-```{r, fig.width=5, fig.height=3}
-#| label: fig-stardardised_trends_beddays_icb
-#| fig-cap: Age and sex standardised rate of beddays for Frail Older People (high frailty) potentially mitigable activity by ICB over the last 9 years.
-
-icb_age_sex_standardised_rates_beddays<-tar_read(icb_age_sex_standardised_rates_beddays)
-
-plotting_icb_over_time(
-  (icb_age_sex_standardised_rates_beddays|> 
-     filter(cohorts=="frail_elderly_high")|>
-     mutate(activity=value)),
-  'Standardised rate per 100,000')
-
-```
-
-<br>
-
-```{r, fig.height=6, fig.width=8}
-#| label: fig-percent_change_standardised_beddays
-#| fig-cap: The percentage change in the standardised rate of Frail Older People (high frailty) beddays by ICB between 2018/19 and 2023/24. 
-
-
-england_average_standardised_beddays<-calculating_england_average_standardised(england_age_sex_standardised_rates_beddays)
-
-plotting_percentage_change_over_time_by_icb(icb_age_sex_standardised_rates_beddays, value, england_average_standardised_beddays$change, 1.4, 1.6)
-
-
-```
-:::
-:::
-
-### Change in age and sex standardised rate over time relative to level of activity
-
-This chart shows the percentage change for each ICB relative to it's starting level of admissions/beddays to help demonstrate performance across ICBs. For example, those in the lower left quadrant already had relatively low standardised rates of admissions/beddays in 2018/19 and have continued to make further decreases over the last five years.
-
-::: panel-tabset
-#### Admissions
-
-```{r, fig.width=5, fig.height=4}
-#| label: fig-activity_vs_rate_of_change_episodes
-#| fig-cap: The standardised rate of Frail Older People (high frailty) admissions (in 2018/19) versus the percentage change in admissions between 2018/19 and 2023/24 for ICBs. 
-#| 
-plotting_total_activity_vs_percentage_change(icb_age_sex_standardised_rates_episodes, value)
-
-
-```
-#### Beddays
-
-```{r, fig.width=5, fig.height=4}
-#| label: fig-activity_vs_rate_of_change_beddays
-#| fig-cap: The standardised rate of Frail Older People (high frailty) beddays (in 2018/19) versus the percentage change in admissions between 2018/19 and 2023/24 for ICBs. 
-#| 
-plotting_total_activity_vs_percentage_change(icb_age_sex_standardised_rates_beddays, value)
-
-
-```
-
-:::
 
 ## Comparative Analysis
 
@@ -1224,4 +823,314 @@ get_summary_by_la_table(summary_frail_elderly_high_la_admissions, "episodes", "e
 ### Beddays
 
 Coming soon. Want to get content right for admissions first.
+:::
+
+## Trend Analysis
+
+We aim to understand whether there have been decreases, or increases, in potentially mitigable Frail Older People (high frailty) activity over time. We have considered Frail Older People (high frailty) admissions and beddays over the past 9 years in England as a whole and for each ICB, including:
+
+a\) the absolute number of Frail Older People (high frailty) admissions/beddays,
+
+b\) these admissions/beddays as a proportion of emergency admissions,
+
+c\) the age and sex standardised rates of these admissions/beddays using the England 2021 census population.
+
+To help understand the variability between ICBs we have calculated for each ICB the percentage change in proportion of emergency admissions and in standardised rates between 2018/19 and 2023/24.
+
+### England
+
+::: panel-tabset
+#### Number over time
+
+::: panel-tabset
+#### Admissions
+
+```{r, fig.width=7, fig.height=3}
+#| label: fig-number_trends_spells_england
+#| fig-cap: The total number of admissions for the Frail Older People (high frailty) mitigable activity cohort in England over the last 9 years. 
+
+numbers_over_time<-tar_read(numbers_over_time)|>
+  filter(year!="2014/15")
+
+denominator_over_time<-tar_read(denominator_over_time)
+icb_population_data<-tar_read(icb_population_data)
+
+number_percentage_over_time<-  data_number_percentage_over_time_icb(denominator_over_time, 
+                                    numbers_over_time,
+                                       "frail_elderly_high",                                       total_episodes_emergency,
+                                      total_beddays_emergency)
+
+plot_of_number_over_time(number_percentage_over_time, episodes)
+
+
+```
+
+#### Beddays
+
+```{r, fig.width=7, fig.height=3}
+#| label: fig-number_trends_beddays_england
+#| fig-cap: The total number of beddays for the Frail Older People (high frailty) mitigable activity cohort in England over the last 9 years. 
+plot_of_number_over_time(number_percentage_over_time,  beddays)
+
+```
+:::
+
+#### Crude rate
+
+Frail Older People (high frailty) activity as a percentage of total emergency activity.
+
+::: panel-tabset
+#### Admissions
+
+```{r, fig.width=7, fig.height=3}
+#| label: fig-percent_trends_spells_england
+#| fig-cap: The percentage of total emergency admissions that are for Frail Older People (high frailty) potentially mitigable activity in England over the last 9 years. 
+
+plot_of_percentage_over_time(number_percentage_over_time|>
+                               filter(!is.na(percentage_episodes)), 
+          episodes, total_episodes)
+
+```
+
+#### Beddays
+
+```{r, fig.width=7, fig.height=3}
+#| label: fig-percent_trends_beddays_england
+#| fig-cap: The percentage of total emergency beddays that are for Frail Older People (high frailty) potentially mitigable activity in England over the last 9 years. 
+
+plot_of_percentage_over_time(number_percentage_over_time|>
+                               filter(!is.na(percentage_beddays)),  beddays, total_beddays)
+
+```
+:::
+
+#### Age and sex standardised rates over time
+
+::: panel-tabset
+#### Admissions
+
+```{r, fig.width=7, fig.height=3}
+#| label: fig-stardardised_trends_spells_england
+#| fig-cap: Age and sex standardised rate of admissions for Frail Older People (high frailty) potentially mitigable activity in England over the last 9 years. 
+
+plot_of_standardised_rates_over_time(england_age_sex_standardised_rates_episodes)
+
+```
+
+#### Beddays
+
+```{r, fig.width=7, fig.height=3}
+#| label: fig-stardardised_trends_beddays_england
+#| fig-cap: Age and sex standardised rate of beddays for Frail Older People (high frailty) potentially mitigable activity in England over the last 9 years.
+
+plot_of_standardised_rates_over_time(england_age_sex_standardised_rates_beddays)
+
+```
+:::
+:::
+
+### ICB
+
+Note: Low numbers of admissions/beddays for Frimley ICB in 2022/23 reflect an issue with data submissions for this period. 
+
+::: panel-tabset
+#### Number over time
+
+::: panel-tabset
+#### Admissions
+
+```{r, fig.width=5, fig.height=3}
+#| label: fig-number_trends_spells_icb
+#| fig-cap: The number of admissions for the Frail Older People (high frailty) mitigable activity cohort by ICB over the last 9 years. 
+
+plotting_icb_over_time(number_percentage_over_time|>
+        mutate(activity=episodes),
+        'Number')
+
+```
+
+<br>
+
+```{r, fig.height=6, fig.width=8}
+#| label: fig-percent_change_number_spells
+#| fig-cap: The percentage change in the number of Frail Older People (high frailty) admissions by ICB between 2018/19 and 2023/24. 
+
+england_average_numbers_episodes<-calculating_england_average_numbers(number_percentage_over_time, episodes)
+
+
+plotting_percentage_change_over_time_by_icb(number_percentage_over_time|>filter(!is.na(icb_2024_name)), episodes, england_average_numbers_episodes$change, 1.6, 1.3)
+
+```
+
+
+#### Beddays
+
+```{r, fig.width=5, fig.height=3}
+#| label: fig-number_trends_beddays_icb
+#| fig-cap: The number of beddays for the Frail Older People (high frailty) mitigable activity cohort by ICB over the last 9 years. 
+
+plotting_icb_over_time(number_percentage_over_time|>
+        mutate(activity=beddays), 'Number')
+```
+
+<br>
+
+```{r, fig.height=6, fig.width=8}
+#| label: fig-percent_change_number_beddays
+#| fig-cap: The percentage change in the number of Frail Older People (high frailty) beddays by ICB between 2018/19 and 2023/24. 
+
+england_average_numbers_beddays<-calculating_england_average_numbers(number_percentage_over_time, beddays)
+
+
+plotting_percentage_change_over_time_by_icb(number_percentage_over_time|>filter(!is.na(icb_2024_name)), beddays, england_average_numbers_beddays$change, 1.6, 1.3)
+
+```
+
+:::
+
+#### Crude rate
+
+Frail Older People (high frailty) activity as a percentage of total emergency activity by ICB.
+
+::: panel-tabset
+#### Admissions
+
+```{r, fig.width=5, fig.height=3}
+#| label: fig-percent_trends_spells_icb
+#| fig-cap: The percentage of total emergency admissions that are for Frail Older People (high frailty) potentially mitigable activity by ICB over the last 9 years. 
+
+plotting_icb_over_time(number_percentage_over_time|>
+        mutate(activity=percentage_episodes)|>
+          filter(!is.na(activity)), 'Percentage')
+
+```
+
+<br>
+
+```{r, fig.height=6, fig.width=8}
+#| label: fig-percent_change_percent_spells
+#| fig-cap: The percentage change in the proportion emergency admissions that are Frail Older People (high frailty) admissions by ICB between 2018/19 and 2023/24. 
+
+england_average_percentage_episodes<-calculating_england_average_percentage(number_percentage_over_time|> filter(!is.na(total_episodes)), episodes, total_episodes)
+
+plotting_percentage_change_over_time_by_icb(number_percentage_over_time, percentage_episodes, england_average_percentage_episodes$change, 1.6, 1.3)
+
+
+```
+
+#### Beddays
+
+```{r, fig.width=5, fig.height=3}
+#| label: fig-percent_trends_beddays_icb
+#| fig-cap: The percentage of total emergency beddays that are for Frail Older People (high frailty) potentially mitigable activity by ICB over the last 9 years. 
+
+plotting_icb_over_time(number_percentage_over_time|>
+        mutate(activity=percentage_beddays)|>
+          filter(!is.na(activity)), 'Percentage')
+
+```
+
+<br>
+
+```{r, fig.height=6, fig.width=8}
+#| label: fig-percent_change_percent_beddays
+#| fig-cap: The percentage change in the proportion emergency beddays that are Frail Older People (high frailty) beddays by ICB between 2018/19 and 2023/24. 
+
+england_average_percentage_beddays<-calculating_england_average_percentage(number_percentage_over_time|>
+          filter(!is.na(percentage_beddays)), beddays, total_beddays)
+
+plotting_percentage_change_over_time_by_icb(number_percentage_over_time, percentage_beddays, england_average_percentage_beddays$change,  1.6, 1.3)
+
+```
+:::
+
+#### Age and sex standardised rates over time
+
+::: panel-tabset
+#### Admissions
+
+```{r, fig.width=5, fig.height=3}
+#| label: fig-stardardised_trends_spells_icb
+#| fig-cap: Age and sex standardised rate of admissions for Frail Older People (high frailty) potentially mitigable activity by ICB over the last 9 years. 
+
+icb_age_sex_standardised_rates_episodes<-tar_read(icb_age_sex_standardised_rates_episodes)
+
+plotting_icb_over_time(
+  (icb_age_sex_standardised_rates_episodes|> 
+     filter(cohorts=="frail_elderly_high")|>
+     mutate(activity=value)),
+  'Standardised rate per 100,000')
+
+```
+
+<br>
+
+```{r, fig.height=6, fig.width=8}
+#| label: fig-percent_change_standardised_spells
+#| fig-cap: The percentage change in the standardised rate of Frail Older People (high frailty) admissions by ICB between 2018/19 and 2023/24. 
+
+england_average_standardised_episodes<-calculating_england_average_standardised(england_age_sex_standardised_rates_episodes)
+
+plotting_percentage_change_over_time_by_icb(icb_age_sex_standardised_rates_episodes, value, england_average_standardised_episodes$change, 1.3, 1.7)
+
+```
+
+#### Beddays
+
+```{r, fig.width=5, fig.height=3}
+#| label: fig-stardardised_trends_beddays_icb
+#| fig-cap: Age and sex standardised rate of beddays for Frail Older People (high frailty) potentially mitigable activity by ICB over the last 9 years.
+
+icb_age_sex_standardised_rates_beddays<-tar_read(icb_age_sex_standardised_rates_beddays)
+
+plotting_icb_over_time(
+  (icb_age_sex_standardised_rates_beddays|> 
+     filter(cohorts=="frail_elderly_high")|>
+     mutate(activity=value)),
+  'Standardised rate per 100,000')
+
+```
+
+<br>
+
+```{r, fig.height=6, fig.width=8}
+#| label: fig-percent_change_standardised_beddays
+#| fig-cap: The percentage change in the standardised rate of Frail Older People (high frailty) beddays by ICB between 2018/19 and 2023/24. 
+
+
+england_average_standardised_beddays<-calculating_england_average_standardised(england_age_sex_standardised_rates_beddays)
+
+plotting_percentage_change_over_time_by_icb(icb_age_sex_standardised_rates_beddays, value, england_average_standardised_beddays$change, 1.4, 1.6)
+
+
+```
+:::
+:::
+
+### Change in age and sex standardised rate over time relative to level of activity
+
+This chart shows the percentage change for each ICB relative to it's starting level of admissions/beddays to help demonstrate performance across ICBs. For example, those in the lower left quadrant already had relatively low standardised rates of admissions/beddays in 2018/19 and have continued to make further decreases over the last five years.
+
+::: panel-tabset
+#### Admissions
+
+```{r, fig.width=5, fig.height=4}
+#| label: fig-activity_vs_rate_of_change_episodes
+#| fig-cap: The standardised rate of Frail Older People (high frailty) admissions (in 2018/19) versus the percentage change in admissions between 2018/19 and 2023/24 for ICBs. 
+#| 
+plotting_total_activity_vs_percentage_change(icb_age_sex_standardised_rates_episodes, value)
+
+
+```
+#### Beddays
+
+```{r, fig.width=5, fig.height=4}
+#| label: fig-activity_vs_rate_of_change_beddays
+#| fig-cap: The standardised rate of Frail Older People (high frailty) beddays (in 2018/19) versus the percentage change in admissions between 2018/19 and 2023/24 for ICBs. 
+#| 
+plotting_total_activity_vs_percentage_change(icb_age_sex_standardised_rates_beddays, value)
+
+
+```
+
 :::
