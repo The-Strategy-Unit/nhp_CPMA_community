@@ -199,7 +199,7 @@ plot_upset_plot<-function(dataset, mitigator_table, activity_type){
 
 plotting_barchart_summary_of_overlaps<-function(data, cohort_name, activity_type, mitigator_table){
   
- name<-mitigator_table$mitigator_name[mitigator_table$mitigator_code==cohort_name]
+ cohort_name2<-mitigator_table$mitigator_name[mitigator_table$mitigator_code==cohort_name]
   
    cohort_total<- data|>
     summarise(total=sum({{activity_type}}))
@@ -215,9 +215,9 @@ plotting_barchart_summary_of_overlaps<-function(data, cohort_name, activity_type
     left_join(mitigator_table[,c("mitigator_name", "mitigator_code", "mechanism")], by=c("cohort"="mitigator_code"))|>
     arrange(desc(number))|>
     mutate(mitigator_name=factor(mitigator_name, unique(mitigator_name)))|>
-    mutate(mitigator_name=fct_relevel(mitigator_name,name ))|>
+    mutate(mitigator_name=fct_relevel(mitigator_name, cohort_name2 ))|>
     arrange(mitigator_name)|>
-    mutate(colour=ifelse(mitigator_name==name, "#000000", ifelse(number==0, "#686f73" , "#ec6555" )))
+    mutate(colour=ifelse(cohort==cohort_name, "#000000", ifelse(number==0, "#686f73" , "#ec6555" )))
   
   name<-deparse(substitute(activity_type))
   
@@ -230,25 +230,71 @@ plotting_barchart_summary_of_overlaps<-function(data, cohort_name, activity_type
     data2<-data2
   }
   
-  data2|>
-    ggplot(aes(x=mitigator_name, y=percentage))+
-    geom_bar(stat="identity", fill=factor(ifelse(data2$cohort==cohort_name,"#686f73","#f9bf07")))+
-    facet_wrap(~mechanism, scales="free", ncol=1)+
-    scale_x_discrete(limits=rev)+
-    su_theme()+
-    theme(axis.text=element_text(size=10),
-          axis.title=element_text(size=13),
-          axis.text.y=element_text(colour=rev(data2$colour)),
-         # strip.background = element_blank(),
-          plot.caption=element_text(colour="#ec6555", size=11))+
-    labs(y=paste0("Percentage of this cohort in each of the other cohorts"),
-         caption = (paste0("Cohorts highlighted in red are those who overlap with this cohort")),
-         x=NULL,
-         title=NULL)+ 
-    geom_text(aes(label=paste0(percentage,  '% (',scales::comma(number), ')')), hjust=-0.05, size=3)+
-    scale_y_continuous(limits=c(0, 124), expand=c(0,0), labels = label_comma())+
-    coord_flip()
+  redirection<-data2|>
+    filter(mechanism=="Redirection/Substitution")
   
+  plot_redirection<-overlap_ggplot_facets(redirection, cohort_name , "Redirection/Substitution" , 5)
+  
+  prevention<-data2|>
+    filter(mechanism=="Prevention")
+  
+  plot_prevention<-overlap_ggplot_facets(prevention,cohort_name , "Prevention" ,4)
+  
+  relocation<-data2|>
+    filter(mechanism=="Efficiencies & Relocation")
+  
+  plot_relocation<-overlap_ggplot_facets(relocation,cohort_name, "Relocation & Efficiencies",2 )
+  
+  efficiencies<-data2|>
+    filter(mechanism=="Efficiencies")
+  
+  plot_efficiencies<-overlap_ggplot_facets(efficiencies,cohort_name , "Efficiencies",1 )+
+    labs(y="Percentage of cohort of interest present in other cohorts")
+  
+  
+  layout <- c(area(
+    t = 0,
+    l = 0,
+    b = 21,
+    r = 6
+  ),
+  area(
+    t = 22,
+    l = 0,
+    b = 31,
+    r = 6
+  ),
+  area(
+    t = 32,
+    l = 0,
+    b = 34,
+    r = 6
+  ),
+  area(
+    t = 35,
+    l = 0,
+    b = 38,
+    r = 6
+  ))
+  # final plot arrangement
+  
+  if(name=="episodes"){
+    plot_redirection + plot_prevention + plot_relocation + plot_layout(design=layout) +
+      plot_annotation(caption="Cohorts highlighted in red are those who overlap with this cohort of interest",
+                      theme = theme(
+                        plot.caption = ggtext::element_textbox_simple(hjust = -33, vjust=10, size=13, colour =  "#ec6555")
+                      ))
+  }
+  
+  else{
+    plot_redirection + plot_prevention + plot_relocation + plot_efficiencies + plot_layout(design=layout) +
+      plot_annotation(caption="Cohorts highlighted in red are those who overlap with this cohort of interest",
+                      theme = theme(
+                        plot.caption = ggtext::element_textbox_simple(hjust = -33, vjust=10, size=13, colour =  "#ec6555")
+                      ))
+  } 
+  
+   
 }
 
 # Number of cohorts of which the admissions are part
@@ -469,3 +515,27 @@ generate_venn_diagram<-function(data, activity_type){
 }
   
   
+# Function for ggplots for summary overlap chart
+
+overlap_ggplot_facets<-function(dataset, cohort_name, title , ratio_number){ 
+  
+
+dataset|>
+  ggplot(aes(x=factor(mitigator_name), y=percentage))+
+    geom_segment(aes( y=0, yend=percentage,  x=mitigator_name), size=3.5, colour=(ifelse(dataset$cohort==cohort_name,"#686f73","#f9bf07"))) +
+  scale_x_discrete(limits=rev)+
+  su_theme()+
+  theme(axis.text=element_text(size=9),
+        axis.title=element_text(size=14),
+        axis.text.y=element_text(colour=rev(dataset$colour)),
+        plot.caption=element_text(colour="#ec6555", size=11))+
+  labs(y=NULL,
+       x=NULL,
+       title=title)+ 
+  geom_text(aes(label=paste0(percentage,  '% (',scales::comma(number), ')')), hjust=-0.05, size=2.7)+
+  scale_y_continuous(limits=c(0, 124), expand=c(0,0), labels = label_comma())+
+  coord_fixed(ratio=ratio_number)+
+  coord_flip() 
+
+}
+

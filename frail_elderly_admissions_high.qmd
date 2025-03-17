@@ -533,10 +533,9 @@ plotting_barchart_summary_of_overlaps(total_cohort_numbers_2324,"frail_elderly_h
 
 #### Beddays
 
-```{r, fig.width=10, fig.height=6 }
+```{r, fig.width=10, fig.height=7 }
 #| label: fig-prop_other_cohorts_frail_beddays
 #| fig-cap: The number and proportion of Frail Elderly beddays that are included in each of the other cohorts (2023/24).
-
 
 plotting_barchart_summary_of_overlaps(total_cohort_numbers_2324,"frail_elderly_high", beddays, mitigator_summary_table)
 
@@ -1134,3 +1133,11 @@ plotting_total_activity_vs_percentage_change(icb_age_sex_standardised_rates_bedd
 ```
 
 :::
+
+### Local Authority
+
+```{r}
+
+  
+
+```
