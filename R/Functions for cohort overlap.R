@@ -40,9 +40,13 @@ Formatting_data_for_cohort_overlap<-function(table){
     summarise(episodes=sum(episodes),
               beddays=sum(beddays))|>
              ungroup()|>
-             collect()
+             collect()|>
+    as.data.frame(total_cohort_numbers)
   
-  total_cohort_numbers<-as.data.frame(total_cohort_numbers)
+
+  total_cohort_numbers<- identify_whether_bedday_or_admissions_or_both( total_cohort_numbers, 1:29)|>
+    mutate(episodes=ifelse(activity_group=="beddays", 0, episodes))|>
+    select(-activity_group, -number_of_cohorts)
   
   return(total_cohort_numbers)
   
@@ -229,6 +233,7 @@ plotting_barchart_summary_of_overlaps<-function(data, cohort_name, activity_type
   data2|>
     ggplot(aes(x=mitigator_name, y=percentage))+
     geom_bar(stat="identity", fill=factor(ifelse(data2$cohort==cohort_name,"#686f73","#f9bf07")))+
+    facet_wrap(~mechanism, scales="free", ncol=1)+
     scale_x_discrete(limits=rev)+
     su_theme()+
     theme(axis.text=element_text(size=10),
@@ -296,15 +301,37 @@ plotting_barchart_number_of_cohorts<-function(data, activity_type){
 
 # Function to identify which cohorts are beddays only
 
-identify_whether_bedday_or_admissions_or_both<-function(data){
+identify_whether_bedday_or_admissions_or_both<-function(data, columns){
   
  data|>
-    mutate(number_of_cohorts = rowSums(pick(1:29), na.rm = TRUE))|>
-    mutate(activity_group=ifelse(number_of_cohorts==1 &
-                                 (emergency_elderly==1 |
-                                  stroke_early_supported_discharge ==1|
-                                  raid_ip==1
-                                 ), "beddays",
+    mutate(number_of_cohorts = rowSums(pick(columns), na.rm = TRUE))|>
+    mutate(activity_group=ifelse(alcohol_partially_attributable_acute==0 &
+                                  alcohol_partially_attributable_chronic==0 &
+                                  alcohol_wholly_attributable==0 &
+                                  ambulatory_care_conditions_acute==0 &
+                                  ambulatory_care_conditions_chronic==0 &
+                                  ambulatory_care_conditions_vaccine_preventable==0 &
+                                  eol_care_2_days==0 &
+                                  eol_care_3_to_14_days==0 &
+                                  falls_related_admissions==0 &
+                                  frail_elderly_high==0 &
+                                  frail_elderly_intermediate==0 &
+                                  intentional_self_harm==0 &
+                                  medically_unexplained_related_admissions==0 &
+                                  medicines_related_admissions_explicit==0 &
+                                  medicines_related_admissions_implicit_anti_diabetics==0 &
+                                  medicines_related_admissions_implicit_benzodiasepines==0 &
+                                  medicines_related_admissions_implicit_diurectics==0 &
+                                  medicines_related_admissions_implicit_nsaids==0 &
+                                  obesity_related_admissions==0 &
+                                  raid_ae==0 &
+                                  readmission_within_28_days==0 &
+                                  smoking==0 &
+                                  virtual_wards_activity_avoidance_ari==0 &
+                                  virtual_wards_activity_avoidance_heart_failure==0 &
+                                  zero_los_no_procedure_adult==0 &
+                                  zero_los_no_procedure_child==0 ,
+                                  "beddays",
                                  "admissions&beddays" ))
   
 }
@@ -358,7 +385,7 @@ identify_mechanism_group<-function(data){
   
 # Generate data for cohort mechanisms overlap
 
-generate_data_for_mechanism_cohort_overlaps<-function(data, activity_type){  
+generate_data_for_mechanism_cohort_overlaps<-function(data){  
   
   data|>
     mutate(Redirection=ifelse((ambulatory_care_conditions_acute==1|
@@ -389,7 +416,7 @@ generate_data_for_mechanism_cohort_overlaps<-function(data, activity_type){
                                 medically_unexplained_related_admissions==1), 
                              1,
                              0 ) )|>
-    mutate(Relocation=ifelse((virtual_wards_activity_avoidance_ari==1|
+    mutate(`Relocation&Efficiencies`=ifelse((virtual_wards_activity_avoidance_ari==1|
                                 virtual_wards_activity_avoidance_heart_failure ==1), 
                              1,
                              0 ) )|>
@@ -398,14 +425,14 @@ generate_data_for_mechanism_cohort_overlaps<-function(data, activity_type){
                                   raid_ip==1), 
                                1,
                                0 ) )|>
-    select(Redirection, Prevention, Relocation, Efficiencies, {{activity_type}})
+    select(Redirection, Prevention, `Relocation&Efficiencies`, Efficiencies, episodes, beddays)
   
 }
 
 #Plot a venn diagram total_cohort_numbers_2324
 generate_venn_diagram<-function(data, activity_type){
   
-  data1<-generate_data_for_mechanism_cohort_overlaps(data, {{activity_type}})|>
+  data1<-generate_data_for_mechanism_cohort_overlaps(data)|>
     uncount({{activity_type}})
   
   name<-deparse(substitute(activity_type))

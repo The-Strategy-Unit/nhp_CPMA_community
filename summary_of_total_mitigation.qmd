@@ -24,43 +24,68 @@ source("R/Functions for cohort overlap.R")
 source("R/Functions for trend analysis.R")
 
 options(scipen = 999)
+
+numbers_over_time<-tar_read(numbers_over_time)
+numbers_over_time_total_mitigation<-targets::tar_read(numbers_over_time_total_mitigation)|>
+  filter(fyear>"201415")
+total_cohort_numbers_2324<-tar_read(total_cohort_numbers_2324)
 ```
 
 ## Mitigators included in this analysis
 
-Efficiency mitigators will only impact length of stay and therefore the number of beddays.
+Numbers of admissions and beddays give the potentially mitigable activity for England in 2023/24.
 
-Redirection/Substitution, Prevention and Relocation mitigators will affect both the number of admission and also therefore beddays as well.
+Redirection/Substitution, Prevention and Relocation mitigators will affect both the number of admission and also therefore also impact beddays.
+
+Efficiency mitigators will only impact length of stay and therefore the number of beddays.
 
 Virtual Wards mitigators are considered both a relocation mitigator and an efficiency mitigator.
 
 ```{r, fig.height=8, fig.width=10}
 
-mitigator_summary_table<-read_excel("summary_mitigators_table.xlsx")
+mitigator_summary_table<-read_excel("summary_mitigators_table.xlsx")|>
+  left_join(numbers_over_time|>
+              filter(year=="2023/24")|>
+              summarise(episodes=sum(episodes),
+                        beddays=sum(beddays),
+                        .by=cohorts), by=c("mitigator_code"="cohorts"))|>
+  select(-activity_group, -mitigator_code)|>
+    mutate(episodes=ifelse(mechanism=="Efficiencies", NA, episodes))|>
+  rename(`Mechanism of mitigation`=mechanism)
+
 
 mitigator_summary_table|>
-  select(-mitigator_code, -activity_group)|>
-    flextable() |>
+  as_grouped_data(groups = "Mechanism of mitigation")|>
+  as_flextable() |>
     set_header_labels(mitigator_name="Mitigator name",
-                      mechanism="Mechanism of mitigation",
-                      type_of_admission="Type of admission")|>
+                      type_of_admission="Type of admission",
+                      episodes="Admissions",
+                      beddays="Beddays")|>
     align(part = "header", align = "left") |>
     bg(bg = "#f9bf07", part = "header") |>
-    bg( part = "body",
-         i = ~ mechanism == "Redirection/Substitution",
-        bg="#FCEAAF") |>
+    bold( part = "body",
+         i = ~ `Mechanism of mitigation` == "Redirection/Substitution") |>
+        bg( part = "body",
+         i = ~ `Mechanism of mitigation` == "Redirection/Substitution",
+        bg="#D8DBDC" ) |>
       bg( part = "body",
-         i = ~ mechanism == "Prevention",
-        bg="#FAD9D6" ) |>
+         i = ~ `Mechanism of mitigation` == "Prevention",
+        bg="#D8DBDC" ) |>
+    bold( part = "body",
+         i = ~ `Mechanism of mitigation` == "Prevention") |>
       bg( part = "body",
-         i = ~ mechanism == "Efficiencies",
-        bg="#CDDAEC") |>
-       bg( part = "body",
-         i = ~ mechanism == "Efficiencies & Relocation",
+         i = ~ `Mechanism of mitigation` == "Efficiencies",
         bg="#D8DBDC") |>
+    bold( part = "body",
+         i = ~ `Mechanism of mitigation` == "Efficiencies") |>
+       bg( part = "body",
+         i = ~ `Mechanism of mitigation` == "Efficiencies & Relocation",
+        bg="#D8DBDC") |>
+    bold( part = "body",
+         i = ~ `Mechanism of mitigation` == "Efficiencies & Relocation") |>
     bold(bold = TRUE, part = "header") |>
-    fontsize(size = 11, part = "body") |>
-    fontsize(size = 12, part = "header") |>
+    fontsize(size = 10, part = "body") |>
+    fontsize(size = 11, part = "header") |>
     padding(padding = 2,
             part = "all",
             padding.top = NULL) |>
@@ -71,19 +96,45 @@ mitigator_summary_table|>
 
 NOTE: The sum of all the individual mitigator activity in this table does not add up to the total potential mitigable activity. This is because much of the activity is by included within multiple different mitigator cohorts and thus adding the total for each mitigator will lead to double counting of admissions and beddays.
 
-## Total potential mitigation
+## Potential mitigable activity for England in 2023/24
 
-#### Admissions
+```{r}
+total_mitigator_activity<-numbers_over_time_total_mitigation|>
+  filter(year=="2023/24")|>
+  summarise(episodes=sum(episodes),
+            beddays=sum(beddays))
 
-In 2023/24 in England there were .... admissions for potentially mitigable activity.
+```
 
-NUMBERS BY MECHANISM GROUPS
+**In 2023/24 in England there were `r format(total_mitigator_activity$episodes, big.mark=",")` admissions and `r format(total_mitigator_activity$beddays, big.mark=",")` beddays for potentially mitigable activity.**
 
-#### Beddays
+```{r}
+total_cohort_numbers_2324|>
+  generate_data_for_mechanism_cohort_overlaps()|>
+  gather(key=mechanism, value=value, -episodes, -beddays)|>
+  filter(value!=0)|>
+  summarise(episodes=sum(episodes),
+            beddays=sum(beddays),
+                        .by=mechanism) |>
+  mutate(episodes=ifelse(mechanism=="Efficiencies", NA, episodes))|>
+  flextable() |>
+    set_header_labels(episodes="Admissions",
+                      beddays="Beddays",
+                      mechanism="Mechanism of mitgation")|>
+    align(part = "header", align = "left") |>
+    bg(bg = "#f9bf07", part = "header") |>
+    bold(bold = TRUE, part = "header") |>
+    fontsize(size = 10, part = "body") |>
+    fontsize(size = 11, part = "header") |>
+    padding(padding = 2,
+            part = "all",
+            padding.top = NULL) |>
+    autofit()
+  
 
-In 2023/24 in England there were .... beddays for potentially mitigable activity.
+```
 
-NUMBERS BY MECHANISM GROUPS
+
 
 ## Cohort overlap
 
@@ -134,9 +185,6 @@ To help understand the variability between ICBs we have calculated for each ICB 
 ```{r, fig.width=7, fig.height=3}
 #| label: fig-number_trends_spells_england_all_mitigators
 #| fig-cap: The total number of admissions for all mitigable activity in England over the last 9 years. 
-
-numbers_over_time_total_mitigation<-targets::tar_read(numbers_over_time_total_mitigation)|>
-  filter(fyear>"201415")
 
 denominator_over_time<-tar_read(denominator_over_time)
 icb_population_data<-tar_read(icb_population_data)

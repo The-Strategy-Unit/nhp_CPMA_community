@@ -30,9 +30,12 @@ Formatting_data_for_trends_analysis_cohorts<-function(table, icb_pop){
   numbers_over_time <- dplyr::tbl(
     sc,
     dbplyr::in_catalog("strategyunit","default", table)
-  )|> collect()
+  )|> collect()|>
+    as.data.frame(numbers_over_time)
   
-  numbers_over_time<-as.data.frame(numbers_over_time)|>
+  numbers_over_time<- identify_whether_bedday_or_admissions_or_both(numbers_over_time, 5:33)|>
+    mutate(episodes=ifelse(activity_group=="beddays", 0, episodes))|>   #avoid counting admissions for efficiency only activity
+    select(-activity_group, -number_of_cohorts)|>
     gather(key="cohorts", value="value", -fyear, -age_range, -sex, -icb, -episodes, -beddays)|>
     filter(value==1)|>
     filter(fyear>201314)|>
@@ -64,15 +67,9 @@ Formatting_data_for_trends_analysis_total_mitigation<-function(table, icb_pop){
     as.data.frame()
   
   
-  numbers_over_time<-  numbers_over_time|>
-    mutate(number_of_cohorts = rowSums(pick(5:33), na.rm = TRUE))|>
-    mutate(activity_group=ifelse(number_of_cohorts==1 &
-                                   (emergency_elderly==1 |
-                                      stroke_early_supported_discharge ==1|
-                                      raid_ip==1
-                                   ), "beddays",
-                                 "admissions&beddays" ))|>
+numbers_over_time<- identify_whether_bedday_or_admissions_or_both(numbers_over_time, 5:33)|>
     mutate(episodes=ifelse(activity_group=="beddays", 0, episodes))|>   #avoid counting admissions for efficiency only activity
+    select(-activity_group, -number_of_cohorts)|>
     left_join(icb_pop[,c("icb24cdh", "icb_2024_name")]|>
                 distinct(icb24cdh, icb_2024_name), by=c("icb"="icb24cdh"))|>
     group_by(age_range, 
