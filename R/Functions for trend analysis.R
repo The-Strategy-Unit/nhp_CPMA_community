@@ -223,38 +223,46 @@ plotting_icb_over_time<-function(data, axis_title){
 }
 
 
-#Plotting change over time
+# Calculating change over time
 
-plotting_percentage_change_over_time_by_icb<-function(data, values, eng_average, min_adjustment, max_adjustment ){
- 
-
-  data1<-data|>
+calculating_change_over_time<-function(data, values, geography ){
+  
+  change_over_time<-data|>
     filter(year=="2018/19"| year=="2023/24")|>
     pivot_wider(names_from = c(year), values_from = {{values}})|>
     summarise(`2018/19`=max(`2018/19`, na.rm=TRUE),
               `2023/24`=max(`2023/24`, na.rm=TRUE),
-              .by=c(icb_2024_name))|>
+              .by=c({{geography}}))|>
     mutate(change=round(((`2023/24`-`2018/19`)/`2018/19`)*100,1))|>
     filter(!is.nan(change))|>
     filter(change!="-Inf")|>
     arrange(change)|>
-    mutate(icb_2024_name=factor(icb_2024_name))
+    mutate(geography_level=factor({{geography}}))
   
+  return(change_over_time)
+}
+
+#Plotting change over time
+
+plotting_percentage_change_over_time_by_icb<-function(data, values, geography, eng_average, min_adjustment, max_adjustment ){
+ 
+
+  change_over_time<-calculating_change_over_time(data, {{values}}, {{geography}})
   
-  data1|>
-    ggplot(aes(x=change, y=fct_reorder(icb_2024_name, change)))+
-    geom_bar(stat="identity", fill=ifelse(data1$change<0,  "#70C19A", "#F19388")) +
+  change_over_time|>
+    ggplot(aes(x=change, y=fct_reorder(geography_level, change)))+
+    geom_bar(stat="identity", fill=ifelse(change_over_time$change<0,  "#70C19A", "#F19388")) +
     geom_vline(xintercept=eng_average, linetype="dashed", 
                color = "black"   , size=0.4 )+
-    geom_text(aes(x=eng_average, label=paste0("England average\n (", eng_average, "%)"), y=nrow(data1)+3), colour="black", vjust=1, hjust =-0.09, size=2.9)+
+    geom_text(aes(x=eng_average, label=paste0("England average\n (", eng_average, "%)"), y=nrow(change_over_time)+3), colour="black", vjust=1, hjust =-0.09, size=2.9)+
     su_theme()+
     theme(axis.text.y=element_text(size=8),
           axis.title=element_text(size=10))+
     labs(y=NULL,
          x="Percentage change",
          title=NULL)+
-    geom_label(aes(label=paste0(change, '%')), hjust=ifelse(data1$change<0, 1.1, -0.1), size=2.3, label.size = 0)+
-    scale_x_continuous(expand=c(0.01,0.01), limits=c((min(data1$change)*min_adjustment),(max(data1$change)*max_adjustment)))
+    geom_label(aes(label=paste0(change, '%')), hjust=ifelse(change_over_time$change<0, 1.1, -0.1), size=2.3, label.size = 0)+
+    scale_x_continuous(expand=c(0.01,0.01), limits=c((min(change_over_time$change)*min_adjustment),(max(change_over_time$change)*max_adjustment)))
 
   
 }
