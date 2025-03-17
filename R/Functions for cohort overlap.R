@@ -40,9 +40,13 @@ Formatting_data_for_cohort_overlap<-function(table){
     summarise(episodes=sum(episodes),
               beddays=sum(beddays))|>
              ungroup()|>
-             collect()
+             collect()|>
+    as.data.frame(total_cohort_numbers)
   
-  total_cohort_numbers<-as.data.frame(total_cohort_numbers)
+
+  total_cohort_numbers<- identify_whether_bedday_or_admissions_or_both( total_cohort_numbers, 1:29)|>
+    mutate(episodes=ifelse(activity_group=="beddays", 0, episodes))|>
+    select(-activity_group, -number_of_cohorts)
   
   return(total_cohort_numbers)
   
@@ -195,7 +199,7 @@ plot_upset_plot<-function(dataset, mitigator_table, activity_type){
 
 plotting_barchart_summary_of_overlaps<-function(data, cohort_name, activity_type, mitigator_table){
   
- name<-mitigator_table$mitigator_name[mitigator_table$mitigator_code==cohort_name]
+ cohort_name2<-mitigator_table$mitigator_name[mitigator_table$mitigator_code==cohort_name]
   
    cohort_total<- data|>
     summarise(total=sum({{activity_type}}))
@@ -211,9 +215,9 @@ plotting_barchart_summary_of_overlaps<-function(data, cohort_name, activity_type
     left_join(mitigator_table[,c("mitigator_name", "mitigator_code", "mechanism")], by=c("cohort"="mitigator_code"))|>
     arrange(desc(number))|>
     mutate(mitigator_name=factor(mitigator_name, unique(mitigator_name)))|>
-    mutate(mitigator_name=fct_relevel(mitigator_name,name ))|>
+    mutate(mitigator_name=fct_relevel(mitigator_name, cohort_name2 ))|>
     arrange(mitigator_name)|>
-    mutate(colour=ifelse(mitigator_name==name, "#000000", ifelse(number==0, "#686f73" , "#ec6555" )))
+    mutate(colour=ifelse(cohort==cohort_name, "#000000", ifelse(number==0, "#686f73" , "#ec6555" )))
   
   name<-deparse(substitute(activity_type))
   
@@ -226,24 +230,71 @@ plotting_barchart_summary_of_overlaps<-function(data, cohort_name, activity_type
     data2<-data2
   }
   
-  data2|>
-    ggplot(aes(x=mitigator_name, y=percentage))+
-    geom_bar(stat="identity", fill=factor(ifelse(data2$cohort==cohort_name,"#686f73","#f9bf07")))+
-    scale_x_discrete(limits=rev)+
-    su_theme()+
-    theme(axis.text=element_text(size=10),
-          axis.title=element_text(size=13),
-          axis.text.y=element_text(colour=rev(data2$colour)),
-         # strip.background = element_blank(),
-          plot.caption=element_text(colour="#ec6555", size=11))+
-    labs(y=paste0("Percentage of this cohort in each of the other cohorts"),
-         caption = (paste0("Cohorts highlighted in red are those who overlap with this cohort")),
-         x=NULL,
-         title=NULL)+ 
-    geom_text(aes(label=paste0(percentage,  '% (',scales::comma(number), ')')), hjust=-0.05, size=3)+
-    scale_y_continuous(limits=c(0, 124), expand=c(0,0), labels = label_comma())+
-    coord_flip()
+  redirection<-data2|>
+    filter(mechanism=="Redirection/Substitution")
   
+  plot_redirection<-overlap_ggplot_facets(redirection, cohort_name , "Redirection/Substitution" , 5)
+  
+  prevention<-data2|>
+    filter(mechanism=="Prevention")
+  
+  plot_prevention<-overlap_ggplot_facets(prevention,cohort_name , "Prevention" ,4)
+  
+  relocation<-data2|>
+    filter(mechanism=="Efficiencies & Relocation")
+  
+  plot_relocation<-overlap_ggplot_facets(relocation,cohort_name, "Relocation & Efficiencies",2 )
+  
+  efficiencies<-data2|>
+    filter(mechanism=="Efficiencies")
+  
+  plot_efficiencies<-overlap_ggplot_facets(efficiencies,cohort_name , "Efficiencies",1 )+
+    labs(y="Percentage of cohort of interest present in other cohorts")
+  
+  
+  layout <- c(area(
+    t = 0,
+    l = 0,
+    b = 21,
+    r = 6
+  ),
+  area(
+    t = 22,
+    l = 0,
+    b = 31,
+    r = 6
+  ),
+  area(
+    t = 32,
+    l = 0,
+    b = 34,
+    r = 6
+  ),
+  area(
+    t = 35,
+    l = 0,
+    b = 38,
+    r = 6
+  ))
+  # final plot arrangement
+  
+  if(name=="episodes"){
+    plot_redirection + plot_prevention + plot_relocation + plot_layout(design=layout) +
+      plot_annotation(caption="Cohorts highlighted in red are those who overlap with this cohort of interest",
+                      theme = theme(
+                        plot.caption = ggtext::element_textbox_simple(hjust = -33, vjust=10, size=13, colour =  "#ec6555")
+                      ))
+  }
+  
+  else{
+    plot_redirection + plot_prevention + plot_relocation + plot_efficiencies + plot_layout(design=layout) +
+      plot_annotation(caption="Cohorts highlighted in red are those who overlap with this cohort of interest",
+                      theme = theme(
+                        plot.caption = ggtext::element_textbox_simple(hjust = -33, vjust=10, size=13, colour =  "#ec6555")
+                      ))
+  } 
+  
+   
 }
 
 # Number of cohorts of which the admissions are part
@@ -296,15 +347,37 @@ plotting_barchart_number_of_cohorts<-function(data, activity_type){
 
 # Function to identify which cohorts are beddays only
 
-identify_whether_bedday_or_admissions_or_both<-function(data){
+identify_whether_bedday_or_admissions_or_both<-function(data, columns){
   
  data|>
-    mutate(number_of_cohorts = rowSums(pick(1:29), na.rm = TRUE))|>
-    mutate(activity_group=ifelse(number_of_cohorts==1 &
-                                 (emergency_elderly==1 |
-                                  stroke_early_supported_discharge ==1|
-                                  raid_ip==1
-                                 ), "beddays",
+    mutate(number_of_cohorts = rowSums(pick(columns), na.rm = TRUE))|>
+    mutate(activity_group=ifelse(alcohol_partially_attributable_acute==0 &
+                                  alcohol_partially_attributable_chronic==0 &
+                                  alcohol_wholly_attributable==0 &
+                                  ambulatory_care_conditions_acute==0 &
+                                  ambulatory_care_conditions_chronic==0 &
+                                  ambulatory_care_conditions_vaccine_preventable==0 &
+                                  eol_care_2_days==0 &
+                                  eol_care_3_to_14_days==0 &
+                                  falls_related_admissions==0 &
+                                  frail_elderly_high==0 &
+                                  frail_elderly_intermediate==0 &
+                                  intentional_self_harm==0 &
+                                  medically_unexplained_related_admissions==0 &
+                                  medicines_related_admissions_explicit==0 &
+                                  medicines_related_admissions_implicit_anti_diabetics==0 &
+                                  medicines_related_admissions_implicit_benzodiasepines==0 &
+                                  medicines_related_admissions_implicit_diurectics==0 &
+                                  medicines_related_admissions_implicit_nsaids==0 &
+                                  obesity_related_admissions==0 &
+                                  raid_ae==0 &
+                                  readmission_within_28_days==0 &
+                                  smoking==0 &
+                                  virtual_wards_activity_avoidance_ari==0 &
+                                  virtual_wards_activity_avoidance_heart_failure==0 &
+                                  zero_los_no_procedure_adult==0 &
+                                  zero_los_no_procedure_child==0 ,
+                                  "beddays",
                                  "admissions&beddays" ))
   
 }
@@ -358,7 +431,7 @@ identify_mechanism_group<-function(data){
   
 # Generate data for cohort mechanisms overlap
 
-generate_data_for_mechanism_cohort_overlaps<-function(data, activity_type){  
+generate_data_for_mechanism_cohort_overlaps<-function(data){  
   
   data|>
     mutate(Redirection=ifelse((ambulatory_care_conditions_acute==1|
@@ -389,7 +462,7 @@ generate_data_for_mechanism_cohort_overlaps<-function(data, activity_type){
                                 medically_unexplained_related_admissions==1), 
                              1,
                              0 ) )|>
-    mutate(Relocation=ifelse((virtual_wards_activity_avoidance_ari==1|
+    mutate(`Relocation&Efficiencies`=ifelse((virtual_wards_activity_avoidance_ari==1|
                                 virtual_wards_activity_avoidance_heart_failure ==1), 
                              1,
                              0 ) )|>
@@ -398,14 +471,14 @@ generate_data_for_mechanism_cohort_overlaps<-function(data, activity_type){
                                   raid_ip==1), 
                                1,
                                0 ) )|>
-    select(Redirection, Prevention, Relocation, Efficiencies, {{activity_type}})
+    select(Redirection, Prevention, `Relocation&Efficiencies`, Efficiencies, episodes, beddays)
   
 }
 
 #Plot a venn diagram total_cohort_numbers_2324
 generate_venn_diagram<-function(data, activity_type){
   
-  data1<-generate_data_for_mechanism_cohort_overlaps(data, {{activity_type}})|>
+  data1<-generate_data_for_mechanism_cohort_overlaps(data)|>
     uncount({{activity_type}})
   
   name<-deparse(substitute(activity_type))
@@ -442,3 +515,27 @@ generate_venn_diagram<-function(data, activity_type){
 }
   
   
+# Function for ggplots for summary overlap chart
+
+overlap_ggplot_facets<-function(dataset, cohort_name, title , ratio_number){ 
+  
+
+dataset|>
+  ggplot(aes(x=factor(mitigator_name), y=percentage))+
+    geom_segment(aes( y=0, yend=percentage,  x=mitigator_name), size=3.5, colour=(ifelse(dataset$cohort==cohort_name,"#686f73","#f9bf07"))) +
+  scale_x_discrete(limits=rev)+
+  su_theme()+
+  theme(axis.text=element_text(size=9),
+        axis.title=element_text(size=14),
+        axis.text.y=element_text(colour=rev(dataset$colour)),
+        plot.caption=element_text(colour="#ec6555", size=11))+
+  labs(y=NULL,
+       x=NULL,
+       title=title)+ 
+  geom_text(aes(label=paste0(percentage,  '% (',scales::comma(number), ')')), hjust=-0.05, size=2.7)+
+  scale_y_continuous(limits=c(0, 124), expand=c(0,0), labels = label_comma())+
+  coord_fixed(ratio=ratio_number)+
+  coord_flip() 
+
+}
+

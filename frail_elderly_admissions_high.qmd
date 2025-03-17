@@ -533,10 +533,9 @@ plotting_barchart_summary_of_overlaps(total_cohort_numbers_2324,"frail_elderly_h
 
 #### Beddays
 
-```{r, fig.width=10, fig.height=6 }
+```{r, fig.width=10, fig.height=7 }
 #| label: fig-prop_other_cohorts_frail_beddays
 #| fig-cap: The number and proportion of Frail Elderly beddays that are included in each of the other cohorts (2023/24).
-
 
 plotting_barchart_summary_of_overlaps(total_cohort_numbers_2324,"frail_elderly_high", beddays, mitigator_summary_table)
 
@@ -958,7 +957,7 @@ plotting_icb_over_time(number_percentage_over_time|>
 england_average_numbers_episodes<-calculating_england_average_numbers(number_percentage_over_time, episodes)
 
 
-plotting_percentage_change_over_time_by_icb(number_percentage_over_time|>filter(!is.na(icb_2024_name)), episodes, england_average_numbers_episodes$change, 1.6, 1.3)
+plotting_percentage_change_over_time_by_icb(number_percentage_over_time|>filter(!is.na(icb_2024_name)), episodes, icb_2024_name , england_average_numbers_episodes$change, 1.6, 1.3)
 
 ```
 
@@ -982,7 +981,7 @@ plotting_icb_over_time(number_percentage_over_time|>
 england_average_numbers_beddays<-calculating_england_average_numbers(number_percentage_over_time, beddays)
 
 
-plotting_percentage_change_over_time_by_icb(number_percentage_over_time|>filter(!is.na(icb_2024_name)), beddays, england_average_numbers_beddays$change, 1.6, 1.3)
+plotting_percentage_change_over_time_by_icb(number_percentage_over_time|>filter(!is.na(icb_2024_name)), beddays, icb_2024_name, england_average_numbers_beddays$change, 1.6, 1.3)
 
 ```
 
@@ -1013,7 +1012,7 @@ plotting_icb_over_time(number_percentage_over_time|>
 
 england_average_percentage_episodes<-calculating_england_average_percentage(number_percentage_over_time|> filter(!is.na(total_episodes)), episodes, total_episodes)
 
-plotting_percentage_change_over_time_by_icb(number_percentage_over_time, percentage_episodes, england_average_percentage_episodes$change, 1.6, 1.3)
+plotting_percentage_change_over_time_by_icb(number_percentage_over_time|>filter(!is.na(icb_2024_name)), percentage_episodes, icb_2024_name, england_average_percentage_episodes$change, 1.6, 1.3)
 
 
 ```
@@ -1039,7 +1038,8 @@ plotting_icb_over_time(number_percentage_over_time|>
 england_average_percentage_beddays<-calculating_england_average_percentage(number_percentage_over_time|>
           filter(!is.na(percentage_beddays)), beddays, total_beddays)
 
-plotting_percentage_change_over_time_by_icb(number_percentage_over_time, percentage_beddays, england_average_percentage_beddays$change,  1.6, 1.3)
+plotting_percentage_change_over_time_by_icb(number_percentage_over_time|>filter(!is.na(icb_2024_name)), percentage_beddays, icb_2024_name, england_average_percentage_beddays$change,  1.6, 1.3)
+
 
 ```
 :::
@@ -1071,7 +1071,9 @@ plotting_icb_over_time(
 
 england_average_standardised_episodes<-calculating_england_average_standardised(england_age_sex_standardised_rates_episodes)
 
-plotting_percentage_change_over_time_by_icb(icb_age_sex_standardised_rates_episodes, value, england_average_standardised_episodes$change, 1.3, 1.7)
+plotting_percentage_change_over_time_by_icb(icb_age_sex_standardised_rates_episodes|> 
+     filter(cohorts=="frail_elderly_high"), value, icb_2024_name, england_average_standardised_episodes$change, 1.3, 1.7)
+
 
 ```
 
@@ -1100,7 +1102,9 @@ plotting_icb_over_time(
 
 england_average_standardised_beddays<-calculating_england_average_standardised(england_age_sex_standardised_rates_beddays)
 
-plotting_percentage_change_over_time_by_icb(icb_age_sex_standardised_rates_beddays, value, england_average_standardised_beddays$change, 1.4, 1.6)
+
+plotting_percentage_change_over_time_by_icb(icb_age_sex_standardised_rates_beddays|> 
+     filter(cohorts=="frail_elderly_high"), value, icb_2024_name, england_average_standardised_beddays$change, 1.4, 1.6)
 
 
 ```
@@ -1134,3 +1138,11 @@ plotting_total_activity_vs_percentage_change(icb_age_sex_standardised_rates_bedd
 ```
 
 :::
+
+### Local Authority
+
+```{r}
+
+  
+
+```
