@@ -72,7 +72,7 @@ get_caption_by_icb <- function(cohort, metric, activity_type, treatment_type = N
   
   metric <- format_metric_for_captions(metric)
   
-  caption <- glue::glue("{metric} of mitigable {activity_type}{denominator} for the {cohort} cohort for ICBs in 2023/24.")
+  caption <- glue::glue("{metric} of mitigable {activity_type}{denominator} for {cohort} for ICBs in 2023/24.")
   
   return(caption)
 }
@@ -85,7 +85,7 @@ get_caption_by_icb <- function(cohort, metric, activity_type, treatment_type = N
 #'
 #' @return A string.
 get_caption_by_icb_table <- function(cohort, activity_type, treatment_type) {
-  caption <- glue::glue("The number of mitigable {activity_type}, the percentage by {treatment_type} admissions and the age and sex standardised rates per 100,000 population for the {cohort} cohort in 2023-24.")
+  caption <- glue::glue("The number of mitigable {activity_type}, the percentage by {treatment_type} admissions and the age and sex standardised rates per 100,000 population for {cohort} in 2023-24.")
   
   return(caption)
   
@@ -108,7 +108,7 @@ get_caption_by_group <- function(metric, cohort, activity_type, group, treatment
   metric <- format_metric_for_captions(metric)
   
   caption <- glue::glue(
-    "{metric} of mitigable {activity_type}{denominator} for the {cohort} cohort in 2023/24 by {group_formatted}."
+    "{metric} of mitigable {activity_type}{denominator} for {cohort} in 2023/24 by {group_formatted}."
   )
   return(caption)
 }
@@ -120,7 +120,7 @@ get_caption_by_group <- function(metric, cohort, activity_type, group, treatment
 #'
 #' @return A string.
 get_caption_overview <- function(cohort, treatment_type) {
-  caption <- glue::glue("Percentage of mitigable admissions and beddays for the {cohort} cohort by {treatment_type} activity in 2023/24.")
+  caption <- glue::glue("Percentage of mitigable admissions and beddays for {cohort} by {treatment_type} activity in 2023/24.")
   
   return(caption)
 }
@@ -132,7 +132,7 @@ get_caption_overview <- function(cohort, treatment_type) {
 #'
 #' @return A string.
 get_caption_top_ten_specialties <- function(cohort, activity_type) {
-  caption <- glue::glue("Top ten specialties of mitigable {activity_type} for the {cohort} cohort in 2023-24.")
+  caption <- glue::glue("Top ten specialties of mitigable {activity_type} for {cohort} in 2023-24.")
   
   return(caption)
 }
