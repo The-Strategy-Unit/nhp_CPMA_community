@@ -339,7 +339,7 @@ plotting_icb_over_time(number_percentage_over_time_removing_icb_na|>
 
 england_average_percentage_episodes<-calculating_england_average_percentage(number_percentage_over_time|>filter(!is.nan(percentage_episodes)), episodes, total_episodes)
 
-plotting_percentage_change_over_time_by_icb(number_percentage_over_time_removing_icb_na, percentage_episodes, england_average_percentage_episodes$change, 2.3, 1.3)
+plotting_percentage_change_over_time_by_icb(number_percentage_over_time_removing_icb_na, percentage_episodes, icb_2024_name, england_average_percentage_episodes$change, 2.3, 1.3)
 
 
 ```
@@ -364,7 +364,7 @@ plotting_icb_over_time(number_percentage_over_time_removing_icb_na|>
 
 england_average_percentage_beddays<-calculating_england_average_percentage(number_percentage_over_time|>filter(!is.nan(percentage_episodes)), beddays, total_beddays)
 
-plotting_percentage_change_over_time_by_icb(number_percentage_over_time_removing_icb_na, percentage_beddays, england_average_percentage_beddays$change,  1.6, 1.3)
+plotting_percentage_change_over_time_by_icb(number_percentage_over_time_removing_icb_na, percentage_beddays, icb_2024_name, england_average_percentage_beddays$change,  1.6, 1.3)
 
 ```
 :::
@@ -395,7 +395,7 @@ plotting_icb_over_time(
 
 england_average_standardised_episodes_total_mitigation<-calculating_england_average_standardised(england_age_sex_standardised_rates_episodes_total_mitigation)
 
-plotting_percentage_change_over_time_by_icb(icb_age_sex_standardised_rates_episodes_total_mitigation, value, england_average_standardised_episodes_total_mitigation$change, 1.3, 1.2)
+plotting_percentage_change_over_time_by_icb(icb_age_sex_standardised_rates_episodes_total_mitigation, value, icb_2024_name, england_average_standardised_episodes_total_mitigation$change, 1.3, 1.2)
 
 ```
 
@@ -423,7 +423,7 @@ plotting_icb_over_time(
 
 england_average_standardised_beddays_total_mitigation<-calculating_england_average_standardised(england_age_sex_standardised_rates_beddays_total_mitigation)
 
-plotting_percentage_change_over_time_by_icb(icb_age_sex_standardised_rates_beddays_total_mitigation, value, england_average_standardised_beddays_total_mitigation$change, 1.3, 1.3)
+plotting_percentage_change_over_time_by_icb(icb_age_sex_standardised_rates_beddays_total_mitigation, value,icb_2024_name, england_average_standardised_beddays_total_mitigation$change, 1.3, 1.3)
 
 
 ```
