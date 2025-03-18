@@ -142,7 +142,10 @@ get_summary_by_geography <- function(data,
     dplyr::left_join(total, geography) |>
     dplyr::mutate(perc = janitor::round_half_up(total_count * 100 / 
                                                   !!rlang::sym(denominator), 
-                                                2))
+                                                2),
+                  dplyr::across(dplyr::any_of(c("icb_2024_name")),
+                                ~stringr::str_remove(.,
+                                                    " Integrated Care Board")))
   
   
   return(wrangled)
