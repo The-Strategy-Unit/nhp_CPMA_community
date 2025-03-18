@@ -702,7 +702,7 @@ rate_frail_elderly_high_icb_admissions_map
 
 ```{r}
 #| label: tbl-rate_frail_elderly_high_icb_admissions
-#| tbl-cap: !expr get_caption_by_icb_table(cohort_title, "admissions", treatment_type)
+#| tbl-cap: !expr get_caption_by_geography_table(cohort_title, "admissions", treatment_type, "icb")
 get_summary_by_geography_table(summary_frail_elderly_high_icb_admissions, "episodes", treatment_type)
 ```
 :::
@@ -711,7 +711,7 @@ get_summary_by_geography_table(summary_frail_elderly_high_icb_admissions, "episo
 
 ```{r}
 #| label: tbl-rate_frail_elderly_high_la_admissions
-#| tbl-cap: !expr get_caption_by_icb_table(cohort_title, "admissions", treatment_type)
+#| tbl-cap: !expr get_caption_by_geography_table(cohort_title, "admissions", treatment_type, "la")
 targets::tar_read(summary_frail_elderly_high_la_admissions) |>
   get_summary_by_geography_table("episodes", treatment_type)
 ```

@@ -82,10 +82,20 @@ get_caption_by_icb <- function(cohort, metric, activity_type, treatment_type = N
 #' @param cohort A string for the mitigator cohort.
 #' @param activity_type Either `"admissions"` or `"beddays"`.
 #' @param treatment_type Either `"emergency"` or `"elective"`.
+#' @param geography Either `"icb"` or `"la"`.
 #'
 #' @return A string.
-get_caption_by_icb_table <- function(cohort, activity_type, treatment_type) {
-  caption <- glue::glue("The number of mitigable {activity_type}, the percentage by {treatment_type} admissions and the age and sex standardised rates per 100,000 population for {cohort} in 2023-24.")
+get_caption_by_geography_table <- function(cohort, 
+                                           activity_type, 
+                                           treatment_type,
+                                           geography) {
+  geography <- if(geography == "icb") {
+    "Integrated Care Board"
+  } else {
+    "Local Authority"
+  }
+  
+  caption <- glue::glue("The number of mitigable {activity_type}, the percentage by {treatment_type} admissions and the age and sex standardised rates per 100,000 population for {cohort} by {geography} in 2023-24.")
   
   return(caption)
   
