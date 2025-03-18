@@ -21,13 +21,22 @@ source("R/Functions for cohort overlap.R")
 source("R/Functions for trend analysis.R")
 
 options(scipen = 999)
+```
 
+```{r global variables}
+cohort <- "frail_elderly_high"
+cohort_title <- "Frail Older People (high frailty)"
+treatment_type <- "emergency"
+```
+
+```{r}
 england_age_sex_standardised_rates_episodes<-tar_read(england_age_sex_standardised_rates_episodes)|>
-  filter(cohorts=="frail_elderly_high")
+  filter(cohorts==cohort)
 
 england_age_sex_standardised_rates_beddays<-tar_read(england_age_sex_standardised_rates_beddays)|>
-  filter(cohorts=="frail_elderly_high")
+  filter(cohorts==cohort)
 ```
+
 
 This cohort includes older patients with a high level of frailty, specifically, those 75 years of age or over with an emergency admission and a frailty score over 15. The frailty score is calculated from ICD-10 diagnoses recorded for admissions during the previous 2 years and using the risk scores in Gilbert et al (2018), Development and validation of a Hospital Frailty Risk Score focusing on older people in acute care settings using electronic hospital records: an observational study. The Lancet, 391(10132), pp.1775-1782.
 
@@ -49,7 +58,7 @@ In 2023/24, `r frail_elderly_high_admissions_perc`% of all emergency admissions 
 
 ```{r}
 #| label: tbl-perc_frail_elderly_high
-#| tbl-cap: !expr get_caption_overview("Frail and Elderly (high)", "emergency")
+#| tbl-cap: !expr get_caption_overview(cohort_title, treatment_type)
 overview_frail_elderly_high |>
   get_table_perc()
 ```
@@ -78,14 +87,14 @@ Of 2023/24 mitigable admissions for the Frail Older People (high frailty) cohort
 
 ```{r}
 #| label: tbl-perc_frail_elderly_high_age_admissions
-#| tbl-cap: !expr get_caption_by_group("perc", "Frail and Elderly (high)", "admissions", "age group", "emergency")
+#| tbl-cap: !expr get_caption_by_group("perc", cohort_title, "admissions", "age group", treatment_type)
 perc_frail_elderly_high_age_admissions |>
   get_table_perc() 
 ```
 
 ```{r}
 #| label: fig-perc_frail_elderly_high_age_admissions
-#| fig-cap: !expr get_caption_by_group("perc", "Frail and Elderly (high)", "admissions", "age group", "emergency")
+#| fig-cap: !expr get_caption_by_group("perc", cohort_title, "admissions", "age group", treatment_type)
 perc_frail_elderly_high_age_admissions |>
   get_perc_by_group_plot("age_range", "admissions")
 ```
@@ -94,14 +103,14 @@ perc_frail_elderly_high_age_admissions |>
 
 ```{r}
 #| label: tbl-rate_frail_elderly_high_age_admissions
-#| tbl-cap: !expr get_caption_by_group("rate", "Frail and Elderly (high)", "admissions", "age group")
+#| tbl-cap: !expr get_caption_by_group("rate", cohort_title, "admissions", "age group")
 rates_frail_elderly_high_age_admissions |>
   get_rates_by_group_table() 
 ```
 
 ```{r}
 #| label: fig-rate_frail_elderly_high_age_admissions
-#| fig-cap: !expr get_caption_by_group("rate", "Frail and Elderly (high)", "admissions", "age group")
+#| fig-cap: !expr get_caption_by_group("rate", cohort_title, "admissions", "age group")
 rates_frail_elderly_high_age_admissions |>
   get_rates_by_group_plot("age_range")
 ```
@@ -121,14 +130,14 @@ Patients in the White ethnic group make up the majority (`r perc_frail_elderly_h
 
 ```{r}
 #| label: tbl-perc_frail_elderly_high_ethnicity_admissions
-#| tbl-cap: !expr get_caption_by_group("perc", "Frail and Elderly (high)", "admissions", "ethnicity", "emergency")
+#| tbl-cap: !expr get_caption_by_group("perc", cohort_title, "admissions", "ethnicity", treatment_type)
 perc_frail_elderly_high_ethnicity_admissions |>
   get_table_perc() 
 ```
 
 ```{r}
 #| label: fig-perc_frail_elderly_high_ethnicity_admissions
-#| fig-cap: !expr get_caption_by_group("perc", "Frail and Elderly (high)", "admissions", "ethnicity", "emergency")
+#| fig-cap: !expr get_caption_by_group("perc", cohort_title, "admissions", "ethnicity", treatment_type)
 perc_frail_elderly_high_ethnicity_admissions |>
   get_perc_by_group_plot("Ethnic_Category", "admissions")
 ```
@@ -137,14 +146,14 @@ perc_frail_elderly_high_ethnicity_admissions |>
 
 ```{r}
 #| label: tbl-rate_frail_elderly_high_ethnicity_admissions
-#| tbl-cap: !expr get_caption_by_group("rate", "Frail and Elderly (high)", "admissions", "ethnicity")
+#| tbl-cap: !expr get_caption_by_group("rate", cohort_title, "admissions", "ethnicity")
 rates_frail_elderly_high_ethnicity_admissions |>
   get_rates_by_group_table() 
 ```
 
 ```{r}
 #| label: fig-rate_frail_elderly_high_ethnicity_admissions
-#| fig-cap: !expr get_caption_by_group("rate", "Frail and Elderly (high)", "admissions", "ethnicity")
+#| fig-cap: !expr get_caption_by_group("rate", cohort_title, "admissions", "ethnicity")
 rates_frail_elderly_high_ethnicity_admissions |>
   get_rates_by_group_plot("Ethnic_Category")
 ```
@@ -164,14 +173,14 @@ The percentage of 2023/24 mitigable admissions for the Frail Older People (high 
 
 ```{r}
 #| label: tbl-perc_frail_elderly_high_imd_admissions
-#| tbl-cap: !expr get_caption_by_group("perc", "Frail and Elderly (high)", "admissions", "imd", "emergency")
+#| tbl-cap: !expr get_caption_by_group("perc", cohort_title, "admissions", "imd", treatment_type)
 perc_frail_elderly_high_imd_admissions |>
   get_table_perc() 
 ```
 
 ```{r}
 #| label: fig-perc_frail_elderly_high_imd_admissions
-#| fig-cap: !expr get_caption_by_group("perc", "Frail and Elderly (high)", "admissions", "imd", "emergency")
+#| fig-cap: !expr get_caption_by_group("perc", cohort_title, "admissions", "imd", treatment_type)
 perc_frail_elderly_high_imd_admissions |>
   get_perc_by_group_plot("imd19_decile", "admissions")
 ```
@@ -180,14 +189,14 @@ perc_frail_elderly_high_imd_admissions |>
 
 ```{r}
 #| label: tbl-rate_frail_elderly_high_imd_admissions
-#| tbl-cap: !expr get_caption_by_group("rate", "Frail and Elderly (high)", "admissions", "imd")
+#| tbl-cap: !expr get_caption_by_group("rate", cohort_title, "admissions", "imd")
 rates_frail_elderly_high_imd_admissions |>
   get_rates_by_group_table() 
 ```
 
 ```{r}
 #| label: fig-rate_frail_elderly_high_imd_admissions
-#| fig-cap: !expr get_caption_by_group("rate", "Frail and Elderly (high)", "admissions", "imd")
+#| fig-cap: !expr get_caption_by_group("rate", cohort_title, "admissions", "imd")
 rates_frail_elderly_high_imd_admissions |>
   get_rates_by_group_plot("imd19_decile")
 ```
@@ -207,14 +216,14 @@ The majority (`r perc_frail_elderly_high_sex_admissions |> dplyr::filter(sex == 
 
 ```{r}
 #| label: tbl-perc_frail_elderly_high_sex_admissions
-#| tbl-cap: !expr get_caption_by_group("perc", "Frail and Elderly (high)", "admissions", "sex", "emergency")
+#| tbl-cap: !expr get_caption_by_group("perc", cohort_title, "admissions", "sex", treatment_type)
 perc_frail_elderly_high_sex_admissions |>
   get_table_perc() 
 ```
 
 ```{r}
 #| label: fig-perc_frail_elderly_high_sex_admissions
-#| fig-cap: !expr get_caption_by_group("perc", "Frail and Elderly (high)", "admissions", "sex", "emergency")
+#| fig-cap: !expr get_caption_by_group("perc", cohort_title, "admissions", "sex", treatment_type)
 perc_frail_elderly_high_sex_admissions |>
   get_perc_by_group_plot("sex", "admissions")
 ```
@@ -223,14 +232,14 @@ perc_frail_elderly_high_sex_admissions |>
 
 ```{r}
 #| label: tbl-rate_frail_elderly_high_sex_admissions
-#| tbl-cap: !expr get_caption_by_group("rate", "Frail and Elderly (high)", "admissions", "sex")
+#| tbl-cap: !expr get_caption_by_group("rate", cohort_title, "admissions", "sex")
 rates_frail_elderly_high_sex_admissions |>
   get_rates_by_group_table() 
 ```
 
 ```{r}
 #| label: fig-rate_frail_elderly_high_sex_admissions
-#| fig-cap: !expr get_caption_by_group("rate", "Frail and Elderly (high)", "admissions", "sex")
+#| fig-cap: !expr get_caption_by_group("rate", cohort_title, "admissions", "sex")
 rates_frail_elderly_high_sex_admissions |>
   get_rates_by_group_plot("sex")
 ```
@@ -254,14 +263,14 @@ Of 2023/24 mitigable beddays for the Frail Older People (high frailty) cohort, m
 
 ```{r}
 #| label: tbl-perc_frail_elderly_high_age_beddays
-#| tbl-cap: !expr get_caption_by_group("perc", "Frail and Elderly (high)", "beddays", "age group", "emergency")
+#| tbl-cap: !expr get_caption_by_group("perc", cohort_title, "beddays", "age group", treatment_type)
 targets::tar_read(perc_frail_elderly_high_age_beddays) |>
   get_table_perc() 
 ```
 
 ```{r}
 #| label: fig-perc_frail_elderly_high_age_beddays
-#| fig-cap: !expr get_caption_by_group("perc", "Frail and Elderly (high)", "beddays", "age group", "emergency")
+#| fig-cap: !expr get_caption_by_group("perc", cohort_title, "beddays", "age group", treatment_type)
 targets::tar_read(perc_frail_elderly_high_age_beddays) |>
   get_perc_by_group_plot("age_range", "beddays")
 ```
@@ -270,14 +279,14 @@ targets::tar_read(perc_frail_elderly_high_age_beddays) |>
 
 ```{r}
 #| label: tbl-rate_frail_elderly_high_age_beddays
-#| tbl-cap: !expr get_caption_by_group("rate", "Frail and Elderly (high)", "beddays", "age group")
+#| tbl-cap: !expr get_caption_by_group("rate", cohort_title, "beddays", "age group")
 targets::tar_read(rates_frail_elderly_high_age_beddays) |>
   get_rates_by_group_table() 
 ```
 
 ```{r}
 #| label: fig-rate_frail_elderly_high_age_beddays
-#| fig-cap: !expr get_caption_by_group("rate", "Frail and Elderly (high)", "beddays", "age group")
+#| fig-cap: !expr get_caption_by_group("rate", cohort_title, "beddays", "age group")
 targets::tar_read(rates_frail_elderly_high_age_beddays) |>
   get_rates_by_group_plot("age_range")
 ```
@@ -297,14 +306,14 @@ Patients in the White ethnic group make up the majority (`r perc_frail_elderly_h
 
 ```{r}
 #| label: tbl-perc_frail_elderly_high_ethnicity_beddays
-#| tbl-cap: !expr get_caption_by_group("perc", "Frail and Elderly (high)", "beddays", "ethnicity", "emergency")
+#| tbl-cap: !expr get_caption_by_group("perc", cohort_title, "beddays", "ethnicity", treatment_type)
 targets::tar_read(perc_frail_elderly_high_ethnicity_beddays) |>
   get_table_perc() 
 ```
 
 ```{r}
 #| label: fig-perc_frail_elderly_high_ethnicity_beddays
-#| fig-cap: !expr get_caption_by_group("perc", "Frail and Elderly (high)", "beddays", "ethnicity", "emergency")
+#| fig-cap: !expr get_caption_by_group("perc", cohort_title, "beddays", "ethnicity", treatment_type)
 targets::tar_read(perc_frail_elderly_high_ethnicity_beddays) |>
   get_perc_by_group_plot("Ethnic_Category", "beddays")
 ```
@@ -313,14 +322,14 @@ targets::tar_read(perc_frail_elderly_high_ethnicity_beddays) |>
 
 ```{r}
 #| label: tbl-rate_frail_elderly_high_ethnicity_beddays
-#| tbl-cap: !expr get_caption_by_group("rate", "Frail and Elderly (high)", "beddays", "ethnicity")
+#| tbl-cap: !expr get_caption_by_group("rate", cohort_title, "beddays", "ethnicity")
 targets::tar_read(rates_frail_elderly_high_ethnicity_beddays) |>
   get_rates_by_group_table() 
 ```
 
 ```{r}
 #| label: fig-rate_frail_elderly_high_ethnicity_beddays
-#| fig-cap: !expr get_caption_by_group("rate", "Frail and Elderly (high)", "beddays", "ethnicity")
+#| fig-cap: !expr get_caption_by_group("rate", cohort_title, "beddays", "ethnicity")
 targets::tar_read(rates_frail_elderly_high_ethnicity_beddays) |>
   get_rates_by_group_plot("Ethnic_Category")
 ```
@@ -340,14 +349,14 @@ The percentage of 2023/24 mitigable beddays for the Frail Older People (high fra
 
 ```{r}
 #| label: tbl-perc_frail_elderly_high_imd_beddays
-#| tbl-cap: !expr get_caption_by_group("perc", "Frail and Elderly (high)", "beddays", "imd", "emergency")
+#| tbl-cap: !expr get_caption_by_group("perc", cohort_title, "beddays", "imd", treatment_type)
 targets::tar_read(perc_frail_elderly_high_imd_beddays) |>
   get_table_perc() 
 ```
 
 ```{r}
 #| label: fig-perc_frail_elderly_high_imd_beddays
-#| fig-cap: !expr get_caption_by_group("perc", "Frail and Elderly (high)", "beddays", "imd", "emergency")
+#| fig-cap: !expr get_caption_by_group("perc", cohort_title, "beddays", "imd", treatment_type)
 targets::tar_read(perc_frail_elderly_high_imd_beddays) |>
   get_perc_by_group_plot("imd19_decile", "beddays")
 ```
@@ -356,14 +365,14 @@ targets::tar_read(perc_frail_elderly_high_imd_beddays) |>
 
 ```{r}
 #| label: tbl-rate_frail_elderly_high_imd_beddays
-#| tbl-cap: !expr get_caption_by_group("rate", "Frail and Elderly (high)", "beddays", "imd")
+#| tbl-cap: !expr get_caption_by_group("rate", cohort_title, "beddays", "imd")
 targets::tar_read(rates_frail_elderly_high_imd_beddays) |>
   get_rates_by_group_table() 
 ```
 
 ```{r}
 #| label: fig-rate_frail_elderly_high_imd_beddays
-#| fig-cap: !expr get_caption_by_group("rate", "Frail and Elderly (high)", "beddays", "imd")
+#| fig-cap: !expr get_caption_by_group("rate", cohort_title, "beddays", "imd")
 targets::tar_read(rates_frail_elderly_high_imd_beddays) |>
   get_rates_by_group_plot("imd19_decile")
 ```
@@ -383,14 +392,14 @@ The majority (`r perc_frail_elderly_high_sex_beddays |> dplyr::filter(sex == "Fe
 
 ```{r}
 #| label: tbl-perc_frail_elderly_high_sex_beddays
-#| tbl-cap: !expr get_caption_by_group("perc", "Frail and Elderly (high)", "beddays", "sex", "emergency")
+#| tbl-cap: !expr get_caption_by_group("perc", cohort_title, "beddays", "sex", treatment_type)
 targets::tar_read(perc_frail_elderly_high_sex_beddays) |>
   get_table_perc() 
 ```
 
 ```{r}
 #| label: fig-perc_frail_elderly_high_sex_beddays
-#| fig-cap: !expr get_caption_by_group("perc", "Frail and Elderly (high)", "beddays", "sex", "emergency")
+#| fig-cap: !expr get_caption_by_group("perc", cohort_title, "beddays", "sex", treatment_type)
 targets::tar_read(perc_frail_elderly_high_sex_beddays) |>
   get_perc_by_group_plot("sex", "beddays")
 ```
@@ -399,14 +408,14 @@ targets::tar_read(perc_frail_elderly_high_sex_beddays) |>
 
 ```{r}
 #| label: tbl-rate_frail_elderly_high_sex_beddays
-#| tbl-cap: !expr get_caption_by_group("rate", "Frail and Elderly (high)", "beddays", "sex")
+#| tbl-cap: !expr get_caption_by_group("rate", cohort_title, "beddays", "sex")
 targets::tar_read(rates_frail_elderly_high_sex_beddays) |>
   get_rates_by_group_table() 
 ```
 
 ```{r}
 #| label: fig-rate_frail_elderly_high_sex_beddays
-#| fig-cap: !expr get_caption_by_group("rate", "Frail and Elderly (high)", "beddays", "sex")
+#| fig-cap: !expr get_caption_by_group("rate", cohort_title, "beddays", "sex")
 targets::tar_read(rates_frail_elderly_high_sex_beddays) |>
   get_rates_by_group_plot("sex")
 ```
@@ -429,14 +438,14 @@ Of the 2023/24 mitigable admissions for Frail Older People (high frailty) cohort
 
 ```{r}
 #| label: tbl-perc_frail_elderly_high_los
-#| tbl-cap: !expr get_caption_by_group("perc", "Frail and Elderly (high)", "admissions", "los", "emergency")
+#| tbl-cap: !expr get_caption_by_group("perc", cohort_title, "admissions", "los", treatment_type)
 targets::tar_read(perc_frail_elderly_high_los) |>
   get_perc_by_los_table()
 ```
 
 ```{r}
 #| label: fig-perc_frail_elderly_high_los
-#| fig-cap: !expr get_caption_by_group("perc", "Frail and Elderly (high)", "admissions", "los", "emergency")
+#| fig-cap: !expr get_caption_by_group("perc", cohort_title, "admissions", "los", treatment_type)
 perc_frail_elderly_high_los |>
   get_perc_by_los_plot()
 ```
@@ -450,14 +459,14 @@ Across both admissions and beddays, the largest two treatment functions for miti
 
 ```{r}
 #| label: tbl-perc_frail_elderly_high_mainspecf_admissions
-#| tbl-cap: !expr get_caption_top_ten_specialties("Frail and Elderly (high)", "admissions")
+#| tbl-cap: !expr get_caption_top_ten_specialties(cohort_title, "admissions")
 targets::tar_read(frail_elderly_high_specialties_top_ten_admissions) |>
   get_table_perc() 
 ```
 
 ```{r}
 #| label: fig-perc_frail_elderly_high_mainspecf_admissions
-#| fig-cap: !expr get_caption_top_ten_specialties("Frail and Elderly (high)", "admissions")
+#| fig-cap: !expr get_caption_top_ten_specialties(cohort_title, "admissions")
 targets::tar_read(frail_elderly_high_specialties_top_ten_admissions)  |>
   get_top_ten_specialties_plot("admissions")
 ```
@@ -466,14 +475,14 @@ targets::tar_read(frail_elderly_high_specialties_top_ten_admissions)  |>
 
 ```{r}
 #| label: tbl-perc_frail_elderly_high_mainspecf_beddays
-#| tbl-cap: !expr get_caption_top_ten_specialties("Frail and Elderly (high)", "beddays")
+#| tbl-cap: !expr get_caption_top_ten_specialties(cohort_title, "beddays")
 targets::tar_read(frail_elderly_high_specialties_top_ten_beddays) |>
   get_table_perc() 
 ```
 
 ```{r}
 #| label: fig-perc_frail_elderly_high_mainspecf_beddays
-#| fig-cap: !expr get_caption_top_ten_specialties("Frail and Elderly (high)", "beddays")
+#| fig-cap: !expr get_caption_top_ten_specialties(cohort_title, "beddays")
 targets::tar_read(frail_elderly_high_specialties_top_ten_beddays) |>
   get_top_ten_specialties_plot("beddays")
 ```
@@ -527,7 +536,7 @@ For example, Elderly Frail High cohort overlaps with all but 2 of the other miti
 
 mitigator_summary_table<-tar_read(mitigator_summary_table)
 
-plotting_barchart_summary_of_overlaps(total_cohort_numbers_2324,"frail_elderly_high", episodes, mitigator_summary_table )
+plotting_barchart_summary_of_overlaps(total_cohort_numbers_2324,cohort, episodes, mitigator_summary_table )
 
 ```
 
@@ -537,7 +546,7 @@ plotting_barchart_summary_of_overlaps(total_cohort_numbers_2324,"frail_elderly_h
 #| label: fig-prop_other_cohorts_frail_beddays
 #| fig-cap: The number and proportion of Frail Elderly beddays that are included in each of the other cohorts (2023/24).
 
-plotting_barchart_summary_of_overlaps(total_cohort_numbers_2324,"frail_elderly_high", beddays, mitigator_summary_table)
+plotting_barchart_summary_of_overlaps(total_cohort_numbers_2324,cohort, beddays, mitigator_summary_table)
 
 ```
 :::
@@ -612,7 +621,7 @@ england_value <- get_england_value("total_count",
 
 get_summary_by_icb_bar(summary_frail_elderly_high_icb_admissions, 
                        "total_count", 
-                       "frail_elderly_high",
+                       cohort,
                        england_value)
 
 rm(england_value)
@@ -639,13 +648,13 @@ total_beddays_admissions <- targets::tar_read(total_beddays_admissions)
 
 england_value <- get_england_value("perc", 
                                    activity = "admissions",
-                                   treatment = "emergency",
+                                   treatment = treatment_type,
                                    data_rate = england_age_sex_standardised_rates_episodes,
-                                   cohort = "frail_elderly_high")
+                                   cohort = cohort)
 
 get_summary_by_icb_bar(summary_frail_elderly_high_icb_admissions, 
                        "perc", 
-                       "frail_elderly_high",
+                       cohort,
                        england_value)
 
 rm(england_value)
@@ -655,7 +664,7 @@ rm(england_value)
 
 ```{r}
 #| label: fig-perc_frail_elderly_high_icb_admissions_map
-#| fig-cap: !expr get_caption_by_icb("Frail Elderly (high)", "perc", "admissions", "emergency")
+#| fig-cap: !expr get_caption_by_icb("Frail Elderly (high)", "perc", "admissions", treatment_type)
 perc_frail_elderly_high_icb_admissions_map
 ```
 :::
@@ -670,11 +679,11 @@ perc_frail_elderly_high_icb_admissions_map
 #| fig-cap: !expr get_caption_by_icb("Frail Elderly (high)", "SR", "admissions")
 england_value <- get_england_value("value",
                                    data_rate = england_age_sex_standardised_rates_episodes,
-                                   cohort = "frail_elderly_high")
+                                   cohort = cohort)
 
 get_summary_by_icb_bar(summary_frail_elderly_high_icb_admissions, 
                        "value", 
-                       "frail_elderly_high",
+                       cohort,
                        england_value)
 
 rm(england_value)
@@ -693,8 +702,8 @@ rate_frail_elderly_high_icb_admissions_map
 
 ```{r}
 #| label: tbl-rate_frail_elderly_high_icb_admissions
-#| tbl-cap: !expr get_caption_by_icb_table("Frail Elderly (high)", "admissions", "emergency")
-get_summary_by_icb_table(summary_frail_elderly_high_icb_admissions, "episodes", "emergency")
+#| tbl-cap: !expr get_caption_by_icb_table("Frail Elderly (high)", "admissions", treatment_type)
+get_summary_by_icb_table(summary_frail_elderly_high_icb_admissions, "episodes", treatment_type)
 ```
 :::
 
@@ -732,7 +741,7 @@ england_value <- get_england_value("total_count",
 
 get_summary_by_la_bar(summary_frail_elderly_high_la_admissions, 
                        "total_count", 
-                       "frail_elderly_high",
+                       cohort,
                        england_value)
 
 rm(england_value)
@@ -755,17 +764,16 @@ number_frail_elderly_high_la_admissions_map
 ```{r}
 #| label: fig-perc_frail_elderly_high_la_admissions_bar
 #| fig-cap: !expr get_caption_by_icb("Frail Elderly (high)", "perc", "admissions")
-total_beddays_admissions <- targets::tar_read(total_beddays_admissions)
 
 england_value <- get_england_value("perc", 
                                    activity = "admissions",
-                                   treatment = "emergency",
+                                   treatment = treatment_type,
                                    data_rate = england_age_sex_standardised_rates_episodes,
-                                   cohort = "frail_elderly_high")
+                                   cohort = cohort)
 
 get_summary_by_la_bar(summary_frail_elderly_high_la_admissions, 
                        "perc", 
-                       "frail_elderly_high",
+                       cohort,
                        england_value)
 
 rm(england_value)
@@ -775,7 +783,7 @@ rm(england_value)
 
 ```{r}
 #| label: fig-perc_frail_elderly_high_la_admissions_map
-#| fig-cap: !expr get_caption_by_icb("Frail Elderly (high)", "perc", "admissions", "emergency")
+#| fig-cap: !expr get_caption_by_icb("Frail Elderly (high)", "perc", "admissions", treatment_type)
 perc_frail_elderly_high_la_admissions_map
 ```
 :::
@@ -790,11 +798,11 @@ perc_frail_elderly_high_la_admissions_map
 #| fig-cap: !expr get_caption_by_icb("Frail Elderly (high)", "SR", "admissions")
 england_value <- get_england_value("value",
                                    data_rate = england_age_sex_standardised_rates_episodes,
-                                   cohort = "frail_elderly_high")
+                                   cohort = cohort)
 
 get_summary_by_la_bar(summary_frail_elderly_high_la_admissions, 
                        "value", 
-                       "frail_elderly_high",
+                       cohort,
                        england_value)
 
 rm(england_value)
@@ -813,8 +821,8 @@ rate_frail_elderly_high_la_admissions_map
 
 ```{r}
 #| label: tbl-rate_frail_elderly_high_la_admissions
-#| tbl-cap: !expr get_caption_by_icb_table("Frail Elderly (high)", "admissions", "emergency")
-get_summary_by_la_table(summary_frail_elderly_high_la_admissions, "episodes", "emergency")
+#| tbl-cap: !expr get_caption_by_icb_table("Frail Elderly (high)", "admissions", treatment_type)
+get_summary_by_la_table(summary_frail_elderly_high_la_admissions, "episodes", treatment_type)
 ```
 :::
 :::
@@ -856,7 +864,7 @@ icb_population_data<-tar_read(icb_population_data)
 
 number_percentage_over_time<-  data_number_percentage_over_time_icb(denominator_over_time, 
                                     numbers_over_time,
-                                       "frail_elderly_high",                                       total_episodes_emergency,
+                                       cohort,                                       total_episodes_emergency,
                                       total_beddays_emergency)
 
 plot_of_number_over_time(number_percentage_over_time, episodes)
@@ -1057,7 +1065,7 @@ icb_age_sex_standardised_rates_episodes<-tar_read(icb_age_sex_standardised_rates
 
 plotting_icb_over_time(
   (icb_age_sex_standardised_rates_episodes|> 
-     filter(cohorts=="frail_elderly_high")|>
+     filter(cohorts==cohort)|>
      mutate(activity=value)),
   'Standardised rate per 100,000')
 
@@ -1072,7 +1080,7 @@ plotting_icb_over_time(
 england_average_standardised_episodes<-calculating_england_average_standardised(england_age_sex_standardised_rates_episodes)
 
 plotting_percentage_change_over_time_by_icb(icb_age_sex_standardised_rates_episodes|> 
-     filter(cohorts=="frail_elderly_high"), value, icb_2024_name, england_average_standardised_episodes$change, 1.3, 1.7)
+     filter(cohorts==cohort), value, icb_2024_name, england_average_standardised_episodes$change, 1.3, 1.7)
 
 
 ```
@@ -1087,7 +1095,7 @@ icb_age_sex_standardised_rates_beddays<-tar_read(icb_age_sex_standardised_rates_
 
 plotting_icb_over_time(
   (icb_age_sex_standardised_rates_beddays|> 
-     filter(cohorts=="frail_elderly_high")|>
+     filter(cohorts==cohort)|>
      mutate(activity=value)),
   'Standardised rate per 100,000')
 
@@ -1104,7 +1112,7 @@ england_average_standardised_beddays<-calculating_england_average_standardised(e
 
 
 plotting_percentage_change_over_time_by_icb(icb_age_sex_standardised_rates_beddays|> 
-     filter(cohorts=="frail_elderly_high"), value, icb_2024_name, england_average_standardised_beddays$change, 1.4, 1.6)
+     filter(cohorts==cohort), value, icb_2024_name, england_average_standardised_beddays$change, 1.4, 1.6)
 
 
 ```
