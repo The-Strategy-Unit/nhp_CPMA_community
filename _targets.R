@@ -354,6 +354,7 @@ tar_target(
 ),
 
 # Comparative analysis ---------------------------------------------------------
+  ## ICB -----------------------------------------------------------------------
   tar_target(
    total_beddays_admissions_by_icb,
     dplyr::tbl(
@@ -370,42 +371,52 @@ tar_target(
                        .by = icb) |>
       sparklyr::collect()
   ),
-tar_target(summary_frail_elderly_high_icb_admissions,
-            get_summary_by_icb(icb_age_sex_standardised_rates_episodes,
-                               "frail_elderly_high",
-                                total_beddays_admissions_by_icb,
-                                "admissions",
-                                "emergency")),
-  tar_target(summary_frail_elderly_high_icb_beddays,
-           get_summary_by_icb(icb_age_sex_standardised_rates_beddays,
-                              "frail_elderly_high",
-                              total_beddays_admissions_by_icb,
-                              "beddays",
-                              "emergency")),
+  tar_target(
+    summary_frail_elderly_high_icb_admissions,
+    get_summary_by_geography(
+      icb_age_sex_standardised_rates_episodes,
+      "frail_elderly_high",
+      total_beddays_admissions_by_icb,
+      "admissions",
+      "emergency",
+      "icb")),  
+  tar_target(
+    summary_frail_elderly_high_icb_beddays,
+    get_summary_by_geography(
+      icb_age_sex_standardised_rates_beddays,
+      "frail_elderly_high",
+      total_beddays_admissions_by_icb,
+      "beddays",
+      "emergency",
+      "icb")),
 
-  tar_target(total_beddays_admissions_by_la,
-             dplyr::tbl(
-               sc,
-               dbplyr::in_catalog(
-                 "strategyunit",
-                 "default",
-                 "sl_af_describing_mitigators_final_2324_local_authority"
-                 )
-               ) |>
-               dplyr::select(dplyr::starts_with("total"), resladst_ons) |>
-               dplyr::distinct() |>
-               dplyr::summarise(dplyr::across(dplyr::starts_with("total"),
-                                              ~ sum(.)),
-                                .by = resladst_ons) |>
-               dplyr::filter(startsWith(resladst_ons, "E")) |>
-               dplyr::rename(ladcode23 = resladst_ons) |>
-               sparklyr::collect()),
-  tar_target(summary_frail_elderly_high_la_admissions,
-             get_summary_by_icb(la_age_sex_standardised_rates_episodes,
-                                "frail_elderly_high",
-                                total_beddays_admissions_by_la,
-                                "admissions",
-                                "emergency",
-                                "ladcode23")
+  ## LA ------------------------------------------------------------------------
+  tar_target(
+    total_beddays_admissions_by_la,
+    dplyr::tbl(
+      sc,
+      dbplyr::in_catalog(
+        "strategyunit",
+        "default",
+        "sl_af_describing_mitigators_final_2324_local_authority"
+        )
+      ) |>
+      dplyr::select(dplyr::starts_with("total"), resladst_ons) |>
+      dplyr::distinct() |>
+      dplyr::summarise(dplyr::across(dplyr::starts_with("total"),
+                                     ~ sum(.)),
+                       .by = resladst_ons) |>
+      dplyr::filter(startsWith(resladst_ons, "E")) |>
+      dplyr::rename(ladcode23 = resladst_ons) |>
+      sparklyr::collect()),
+  tar_target(
+    summary_frail_elderly_high_la_admissions,
+    get_summary_by_geography(
+      la_age_sex_standardised_rates_episodes,
+      "frail_elderly_high",
+      total_beddays_admissions_by_la,
+      "admissions",
+      "emergency",
+      "ladcode23")
   )
 )
