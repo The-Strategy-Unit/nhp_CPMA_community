@@ -644,7 +644,7 @@ number_frail_elderly_high_icb_admissions_map
 
 ```{r}
 #| label: fig-perc_frail_elderly_high_icb_admissions_bar
-#| fig-cap: !expr get_caption_by_icb(cohort_title, "perc", "admissions")
+#| fig-cap: !expr get_caption_by_icb(cohort_title, "perc", "admissions", treatment_type)
 total_beddays_admissions <- targets::tar_read(total_beddays_admissions)
 
 england_value <- get_england_value("perc", 
@@ -773,7 +773,7 @@ number_frail_elderly_high_icb_beddays_map
 
 ```{r}
 #| label: fig-perc_frail_elderly_high_icb_beddays_bar
-#| fig-cap: !expr get_caption_by_icb(cohort_title, "perc", "beddays")
+#| fig-cap: !expr get_caption_by_icb(cohort_title, "perc", "beddays", treatment_type)
 total_beddays_admissions <- targets::tar_read(total_beddays_admissions)
 
 england_value <- get_england_value("perc", 
