@@ -30,17 +30,17 @@ get_overview_of_mitigator <- function(treatment,
       "sl_af_describing_mitigators_final_2324_sex"
     )
   ) |>
-    dplyr::filter(!!rlang::parse_expr(condition)) |>
+    dplyr::filter(!!rlang::sym(condition) == 1) |>
     dplyr::summarise(admissions = sum(episodes),
                      beddays = sum(beddays)) |>
-    sparklyr::collect() |>
+    sparklyr::collect() 
+  
+  summary <- mitigator_totals |>
     tidyr::pivot_longer(
       cols = c(admissions, beddays),
       names_to = "activity_type",
       values_to = "number"
-    )
-  
-  summary <- mitigator_totals |>
+    ) |>
     dplyr::left_join(totals, "activity_type") |>
     dplyr::mutate(
       perc = janitor::round_half_up(number * 100 / total, 2),

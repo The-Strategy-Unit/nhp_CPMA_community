@@ -31,6 +31,10 @@ sc <- sparklyr::spark_connect(
   envname    = Sys.getenv("DATABRICKS_ENVNAME")
 )
 
+mitigators <- readxl::read_excel("summary_mitigators_table.xlsx") |>
+  dplyr::pull(mitigator_code)
+
+
 # Run the R scripts in the R/ folder with your custom functions:
 tar_source()
 
@@ -264,9 +268,14 @@ list(
                                                          "episodes", 
                                                          "admissions"))
   ),
-  tar_target(
-    overview_frail_elderly_high,
-    get_overview_of_mitigator("emergency", "frail_elderly_high == 1", total_beddays_admissions)
+  tarchetypes::tar_map(
+    list(mitigator = mitigators),
+    tar_target(
+      overview,
+      get_overview_of_mitigator("emergency",
+                                mitigator,
+                                total_beddays_admissions)
+    )
   ),
   
   ## Percentage breakdowns -----------------------------------------------------
