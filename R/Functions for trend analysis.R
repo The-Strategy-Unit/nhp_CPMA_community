@@ -89,13 +89,27 @@ numbers_over_time<- identify_whether_bedday_or_admissions_or_both(numbers_over_t
 
 
 # Calculating numbers and percentages over time
-data_number_percentage_over_time_icb<-function(data1, data2, mitigator, denom1, denom2){
+data_number_percentage_over_time_icb<-function(data1, data2, mitigator, treatment_type){
   
-  denominator_data<-data1|>
-    filter(fyear!=201415)|>
-    summarise(total_episodes=sum({{denom1}}),
-              total_beddays=sum({{denom2}}),
-              .by=c(fyear, icb_2024_name))
+  if(treatment_type=="emergency"){
+    
+    denominator_data<-data1|>
+      filter(fyear!=201415)|>
+      summarise(total_episodes=sum(total_episodes_emergency),
+                total_beddays=sum( total_beddays_emergency),
+                .by=c(fyear, icb_2024_name))
+    
+  }
+  else{
+    denominator_data<-data1|>
+      filter(fyear!=201415)|>
+      summarise(total_episodes=sum(total_episodes_all),
+                total_beddays=sum( total_beddays_all),
+                .by=c(fyear, icb_2024_name))
+    
+  }
+  
+ 
   
   data2|>
     filter(cohorts==mitigator)|>
