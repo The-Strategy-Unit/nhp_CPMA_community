@@ -30,7 +30,7 @@ get_overview_of_mitigator <- function(treatment,
       "sl_af_describing_mitigators_final_2324_sex"
     )
   ) |>
-    dplyr::filter(!!rlang::sym(condition) == 1) |>
+    filter_to_mitigator_or_mechanism(condition) |>
     dplyr::summarise(admissions = sum(episodes),
                      beddays = sum(beddays)) |>
     sparklyr::collect() 

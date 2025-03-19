@@ -32,7 +32,14 @@ sc <- sparklyr::spark_connect(
 )
 
 mitigators <- readxl::read_excel("summary_mitigators_table.xlsx") |>
-  dplyr::pull(mitigator_code)
+  dplyr::pull(mitigator_code) 
+
+mechanisms <- readxl::read_excel("summary_mitigators_table.xlsx") |>
+  dplyr::mutate(mechanism = snakecase::to_snake_case(mechanism)) |>
+  dplyr::pull(mechanism) |>
+  unique()
+
+mitigators_and_mechanisms <- c(mitigators, mechanisms)
 
 
 # Run the R scripts in the R/ folder with your custom functions:
@@ -269,7 +276,7 @@ list(
                                                          "admissions"))
   ),
   tarchetypes::tar_map(
-    list(mitigator = mitigators),
+    list(mitigator = mitigators_and_mechanisms),
     tar_target(
       overview,
       get_overview_of_mitigator("emergency",
