@@ -166,3 +166,16 @@ scrape_xls <- function(url, sheet = 1, skip = 0) {
   return(data)
   
 }
+
+#' Simplify ICB names.
+#'
+#' @param column The ICB name column.
+#'
+#' @return A column of simplified ICB names.
+simplify_icb_name <- function(column) {
+  simplified <- column |>
+    stringr::str_remove(" Integrated Care Board") |>
+    stringr::str_remove("NHS ")
+  
+  return(simplified)
+}
