@@ -1,4 +1,4 @@
-# Summary of total mitigation
+# Summary of total mitigation {#sec-summary .unnumbered}
 
 ```{r}
 library("flextable")
