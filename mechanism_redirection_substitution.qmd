@@ -1,0 +1,66 @@
+# Redirection and Substitution
+
+```{r}
+library("flextable")
+library("tidyr")
+library("dplyr")
+library("ggplot2")
+library("StrategyUnitTheme")
+library("forcats")
+library("ComplexUpset")
+library("scales")
+library("targets")
+library("plotly")
+library("patchwork")
+
+source("R/captions.R")
+source("R/general.R")
+source("R/descriptive_analyses.R")
+source("R/comparative_analyses.R")
+source("R/Functions for cohort overlap.R")
+source("R/Functions for trend analysis.R")
+
+options(scipen = 999)
+```
+
+```{r global variables}
+cohort <- "redirection_substitution"
+cohort_title <- "Redirection and Substitution"
+treatment_type <- "emergency"
+```
+
+```{r}
+# england_age_sex_standardised_rates_episodes<-tar_read(england_age_sex_standardised_rates_episodes)|>
+#   filter(cohorts==cohort)
+# 
+# england_age_sex_standardised_rates_beddays<-tar_read(england_age_sex_standardised_rates_beddays)|>
+#   filter(cohorts==cohort)
+```
+
+What this mechanism is...
+
+## Descriptive Analysis of Mitigable Activity
+
+```{r}
+overview_redirection_substitution <- targets::tar_read(overview_redirection_substitution)
+
+redirection_substitution_admissions_perc <- overview_redirection_substitution |>
+  dplyr::filter(activity_type == "Admissions") |>
+  dplyr::pull(perc)
+
+redirection_substitution_beddays_perc <- overview_redirection_substitution |>
+  dplyr::filter(activity_type == "Beddays") |>
+  dplyr::pull(perc)
+```
+
+In 2023/24, `r redirection_substitution_admissions_perc`% of all emergency admissions and `r redirection_substitution_beddays_perc`% of all emergency beddays fall under mitigable activity for the Frail Older People (high frailty) cohort (@tbl-perc_redirection_substitution).
+
+```{r}
+#| label: tbl-perc_redirection_substitution
+#| tbl-cap: !expr get_caption_overview(cohort_title, treatment_type)
+overview_redirection_substitution |>
+  get_table_perc()
+```
+
+...
+

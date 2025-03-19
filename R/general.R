@@ -17,6 +17,67 @@ create_dt <- function(x) {
   )
 }
 
+#' Filter a dataframe to data for a mitigator or mechanism.
+#'
+#' @param data A dataframe.
+#' @param mitigator The mitigator or mechanism.
+#'
+#' @return A dataframe.
+filter_to_mitigator_or_mechanism <- function(data, mitigator) {
+  
+  filtered <- if(mitigator == "prevention") { 
+    data |>
+      dplyr::filter(
+        alcohol_partially_attributable_acute == 1 | 
+          alcohol_partially_attributable_chronic == 1 | 
+          alcohol_wholly_attributable == 1 | 
+          obesity_related_admissions == 1 | 
+          smoking == 1 | 
+          raid_ae == 1 | 
+          intentional_self_harm == 1 | 
+          medically_unexplained_related_admissions == 1
+      )
+  } else if(mitigator == "redirection_substitution") { 
+    data |>
+      dplyr::filter(
+        ambulatory_care_conditions_acute == 1 | 
+          ambulatory_care_conditions_chronic == 1 |
+          ambulatory_care_conditions_vaccine_preventable == 1 | 
+          eol_care_2_days == 1 | 
+          eol_care_3_to_14_days == 1 |
+          falls_related_admissions == 1 | 
+          frail_elderly_high == 1 | 
+          frail_elderly_intermediate == 1 | 
+          medicines_related_admissions_explicit == 1 | 
+          medicines_related_admissions_implicit_anti_diabetics == 1 | 
+          medicines_related_admissions_implicit_benzodiasepines == 1 | 
+          medicines_related_admissions_implicit_diurectics == 1 | 
+          medicines_related_admissions_implicit_nsaids == 1 | 
+          readmission_within_28_days == 1 | 
+          zero_los_no_procedure_adult == 1 | 
+          zero_los_no_procedure_child == 1
+      )
+  } else if(mitigator == "efficiencies_relocation") { 
+    data |>
+      dplyr::filter(
+        virtual_wards_activity_avoidance_ari == 1 | 
+          virtual_wards_activity_avoidance_heart_failure == 1
+      )
+  } else if(mitigator == "efficiencies") { 
+    data |>
+      dplyr::filter(
+        emergency_elderly == 1 | 
+          stroke_early_supported_discharge == 1 | 
+          raid_ip == 1
+      )
+  } else {
+    data |>
+      dplyr::filter(!!rlang::sym(mitigator) == 1)
+  }
+  
+  return(filtered)
+}
+
 #' Formats a string into a title for tables and plots.
 #'
 #' @param col_name A string.
