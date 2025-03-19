@@ -549,8 +549,8 @@ rate_frail_elderly_high_icb_admissions_map
 
 ```{r}
 #| label: tbl-rate_frail_elderly_high_icb_admissions
-#| tbl-cap: !expr get_caption_by_icb_table("Frail Elderly (high)", "admissions", "emergency")
-get_summary_by_icb_table(summary_frail_elderly_high_icb_admissions, "episodes", "emergency")
+#| tbl-cap: !expr get_caption_by_geography_table("Frail Elderly (high)", "admissions", "emergency", "icb")
+get_summary_by_geography_table(summary_frail_elderly_high_icb_admissions, "episodes", "emergency")
 ```
 :::
 
