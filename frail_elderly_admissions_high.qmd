@@ -582,8 +582,6 @@ plot_upset_plot(total_cohort_numbers_2324,  mitigator_summary_table, beddays)
 
 ## Comparative Analysis
 
-This section is still a work in progress.
-
 ::: panel-tabset
 ### Admissions
 
