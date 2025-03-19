@@ -144,14 +144,12 @@ get_summary_by_geography <- function(data,
                                                   !!rlang::sym(denominator), 
                                                 2),
                   dplyr::across(dplyr::any_of(c("icb_2024_name")),
-                                ~stringr::str_remove(.,
-                                                    " Integrated Care Board")))
-  
+                                ~simplify_icb_name(.)))
   
   return(wrangled)
 }
 
-#' Format the summary by ICb / LA as a table.
+#' Format the summary by ICB / LA as a table.
 #'
 #' @param data The output of `get_summary_by_geography()`.
 #' @param activity_type Either `"admissions"` or `"beddays"`.

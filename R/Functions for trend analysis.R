@@ -109,8 +109,7 @@ data_number_percentage_over_time_icb<-function(data1, data2, mitigator, denom1, 
   mutate(percentage_episodes=ifelse(is.nan(percentage_episodes), NA, percentage_episodes))|>
     mutate(percentage_beddays=ifelse(is.nan(percentage_beddays), NA, percentage_beddays))|>
     as.data.frame() |>
-    dplyr::mutate(icb_2024_name = stringr::str_remove(icb_2024_name,
-                                                      " Integrated Care Board"))
+    dplyr::mutate(icb_2024_name = simplify_icb_name(icb_2024_name))
   
 }
 
