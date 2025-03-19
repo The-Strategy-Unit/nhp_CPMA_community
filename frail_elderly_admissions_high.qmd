@@ -719,7 +719,135 @@ targets::tar_read(summary_frail_elderly_high_la_admissions) |>
 
 ### Beddays
 
-Coming soon. Want to get content right for admissions first.
+::: panel-tabset
+#### Integrated Care Board
+
+```{r}
+#| output: false
+summary_frail_elderly_high_icb_beddays <- targets::tar_read(summary_frail_elderly_high_icb_beddays)
+
+icb_23_shp <- sf::st_read("https://services1.arcgis.com/ESMARspQHYMw9BZ9/arcgis/rest/services/Integrated_Care_Boards_April_2023_EN_BGC/FeatureServer/0/query?outFields=*&where=1%3D1&f=geojson") |>
+  janitor::clean_names()
+
+number_frail_elderly_high_icb_beddays_map <- summary_frail_elderly_high_icb_beddays |>
+  get_summary_by_icb_map(icb_23_shp, "total_count")
+
+perc_frail_elderly_high_icb_beddays_map <- summary_frail_elderly_high_icb_beddays |>
+  get_summary_by_icb_map(icb_23_shp, "perc")
+
+rate_frail_elderly_high_icb_beddays_map <- summary_frail_elderly_high_icb_beddays |>
+  get_summary_by_icb_map(icb_23_shp, "value")
+```
+
+::: panel-tabset
+##### Number of beddays
+
+::: panel-tabset
+###### Bars
+
+```{r}
+#| label: fig-number_frail_elderly_high_icb_beddays_bar
+#| fig-cap: !expr get_caption_by_icb(cohort_title, "number", "beddays")
+england_value <- get_england_value("total_count", 
+                                   data_number = summary_frail_elderly_high_icb_beddays)
+
+get_summary_by_icb_bar(summary_frail_elderly_high_icb_beddays, 
+                       "total_count", 
+                       cohort,
+                       england_value)
+
+rm(england_value)
+```
+
+###### Map
+
+```{r}
+#| label: fig-number_frail_elderly_high_icb_beddays_map
+#| fig-cap: !expr get_caption_by_icb(cohort_title, "number", "beddays")
+number_frail_elderly_high_icb_beddays_map
+```
+:::
+
+##### Percentage of emergency activity
+
+::: panel-tabset
+###### Bars
+
+```{r}
+#| label: fig-perc_frail_elderly_high_icb_beddays_bar
+#| fig-cap: !expr get_caption_by_icb(cohort_title, "perc", "beddays")
+total_beddays_admissions <- targets::tar_read(total_beddays_admissions)
+
+england_value <- get_england_value("perc", 
+                                   activity = "beddays",
+                                   treatment = treatment_type,
+                                   data_rate = england_age_sex_standardised_rates_beddays,
+                                   cohort = cohort)
+
+get_summary_by_icb_bar(summary_frail_elderly_high_icb_beddays, 
+                       "perc", 
+                       cohort,
+                       england_value)
+
+rm(england_value)
+```
+
+###### Map
+
+```{r}
+#| label: fig-perc_frail_elderly_high_icb_beddays_map
+#| fig-cap: !expr get_caption_by_icb(cohort_title, "perc", "beddays", treatment_type)
+perc_frail_elderly_high_icb_beddays_map
+```
+:::
+
+##### Age and sex standardised rates per 100,000 population
+
+::: panel-tabset
+###### Bars
+
+```{r}
+#| label: fig-rate_frail_elderly_high_icb_beddays_bar
+#| fig-cap: !expr get_caption_by_icb(cohort_title, "SR", "beddays")
+england_value <- get_england_value("value",
+                                   data_rate = england_age_sex_standardised_rates_beddays,
+                                   cohort = cohort)
+
+get_summary_by_icb_bar(summary_frail_elderly_high_icb_beddays, 
+                       "value", 
+                       cohort,
+                       england_value)
+
+rm(england_value)
+```
+
+###### Map
+
+```{r}
+#| label: fig-rate_frail_elderly_high_icb_beddays_map
+#| fig-cap: !expr get_caption_by_icb(cohort_title, "SR", "beddays")
+rate_frail_elderly_high_icb_beddays_map
+```
+:::
+
+##### Table
+
+```{r}
+#| label: tbl-rate_frail_elderly_high_icb_beddays
+#| tbl-cap: !expr get_caption_by_geography_table(cohort_title, "beddays", treatment_type, "icb")
+get_summary_by_geography_table(summary_frail_elderly_high_icb_beddays, "beddays", treatment_type)
+```
+:::
+
+#### Local Authority
+
+```{r}
+#| label: tbl-rate_frail_elderly_high_la_beddays
+#| tbl-cap: !expr get_caption_by_geography_table(cohort_title, "beddays", treatment_type, "la")
+targets::tar_read(summary_frail_elderly_high_la_beddays) |>
+  get_summary_by_geography_table("beddays", treatment_type)
+```
+:::
 :::
 
 ## Trend Analysis
