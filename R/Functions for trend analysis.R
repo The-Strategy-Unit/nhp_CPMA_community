@@ -61,7 +61,7 @@ Formatting_data_for_trends_analysis_total_mitigation<-function(table, icb_pop){
   
   numbers_over_time <- dplyr::tbl(
     sc,
-    dbplyr::in_catalog("strategyunit","default", "sl_af_describing_mitigators_fyear")
+    dbplyr::in_catalog("strategyunit","default", table)
   )|> collect()|>
     filter(fyear>201314)|>
     as.data.frame()
