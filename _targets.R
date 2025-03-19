@@ -212,6 +212,17 @@ list(
        episodes
      )
    ),
+ tar_target(
+   la_age_sex_standardised_rates_beddays,
+   generating_la_age_sex_standardised_rates(
+     la_numbers,
+     la_population_data |> 
+       dplyr::mutate(sex = as.character(sex)) |> 
+       dplyr::filter(fyear == "2023/24"),
+     standard_england_pop_2021_census,
+     beddays
+   )
+  ),
  
   # Mitigator details-----------------------------------------------------------
  
@@ -416,6 +427,16 @@ tar_target(
       "frail_elderly_high",
       total_beddays_admissions_by_la,
       "admissions",
+      "emergency",
+      "ladcode23")
+  ),
+  tar_target(
+    summary_frail_elderly_high_la_beddays,
+    get_summary_by_geography(
+      la_age_sex_standardised_rates_beddays,
+      "frail_elderly_high",
+      total_beddays_admissions_by_la,
+      "beddays",
       "emergency",
       "ladcode23")
   )
