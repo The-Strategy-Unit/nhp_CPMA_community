@@ -726,9 +726,6 @@ targets::tar_read(summary_frail_elderly_high_la_admissions) |>
 #| output: false
 summary_frail_elderly_high_icb_beddays <- targets::tar_read(summary_frail_elderly_high_icb_beddays)
 
-icb_23_shp <- sf::st_read("https://services1.arcgis.com/ESMARspQHYMw9BZ9/arcgis/rest/services/Integrated_Care_Boards_April_2023_EN_BGC/FeatureServer/0/query?outFields=*&where=1%3D1&f=geojson") |>
-  janitor::clean_names()
-
 number_frail_elderly_high_icb_beddays_map <- summary_frail_elderly_high_icb_beddays |>
   get_summary_by_icb_map(icb_23_shp, "total_count")
 
