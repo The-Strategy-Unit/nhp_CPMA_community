@@ -9,7 +9,7 @@
 #' @param treatment_type  Either `"emergency"` or `"elective"`.
 #'
 #' @return A string.
-format_denominator_for_captions <- function(metric, activity_type, treatment_type) {
+format_denominator_for_caption <- function(metric, activity_type, treatment_type) {
   denominator <- if(metric == "perc") {
     glue::glue(" by {treatment_type} {activity_type}")
   } else {
@@ -44,7 +44,7 @@ format_group_name_for_caption <- function(group) {
 #' @param metric Either `"number"`, `"perc"`, `"rate"` or` "SR"`.
 #'
 #' @return A string.
-format_metric_for_captions <- function(metric) {
+format_metric_for_caption <- function(metric) {
   renamed <- if (metric == "perc") {
     "Percentage"
   } else if(metric == "SR") {
@@ -58,6 +58,16 @@ format_metric_for_captions <- function(metric) {
   return(renamed)
 }
 
+format_treatment_for_caption <- function(treatment_type) {
+  caption <- if(treatment_type == "both") {
+    "all (both elective and emergency)"
+  } else {
+    treatment_type
+  }
+  
+  return(caption)
+}
+
 #' Get a caption for the tables of number/percentage/rates of mitigable admissions/beddays by mitigator by ICB.
 #'
 #' @param cohort A string for the mitigator cohort.
@@ -68,9 +78,13 @@ format_metric_for_captions <- function(metric) {
 #' @return A string.
 get_caption_by_icb <- function(cohort, metric, activity_type, treatment_type = NULL) {
   
-  denominator <- format_denominator_for_captions(metric, activity_type, treatment_type)
+  if(metric == "perc"){
+    treatment_type <- format_treatment_for_caption(treatment_type)
+  }
   
-  metric <- format_metric_for_captions(metric)
+  denominator <- format_denominator_for_caption(metric, activity_type, treatment_type)
+  
+  metric <- format_metric_for_caption(metric)
   
   caption <- glue::glue("{metric} of mitigable {activity_type}{denominator} for {cohort} for ICBs in 2023/24.")
   
@@ -89,6 +103,9 @@ get_caption_by_geography_table <- function(cohort,
                                            activity_type, 
                                            treatment_type,
                                            geography) {
+  
+  treatment_type <- format_treatment_for_caption(treatment_type)
+  
   geography <- if(geography == "icb") {
     "Integrated Care Board"
   } else {
@@ -111,11 +128,15 @@ get_caption_by_geography_table <- function(cohort,
 #' @return A string.
 get_caption_by_group <- function(metric, cohort, activity_type, group, treatment_type = NULL) {
   
-  denominator <- format_denominator_for_captions(metric, activity_type, treatment_type)
+  if(metric == "perc"){
+    treatment_type <- format_treatment_for_caption(treatment_type)
+  }
+  
+  denominator <- format_denominator_for_caption(metric, activity_type, treatment_type)
   
   group_formatted <- format_group_name_for_caption(group)
   
-  metric <- format_metric_for_captions(metric)
+  metric <- format_metric_for_caption(metric)
   
   caption <- glue::glue(
     "{metric} of mitigable {activity_type}{denominator} for {cohort} in 2023/24 by {group_formatted}."
@@ -130,9 +151,8 @@ get_caption_by_group <- function(metric, cohort, activity_type, group, treatment
 #'
 #' @return A string.
 get_caption_overview <- function(cohort, treatment_type) {
-  treatment_type <- if(treatment_type == "both") {
-    "all (both elective and emergency)"
-  }
+  
+  treatment_type <- format_treatment_for_caption(treatment_type)
   
   caption <- glue::glue("Percentage of mitigable admissions and beddays for {cohort} by {treatment_type} activity in 2023/24.")
   
