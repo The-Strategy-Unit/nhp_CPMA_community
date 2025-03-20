@@ -355,11 +355,14 @@ list(
   # ),
  
  ## Length of Stay -------------------------------------------------------------
- # tar_target(
- #   perc_frail_elderly_high_los,
- #   get_perc_by_los("frail_elderly_high == 1")
- # ),
-  
+ tarchetypes::tar_map(
+   list(mitigator = mitigators_and_mechanisms),
+   tar_target(
+     perc_los,
+     get_perc_by_los(mitigator)
+   )
+ ),
+ 
   # Cohort analysis ------------------------------------------------------------
   
   tar_target(

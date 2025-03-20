@@ -316,9 +316,9 @@ get_top_ten_specialties_plot <- function(data, activity_type) {
 #'
 #' @return A dataframe of the number and percentage of mitigable admissions by
 #' LOS.
-get_perc_by_los <- function(condition, connection = sc) {
-  data_weeks <- get_perc_by_group("los", 
-                                  condition, 
+get_perc_by_los <- function(mitigator, connection = sc) {
+  data_weeks <- get_perc_by_group(mitigator,
+                                  "los",  
                                   "admissions",
                                   connection) |>
     dplyr::mutate(

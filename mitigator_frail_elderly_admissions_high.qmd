@@ -433,7 +433,7 @@ In this section, mitigable activity for the Frail Older People (high frailty) co
 ### Length Of Stay
 
 ```{r}
-perc_frail_elderly_high_los <- targets::tar_read(perc_frail_elderly_high_los)
+perc_frail_elderly_high_los <- targets::tar_read(perc_los_frail_elderly_high)
 ```
 
 Of the 2023/24 mitigable admissions for Frail Older People (high frailty) cohort, most (`r perc_frail_elderly_high_los |> dplyr::filter(weeks == 1) |> dplyr::pull(perc_weeks) |> purrr::pluck(1)`%) length of stays are under 1 week and `r perc_frail_elderly_high_los |> dplyr::filter(los_range == 0) |> dplyr::pull(perc)`% are less than 1 day.
@@ -441,7 +441,7 @@ Of the 2023/24 mitigable admissions for Frail Older People (high frailty) cohort
 ```{r}
 #| label: tbl-perc_frail_elderly_high_los
 #| tbl-cap: !expr get_caption_by_group("perc", cohort_title, "admissions", "los", treatment_type)
-targets::tar_read(perc_frail_elderly_high_los) |>
+perc_frail_elderly_high_los |>
   get_perc_by_los_table()
 ```
 

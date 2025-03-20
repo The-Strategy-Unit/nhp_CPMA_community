@@ -62,5 +62,408 @@ overview_redirection_substitution |>
   get_table_perc()
 ```
 
-...
+### Patient Characteristics
 
+In this section, the number and percentage of mitigable activity for the Redirection and Substitution group cohort are shown by patient characteristics: age, ethnic category, IMD decile and sex. Rates per 100,000 population are also provided for context.
+
+Outputs are presented for both admissions and beddays, but patterns are broadly similar across the two.
+
+::: panel-tabset
+### Admissions
+
+::: panel-tabset
+### Age
+
+```{r}
+perc_redirection_substitution_age_admissions <- targets::tar_read(perc_redirection_substitution_age_admissions)
+rates_redirection_substitution_age_admissions <- targets::tar_read(rates_redirection_substitution_age_admissions)
+```
+
+::: panel-tabset
+#### Percentage of emergency activity
+
+```{r}
+#| label: tbl-perc_redirection_substitution_age_admissions
+#| tbl-cap: !expr get_caption_by_group("perc", cohort_title, "admissions", "age group", treatment_type)
+perc_redirection_substitution_age_admissions |>
+  get_table_perc() 
+```
+
+```{r}
+#| label: fig-perc_redirection_substitution_age_admissions
+#| fig-cap: !expr get_caption_by_group("perc", cohort_title, "admissions", "age group", treatment_type)
+perc_redirection_substitution_age_admissions |>
+  get_perc_by_group_plot("age_range", "admissions")
+```
+
+#### Rates per 100,000 population
+
+```{r}
+#| label: tbl-rate_redirection_substitution_age_admissions
+#| tbl-cap: !expr get_caption_by_group("rate", cohort_title, "admissions", "age group")
+rates_redirection_substitution_age_admissions |>
+  get_rates_by_group_table() 
+```
+
+```{r}
+#| label: fig-rate_redirection_substitution_age_admissions
+#| fig-cap: !expr get_caption_by_group("rate", cohort_title, "admissions", "age group")
+rates_redirection_substitution_age_admissions |>
+  get_rates_by_group_plot("age_range")
+```
+:::
+
+### Ethnicity
+
+```{r}
+perc_redirection_substitution_ethnicity_admissions <- targets::tar_read(perc_redirection_substitution_ethnicity_admissions)
+rates_redirection_substitution_ethnicity_admissions <- targets::tar_read(rates_redirection_substitution_ethnicity_admissions)
+```
+
+::: panel-tabset
+#### Percentage of emergency activity
+
+```{r}
+#| label: tbl-perc_redirection_substitution_ethnicity_admissions
+#| tbl-cap: !expr get_caption_by_group("perc", cohort_title, "admissions", "ethnicity", treatment_type)
+perc_redirection_substitution_ethnicity_admissions |>
+  get_table_perc() 
+```
+
+```{r}
+#| label: fig-perc_redirection_substitution_ethnicity_admissions
+#| fig-cap: !expr get_caption_by_group("perc", cohort_title, "admissions", "ethnicity", treatment_type)
+perc_redirection_substitution_ethnicity_admissions |>
+  get_perc_by_group_plot("Ethnic_Category", "admissions")
+```
+
+#### Rates per 100,000 population
+
+```{r}
+#| label: tbl-rate_redirection_substitution_ethnicity_admissions
+#| tbl-cap: !expr get_caption_by_group("rate", cohort_title, "admissions", "ethnicity")
+rates_redirection_substitution_ethnicity_admissions |>
+  get_rates_by_group_table() 
+```
+
+```{r}
+#| label: fig-rate_redirection_substitution_ethnicity_admissions
+#| fig-cap: !expr get_caption_by_group("rate", cohort_title, "admissions", "ethnicity")
+rates_redirection_substitution_ethnicity_admissions |>
+  get_rates_by_group_plot("Ethnic_Category")
+```
+:::
+
+### IMD
+
+```{r}
+perc_redirection_substitution_imd_admissions <- targets::tar_read(perc_redirection_substitution_imd_admissions)
+rates_redirection_substitution_imd_admissions <- targets::tar_read(rates_redirection_substitution_imd_admissions)
+```
+
+::: panel-tabset
+#### Percentage of emergency activity
+
+```{r}
+#| label: tbl-perc_redirection_substitution_imd_admissions
+#| tbl-cap: !expr get_caption_by_group("perc", cohort_title, "admissions", "imd", treatment_type)
+perc_redirection_substitution_imd_admissions |>
+  get_table_perc() 
+```
+
+```{r}
+#| label: fig-perc_redirection_substitution_imd_admissions
+#| fig-cap: !expr get_caption_by_group("perc", cohort_title, "admissions", "imd", treatment_type)
+perc_redirection_substitution_imd_admissions |>
+  get_perc_by_group_plot("imd19_decile", "admissions")
+```
+
+#### Rates per 100,000 population
+
+```{r}
+#| label: tbl-rate_redirection_substitution_imd_admissions
+#| tbl-cap: !expr get_caption_by_group("rate", cohort_title, "admissions", "imd")
+rates_redirection_substitution_imd_admissions |>
+  get_rates_by_group_table() 
+```
+
+```{r}
+#| label: fig-rate_redirection_substitution_imd_admissions
+#| fig-cap: !expr get_caption_by_group("rate", cohort_title, "admissions", "imd")
+rates_redirection_substitution_imd_admissions |>
+  get_rates_by_group_plot("imd19_decile")
+```
+:::
+
+### Sex
+
+```{r}
+perc_redirection_substitution_sex_admissions <- targets::tar_read(perc_redirection_substitution_sex_admissions)
+rates_redirection_substitution_sex_admissions <- targets::tar_read(rates_redirection_substitution_sex_admissions)
+```
+
+::: panel-tabset
+#### Percentage of emergency activity
+
+```{r}
+#| label: tbl-perc_redirection_substitution_sex_admissions
+#| tbl-cap: !expr get_caption_by_group("perc", cohort_title, "admissions", "sex", treatment_type)
+perc_redirection_substitution_sex_admissions |>
+  get_table_perc() 
+```
+
+```{r}
+#| label: fig-perc_redirection_substitution_sex_admissions
+#| fig-cap: !expr get_caption_by_group("perc", cohort_title, "admissions", "sex", treatment_type)
+perc_redirection_substitution_sex_admissions |>
+  get_perc_by_group_plot("sex", "admissions")
+```
+
+#### Rates per 100,000 population
+
+```{r}
+#| label: tbl-rate_redirection_substitution_sex_admissions
+#| tbl-cap: !expr get_caption_by_group("rate", cohort_title, "admissions", "sex")
+rates_redirection_substitution_sex_admissions |>
+  get_rates_by_group_table() 
+```
+
+```{r}
+#| label: fig-rate_redirection_substitution_sex_admissions
+#| fig-cap: !expr get_caption_by_group("rate", cohort_title, "admissions", "sex")
+rates_redirection_substitution_sex_admissions |>
+  get_rates_by_group_plot("sex")
+```
+:::
+:::
+
+### Beddays
+
+::: panel-tabset
+### Age
+
+```{r}
+perc_redirection_substitution_age_beddays <- targets::tar_read(perc_redirection_substitution_age_beddays)
+rates_redirection_substitution_age_beddays <- targets::tar_read(rates_redirection_substitution_age_beddays)
+```
+
+::: panel-tabset
+#### Percentage of emergency activity
+
+```{r}
+#| label: tbl-perc_redirection_substitution_age_beddays
+#| tbl-cap: !expr get_caption_by_group("perc", cohort_title, "beddays", "age group", treatment_type)
+targets::tar_read(perc_redirection_substitution_age_beddays) |>
+  get_table_perc() 
+```
+
+```{r}
+#| label: fig-perc_redirection_substitution_age_beddays
+#| fig-cap: !expr get_caption_by_group("perc", cohort_title, "beddays", "age group", treatment_type)
+targets::tar_read(perc_redirection_substitution_age_beddays) |>
+  get_perc_by_group_plot("age_range", "beddays")
+```
+
+#### Rates per 100,000 population
+
+```{r}
+#| label: tbl-rate_redirection_substitution_age_beddays
+#| tbl-cap: !expr get_caption_by_group("rate", cohort_title, "beddays", "age group")
+targets::tar_read(rates_redirection_substitution_age_beddays) |>
+  get_rates_by_group_table() 
+```
+
+```{r}
+#| label: fig-rate_redirection_substitution_age_beddays
+#| fig-cap: !expr get_caption_by_group("rate", cohort_title, "beddays", "age group")
+targets::tar_read(rates_redirection_substitution_age_beddays) |>
+  get_rates_by_group_plot("age_range")
+```
+:::
+
+### Ethnicity
+
+```{r}
+perc_redirection_substitution_ethnicity_beddays <- targets::tar_read(perc_redirection_substitution_ethnicity_beddays)
+rates_redirection_substitution_ethnicity_beddays <- targets::tar_read(rates_redirection_substitution_ethnicity_beddays)
+```
+
+::: panel-tabset
+#### Percentage of emergency activity
+
+```{r}
+#| label: tbl-perc_redirection_substitution_ethnicity_beddays
+#| tbl-cap: !expr get_caption_by_group("perc", cohort_title, "beddays", "ethnicity", treatment_type)
+targets::tar_read(perc_redirection_substitution_ethnicity_beddays) |>
+  get_table_perc() 
+```
+
+```{r}
+#| label: fig-perc_redirection_substitution_ethnicity_beddays
+#| fig-cap: !expr get_caption_by_group("perc", cohort_title, "beddays", "ethnicity", treatment_type)
+targets::tar_read(perc_redirection_substitution_ethnicity_beddays) |>
+  get_perc_by_group_plot("Ethnic_Category", "beddays")
+```
+
+#### Rates per 100,000 population
+
+```{r}
+#| label: tbl-rate_redirection_substitution_ethnicity_beddays
+#| tbl-cap: !expr get_caption_by_group("rate", cohort_title, "beddays", "ethnicity")
+targets::tar_read(rates_redirection_substitution_ethnicity_beddays) |>
+  get_rates_by_group_table() 
+```
+
+```{r}
+#| label: fig-rate_redirection_substitution_ethnicity_beddays
+#| fig-cap: !expr get_caption_by_group("rate", cohort_title, "beddays", "ethnicity")
+targets::tar_read(rates_redirection_substitution_ethnicity_beddays) |>
+  get_rates_by_group_plot("Ethnic_Category")
+```
+:::
+
+### IMD
+
+```{r}
+perc_redirection_substitution_imd_beddays <- targets::tar_read(perc_redirection_substitution_imd_beddays)
+rates_redirection_substitution_imd_beddays <- targets::tar_read(rates_redirection_substitution_imd_beddays)
+```
+
+::: panel-tabset
+#### Percentage of emergency activity
+
+```{r}
+#| label: tbl-perc_redirection_substitution_imd_beddays
+#| tbl-cap: !expr get_caption_by_group("perc", cohort_title, "beddays", "imd", treatment_type)
+targets::tar_read(perc_redirection_substitution_imd_beddays) |>
+  get_table_perc() 
+```
+
+```{r}
+#| label: fig-perc_redirection_substitution_imd_beddays
+#| fig-cap: !expr get_caption_by_group("perc", cohort_title, "beddays", "imd", treatment_type)
+targets::tar_read(perc_redirection_substitution_imd_beddays) |>
+  get_perc_by_group_plot("imd19_decile", "beddays")
+```
+
+#### Rates per 100,000 population
+
+```{r}
+#| label: tbl-rate_redirection_substitution_imd_beddays
+#| tbl-cap: !expr get_caption_by_group("rate", cohort_title, "beddays", "imd")
+targets::tar_read(rates_redirection_substitution_imd_beddays) |>
+  get_rates_by_group_table() 
+```
+
+```{r}
+#| label: fig-rate_redirection_substitution_imd_beddays
+#| fig-cap: !expr get_caption_by_group("rate", cohort_title, "beddays", "imd")
+targets::tar_read(rates_redirection_substitution_imd_beddays) |>
+  get_rates_by_group_plot("imd19_decile")
+```
+:::
+
+### Sex
+
+```{r}
+perc_redirection_substitution_sex_beddays <- targets::tar_read(perc_redirection_substitution_sex_beddays)
+rates_redirection_substitution_sex_beddays <- targets::tar_read(rates_redirection_substitution_sex_beddays)
+```
+
+::: panel-tabset
+#### Percentage of emergency activity
+
+```{r}
+#| label: tbl-perc_redirection_substitution_sex_beddays
+#| tbl-cap: !expr get_caption_by_group("perc", cohort_title, "beddays", "sex", treatment_type)
+targets::tar_read(perc_redirection_substitution_sex_beddays) |>
+  get_table_perc() 
+```
+
+```{r}
+#| label: fig-perc_redirection_substitution_sex_beddays
+#| fig-cap: !expr get_caption_by_group("perc", cohort_title, "beddays", "sex", treatment_type)
+targets::tar_read(perc_redirection_substitution_sex_beddays) |>
+  get_perc_by_group_plot("sex", "beddays")
+```
+
+#### Rates per 100,000 population
+
+```{r}
+#| label: tbl-rate_redirection_substitution_sex_beddays
+#| tbl-cap: !expr get_caption_by_group("rate", cohort_title, "beddays", "sex")
+targets::tar_read(rates_redirection_substitution_sex_beddays) |>
+  get_rates_by_group_table() 
+```
+
+```{r}
+#| label: fig-rate_redirection_substitution_sex_beddays
+#| fig-cap: !expr get_caption_by_group("rate", cohort_title, "beddays", "sex")
+targets::tar_read(rates_redirection_substitution_sex_beddays) |>
+  get_rates_by_group_plot("sex")
+```
+:::
+:::
+:::
+
+### Admission Characteristics
+
+In this section, mitigable activity for the Redirection and Substitution group are shown by admission characteristics.
+
+::: panel-tabset
+### Length Of Stay
+
+```{r}
+perc_redirection_substitution_los <- targets::tar_read(perc_redirection_substitution_los)
+```
+
+```{r}
+#| label: tbl-perc_redirection_substitution_los
+#| tbl-cap: !expr get_caption_by_group("perc", cohort_title, "admissions", "los", treatment_type)
+targets::tar_read(perc_redirection_substitution_los) |>
+  get_perc_by_los_table()
+```
+
+```{r}
+#| label: fig-perc_redirection_substitution_los
+#| fig-cap: !expr get_caption_by_group("perc", cohort_title, "admissions", "los", treatment_type)
+perc_redirection_substitution_los |>
+  get_perc_by_los_plot()
+```
+
+### Specialty
+
+::: panel-tabset
+#### Admissions
+
+```{r}
+#| label: tbl-perc_redirection_substitution_mainspecf_admissions
+#| tbl-cap: !expr get_caption_top_ten_specialties(cohort_title, "admissions")
+targets::tar_read(redirection_substitution_specialties_top_ten_admissions) |>
+  get_table_perc() 
+```
+
+```{r}
+#| label: fig-perc_redirection_substitution_mainspecf_admissions
+#| fig-cap: !expr get_caption_top_ten_specialties(cohort_title, "admissions")
+targets::tar_read(redirection_substitution_specialties_top_ten_admissions)  |>
+  get_top_ten_specialties_plot("admissions")
+```
+
+#### Beddays
+
+```{r}
+#| label: tbl-perc_redirection_substitution_mainspecf_beddays
+#| tbl-cap: !expr get_caption_top_ten_specialties(cohort_title, "beddays")
+targets::tar_read(redirection_substitution_specialties_top_ten_beddays) |>
+  get_table_perc() 
+```
+
+```{r}
+#| label: fig-perc_redirection_substitution_mainspecf_beddays
+#| fig-cap: !expr get_caption_top_ten_specialties(cohort_title, "beddays")
+targets::tar_read(redirection_substitution_specialties_top_ten_beddays) |>
+  get_top_ten_specialties_plot("beddays")
+```
+:::
+:::
