@@ -56,6 +56,13 @@ list(
   ),
   
   tar_target(
+    la_code_lookup,
+    read_excel(
+      "la_code_lookup.xlsx"
+    )
+  ),
+  
+  tar_target(
     icb_population_data,
     wrangling_icb_population_data(
       "Z:/Strategic Analytics/Projects 2025/Describing and Quantifying the NHP mitigators/population_data/sapeicb202420112022.xlsx",
