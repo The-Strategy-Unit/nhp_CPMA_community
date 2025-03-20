@@ -74,14 +74,13 @@ get_overview_of_mitigator <- function(mitigator,
 #' admissions by group.
 #'
 #' @param group A string of the group that the table is for.
-#' @param condition A string containing the expression needed to filter for a
-#' mitigator or set of mitigators.
 #' @param activity_type Either `"admissions"` or `"beddays"`.
 #' @param connection The Databricks connection.
+#' @param mitigator The mitigator or mechanism.
 #'
 #' @return A dataframe of the number of mitigable admissions by group.
-get_number_by_group <- function(group,
-                                condition,
+get_number_by_group <- function(mitigator,
+                                group,
                                 activity_type,
                                 connection = sc) {
   col_name <- get_col_name_from_group(group)
@@ -92,19 +91,17 @@ get_number_by_group <- function(group,
                           "default",
                           paste0("sl_af_describing_mitigators_final_2324_", group)
                         )) |>
-    dplyr::filter(!!rlang::parse_expr(condition), 
-                  !is.na(!!rlang::sym(col_name)) # exclude NULLs
-                  ) |>
-                  dplyr::rename(admissions = episodes) |>
-                    # Although the column is called episodes, each row is the 
-                    # last episode in a spell. So renaming as admissions here to
-                    # avoid confusion later.
-                    dplyr::summarise(number = sum(!!rlang::sym(activity_type)), 
-                                     .by = {{col_name}}) |>
-                    sparklyr::collect()
-                  
-                  return(summary)
-                  }
+    filter_to_mitigator_or_mechanism(mitigator) |>
+    dplyr::filter(!is.na(!!rlang::sym(col_name))) |> # exclude NULLs
+    dplyr::rename(admissions = episodes) |>
+      # Although the column is called episodes, each row is the last episode in 
+      # a spell. So renaming as admissions here to avoid confusion later.
+    dplyr::summarise(number = sum(!!rlang::sym(activity_type)), 
+                     .by = {{col_name}}) |>
+    sparklyr::collect()
+  
+    return(summary)
+  }
 
 #' Get the percentage of mitigable admissions for a mitigator by a group.
 #'
@@ -114,19 +111,18 @@ get_number_by_group <- function(group,
 #' the number and percentage of mitigable admissions by group.
 #'
 #' @param group A string of the group that the table is for.
-#' @param condition A string containing the expression needed to filter for a
-#' mitigator or set of mitigators.
 #' @param activity_type Either `"admissions"` or `"beddays"`.
 #' @param connection The Databricks connection.
+#' @param mitigator The mitigator or mechanism.
 #'
 #' @return A dataframe of the number and percentage of mitigable admissions by 
 #' group.
-get_perc_by_group <- function(group,
-                              condition,
+get_perc_by_group <- function(mitigator,
+                              group,
                               activity_type,
                               connection = sc) {
-  summary <- get_number_by_group(group, 
-                                 condition, 
+  summary <- get_number_by_group(mitigator,
+                                 group,
                                  activity_type, 
                                  connection = sc) |>
     dplyr::mutate(

@@ -291,47 +291,50 @@ list(
   
   ## Percentage breakdowns -----------------------------------------------------
   tarchetypes::tar_map(
-    list(group = rep(
-      c("age", "ethnicity", "imd", "sex"), 2), 
-      activity_type = rep(c("admissions", "beddays"), each = 4)),
+    list(
+      mitigator = rep(mitigators_and_mechanisms, 8),
+      group = rep(c("age", "ethnicity", "imd", "sex"), each = 66),
+      activity_type = rep(rep(c("admissions", "beddays"), each = 33), 4)),
     tar_target(
-      perc_frail_elderly_high,
-      get_perc_by_group(group, "frail_elderly_high == 1", activity_type)
+      perc,
+      get_perc_by_group(mitigator, 
+                        group, 
+                        activity_type)
     )
   ),
   
   ## Rates per 100,000 population ----------------------------------------------
-  tarchetypes::tar_map(
-    list(activity_type = c("admissions", "beddays")),
-    tar_target(
-      rates_frail_elderly_high_age,
-      get_rates_by_group("age", "frail_elderly_high == 1", pop_by_age, activity_type)
-    )
-  ),
-  
-  tarchetypes::tar_map(
-    list(activity_type = c("admissions", "beddays")),
-    tar_target(
-      rates_frail_elderly_high_ethnicity,
-      get_rates_by_group("ethnicity", "frail_elderly_high == 1", pop_by_ethnicity, activity_type)
-    )
-  ),
-  
-  tarchetypes::tar_map(
-    list(activity_type = c("admissions", "beddays")),
-    tar_target(
-      rates_frail_elderly_high_imd,
-      get_rates_by_group("imd", "frail_elderly_high == 1", pop_by_imd, activity_type)
-    )
-  ),
-  
-  tarchetypes::tar_map(
-    list(activity_type = c("admissions", "beddays")),
-    tar_target(
-      rates_frail_elderly_high_sex,
-      get_rates_by_group("sex", "frail_elderly_high == 1", pop_by_sex, activity_type)
-    )
-  ),
+  # tarchetypes::tar_map(
+  #   list(activity_type = c("admissions", "beddays")),
+  #   tar_target(
+  #     rates_frail_elderly_high_age,
+  #     get_rates_by_group("age", "frail_elderly_high == 1", pop_by_age, activity_type)
+  #   )
+  # ),
+  # 
+  # tarchetypes::tar_map(
+  #   list(activity_type = c("admissions", "beddays")),
+  #   tar_target(
+  #     rates_frail_elderly_high_ethnicity,
+  #     get_rates_by_group("ethnicity", "frail_elderly_high == 1", pop_by_ethnicity, activity_type)
+  #   )
+  # ),
+  # 
+  # tarchetypes::tar_map(
+  #   list(activity_type = c("admissions", "beddays")),
+  #   tar_target(
+  #     rates_frail_elderly_high_imd,
+  #     get_rates_by_group("imd", "frail_elderly_high == 1", pop_by_imd, activity_type)
+  #   )
+  # ),
+  # 
+  # tarchetypes::tar_map(
+  #   list(activity_type = c("admissions", "beddays")),
+  #   tar_target(
+  #     rates_frail_elderly_high_sex,
+  #     get_rates_by_group("sex", "frail_elderly_high == 1", pop_by_sex, activity_type)
+  #   )
+  # ),
   
   ## Specialty -----------------------------------------------------------------
   tar_target(
@@ -343,19 +346,19 @@ list(
     scrape_xls(specialty_url, sheet = 2) |>
       dplyr::rename(specialty = treatment_function_title, specialty_group = group)
   ),
-  tarchetypes::tar_map(
-    list(activity_type = c("admissions", "beddays")),
-    tar_target(
-      frail_elderly_high_specialties_top_ten,
-      get_top_ten_specialties("frail_elderly_high == 1", specialty_key, activity_type)
-    )
-  ),
+  # tarchetypes::tar_map(
+  #   list(activity_type = c("admissions", "beddays")),
+  #   tar_target(
+  #     frail_elderly_high_specialties_top_ten,
+  #     get_top_ten_specialties("frail_elderly_high == 1", specialty_key, activity_type)
+  #   )
+  # ),
  
  ## Length of Stay -------------------------------------------------------------
- tar_target(
-   perc_frail_elderly_high_los,
-   get_perc_by_los("frail_elderly_high == 1")
- ),
+ # tar_target(
+ #   perc_frail_elderly_high_los,
+ #   get_perc_by_los("frail_elderly_high == 1")
+ # ),
   
   # Cohort analysis ------------------------------------------------------------
   
