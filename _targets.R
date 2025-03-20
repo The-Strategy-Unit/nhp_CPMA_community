@@ -22,6 +22,7 @@ tar_option_set(
   )
 )
 
+# Databricks connection --------------------------------------------------------
 # Connection to Databricks
 sc <- sparklyr::spark_connect(
   master     = Sys.getenv("DATABRICKS_HOST"),
@@ -31,16 +32,18 @@ sc <- sparklyr::spark_connect(
   envname    = Sys.getenv("DATABRICKS_ENVNAME")
 )
 
-mitigators <- readxl::read_excel("summary_mitigators_table.xlsx") |>
+# Mitigator details ------------------------------------------------------------
+mitigator_summary_table <- readxl::read_excel("summary_mitigators_table.xlsx")
+
+mitigators <- mitigator_summary_table |>
   dplyr::pull(mitigator_code) 
 
-mechanisms <- readxl::read_excel("summary_mitigators_table.xlsx") |>
+mechanisms <- mitigator_summary_table |>
   dplyr::mutate(mechanism = snakecase::to_snake_case(mechanism)) |>
   dplyr::pull(mechanism) |>
   unique()
 
 mitigators_and_mechanisms <- c(mitigators, mechanisms)
-
 
 # Run the R scripts in the R/ folder with your custom functions:
 tar_source()
@@ -234,18 +237,8 @@ list(
      beddays
    )
   ),
- 
-  # Mitigator details-----------------------------------------------------------
- 
- tar_target(
-   mitigator_summary_table,
-   read_excel("summary_mitigators_table.xlsx")
- ),
-
    
   # Descriptive analysis -------------------------------------------------------
-
- 
   ## Overview of mitigator -----------------------------------------------------
   tar_target(
     total_beddays_admissions,
