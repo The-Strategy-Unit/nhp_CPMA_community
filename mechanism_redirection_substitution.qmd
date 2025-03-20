@@ -53,7 +53,7 @@ redirection_substitution_beddays_perc <- overview_redirection_substitution |>
   dplyr::pull(perc)
 ```
 
-In 2023/24, `r redirection_substitution_admissions_perc`% of all emergency admissions and `r redirection_substitution_beddays_perc`% of all emergency beddays fall under mitigable activity for the Frail Older People (high frailty) cohort (@tbl-perc_redirection_substitution).
+In 2023/24, `r redirection_substitution_admissions_perc`% of all (both emergency and elective) admissions and `r redirection_substitution_beddays_perc`% of all beddays fall under mitigable activity for the Redirection and Substitution group (@tbl-perc_redirection_substitution).
 
 ```{r}
 #| label: tbl-perc_redirection_substitution
