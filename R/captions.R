@@ -130,6 +130,10 @@ get_caption_by_group <- function(metric, cohort, activity_type, group, treatment
 #'
 #' @return A string.
 get_caption_overview <- function(cohort, treatment_type) {
+  treatment_type <- if(treatment_type == "both") {
+    "all (both elective and emergency)"
+  }
+  
   caption <- glue::glue("Percentage of mitigable admissions and beddays for {cohort} by {treatment_type} activity in 2023/24.")
   
   return(caption)
