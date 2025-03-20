@@ -510,7 +510,6 @@ generate_venn_diagram<-function(data, activity_type){
     scale_x_continuous(expand=c(0.1,0.1))+
     theme(legend.position="none",
           plot.title=element_text(face="bold", hjust = 0.5))
-
   
 }
   
