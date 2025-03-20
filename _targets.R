@@ -22,6 +22,7 @@ tar_option_set(
   )
 )
 
+# Databricks connection --------------------------------------------------------
 # Connection to Databricks
 sc <- sparklyr::spark_connect(
   master     = Sys.getenv("DATABRICKS_HOST"),
@@ -31,16 +32,29 @@ sc <- sparklyr::spark_connect(
   envname    = Sys.getenv("DATABRICKS_ENVNAME")
 )
 
-mitigators <- readxl::read_excel("summary_mitigators_table.xlsx") |>
-  dplyr::pull(mitigator_code) 
+# Mitigator details ------------------------------------------------------------
+mitigator_summary_table <- readxl::read_excel("summary_mitigators_table.xlsx")
 
-mechanisms <- readxl::read_excel("summary_mitigators_table.xlsx") |>
+mitigators <- mitigator_summary_table |>
+  dplyr::select(mitigator_or_mechanism = mitigator_code, treatment_type = type_of_admission) 
+
+mechanisms <- mitigator_summary_table |>
   dplyr::mutate(mechanism = snakecase::to_snake_case(mechanism)) |>
-  dplyr::pull(mechanism) |>
-  unique()
+  dplyr::summarise(treatment_type = paste(unique(type_of_admission), 
+                                          collapse = ', '), 
+                   .by = mechanism) |>
+  dplyr::mutate(
+    treatment_type = ifelse(stringr::str_detect(treatment_type, 
+                                                "emergency & elective"), 
+                            "both", 
+                            treatment_type)) |>
+dplyr::rename(mitigator_or_mechanism = mechanism)
 
-mitigators_and_mechanisms <- c(mitigators, mechanisms)
+mitigators_and_mechanisms_treatment_lookup <- mitigators |>
+  rbind(mechanisms)
 
+mitigators_and_mechanisms <- mitigators_and_mechanisms_treatment_lookup |>
+  dplyr::pull(mitigator_or_mechanism)
 
 # Run the R scripts in the R/ folder with your custom functions:
 tar_source()
@@ -234,18 +248,8 @@ list(
      beddays
    )
   ),
- 
-  # Mitigator details-----------------------------------------------------------
- 
- tar_target(
-   mitigator_summary_table,
-   read_excel("summary_mitigators_table.xlsx")
- ),
-
    
   # Descriptive analysis -------------------------------------------------------
-
- 
   ## Overview of mitigator -----------------------------------------------------
   tar_target(
     total_beddays_admissions,
@@ -279,53 +283,64 @@ list(
     list(mitigator = mitigators_and_mechanisms),
     tar_target(
       overview,
-      get_overview_of_mitigator("emergency",
-                                mitigator,
-                                total_beddays_admissions)
+      get_overview_of_mitigator(mitigator,
+                                total_beddays_admissions,
+                                mitigators_and_mechanisms_treatment_lookup)
     )
   ),
   
   ## Percentage breakdowns -----------------------------------------------------
   tarchetypes::tar_map(
-    list(group = rep(
-      c("age", "ethnicity", "imd", "sex"), 2), 
-      activity_type = rep(c("admissions", "beddays"), each = 4)),
+    list(
+      group = rep(c("age", "ethnicity", "imd", "sex"), each = 66),
+      mitigator = rep(mitigators_and_mechanisms, 8),
+      activity_type = rep(rep(c("admissions", "beddays"), each = 33), 4)),
     tar_target(
-      perc_frail_elderly_high,
-      get_perc_by_group(group, "frail_elderly_high == 1", activity_type)
+      perc,
+      get_perc_by_group(mitigator, 
+                        group, 
+                        activity_type)
     )
   ),
   
   ## Rates per 100,000 population ----------------------------------------------
   tarchetypes::tar_map(
-    list(activity_type = c("admissions", "beddays")),
+    list(
+      mitigator = rep(mitigators_and_mechanisms, 2),
+      activity_type = rep(c("admissions", "beddays"), each = 33)),
     tar_target(
-      rates_frail_elderly_high_age,
-      get_rates_by_group("age", "frail_elderly_high == 1", pop_by_age, activity_type)
+      rates_age,
+      get_rates_by_group(mitigator, "age", pop_by_age, activity_type)
     )
   ),
-  
+
   tarchetypes::tar_map(
-    list(activity_type = c("admissions", "beddays")),
+    list(
+      mitigator = rep(mitigators_and_mechanisms, 2),
+      activity_type = rep(c("admissions", "beddays"), each = 33)),
     tar_target(
-      rates_frail_elderly_high_ethnicity,
-      get_rates_by_group("ethnicity", "frail_elderly_high == 1", pop_by_ethnicity, activity_type)
+      rates_ethnicity,
+      get_rates_by_group(mitigator, "ethnicity",  pop_by_ethnicity, activity_type)
     )
   ),
-  
+
   tarchetypes::tar_map(
-    list(activity_type = c("admissions", "beddays")),
+    list(
+      mitigator = rep(mitigators_and_mechanisms, 2),
+      activity_type = rep(c("admissions", "beddays"), each = 33)),
     tar_target(
-      rates_frail_elderly_high_imd,
-      get_rates_by_group("imd", "frail_elderly_high == 1", pop_by_imd, activity_type)
+      rates_imd,
+      get_rates_by_group(mitigator, "imd", pop_by_imd, activity_type)
     )
   ),
-  
+
   tarchetypes::tar_map(
-    list(activity_type = c("admissions", "beddays")),
+    list(
+      mitigator = rep(mitigators_and_mechanisms, 2),
+      activity_type = rep(c("admissions", "beddays"), each = 33)),
     tar_target(
-      rates_frail_elderly_high_sex,
-      get_rates_by_group("sex", "frail_elderly_high == 1", pop_by_sex, activity_type)
+      rates_sex,
+      get_rates_by_group(mitigator, "sex", pop_by_sex, activity_type)
     )
   ),
   
@@ -340,19 +355,24 @@ list(
       dplyr::rename(specialty = treatment_function_title, specialty_group = group)
   ),
   tarchetypes::tar_map(
-    list(activity_type = c("admissions", "beddays")),
+    list(
+      mitigator = rep(mitigators_and_mechanisms, 2),
+      activity_type = rep(c("admissions", "beddays"), each = 33)),
     tar_target(
-      frail_elderly_high_specialties_top_ten,
-      get_top_ten_specialties("frail_elderly_high == 1", specialty_key, activity_type)
+      specialty,
+      get_top_ten_specialties(mitigator, specialty_key, activity_type)
     )
   ),
  
  ## Length of Stay -------------------------------------------------------------
- tar_target(
-   perc_frail_elderly_high_los,
-   get_perc_by_los("frail_elderly_high == 1")
+ tarchetypes::tar_map(
+   list(mitigator = mitigators_and_mechanisms),
+   tar_target(
+     perc_los,
+     get_perc_by_los(mitigator)
+   )
  ),
-  
+ 
   # Cohort analysis ------------------------------------------------------------
   
   tar_target(
