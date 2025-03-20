@@ -140,7 +140,7 @@ total_cohort_numbers_2324|>
 
 #### Admissions
 
-```{r, fig.width=7, fig.height=6}
+```{r, fig.width=4, fig.height=4}
 #| label: fig-overlap_mechanism_cohorts_episodes
 #| fig-cap: Venn diagram showing the overlap in admissions between the mechanisms of mitigation groups.
 
@@ -186,23 +186,25 @@ To help understand the variability between ICBs we have calculated for each ICB 
 #| label: fig-number_trends_spells_england_all_mitigators
 #| fig-cap: The total number of admissions for all mitigable activity in England over the last 9 years. 
 
-denominator_over_time<-tar_read(denominator_over_time)
+denominator_over_time<-tar_read(denominator_over_time)|>
+  filter(age_range!="NA")
 icb_population_data<-tar_read(icb_population_data)
 
 
+denominator_over_time<-tar_read(denominator_over_time)
+
+
 number_percentage_over_time<-numbers_over_time_total_mitigation|>
-      summarise(episodes=sum(episodes),
-              beddays=sum(beddays),
-              .by=c(icb_2024_name, year, fyear))|>
-      left_join(denominator_over_time|>
-                filter(fyear!=201415)|>
-                summarise(total_episodes=sum(total_episodes_all),
-                total_beddays=sum(total_beddays_all),
-                .by=c(fyear, icb_2024_name))
-      , by=c("fyear", "icb_2024_name"))|>
-    mutate(percentage_episodes=round((episodes/total_episodes)*100,1),
-           percentage_beddays=round((beddays/total_beddays)*100,1))|>
-    as.data.frame()
+  left_join(denominator_over_time, by=c("age_range", "sex", "year", "icb", "icb_2024_name"))|>
+  summarise(episodes=sum(episodes, na.rm=TRUE),
+            beddays=sum(beddays, na.rm=TRUE),
+            total_episodes=sum(total_episodes_all, na.rm=TRUE),
+            total_beddays=sum(total_beddays_all, na.rm=TRUE),
+            .by=c(icb, icb_2024_name, year))|>
+  filter(year!="2014/15")|>
+  mutate(percentage_episodes=round((episodes/total_episodes)*100,1),
+         percentage_beddays=round((beddays/total_beddays)*100,1))|>
+  as.data.frame()
 
 plot_of_number_over_time(number_percentage_over_time, episodes)
 
