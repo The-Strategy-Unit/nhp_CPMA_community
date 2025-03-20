@@ -292,8 +292,8 @@ list(
   ## Percentage breakdowns -----------------------------------------------------
   tarchetypes::tar_map(
     list(
-      mitigator = rep(mitigators_and_mechanisms, 8),
       group = rep(c("age", "ethnicity", "imd", "sex"), each = 66),
+      mitigator = rep(mitigators_and_mechanisms, 8),
       activity_type = rep(rep(c("admissions", "beddays"), each = 33), 4)),
     tar_target(
       perc,
@@ -359,7 +359,7 @@ list(
       mitigator = rep(mitigators_and_mechanisms, 2),
       activity_type = rep(c("admissions", "beddays"), each = 33)),
     tar_target(
-      specialties_top_ten,
+      specialty,
       get_top_ten_specialties(mitigator, specialty_key, activity_type)
     )
   ),
