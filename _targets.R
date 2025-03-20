@@ -346,13 +346,15 @@ list(
     scrape_xls(specialty_url, sheet = 2) |>
       dplyr::rename(specialty = treatment_function_title, specialty_group = group)
   ),
-  # tarchetypes::tar_map(
-  #   list(activity_type = c("admissions", "beddays")),
-  #   tar_target(
-  #     frail_elderly_high_specialties_top_ten,
-  #     get_top_ten_specialties("frail_elderly_high == 1", specialty_key, activity_type)
-  #   )
-  # ),
+  tarchetypes::tar_map(
+    list(
+      mitigator = rep(mitigators_and_mechanisms, 2),
+      activity_type = rep(c("admissions", "beddays"), each = 33)),
+    tar_target(
+      specialties_top_ten,
+      get_top_ten_specialties(mitigator, specialty_key, activity_type)
+    )
+  ),
  
  ## Length of Stay -------------------------------------------------------------
  tarchetypes::tar_map(

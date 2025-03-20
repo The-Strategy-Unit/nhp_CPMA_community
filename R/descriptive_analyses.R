@@ -265,14 +265,13 @@ get_rates_by_group_table <- function(data) {
 # Top ten specialties ----------------------------------------------------------
 #' Get the top ten specialties for a mitigator.
 #'
-#' @param condition A string containing the expression needed to filter for a
-#' mitigator or set of mitigators.
 #' @param key The specialty key.
 #' @param activity_type Either `"admissions"` or `"beddays"`.
+#' @param mitigator The mitigator or mechanism.
 #'
 #' @return A dataframe.
-get_top_ten_specialties <- function(condition, key, activity_type) {
-  get_perc_by_group("tretspef", condition, activity_type) |>
+get_top_ten_specialties <- function(mitigator, key, activity_type) {
+  get_perc_by_group(mitigator, "tretspef", activity_type) |>
     dplyr::left_join(key, by = c("tretspef" = "dd_code")) |>
     dplyr::arrange(desc(perc)) |>
     dplyr::slice(1:10) |>
@@ -310,9 +309,8 @@ get_top_ten_specialties_plot <- function(data, activity_type) {
 #' the `condition` provided and calculate the number and percentage of mitigable
 #' admissions by length of stay (LOS).
 #'
-#' @param condition A string containing the expression needed to filter for a
-#' mitigator or set of mitigators.
 #' @param connection The Databricks connection.
+#' @param mitigator The mitigator or mechanism.
 #'
 #' @return A dataframe of the number and percentage of mitigable admissions by
 #' LOS.

@@ -414,13 +414,13 @@ In this section, mitigable activity for the Redirection and Substitution group a
 ### Length Of Stay
 
 ```{r}
-perc_redirection_substitution_los <- targets::tar_read(perc_redirection_substitution_los)
+perc_redirection_substitution_los <- targets::tar_read(perc_los_redirection_substitution)
 ```
 
 ```{r}
 #| label: tbl-perc_redirection_substitution_los
 #| tbl-cap: !expr get_caption_by_group("perc", cohort_title, "admissions", "los", treatment_type)
-targets::tar_read(perc_redirection_substitution_los) |>
+perc_redirection_substitution_los |>
   get_perc_by_los_table()
 ```
 
@@ -439,14 +439,14 @@ perc_redirection_substitution_los |>
 ```{r}
 #| label: tbl-perc_redirection_substitution_mainspecf_admissions
 #| tbl-cap: !expr get_caption_top_ten_specialties(cohort_title, "admissions")
-targets::tar_read(redirection_substitution_specialties_top_ten_admissions) |>
+targets::tar_read(specialties_top_ten_redirection_substitution_admissions) |>
   get_table_perc() 
 ```
 
 ```{r}
 #| label: fig-perc_redirection_substitution_mainspecf_admissions
 #| fig-cap: !expr get_caption_top_ten_specialties(cohort_title, "admissions")
-targets::tar_read(redirection_substitution_specialties_top_ten_admissions)  |>
+targets::tar_read(specialties_top_ten_redirection_substitution_admissions)  |>
   get_top_ten_specialties_plot("admissions")
 ```
 
@@ -455,14 +455,14 @@ targets::tar_read(redirection_substitution_specialties_top_ten_admissions)  |>
 ```{r}
 #| label: tbl-perc_redirection_substitution_mainspecf_beddays
 #| tbl-cap: !expr get_caption_top_ten_specialties(cohort_title, "beddays")
-targets::tar_read(redirection_substitution_specialties_top_ten_beddays) |>
+targets::tar_read(specialties_top_ten_redirection_substitution_beddays) |>
   get_table_perc() 
 ```
 
 ```{r}
 #| label: fig-perc_redirection_substitution_mainspecf_beddays
 #| fig-cap: !expr get_caption_top_ten_specialties(cohort_title, "beddays")
-targets::tar_read(redirection_substitution_specialties_top_ten_beddays) |>
+targets::tar_read(specialties_top_ten_redirection_substitution_beddays) |>
   get_top_ten_specialties_plot("beddays")
 ```
 :::
