@@ -30,6 +30,8 @@ treatment_type <- "emergency"
 ```
 
 ```{r}
+mitigator_summary_table <- readxl::read_excel("summary_mitigators_table.xlsx")
+
 england_age_sex_standardised_rates_episodes<-tar_read(england_age_sex_standardised_rates_episodes)|>
   filter(cohorts==cohort)
 
@@ -505,7 +507,7 @@ For the Frail Older People (high frailty) activity we show how much of the activ
 #| fig-cap: The number and percentage of mitigator cohorts that the Frail Elderly spells are a part of (2023/24).
 
 total_cohort_numbers_2324<-targets::tar_read(total_cohort_numbers_2324)|>
-  filter(frail_elderly_high==1)
+  filter(!!rlang::sym(cohort)==1)
 
 plotting_barchart_number_of_cohorts(total_cohort_numbers_2324, episodes)
 
@@ -533,8 +535,6 @@ For example, Elderly Frail High cohort overlaps with all but 2 of the other miti
 ```{r, fig.width=10, fig.height=6 }
 #| label: fig-prop_other_cohorts_frail_spells
 #| fig-cap: The number and proportion of Frail Elderly spells that are included in each of the other cohorts (2023/24).
-
-mitigator_summary_table<-tar_read(mitigator_summary_table)
 
 plotting_barchart_summary_of_overlaps(total_cohort_numbers_2324,cohort, episodes, mitigator_summary_table )
 
