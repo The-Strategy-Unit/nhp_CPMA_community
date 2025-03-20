@@ -1,11 +1,11 @@
 # Functions used to complete the descriptive analyses.
 
 # Percentage breakdowns --------------------------------------------------------
-#' Get an overview of mitigable activity for a mitigator.
+#' Get an overview of mitigable activity for a mitigator or mechanism.
 #'
-#' That is, get the number of mitigable admissions and beddays for a mitigator
-#' in 2023-24, get the total number of all emergency or elective admissions and
-#' calculate the percentage.
+#' That is, get the number of mitigable admissions and beddays for a mitigator 
+#' or mechanism in 2023-24, get the total number of all emergency or elective 
+#' admissions and calculate the percentage.
 #'
 #' @param mitigator The mitigator or mechanism.
 #' @param totals A dataframe containing the total beddays and episodes for 2023-24.
@@ -66,12 +66,12 @@ get_overview_of_mitigator <- function(mitigator,
   return(summary)
 }
 
-#' Get the number of mitigable admissions for a mitigator by a group.
+#' Get the number of mitigable admissions for a mitigator or mechanism by a 
+#' group.
 #'
 #' Given a `group` (for example, `sex` or `age`), this function will get the
-#' table from Databricks, filter to the mitigator or set of mitigators using
-#' the `condition` provided and calculate the number and percentage of mitigable
-#' admissions by group.
+#' table from Databricks, filter to the mitigator or mechanism using and 
+#' calculate the number and percentage of mitigable admissions by group.
 #'
 #' @param group A string of the group that the table is for.
 #' @param activity_type Either `"admissions"` or `"beddays"`.
@@ -103,12 +103,13 @@ get_number_by_group <- function(mitigator,
     return(summary)
   }
 
-#' Get the percentage of mitigable admissions for a mitigator by a group.
+#' Get the percentage of mitigable admissions for a mitigator or mechanism by a 
+#' group.
 #'
 #' Given a `group` (for example, `sex` or `age`), this function will use 
 #' `get_number_by_group()` to get the table from Databricks, filter to the 
-#' mitigator or set of mitigators using the `condition` provided and calculate 
-#' the number and percentage of mitigable admissions by group.
+#' mitigator or mechanism and calculate the number and percentage of mitigable 
+#' admissions by group.
 #'
 #' @param group A string of the group that the table is for.
 #' @param activity_type Either `"admissions"` or `"beddays"`.
@@ -137,7 +138,8 @@ get_perc_by_group <- function(mitigator,
   return(summary)
 }
 
-#' Plot the percentage of mitigable admissions for a mitigator by a group.
+#' Plot the percentage of mitigable admissions for a mitigator or mechanism by a
+#' group.
 #'
 #' @param data The output of `get_perc_admissions_by_group()`.
 #' @param col_name The col_name that the data is split by.
@@ -181,7 +183,8 @@ get_table_perc <- function(data) {
 }
 
 # Rates per 100,000 ------------------------------------------------------------
-#' Get rates per population of admissions per group.
+#' Get rates per population of admissions per group for a mitigator or 
+#' mechanism.
 #'
 #' @param group A string of the group that the table is for.
 #' @param population A dataframe of the population by group.
@@ -262,7 +265,7 @@ get_rates_by_group_table <- function(data) {
 }
 
 # Top ten specialties ----------------------------------------------------------
-#' Get the top ten specialties for a mitigator.
+#' Get the top ten specialties for a mitigator or mechanism.
 #'
 #' @param key The specialty key.
 #' @param activity_type Either `"admissions"` or `"beddays"`.
@@ -277,7 +280,7 @@ get_top_ten_specialties <- function(mitigator, key, activity_type) {
     dplyr::select(specialty, {{activity_type}}, perc)
 }
 
-#' Plot the top ten specialties for a mitigator.
+#' Plot the top ten specialties for a mitigator or mechanism.
 #'
 #' @param data The output of `get_top_ten_specialties()`.
 #' @param activity_type Either `"admissions"` or `"beddays"`.
@@ -301,12 +304,12 @@ get_top_ten_specialties_plot <- function(data, activity_type) {
 
 # Length of Stay ---------------------------------------------------------------
 
-#' Get the percentage of mitigable admissions for a mitigator by a group.
+#' Get the percentage of mitigable admissions for a mitigator or mechanism by a 
+#' group.
 #'
 #' Using `get_perc_by_group` with `group = "los`, this function will get the
-#' table from Databricks, filter to the mitigator or set of mitigators using
-#' the `condition` provided and calculate the number and percentage of mitigable
-#' admissions by length of stay (LOS).
+#' table from Databricks, filter to the mitigator  or mechanism and calculate 
+#' the number and percentage of mitigable admissions by length of stay (LOS).
 #'
 #' @param connection The Databricks connection.
 #' @param mitigator The mitigator or mechanism.
@@ -349,7 +352,8 @@ get_perc_by_los <- function(mitigator, connection = sc) {
   return(summary)
 }
 
-#' Plot the percentage of mitigable activity for a mitigator by LOS.
+#' Plot the percentage of mitigable activity for a mitigator or mechanism by 
+#' LOS.
 #'
 #' @param data The output of `get_perc_by_group()`.
 #'
