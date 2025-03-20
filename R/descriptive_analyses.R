@@ -184,22 +184,21 @@ get_table_perc <- function(data) {
 #' Get rates per population of admissions per group.
 #'
 #' @param group A string of the group that the table is for.
-#' @param condition A string containing the expression needed to filter for a
-#' mitigator or set of mitigators.
 #' @param population A dataframe of the population by group.
 #' @param activity_type Either `"admissions"` or `"beddays"`.
 #' @param connection The Databricks connection.
+#' @param mitigator The mitigator or mechanism.
 #'
 #' @return
-get_rates_by_group <- function(group,
-                               condition,
+get_rates_by_group <- function(mitigator,
+                               group,
                                population,
                                activity_type,
                                connection = sc) {
   col_name <- get_col_name_from_group(group)
   
-  summary <- get_number_by_group(group, 
-                                 condition, 
+  summary <- get_number_by_group(mitigator, 
+                                 group,
                                  activity_type, 
                                  connection = sc) |>
     dplyr::left_join(population, {{col_name}}) |>

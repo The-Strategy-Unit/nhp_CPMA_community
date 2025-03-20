@@ -304,37 +304,45 @@ list(
   ),
   
   ## Rates per 100,000 population ----------------------------------------------
-  # tarchetypes::tar_map(
-  #   list(activity_type = c("admissions", "beddays")),
-  #   tar_target(
-  #     rates_frail_elderly_high_age,
-  #     get_rates_by_group("age", "frail_elderly_high == 1", pop_by_age, activity_type)
-  #   )
-  # ),
-  # 
-  # tarchetypes::tar_map(
-  #   list(activity_type = c("admissions", "beddays")),
-  #   tar_target(
-  #     rates_frail_elderly_high_ethnicity,
-  #     get_rates_by_group("ethnicity", "frail_elderly_high == 1", pop_by_ethnicity, activity_type)
-  #   )
-  # ),
-  # 
-  # tarchetypes::tar_map(
-  #   list(activity_type = c("admissions", "beddays")),
-  #   tar_target(
-  #     rates_frail_elderly_high_imd,
-  #     get_rates_by_group("imd", "frail_elderly_high == 1", pop_by_imd, activity_type)
-  #   )
-  # ),
-  # 
-  # tarchetypes::tar_map(
-  #   list(activity_type = c("admissions", "beddays")),
-  #   tar_target(
-  #     rates_frail_elderly_high_sex,
-  #     get_rates_by_group("sex", "frail_elderly_high == 1", pop_by_sex, activity_type)
-  #   )
-  # ),
+  tarchetypes::tar_map(
+    list(
+      mitigator = rep(mitigators_and_mechanisms, 2),
+      activity_type = rep(c("admissions", "beddays"), each = 33)),
+    tar_target(
+      rates_age,
+      get_rates_by_group(mitigator, "age", pop_by_age, activity_type)
+    )
+  ),
+
+  tarchetypes::tar_map(
+    list(
+      mitigator = rep(mitigators_and_mechanisms, 2),
+      activity_type = rep(c("admissions", "beddays"), each = 33)),
+    tar_target(
+      rates_ethnicity,
+      get_rates_by_group(mitigator, "ethnicity",  pop_by_ethnicity, activity_type)
+    )
+  ),
+
+  tarchetypes::tar_map(
+    list(
+      mitigator = rep(mitigators_and_mechanisms, 2),
+      activity_type = rep(c("admissions", "beddays"), each = 33)),
+    tar_target(
+      rates_imd,
+      get_rates_by_group(mitigator, "imd", pop_by_imd, activity_type)
+    )
+  ),
+
+  tarchetypes::tar_map(
+    list(
+      mitigator = rep(mitigators_and_mechanisms, 2),
+      activity_type = rep(c("admissions", "beddays"), each = 33)),
+    tar_target(
+      rates_sex,
+      get_rates_by_group(mitigator, "sex", pop_by_sex, activity_type)
+    )
+  ),
   
   ## Specialty -----------------------------------------------------------------
   tar_target(

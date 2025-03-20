@@ -76,7 +76,7 @@ Outputs are presented for both admissions and beddays, but patterns are broadly 
 
 ```{r}
 perc_redirection_substitution_age_admissions <- targets::tar_read(perc_redirection_substitution_age_admissions)
-rates_redirection_substitution_age_admissions <- targets::tar_read(rates_redirection_substitution_age_admissions)
+rates_redirection_substitution_age_admissions <- targets::tar_read(rates_age_redirection_substitution_admissions)
 ```
 
 ::: panel-tabset
