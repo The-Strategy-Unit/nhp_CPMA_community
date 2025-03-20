@@ -154,21 +154,23 @@ generating_icb_age_sex_standardised_rates<-function(data, icb_pop, standard_pop,
   expanded_data<-data|>
     filter(fyear!=201415)|>
     expand(age_range, sex, cohorts, year,icb)
-   
+  
   standardised_data<-expanded_data|>
-    left_join(data, by=c("icb", "year", "age_range", "sex", "cohorts"))|>
-    mutate(episodes=ifelse(is.na(episodes), 0, episodes),
-           beddays=ifelse(is.na(beddays), 0, beddays) )|>
-    left_join(icb_pop[,c("icb_2024_name", "fyear", "age_range", "sex", "icb_population")], by=c("icb_2024_name", "year"="fyear", "age_range", "sex"))|>
+    left_join(data[,c("icb", "year", "age_range", "sex", "cohorts", "episodes", "beddays")],
+              by=c("icb", "year", "age_range", "sex", "cohorts"))|>
+    left_join(icb_pop[,c("icb_2024_name","icb24cdh", "fyear", "age_range", "sex", "icb_population")], by=c("icb"="icb24cdh", "year"="fyear", "age_range", "sex"))|>
     left_join(standard_pop, by=c("age_range", "sex"))|>
     filter(!is.na(icb_2024_name))|>
     filter(age_range!="NA")|>
-    group_by(icb_2024_name, icb, year, cohorts) |>
+    mutate(episodes=ifelse(is.na(episodes), 0, episodes),
+           beddays=ifelse(is.na(beddays), 0, beddays) )|>
     rename(activity={{activity_type}})|>
-    PHEindicatormethods::calculate_dsr(x =activity,    # observed number of events
+    group_by(icb_2024_name, icb, year, cohorts) |>
+    PHEindicatormethods::calculate_dsr(x = activity,    # observed number of events
                                        n = icb_population,  # non-standard pops for each stratum
                                        stdpop = pop) |>   # standard populations for England for each stratum
-   mutate(value=round(value,0))
+    mutate(value=round(value,0))
+  
 
   
 }
@@ -204,14 +206,15 @@ generating_england_age_sex_standardised_rates<-function(data, icb_pop, standard_
     filter(fyear!=201415)|>
     expand(age_range, sex, cohorts, year,icb)
   
-      standardised_data<-expanded_data|>
-      left_join(data, by=c("icb", "year", "age_range", "sex", "cohorts"))|>
-      mutate(episodes=ifelse(is.na(episodes), 0, episodes),
-             beddays=ifelse(is.na(beddays), 0, beddays) )|>
-        left_join(icb_pop[,c("icb_2024_name", "fyear", "age_range", "sex", "icb_population")], by=c("icb_2024_name", "year"="fyear", "age_range", "sex"))|>
+  standardised_data<-expanded_data|>
+    left_join(data[,c("icb", "year", "age_range", "sex", "cohorts", "episodes", "beddays")],
+              by=c("icb", "year", "age_range", "sex", "cohorts"))|>
+    left_join(icb_pop[,c("icb_2024_name","icb24cdh", "fyear", "age_range", "sex", "icb_population")], by=c("icb"="icb24cdh", "year"="fyear", "age_range", "sex"))|>
     left_join(standard_pop, by=c("age_range", "sex"))|>
     filter(!is.na(icb_2024_name))|>
     filter(age_range!="NA")|>
+    mutate(episodes=ifelse(is.na(episodes), 0, episodes),
+           beddays=ifelse(is.na(beddays), 0, beddays) )|>
     rename(activity={{activity_type}})|>
     group_by(year, cohorts) |>
     PHEindicatormethods::calculate_dsr(x = activity,    # observed number of events
@@ -243,19 +246,21 @@ generating_la_age_sex_standardised_rates_for_trends <- function(data, la_pop, st
   
   standardised_data<-expanded_data|>
   left_join(la_numbers_over_time, by=c("resladst_ons", "year", "age_range", "sex", "cohorts"))|>
-    mutate(episodes=ifelse(is.na(episodes), 0, episodes),
-           beddays=ifelse(is.na(beddays), 0, beddays) )|>
     dplyr::left_join(la_pop, by = c("resladst_ons"="ladcode23", "age_range", "sex", "year"="fyear")) |>
     dplyr::left_join(standard_pop, by = c("age_range", "sex")) |>
     dplyr::filter(!is.na(ladcode23),
                   startsWith(ladcode23, "E"),
                   age_range != "NA") |>
+    mutate(episodes=ifelse(is.na(episodes), 0, episodes),
+           beddays=ifelse(is.na(beddays), 0, beddays) )|>
     dplyr::group_by(ladcode23, laname23, cohorts, year) |>
     dplyr::rename(activity = {{activity_type}}) |>
     dplyr::filter(!is.na(la_population)) |> #########################################################################
   PHEindicatormethods::calculate_dsr(x = activity, # observed number of events
                                      n = la_population, # non-standard pops for each stratum
-                                     stdpop = pop)    # standard populations for England for each stratum
+                                     stdpop = pop) |>   # standard populations for England for each stratum
+    mutate(value=round(value,0))   # standard populations for England for each stratum
+  
   
 }
 
