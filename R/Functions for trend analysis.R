@@ -349,13 +349,18 @@ plotting_total_activity_vs_percentage_change<-function(data, activity_type){
   
   p<- plot_data|>
     ggplot()+
+    annotate("rect", xmin =(min(plot_data$`2018/19`)-(min(plot_data$`2018/19`)*0.1)) , xmax = mean(plot_data$`2018/19`), ymin =min(plot_data$change)*1.2 , ymax = 0 , fill= "#c9e7d9")+ 
     geom_point(aes(x=`2018/19`, y=change, label=icb_2024_name), colour="#686f73")+
     labs(x="Standardised rate for 2018/2019",
          y= "% change between 2018/19 and 2023/24")+
     su_theme()+
-    theme(axis.title=element_text(size=12))+
+    theme(axis.title=element_text(size=12),
+          legend.position="none")+
     geom_hline(yintercept=0, linetype="dashed", color = "#ec6555")+
-    geom_vline(xintercept = mean(plot_data$`2018/19`), linetype="dashed", color = "#ec6555")
+    geom_vline(xintercept = mean(plot_data$`2018/19`), linetype="dashed", color = "#ec6555")+
+   coord_cartesian(xlim =c(min(plot_data$`2018/19`)-1, max(plot_data$`2018/19`)), ylim = c((min(plot_data$change))*1.05 , (max(plot_data$change))*1.05))
+
+
   
   ggplotly(p, width=660, height=450)
   
