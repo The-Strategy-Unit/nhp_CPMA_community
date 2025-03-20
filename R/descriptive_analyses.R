@@ -7,19 +7,31 @@
 #' in 2023-24, get the total number of all emergency or elective admissions and
 #' calculate the percentage.
 #'
-#' @param treatment_type Either `"emergency"` or `"elective"`.
-#' @param condition A string containing the expression needed to filter for a
-#' mitigator or set of mitigators.
+#' @param mitigator The mitigator or mechanism.
 #' @param totals A dataframe containing the total beddays and episodes for 2023-24.
 #' @param connection The Databricks connection.
+#' @param treatment_lookup A dataframe of the mitigators and mechanisms and their treatment types.
 #'
 #' @return A dataframe.
-get_overview_of_mitigator <- function(treatment,
-                                      condition,
+get_overview_of_mitigator <- function(mitigator,
                                       totals,
+                                      treatment_lookup,
                                       connection = sc) {
+  
+  treatment <- treatment_lookup |> 
+    dplyr::filter(mitigator_or_mechanism == mitigator) |>
+    dplyr::pull(treatment_type)
+  
+  if(treatment == "both") {
+    treatment <- c("emergency", "elective")
+    treatment_title <- ""
+  } else {
+    treatment_title <- paste0(treatment, " ")
+  }
+  
   totals <- totals |>
-    dplyr::filter(treatment_type == treatment) |>
+    dplyr::filter(treatment_type %in% treatment) |>
+    dplyr::summarise(total = sum(total), .by = activity_type) |>
     dplyr::select(activity_type, total)
   
   mitigator_totals <- dplyr::tbl(
@@ -30,7 +42,7 @@ get_overview_of_mitigator <- function(treatment,
       "sl_af_describing_mitigators_final_2324_sex"
     )
   ) |>
-    filter_to_mitigator_or_mechanism(condition) |>
+    filter_to_mitigator_or_mechanism(mitigator) |>
     dplyr::summarise(admissions = sum(episodes),
                      beddays = sum(beddays)) |>
     sparklyr::collect() 
@@ -48,7 +60,7 @@ get_overview_of_mitigator <- function(treatment,
         stringr::str_to_sentence()
     ) |>
     dplyr::arrange(dplyr::across(1)) |>
-    dplyr::rename(!!rlang::sym(glue::glue("Total {treatment} activity")) := total,
+    dplyr::rename(!!rlang::sym(glue::glue("Total{treatment_title} activity")) := total,
                   "Mitigable activity" = number)
   
   return(summary)

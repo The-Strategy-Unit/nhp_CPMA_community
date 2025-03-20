@@ -36,14 +36,25 @@ sc <- sparklyr::spark_connect(
 mitigator_summary_table <- readxl::read_excel("summary_mitigators_table.xlsx")
 
 mitigators <- mitigator_summary_table |>
-  dplyr::pull(mitigator_code) 
+  dplyr::select(mitigator_or_mechanism = mitigator_code, treatment_type = type_of_admission) 
 
 mechanisms <- mitigator_summary_table |>
   dplyr::mutate(mechanism = snakecase::to_snake_case(mechanism)) |>
-  dplyr::pull(mechanism) |>
-  unique()
+  dplyr::summarise(treatment_type = paste(unique(type_of_admission), 
+                                          collapse = ', '), 
+                   .by = mechanism) |>
+  dplyr::mutate(
+    treatment_type = ifelse(stringr::str_detect(treatment_type, 
+                                                "emergency & elective"), 
+                            "both", 
+                            treatment_type)) |>
+dplyr::rename(mitigator_or_mechanism = mechanism)
 
-mitigators_and_mechanisms <- c(mitigators, mechanisms)
+mitigators_and_mechanisms_treatment_lookup <- mitigators |>
+  rbind(mechanisms)
+
+mitigators_and_mechanisms <- mitigators_and_mechanisms_treatment_lookup |>
+  dplyr::pull(mitigator_or_mechanism)
 
 # Run the R scripts in the R/ folder with your custom functions:
 tar_source()
@@ -272,9 +283,9 @@ list(
     list(mitigator = mitigators_and_mechanisms),
     tar_target(
       overview,
-      get_overview_of_mitigator("emergency",
-                                mitigator,
-                                total_beddays_admissions)
+      get_overview_of_mitigator(mitigator,
+                                total_beddays_admissions,
+                                mitigators_and_mechanisms_treatment_lookup)
     )
   ),
   

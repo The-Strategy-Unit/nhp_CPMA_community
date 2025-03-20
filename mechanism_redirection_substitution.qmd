@@ -26,7 +26,7 @@ options(scipen = 999)
 ```{r global variables}
 cohort <- "redirection_substitution"
 cohort_title <- "Redirection and Substitution"
-treatment_type <- "emergency"
+treatment_type <- "both"
 ```
 
 ```{r}
