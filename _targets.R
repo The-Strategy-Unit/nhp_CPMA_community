@@ -33,25 +33,27 @@ sc <- sparklyr::spark_connect(
 )
 
 # Mitigator details ------------------------------------------------------------
-mitigator_summary_table <- readxl::read_excel("summary_mitigators_table.xlsx")
+mitigator_summary_table <-
+  readxl::read_excel("summary_mitigators_table.xlsx") |>
+  dplyr::mutate(mechanism = snakecase::to_snake_case(mechanism))
 
 mitigators <- mitigator_summary_table |>
-  dplyr::select(mitigator_or_mechanism = mitigator_code, treatment_type = type_of_admission) 
+  dplyr::select(mitigator_or_mechanism = mitigator_code,
+                treatment_type = type_of_admission)
 
 mechanisms <- mitigator_summary_table |>
-  dplyr::mutate(mechanism = snakecase::to_snake_case(mechanism)) |>
-  dplyr::summarise(treatment_type = paste(unique(type_of_admission), 
-                                          collapse = ', '), 
+  dplyr::summarise(treatment_type = paste(unique(type_of_admission), collapse = ', '),
                    .by = mechanism) |>
-  dplyr::mutate(
-    treatment_type = ifelse(stringr::str_detect(treatment_type, 
-                                                "emergency & elective"), 
-                            "both", 
-                            treatment_type)) |>
-dplyr::rename(mitigator_or_mechanism = mechanism)
+  dplyr::mutate(treatment_type = ifelse(
+    stringr::str_detect(treatment_type, "emergency & elective"),
+    "both",
+    treatment_type
+  )) |>
+  dplyr::rename(mitigator_or_mechanism = mechanism)
 
 mitigators_and_mechanisms_treatment_lookup <- mitigators |>
-  rbind(mechanisms)
+  rbind(mechanisms) |>
+  dplyr::mutate(treatment_type = stringr::str_replace(treatment_type, "emergency & elective", "both"))
 
 mitigators_and_mechanisms <- mitigators_and_mechanisms_treatment_lookup |>
   dplyr::pull(mitigator_or_mechanism)
@@ -69,12 +71,7 @@ list(
     )
   ),
   
-  tar_target(
-    la_code_lookup,
-    read_excel(
-      "la_code_lookup.xlsx"
-    )
-  ),
+  tar_target(la_code_lookup, read_excel("la_code_lookup.xlsx")),
   
   tar_target(
     icb_population_data,
@@ -141,6 +138,8 @@ list(
       dplyr::rename(imd19_decile = imd_decile)
   ),
   
+  ## Standardised rates --------------------------------------------------------
+  ### ICB ---------------------------------------------------------------------- 
   tar_target(
     icb_age_sex_standardised_rates_episodes,
     generating_icb_age_sex_standardised_rates(
@@ -161,12 +160,11 @@ list(
     )
   ),
   
-  
   tar_target(
     icb_age_sex_standardised_rates_episodes_total_mitigation,
     generating_icb_age_sex_standardised_rates(
-      numbers_over_time_total_mitigation|>
-        mutate(cohorts="all"),
+      numbers_over_time_total_mitigation |>
+        mutate(cohorts = "all"),
       icb_population_data,
       standard_england_pop_2021_census,
       episodes
@@ -176,123 +174,121 @@ list(
   tar_target(
     icb_age_sex_standardised_rates_beddays_total_mitigation,
     generating_icb_age_sex_standardised_rates(
-      numbers_over_time_total_mitigation|>
-        mutate(cohorts="all"),
+      numbers_over_time_total_mitigation |>
+        mutate(cohorts = "all"),
       icb_population_data,
       standard_england_pop_2021_census,
       beddays
     )
   ),
-  tar_target(england_age_sex_standardised_rates_episodes,
-            generating_england_age_sex_standardised_rates(numbers_over_time, 
-                                                          icb_population_data, 
-                                                          standard_england_pop_2021_census, 
-                                                          episodes)
- ),
- 
- tar_target(england_age_sex_standardised_rates_beddays,
-            generating_england_age_sex_standardised_rates(numbers_over_time, 
-                                                          icb_population_data, 
-                                                          standard_england_pop_2021_census, 
-                                                          beddays)
- ),
- 
- tar_target(england_age_sex_standardised_rates_episodes_total_mitigation,
-            generating_england_age_sex_standardised_rates(numbers_over_time_total_mitigation|>
-                                                            mutate(cohorts="all"), 
-                                                          icb_population_data, 
-                                                          standard_england_pop_2021_census, 
-                                                          episodes)
- ),
- 
- tar_target(england_age_sex_standardised_rates_beddays_total_mitigation,
-            generating_england_age_sex_standardised_rates(numbers_over_time_total_mitigation|>
-                                                            mutate(cohorts="all"), 
-                                                          icb_population_data, 
-                                                          standard_england_pop_2021_census, 
-                                                          beddays)
- ),
- 
- # Local authority
-   tar_target(la_numbers,
-              dplyr::tbl(
-                sc,
-                dbplyr::in_catalog(
-                  "strategyunit",
-                  "default",
-                  "SL_AF_describing_mitigators_2324_local_authority"
-                )
-              ) |>
-                sparklyr::collect() |>
-                tidyr::pivot_longer(cols = !c(sex, age_range, resladst_ons, episodes, beddays),
-                                    names_to = "cohorts",
-                                    values_to = "value") |>
-                dplyr::filter(value == 1) |>
-                dplyr::summarise(episodes = sum(episodes),
-                                 beddays = sum(beddays),
-                                 .by = c(age_range, sex, resladst_ons, cohorts)) |>
-                dplyr::rename(ladcode23 = resladst_ons)),
-   
-   tar_target(
-     la_age_sex_standardised_rates_episodes,
-     generating_la_age_sex_standardised_rates(
-       la_numbers,
-       la_population_data |> 
-         dplyr::mutate(sex = as.character(sex)) |> 
-         dplyr::filter(fyear == "2023/24"),
-       standard_england_pop_2021_census,
-       episodes
-     )
-   ),
- tar_target(
-   la_age_sex_standardised_rates_beddays,
-   generating_la_age_sex_standardised_rates(
-     la_numbers,
-     la_population_data |> 
-       dplyr::mutate(sex = as.character(sex)) |> 
-       dplyr::filter(fyear == "2023/24"),
-     standard_england_pop_2021_census,
-     beddays
-   )
-  ),
-   
-  # Descriptive analysis -------------------------------------------------------
-  ## Overview of mitigator -----------------------------------------------------
+  
+  ### England ------------------------------------------------------------------
   tar_target(
-    total_beddays_admissions,
+    england_age_sex_standardised_rates_episodes,
+    generating_england_age_sex_standardised_rates(
+      numbers_over_time,
+      icb_population_data,
+      standard_england_pop_2021_census,
+      episodes
+    )
+  ),
+  
+  tar_target(
+    england_age_sex_standardised_rates_beddays,
+    generating_england_age_sex_standardised_rates(
+      numbers_over_time,
+      icb_population_data,
+      standard_england_pop_2021_census,
+      beddays
+    )
+  ),
+  
+  tar_target(
+    england_age_sex_standardised_rates_episodes_total_mitigation,
+    generating_england_age_sex_standardised_rates(
+      numbers_over_time_total_mitigation |>
+        mutate(cohorts =
+                 "all"),
+      icb_population_data,
+      standard_england_pop_2021_census,
+      episodes
+    )
+  ),
+  
+  tar_target(
+    england_age_sex_standardised_rates_beddays_total_mitigation,
+    generating_england_age_sex_standardised_rates(
+      numbers_over_time_total_mitigation |>
+        mutate(cohorts =
+                 "all"),
+      icb_population_data,
+      standard_england_pop_2021_census,
+      beddays
+    )
+  ),
+  
+  ### LA -----------------------------------------------------------------------
+  tar_target(
+    la_numbers,
     dplyr::tbl(
       sc,
       dbplyr::in_catalog(
         "strategyunit",
         "default",
-        "sl_af_describing_mitigators_final_2324_sex"
+        "SL_AF_describing_mitigators_2324_local_authority"
       )
     ) |>
-      dplyr::select(dplyr::starts_with("total")) |>
-      dplyr::distinct() |>
-      dplyr::summarise(dplyr::across(dplyr::everything(), ~ sum(.))) |>
       sparklyr::collect() |>
+      mutate_mechanism_columns() |>
       tidyr::pivot_longer(
-        cols = dplyr::everything(),
-        names_to = "activity_treatment",
-        values_to = "total"
+        cols = !c(sex, age_range, resladst_ons, episodes, beddays),
+        names_to = "cohorts",
+        values_to = "value"
       ) |>
-      tidyr::separate_wider_delim(activity_treatment, 
-                                  "_", 
-                                  names = c("a", 
-                                            "activity_type", 
-                                            "treatment_type")) |>
-      dplyr::mutate(activity_type = stringr::str_replace(activity_type,
-                                                         "episodes", 
-                                                         "admissions"))
+      dplyr::filter(value == 1) |>
+      dplyr::summarise(
+        episodes = sum(episodes),
+        beddays = sum(beddays),
+        .by = c(age_range, sex, resladst_ons, cohorts)
+      ) |>
+      dplyr::rename(ladcode23 = resladst_ons)
   ),
+  
+  tar_target(
+    la_age_sex_standardised_rates_episodes,
+    generating_la_age_sex_standardised_rates(
+      la_numbers,
+      la_population_data |>
+        dplyr::mutate(sex = as.character(sex)) |>
+        dplyr::filter(fyear == "2023/24"),
+      standard_england_pop_2021_census,
+      episodes
+    )
+  ),
+  tar_target(
+    la_age_sex_standardised_rates_beddays,
+    generating_la_age_sex_standardised_rates(
+      la_numbers,
+      la_population_data |>
+        dplyr::mutate(sex = as.character(sex)) |>
+        dplyr::filter(fyear == "2023/24"),
+      standard_england_pop_2021_census,
+      beddays
+    )
+  ),
+  
+  # Descriptive analysis -------------------------------------------------------
+  ## Overview of mitigator -----------------------------------------------------
+  tar_target(total_beddays_admissions, get_total_beddays_admissions(sc)),
   tarchetypes::tar_map(
     list(mitigator = mitigators_and_mechanisms),
     tar_target(
       overview,
-      get_overview_of_mitigator(mitigator,
-                                total_beddays_admissions,
-                                mitigators_and_mechanisms_treatment_lookup)
+      get_overview_of_mitigator(
+        mitigator,
+        total_beddays_admissions,
+        mitigators_and_mechanisms_treatment_lookup
+      )
     )
   ),
   
@@ -301,50 +297,52 @@ list(
     list(
       group = rep(c("age", "ethnicity", "imd", "sex"), each = 66),
       mitigator = rep(mitigators_and_mechanisms, 8),
-      activity_type = rep(rep(c("admissions", "beddays"), each = 33), 4)),
-    tar_target(
-      perc,
-      get_perc_by_group(mitigator, 
-                        group, 
-                        activity_type)
-    )
+      activity_type = rep(rep(c(
+        "admissions", "beddays"
+      ), each = 33), 4)
+    ),
+    tar_target(perc, get_perc_by_group(mitigator, group, activity_type))
   ),
   
   ## Rates per 100,000 population ----------------------------------------------
   tarchetypes::tar_map(
     list(
       mitigator = rep(mitigators_and_mechanisms, 2),
-      activity_type = rep(c("admissions", "beddays"), each = 33)),
+      activity_type = rep(c("admissions", "beddays"), each = 33)
+    ),
     tar_target(
       rates_age,
       get_rates_by_group(mitigator, "age", pop_by_age, activity_type)
     )
   ),
-
+  
   tarchetypes::tar_map(
     list(
       mitigator = rep(mitigators_and_mechanisms, 2),
-      activity_type = rep(c("admissions", "beddays"), each = 33)),
+      activity_type = rep(c("admissions", "beddays"), each = 33)
+    ),
     tar_target(
       rates_ethnicity,
-      get_rates_by_group(mitigator, "ethnicity",  pop_by_ethnicity, activity_type)
+      get_rates_by_group(mitigator, "ethnicity", pop_by_ethnicity, activity_type)
     )
   ),
-
+  
   tarchetypes::tar_map(
     list(
       mitigator = rep(mitigators_and_mechanisms, 2),
-      activity_type = rep(c("admissions", "beddays"), each = 33)),
+      activity_type = rep(c("admissions", "beddays"), each = 33)
+    ),
     tar_target(
       rates_imd,
       get_rates_by_group(mitigator, "imd", pop_by_imd, activity_type)
     )
   ),
-
+  
   tarchetypes::tar_map(
     list(
       mitigator = rep(mitigators_and_mechanisms, 2),
-      activity_type = rep(c("admissions", "beddays"), each = 33)),
+      activity_type = rep(c("admissions", "beddays"), each = 33)
+    ),
     tar_target(
       rates_sex,
       get_rates_by_group(mitigator, "sex", pop_by_sex, activity_type)
@@ -364,86 +362,100 @@ list(
   tarchetypes::tar_map(
     list(
       mitigator = rep(mitigators_and_mechanisms, 2),
-      activity_type = rep(c("admissions", "beddays"), each = 33)),
+      activity_type = rep(c("admissions", "beddays"), each = 33)
+    ),
     tar_target(
       specialty,
       get_top_ten_specialties(mitigator, specialty_key, activity_type)
     )
   ),
- 
- ## Length of Stay -------------------------------------------------------------
- tarchetypes::tar_map(
-   list(mitigator = mitigators_and_mechanisms),
-   tar_target(
-     perc_los,
-     get_perc_by_los(mitigator)
-   )
- ),
- 
+  
+  ## Length of Stay -------------------------------------------------------------
+  tarchetypes::tar_map(
+    list(mitigator = mitigators_and_mechanisms),
+    tar_target(perc_los, get_perc_by_los(mitigator))
+  ),
+  
   # Cohort analysis ------------------------------------------------------------
   
   tar_target(
     total_cohort_numbers_2324,
-    Formatting_data_for_cohort_overlap("sl_af_describing_mitigators_fyear")|>
-      filter(fyear=="202324")
+    Formatting_data_for_cohort_overlap("sl_af_describing_mitigators_fyear") |>
+      filter(fyear == "202324")
   ),
- 
-
- # Trends analysis -------------------------------------------------------------
-
-tar_target(
-  numbers_over_time,
-  Formatting_data_for_trends_analysis_cohorts( "sl_af_describing_mitigators_fyear" , icb_population_data)
-),
-
-tar_target(
-  numbers_over_time_total_mitigation,
-  Formatting_data_for_trends_analysis_total_mitigation( "sl_af_describing_mitigators_fyear", icb_population_data )
-),
-
-
-tar_target(
-  denominator_over_time,
-  Formatting_data_for_trends_analysis_denominator( "sl_af_total_elective_emergency_activity", icb_population_data )
-),
-
-# Comparative analysis ---------------------------------------------------------
+  
+  
+  # Trends analysis -------------------------------------------------------------
+  
+  tar_target(
+    numbers_over_time,
+    Formatting_data_for_trends_analysis_cohorts("sl_af_describing_mitigators_fyear" , icb_population_data)
+  ),
+  
+  tar_target(
+    numbers_over_time_total_mitigation,
+    Formatting_data_for_trends_analysis_total_mitigation("sl_af_describing_mitigators_fyear", icb_population_data)
+  ),
+  
+  
+  tar_target(
+    denominator_over_time,
+    Formatting_data_for_trends_analysis_denominator(
+      "sl_af_total_elective_emergency_activity",
+      icb_population_data
+    )
+  ),
+  
+  # Comparative analysis ---------------------------------------------------------
   ## ICB -----------------------------------------------------------------------
   tar_target(
-   total_beddays_admissions_by_icb,
+    total_beddays_admissions_by_icb,
     dplyr::tbl(
       sc,
       dbplyr::in_catalog(
         "strategyunit",
         "default",
         "sl_af_describing_mitigators_final_2324_icb"
-        )
-      ) |>
-     dplyr::select(dplyr::starts_with("total"), icb) |>
+      )
+    ) |>
+      dplyr::select(dplyr::starts_with("total"), icb) |>
       dplyr::distinct() |>
-      dplyr::summarise(dplyr::across(dplyr::starts_with("total"), ~ sum(.)),
-                       .by = icb) |>
-      sparklyr::collect()
+      dplyr::summarise(dplyr::across(dplyr::starts_with("total"), ~ sum(.)), .by = icb) |>
+      sparklyr::collect() |>
+      dplyr::mutate(
+        total_episodes_both = total_episodes_emergency + total_episodes_elective,
+        total_beddays_both = total_beddays_emergency + total_beddays_elective
+      )
   ),
-  tar_target(
-    summary_frail_elderly_high_icb_admissions,
-    get_summary_by_geography(
-      icb_age_sex_standardised_rates_episodes,
-      "frail_elderly_high",
-      total_beddays_admissions_by_icb,
-      "admissions",
-      "emergency",
-      "icb")),  
-  tar_target(
-    summary_frail_elderly_high_icb_beddays,
-    get_summary_by_geography(
-      icb_age_sex_standardised_rates_beddays,
-      "frail_elderly_high",
-      total_beddays_admissions_by_icb,
-      "beddays",
-      "emergency",
-      "icb")),
-
+  tarchetypes::tar_map(
+    list(mitigator = mitigators_and_mechanisms),
+    tar_target(
+      summary_icb_admissions,
+      get_summary_by_geography(
+        icb_age_sex_standardised_rates_episodes,
+        mitigator,
+        total_beddays_admissions_by_icb,
+        "admissions",
+        "icb",
+        mitigators_and_mechanisms_treatment_lookup
+      )
+    )
+  ),
+  tarchetypes::tar_map(
+    list(mitigator = mitigators_and_mechanisms),
+    tar_target(
+      summary_icb_beddays,
+      get_summary_by_geography(
+        icb_age_sex_standardised_rates_beddays,
+        mitigator,
+        total_beddays_admissions_by_icb,
+        "beddays",
+        "icb",
+        mitigators_and_mechanisms_treatment_lookup
+      )
+    )
+  ),
+  
   ## LA ------------------------------------------------------------------------
   tar_target(
     total_beddays_admissions_by_la,
@@ -453,34 +465,45 @@ tar_target(
         "strategyunit",
         "default",
         "sl_af_describing_mitigators_final_2324_local_authority"
-        )
-      ) |>
+      )
+    ) |>
       dplyr::select(dplyr::starts_with("total"), resladst_ons) |>
       dplyr::distinct() |>
-      dplyr::summarise(dplyr::across(dplyr::starts_with("total"),
-                                     ~ sum(.)),
-                       .by = resladst_ons) |>
+      dplyr::summarise(dplyr::across(dplyr::starts_with("total"), ~ sum(.)), .by = resladst_ons) |>
       dplyr::filter(startsWith(resladst_ons, "E")) |>
       dplyr::rename(ladcode23 = resladst_ons) |>
-      sparklyr::collect()),
-  tar_target(
-    summary_frail_elderly_high_la_admissions,
-    get_summary_by_geography(
-      la_age_sex_standardised_rates_episodes,
-      "frail_elderly_high",
-      total_beddays_admissions_by_la,
-      "admissions",
-      "emergency",
-      "ladcode23")
+      sparklyr::collect() |>
+      dplyr::mutate(
+        total_episodes_both = total_episodes_emergency + total_episodes_elective,
+        total_beddays_both = total_beddays_emergency + total_beddays_elective
+      )
   ),
-  tar_target(
-    summary_frail_elderly_high_la_beddays,
-    get_summary_by_geography(
-      la_age_sex_standardised_rates_beddays,
-      "frail_elderly_high",
-      total_beddays_admissions_by_la,
-      "beddays",
-      "emergency",
-      "ladcode23")
+  tarchetypes::tar_map(
+    list(mitigator = mitigators_and_mechanisms),
+    tar_target(
+      summary_la_admissions,
+      get_summary_by_geography(
+        la_age_sex_standardised_rates_episodes,
+        mitigator,
+        total_beddays_admissions_by_la,
+        "admissions",
+        "ladcode23",
+        mitigators_and_mechanisms_treatment_lookup
+      )
+    )
+  ),
+  tarchetypes::tar_map(
+    list(mitigator = mitigators_and_mechanisms),
+    tar_target(
+      summary_la_beddays,
+      get_summary_by_geography(
+        la_age_sex_standardised_rates_beddays,
+        mitigator,
+        total_beddays_admissions_by_la,
+        "beddays",
+        "ladcode23",
+        mitigators_and_mechanisms_treatment_lookup
+      )
+    )
   )
 )

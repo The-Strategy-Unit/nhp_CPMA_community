@@ -30,11 +30,11 @@ treatment_type <- "both"
 ```
 
 ```{r}
-# england_age_sex_standardised_rates_episodes<-tar_read(england_age_sex_standardised_rates_episodes)|>
-#   filter(cohorts==cohort)
-# 
-# england_age_sex_standardised_rates_beddays<-tar_read(england_age_sex_standardised_rates_beddays)|>
-#   filter(cohorts==cohort)
+england_age_sex_standardised_rates_episodes<-tar_read(england_age_sex_standardised_rates_episodes)|>
+  filter(cohorts==cohort)
+
+england_age_sex_standardised_rates_beddays<-tar_read(england_age_sex_standardised_rates_beddays)|>
+  filter(cohorts==cohort)
 ```
 
 What this mechanism is...
@@ -61,7 +61,6 @@ In 2023/24, `r redirection_substitution_admissions_perc`% of all (both emergency
 overview_redirection_substitution |>
   get_table_perc()
 ```
-
 
 ### Patient Characteristics
 
@@ -460,7 +459,279 @@ targets::tar_read(specialty_redirection_substitution_beddays) |>
 targets::tar_read(specialty_redirection_substitution_beddays) |>
   get_top_ten_specialties_plot("beddays")
 ```
-
+:::
 :::
 
+## Cohort overlap
+
+(Placeholder)
+
+## Comparative Analysis
+
+::: panel-tabset
+### Admissions
+
+::: panel-tabset
+#### Integrated Care Board
+
+```{r}
+#| output: false
+summary_icb_admissions_redirection_substitution <- targets::tar_read(summary_icb_admissions_redirection_substitution)
+
+icb_23_shp <- sf::st_read("https://services1.arcgis.com/ESMARspQHYMw9BZ9/arcgis/rest/services/Integrated_Care_Boards_April_2023_EN_BGC/FeatureServer/0/query?outFields=*&where=1%3D1&f=geojson") |>
+  janitor::clean_names() |>
+  dplyr::mutate(icb23nm = simplify_icb_name(icb23nm))
+
+number_icb_admissions_redirection_substitution_map <- summary_icb_admissions_redirection_substitution |>
+  get_summary_by_icb_map(icb_23_shp, "total_count")
+
+perc_icb_admissions_redirection_substitution_map <- summary_icb_admissions_redirection_substitution |>
+  get_summary_by_icb_map(icb_23_shp, "perc")
+
+rate_icb_admissions_redirection_substitution_map <- summary_icb_admissions_redirection_substitution |>
+  get_summary_by_icb_map(icb_23_shp, "value")
+```
+
+::: panel-tabset
+##### Number of admissions
+
+::: panel-tabset
+###### Bars
+
+```{r}
+#| label: fig-number_icb_admissions_redirection_substitution_bar
+#| fig-cap: !expr get_caption_by_icb(cohort_title, "number", "admissions")
+england_value <- get_england_value("total_count", 
+                                   data_number = summary_icb_admissions_redirection_substitution)
+
+get_summary_by_icb_bar(summary_icb_admissions_redirection_substitution, 
+                       "total_count", 
+                       cohort,
+                       england_value)
+
+rm(england_value)
+```
+
+###### Map
+
+```{r}
+#| label: fig-number_icb_admissions_redirection_substitution_map
+#| fig-cap: !expr get_caption_by_icb(cohort_title, "number", "admissions")
+number_icb_admissions_redirection_substitution_map
+```
 :::
+
+##### Percentage of emergency activity
+
+::: panel-tabset
+###### Bars
+
+```{r}
+#| label: fig-perc_icb_admissions_redirection_substitution_bar
+#| fig-cap: !expr get_caption_by_icb(cohort_title, "perc", "admissions", treatment_type)
+total_beddays_admissions <- targets::tar_read(total_beddays_admissions)
+
+england_value <- get_england_value("perc", 
+                                   activity = "admissions",
+                                   treatment = treatment_type,
+                                   data_rate = england_age_sex_standardised_rates_episodes,
+                                   cohort = cohort)
+
+get_summary_by_icb_bar(summary_icb_admissions_redirection_substitution, 
+                       "perc", 
+                       cohort,
+                       england_value)
+
+rm(england_value)
+```
+
+###### Map
+
+```{r}
+#| label: fig-perc_icb_admissions_redirection_substitution_map
+#| fig-cap: !expr get_caption_by_icb(cohort_title, "perc", "admissions", treatment_type)
+perc_icb_admissions_redirection_substitution_map
+```
+:::
+
+##### Age and sex standardised rates per 100,000 population
+
+::: panel-tabset
+###### Bars
+
+```{r}
+#| label: fig-rate_icb_admissions_redirection_substitution_bar
+#| fig-cap: !expr get_caption_by_icb(cohort_title, "SR", "admissions")
+england_value <- get_england_value("value",
+                                   data_rate = england_age_sex_standardised_rates_episodes,
+                                   cohort = cohort)
+
+get_summary_by_icb_bar(summary_icb_admissions_redirection_substitution, 
+                       "value", 
+                       cohort,
+                       england_value)
+
+rm(england_value)
+```
+
+###### Map
+
+```{r}
+#| label: fig-rate_icb_admissions_redirection_substitution_map
+#| fig-cap: !expr get_caption_by_icb(cohort_title, "SR", "admissions")
+rate_icb_admissions_redirection_substitution_map
+```
+:::
+
+##### Table
+
+```{r}
+#| label: tbl-rate_icb_admissions_redirection_substitution
+#| tbl-cap: !expr get_caption_by_geography_table(cohort_title, "admissions", treatment_type, "icb")
+get_summary_by_geography_table(summary_icb_admissions_redirection_substitution, "episodes", treatment_type)
+```
+:::
+
+#### Local Authority
+
+```{r}
+#| label: tbl-rate_la_admissions_redirection_substitution
+#| tbl-cap: !expr get_caption_by_geography_table(cohort_title, "admissions", treatment_type, "la")
+targets::tar_read(summary_la_admissions_redirection_substitution) |>
+  get_summary_by_geography_table("episodes", treatment_type)
+```
+:::
+
+### Beddays
+
+::: panel-tabset
+#### Integrated Care Board
+
+```{r}
+#| output: false
+summary_icb_beddays_redirection_substitution <- targets::tar_read(summary_icb_beddays_redirection_substitution)
+
+number_icb_beddays_redirection_substitution_map <- summary_icb_beddays_redirection_substitution |>
+  get_summary_by_icb_map(icb_23_shp, "total_count")
+
+perc_icb_beddays_redirection_substitution_map <- summary_icb_beddays_redirection_substitution |>
+  get_summary_by_icb_map(icb_23_shp, "perc")
+
+rate_icb_beddays_redirection_substitution_map <- summary_icb_beddays_redirection_substitution |>
+  get_summary_by_icb_map(icb_23_shp, "value")
+```
+
+::: panel-tabset
+##### Number of beddays
+
+::: panel-tabset
+###### Bars
+
+```{r}
+#| label: fig-number_icb_beddays_redirection_substitution_bar
+#| fig-cap: !expr get_caption_by_icb(cohort_title, "number", "beddays")
+england_value <- get_england_value("total_count", 
+                                   data_number = summary_icb_beddays_redirection_substitution)
+
+get_summary_by_icb_bar(summary_icb_beddays_redirection_substitution, 
+                       "total_count", 
+                       cohort,
+                       england_value)
+
+rm(england_value)
+```
+
+###### Map
+
+```{r}
+#| label: fig-number_icb_beddays_redirection_substitution_map
+#| fig-cap: !expr get_caption_by_icb(cohort_title, "number", "beddays")
+number_icb_beddays_redirection_substitution_map
+```
+:::
+
+##### Percentage of emergency activity
+
+::: panel-tabset
+###### Bars
+
+```{r}
+#| label: fig-perc_icb_beddays_redirection_substitution_bar
+#| fig-cap: !expr get_caption_by_icb(cohort_title, "perc", "beddays", treatment_type)
+total_beddays_admissions <- targets::tar_read(total_beddays_admissions)
+
+england_value <- get_england_value("perc", 
+                                   activity = "beddays",
+                                   treatment = treatment_type,
+                                   data_rate = england_age_sex_standardised_rates_beddays,
+                                   cohort = cohort)
+
+get_summary_by_icb_bar(summary_icb_beddays_redirection_substitution, 
+                       "perc", 
+                       cohort,
+                       england_value)
+
+rm(england_value)
+```
+
+###### Map
+
+```{r}
+#| label: fig-perc_icb_beddays_redirection_substitution_map
+#| fig-cap: !expr get_caption_by_icb(cohort_title, "perc", "beddays", treatment_type)
+perc_icb_beddays_redirection_substitution_map
+```
+:::
+
+##### Age and sex standardised rates per 100,000 population
+
+::: panel-tabset
+###### Bars
+
+```{r}
+#| label: fig-rate_icb_beddays_redirection_substitution_bar
+#| fig-cap: !expr get_caption_by_icb(cohort_title, "SR", "beddays")
+england_value <- get_england_value("value",
+                                   data_rate = england_age_sex_standardised_rates_beddays,
+                                   cohort = cohort)
+
+get_summary_by_icb_bar(summary_icb_beddays_redirection_substitution, 
+                       "value", 
+                       cohort,
+                       england_value)
+
+rm(england_value)
+```
+
+###### Map
+
+```{r}
+#| label: fig-rate_icb_beddays_redirection_substitution_map
+#| fig-cap: !expr get_caption_by_icb(cohort_title, "SR", "beddays")
+rate_icb_beddays_redirection_substitution_map
+```
+:::
+
+##### Table
+
+```{r}
+#| label: tbl-rate_icb_beddays_redirection_substitution
+#| tbl-cap: !expr get_caption_by_geography_table(cohort_title, "beddays", treatment_type, "icb")
+get_summary_by_geography_table(summary_icb_beddays_redirection_substitution, "beddays", treatment_type)
+```
+:::
+
+#### Local Authority
+
+```{r}
+#| label: tbl-rate_la_beddays_redirection_substitution
+#| tbl-cap: !expr get_caption_by_geography_table(cohort_title, "beddays", treatment_type, "la")
+targets::tar_read(summary_la_beddays_redirection_substitution) |>
+  get_summary_by_geography_table("beddays", treatment_type)
+```
+:::
+:::
+
+## Trend Analysis
+
+(Placeholder)

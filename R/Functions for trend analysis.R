@@ -25,17 +25,20 @@ Formatting_data_for_trends_analysis_denominator<-function(table, icb_pop){
 }
 
 
-Formatting_data_for_trends_analysis_cohorts<-function(table, icb_pop){
+Formatting_data_for_trends_analysis_cohorts <- function(table, icb_pop){
   
   numbers_over_time <- dplyr::tbl(
     sc,
     dbplyr::in_catalog("strategyunit","default", table)
-  )|> collect()|>
-    as.data.frame(numbers_over_time)
+  )|> 
+    collect() |>
+    as.data.frame(numbers_over_time) 
   
-  numbers_over_time<- identify_whether_bedday_or_admissions_or_both(numbers_over_time, 5:33)|>
+  numbers_over_time <- numbers_over_time |> 
+    identify_whether_bedday_or_admissions_or_both(5:33) |>
     mutate(episodes=ifelse(activity_group=="beddays", 0, episodes))|>   #avoid counting admissions for efficiency only activity
     select(-activity_group, -number_of_cohorts)|>
+    mutate_mechanism_columns() |> 
     gather(key="cohorts", value="value", -fyear, -age_range, -sex, -icb, -episodes, -beddays)|>
     filter(value==1)|>
     filter(fyear>201314)|>

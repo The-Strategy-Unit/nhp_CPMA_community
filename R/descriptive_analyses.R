@@ -23,14 +23,13 @@ get_overview_of_mitigator <- function(mitigator,
     dplyr::pull(treatment_type)
   
   if(treatment == "both") {
-    treatment <- c("emergency", "elective")
     treatment_title <- ""
   } else {
-    treatment_title <- paste0(treatment, " ")
+    treatment_title <- paste0(" ", treatment)
   }
   
   totals <- totals |>
-    dplyr::filter(treatment_type %in% treatment) |>
+    dplyr::filter(treatment_type == treatment) |>
     dplyr::summarise(total = sum(total), .by = activity_type) |>
     dplyr::select(activity_type, total)
   
@@ -386,4 +385,47 @@ get_perc_by_los_table <- function(data) {
     get_table_perc()
   
   return(table)
+}
+
+
+
+#' Get the total number of beddays and admissions by emergency, elective and 
+#' both.
+#'
+#' @param connection The Databricks connection.
+#'
+#' @return A dataframe.
+get_total_beddays_admissions <- function(connection) {
+  data_each <- dplyr::tbl(
+    connection,
+    dbplyr::in_catalog(
+      "strategyunit",
+      "default",
+      "sl_af_describing_mitigators_final_2324_sex"
+    )
+  ) |>
+    dplyr::select(dplyr::starts_with("total")) |>
+    dplyr::distinct() |>
+    dplyr::summarise(dplyr::across(dplyr::everything(), ~ sum(.))) |>
+    sparklyr::collect() |>
+    tidyr::pivot_longer(
+      cols = dplyr::everything(),
+      names_to = "activity_treatment",
+      values_to = "total"
+    ) |>
+    tidyr::separate_wider_delim(activity_treatment,
+                                "_",
+                                names = c("a", "activity_type", "treatment_type")) |>
+    dplyr::mutate(activity_type = stringr::str_replace(activity_type, "episodes", "admissions"))
+  
+  data_both <- data_each |>
+    dplyr::summarise(total = sum(total), .by = activity_type) |>
+    dplyr::mutate(treatment_type = "both",
+                  a = "total") |>
+    dplyr::select(a, activity_type, treatment_type, total)
+  
+  data <- data_each |>
+    rbind(data_both)
+  
+  return(data)
 }
