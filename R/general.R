@@ -1,5 +1,10 @@
 # Functions used for general tasks, like creating tables.
 
+#' Convert a dataframe into a datatable.
+#'
+#' @param A dataframe.
+#'
+#' @return A table.
 create_dt <- function(x) {
   DT::datatable(
     x,
@@ -11,7 +16,9 @@ create_dt <- function(x) {
       paging = FALSE,
       bInfo = FALSE,
       class = 'cell-border stripe',
-      columnDefs = list(list(className = 'dt-left', targets = 0)),
+      columnDefs = list(list(
+        className = 'dt-left', targets = 0
+      )),
       lengthMenu = list(c(10, 25, 50, -1), c(10, 25, 50, "All"))
     )
   )
@@ -24,52 +31,49 @@ create_dt <- function(x) {
 #'
 #' @return A dataframe.
 filter_to_mitigator_or_mechanism <- function(data, mitigator) {
-  
-  filtered <- if(mitigator == "prevention") { 
+  filtered <- if (mitigator == "prevention") {
     data |>
       dplyr::filter(
-        alcohol_partially_attributable_acute == 1 | 
-          alcohol_partially_attributable_chronic == 1 | 
-          alcohol_wholly_attributable == 1 | 
-          obesity_related_admissions == 1 | 
-          smoking == 1 | 
-          raid_ae == 1 | 
-          intentional_self_harm == 1 | 
+        alcohol_partially_attributable_acute == 1 |
+          alcohol_partially_attributable_chronic == 1 |
+          alcohol_wholly_attributable == 1 |
+          obesity_related_admissions == 1 |
+          smoking == 1 |
+          raid_ae == 1 |
+          intentional_self_harm == 1 |
           medically_unexplained_related_admissions == 1
       )
-  } else if(mitigator == "redirection_substitution") { 
+  } else if (mitigator == "redirection_substitution") {
     data |>
       dplyr::filter(
-        ambulatory_care_conditions_acute == 1 | 
+        ambulatory_care_conditions_acute == 1 |
           ambulatory_care_conditions_chronic == 1 |
-          ambulatory_care_conditions_vaccine_preventable == 1 | 
-          eol_care_2_days == 1 | 
+          ambulatory_care_conditions_vaccine_preventable == 1 |
+          eol_care_2_days == 1 |
           eol_care_3_to_14_days == 1 |
-          falls_related_admissions == 1 | 
-          frail_elderly_high == 1 | 
-          frail_elderly_intermediate == 1 | 
-          medicines_related_admissions_explicit == 1 | 
-          medicines_related_admissions_implicit_anti_diabetics == 1 | 
-          medicines_related_admissions_implicit_benzodiasepines == 1 | 
-          medicines_related_admissions_implicit_diurectics == 1 | 
-          medicines_related_admissions_implicit_nsaids == 1 | 
-          readmission_within_28_days == 1 | 
-          zero_los_no_procedure_adult == 1 | 
+          falls_related_admissions == 1 |
+          frail_elderly_high == 1 |
+          frail_elderly_intermediate == 1 |
+          medicines_related_admissions_explicit == 1 |
+          medicines_related_admissions_implicit_anti_diabetics == 1 |
+          medicines_related_admissions_implicit_benzodiasepines == 1 |
+          medicines_related_admissions_implicit_diurectics == 1 |
+          medicines_related_admissions_implicit_nsaids == 1 |
+          readmission_within_28_days == 1 |
+          zero_los_no_procedure_adult == 1 |
           zero_los_no_procedure_child == 1
       )
-  } else if(mitigator == "efficiencies_relocation") { 
+  } else if (mitigator == "efficiencies_relocation") {
     data |>
       dplyr::filter(
-        virtual_wards_activity_avoidance_ari == 1 | 
+        virtual_wards_activity_avoidance_ari == 1 |
           virtual_wards_activity_avoidance_heart_failure == 1
       )
-  } else if(mitigator == "efficiencies") { 
+  } else if (mitigator == "efficiencies") {
     data |>
-      dplyr::filter(
-        emergency_elderly == 1 | 
-          stroke_early_supported_discharge == 1 | 
-          raid_ip == 1
-      )
+      dplyr::filter(emergency_elderly == 1 |
+                      stroke_early_supported_discharge == 1 |
+                      raid_ip == 1)
   } else {
     data |>
       dplyr::filter(!!rlang::sym(mitigator) == 1)
@@ -87,29 +91,33 @@ format_as_title <- function(col_name) {
   title <- col_name |>
     stringr::str_replace("_", " ") |>
     stringr::str_to_title() |>
-    stringr::str_replace_all(c("Imd19" = "IMD",
-                               "Perc" = "Percentage",
-                               "Pop" = "Population",
-                               "Lowercl" = "Lower CL",
-                               "Uppercl" = "Upper CL",
-                               "Los Range" = "LOS Range",
-                               "Icb" = "ICB",
-                               "Total Episodes_emergency" = "Total Emergency Admissions",
-                               "Total Episodes_elective" = "Total Elective Admissions",
-                               "Total Beddays_emergency" = "Total Emergency Beddays",
-                               "Total Beddays_elective" = "Total Elective Beddays",
-                               "Mitigable Episodes" = "Mitigable Admissions"))
+    stringr::str_replace_all(
+      c(
+        "Imd19" = "IMD",
+        "Perc" = "Percentage",
+        "Pop" = "Population",
+        "Lowercl" = "Lower CL",
+        "Uppercl" = "Upper CL",
+        "Los Range" = "LOS Range",
+        "Icb" = "ICB",
+        "Total Episodes_emergency" = "Total Emergency Admissions",
+        "Total Episodes_elective" = "Total Elective Admissions",
+        "Total Beddays_emergency" = "Total Emergency Beddays",
+        "Total Beddays_elective" = "Total Elective Beddays",
+        "Mitigable Episodes" = "Mitigable Admissions"
+      )
+    )
   
   return(title)
 }
 
 #' Get the column name from the group.
-#' 
-#' In Databricks, the grouped tables have a suffix to indicate the group, but 
-#' this does not always match the name of the column that indicates which group 
+#'
+#' In Databricks, the grouped tables have a suffix to indicate the group, but
+#' this does not always match the name of the column that indicates which group
 #' the row belongs to. For example, the table split by age has the suffix "age",
-#' but the column name is "age_range". This function is to get the associated 
-#' column name from the group so in other functions only the group needs to be 
+#' but the column name is "age_range". This function is to get the associated
+#' column name from the group so in other functions only the group needs to be
 #' provided.
 #'
 #' @param group A string of the group that the table is for.
@@ -158,8 +166,8 @@ get_table <- function(data) {
 }
 
 #' Order the levels of factor variables.
-#' 
-#' If a dataframe contains one a column for imd19_decile, age_range or 
+#'
+#' If a dataframe contains one a column for imd19_decile, age_range or
 #' los_range, that column will be converted to a factor with the levels ordered
 #' as below.
 #'
@@ -209,7 +217,7 @@ order_levels_of_factors <- function(data) {
 #'
 #' @param url The URL where the excel file is.
 #' @param sheet Default is to read sheet 1 but can specify other sheet number.
-#' @param skip Default is to read all rows, but can specify number of rows to 
+#' @param skip Default is to read all rows, but can specify number of rows to
 #' skip.
 #'
 #' @return A dataframe.
