@@ -33,13 +33,13 @@ sc <- sparklyr::spark_connect(
 )
 
 # Mitigator details ------------------------------------------------------------
-mitigator_summary_table <- readxl::read_excel("summary_mitigators_table.xlsx")
+mitigator_summary_table <- readxl::read_excel("summary_mitigators_table.xlsx") |>
+  dplyr::mutate(mechanism = snakecase::to_snake_case(mechanism))
 
 mitigators <- mitigator_summary_table |>
   dplyr::select(mitigator_or_mechanism = mitigator_code, treatment_type = type_of_admission) 
 
 mechanisms <- mitigator_summary_table |>
-  dplyr::mutate(mechanism = snakecase::to_snake_case(mechanism)) |>
   dplyr::summarise(treatment_type = paste(unique(type_of_admission), 
                                           collapse = ', '), 
                    .by = mechanism) |>
@@ -425,6 +425,7 @@ tar_target(
                        .by = icb) |>
       sparklyr::collect()
   ),
+
   tar_target(
     summary_frail_elderly_high_icb_admissions,
     get_summary_by_geography(
