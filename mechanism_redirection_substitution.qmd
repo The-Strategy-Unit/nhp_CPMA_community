@@ -62,7 +62,6 @@ overview_redirection_substitution |>
   get_table_perc()
 ```
 
-
 ### Patient Characteristics
 
 ::: panel-tabset
