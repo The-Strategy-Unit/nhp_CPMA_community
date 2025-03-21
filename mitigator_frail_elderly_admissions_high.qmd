@@ -594,13 +594,13 @@ icb_23_shp <- sf::st_read("https://services1.arcgis.com/ESMARspQHYMw9BZ9/arcgis/
   janitor::clean_names() |>
   dplyr::mutate(icb23nm = simplify_icb_name(icb23nm))
 
-number_frail_elderly_high_icb_admissions_map <- summary_icb_admissions_frail_elderly_high |>
+number_icb_admissions_frail_elderly_high_map <- summary_icb_admissions_frail_elderly_high |>
   get_summary_by_icb_map(icb_23_shp, "total_count")
 
-perc_frail_elderly_high_icb_admissions_map <- summary_icb_admissions_frail_elderly_high |>
+perc_icb_admissions_frail_elderly_high_map <- summary_icb_admissions_frail_elderly_high |>
   get_summary_by_icb_map(icb_23_shp, "perc")
 
-rate_frail_elderly_high_icb_admissions_map <- summary_icb_admissions_frail_elderly_high |>
+rate_icb_admissions_frail_elderly_high_map <- summary_icb_admissions_frail_elderly_high |>
   get_summary_by_icb_map(icb_23_shp, "value")
 ```
 
@@ -611,7 +611,7 @@ rate_frail_elderly_high_icb_admissions_map <- summary_icb_admissions_frail_elder
 ###### Bars
 
 ```{r}
-#| label: fig-number_frail_elderly_high_icb_admissions_bar
+#| label: fig-number_icb_admissions_frail_elderly_high_bar
 #| fig-cap: !expr get_caption_by_icb(cohort_title, "number", "admissions")
 england_value <- get_england_value("total_count", 
                                    data_number = summary_icb_admissions_frail_elderly_high)
@@ -627,9 +627,9 @@ rm(england_value)
 ###### Map
 
 ```{r}
-#| label: fig-number_frail_elderly_high_icb_admissions_map
+#| label: fig-number_icb_admissions_frail_elderly_high_map
 #| fig-cap: !expr get_caption_by_icb(cohort_title, "number", "admissions")
-number_frail_elderly_high_icb_admissions_map
+number_icb_admissions_frail_elderly_high_map
 ```
 :::
 
@@ -639,7 +639,7 @@ number_frail_elderly_high_icb_admissions_map
 ###### Bars
 
 ```{r}
-#| label: fig-perc_frail_elderly_high_icb_admissions_bar
+#| label: fig-perc_icb_admissions_frail_elderly_high_bar
 #| fig-cap: !expr get_caption_by_icb(cohort_title, "perc", "admissions", treatment_type)
 total_beddays_admissions <- targets::tar_read(total_beddays_admissions)
 
@@ -660,9 +660,9 @@ rm(england_value)
 ###### Map
 
 ```{r}
-#| label: fig-perc_frail_elderly_high_icb_admissions_map
+#| label: fig-perc_icb_admissions_frail_elderly_high_map
 #| fig-cap: !expr get_caption_by_icb(cohort_title, "perc", "admissions", treatment_type)
-perc_frail_elderly_high_icb_admissions_map
+perc_icb_admissions_frail_elderly_high_map
 ```
 :::
 
@@ -672,7 +672,7 @@ perc_frail_elderly_high_icb_admissions_map
 ###### Bars
 
 ```{r}
-#| label: fig-rate_frail_elderly_high_icb_admissions_bar
+#| label: fig-rate_icb_admissions_frail_elderly_high_bar
 #| fig-cap: !expr get_caption_by_icb(cohort_title, "SR", "admissions")
 england_value <- get_england_value("value",
                                    data_rate = england_age_sex_standardised_rates_episodes,
@@ -689,16 +689,16 @@ rm(england_value)
 ###### Map
 
 ```{r}
-#| label: fig-rate_frail_elderly_high_icb_admissions_map
+#| label: fig-rate_icb_admissions_frail_elderly_high_map
 #| fig-cap: !expr get_caption_by_icb(cohort_title, "SR", "admissions")
-rate_frail_elderly_high_icb_admissions_map
+rate_icb_admissions_frail_elderly_high_map
 ```
 :::
 
 ##### Table
 
 ```{r}
-#| label: tbl-rate_frail_elderly_high_icb_admissions
+#| label: tbl-rate_icb_admissions_frail_elderly_high
 #| tbl-cap: !expr get_caption_by_geography_table(cohort_title, "admissions", treatment_type, "icb")
 get_summary_by_geography_table(summary_icb_admissions_frail_elderly_high, "episodes", treatment_type)
 ```
@@ -707,9 +707,9 @@ get_summary_by_geography_table(summary_icb_admissions_frail_elderly_high, "episo
 #### Local Authority
 
 ```{r}
-#| label: tbl-rate_frail_elderly_high_la_admissions
+#| label: tbl-rate_la_admissions_frail_elderly_high
 #| tbl-cap: !expr get_caption_by_geography_table(cohort_title, "admissions", treatment_type, "la")
-targets::tar_read(summary_frail_elderly_high_la_admissions) |>
+targets::tar_read(summary_la_admissions_frail_elderly_high) |>
   get_summary_by_geography_table("episodes", treatment_type)
 ```
 :::
@@ -723,13 +723,13 @@ targets::tar_read(summary_frail_elderly_high_la_admissions) |>
 #| output: false
 summary_icb_beddays_frail_elderly_high <- targets::tar_read(summary_icb_beddays_frail_elderly_high)
 
-number_frail_elderly_high_icb_beddays_map <- summary_icb_beddays_frail_elderly_high |>
+number_icb_beddays_frail_elderly_high_map <- summary_icb_beddays_frail_elderly_high |>
   get_summary_by_icb_map(icb_23_shp, "total_count")
 
-perc_frail_elderly_high_icb_beddays_map <- summary_icb_beddays_frail_elderly_high |>
+perc_icb_beddays_frail_elderly_high_map <- summary_icb_beddays_frail_elderly_high |>
   get_summary_by_icb_map(icb_23_shp, "perc")
 
-rate_frail_elderly_high_icb_beddays_map <- summary_icb_beddays_frail_elderly_high |>
+rate_icb_beddays_frail_elderly_high_map <- summary_icb_beddays_frail_elderly_high |>
   get_summary_by_icb_map(icb_23_shp, "value")
 ```
 
@@ -740,7 +740,7 @@ rate_frail_elderly_high_icb_beddays_map <- summary_icb_beddays_frail_elderly_hig
 ###### Bars
 
 ```{r}
-#| label: fig-number_frail_elderly_high_icb_beddays_bar
+#| label: fig-number_icb_beddays_frail_elderly_high_bar
 #| fig-cap: !expr get_caption_by_icb(cohort_title, "number", "beddays")
 england_value <- get_england_value("total_count", 
                                    data_number = summary_icb_beddays_frail_elderly_high)
@@ -756,9 +756,9 @@ rm(england_value)
 ###### Map
 
 ```{r}
-#| label: fig-number_frail_elderly_high_icb_beddays_map
+#| label: fig-number_icb_beddays_frail_elderly_high_map
 #| fig-cap: !expr get_caption_by_icb(cohort_title, "number", "beddays")
-number_frail_elderly_high_icb_beddays_map
+number_icb_beddays_frail_elderly_high_map
 ```
 :::
 
@@ -768,7 +768,7 @@ number_frail_elderly_high_icb_beddays_map
 ###### Bars
 
 ```{r}
-#| label: fig-perc_frail_elderly_high_icb_beddays_bar
+#| label: fig-perc_icb_beddays_frail_elderly_high_bar
 #| fig-cap: !expr get_caption_by_icb(cohort_title, "perc", "beddays", treatment_type)
 total_beddays_admissions <- targets::tar_read(total_beddays_admissions)
 
@@ -789,9 +789,9 @@ rm(england_value)
 ###### Map
 
 ```{r}
-#| label: fig-perc_frail_elderly_high_icb_beddays_map
+#| label: fig-perc_icb_beddays_frail_elderly_high_map
 #| fig-cap: !expr get_caption_by_icb(cohort_title, "perc", "beddays", treatment_type)
-perc_frail_elderly_high_icb_beddays_map
+perc_icb_beddays_frail_elderly_high_map
 ```
 :::
 
@@ -801,7 +801,7 @@ perc_frail_elderly_high_icb_beddays_map
 ###### Bars
 
 ```{r}
-#| label: fig-rate_frail_elderly_high_icb_beddays_bar
+#| label: fig-rate_icb_beddays_frail_elderly_high_bar
 #| fig-cap: !expr get_caption_by_icb(cohort_title, "SR", "beddays")
 england_value <- get_england_value("value",
                                    data_rate = england_age_sex_standardised_rates_beddays,
@@ -818,16 +818,16 @@ rm(england_value)
 ###### Map
 
 ```{r}
-#| label: fig-rate_frail_elderly_high_icb_beddays_map
+#| label: fig-rate_icb_beddays_frail_elderly_high_map
 #| fig-cap: !expr get_caption_by_icb(cohort_title, "SR", "beddays")
-rate_frail_elderly_high_icb_beddays_map
+rate_icb_beddays_frail_elderly_high_map
 ```
 :::
 
 ##### Table
 
 ```{r}
-#| label: tbl-rate_frail_elderly_high_icb_beddays
+#| label: tbl-rate_icb_beddays_frail_elderly_high
 #| tbl-cap: !expr get_caption_by_geography_table(cohort_title, "beddays", treatment_type, "icb")
 get_summary_by_geography_table(summary_icb_beddays_frail_elderly_high, "beddays", treatment_type)
 ```
@@ -836,9 +836,9 @@ get_summary_by_geography_table(summary_icb_beddays_frail_elderly_high, "beddays"
 #### Local Authority
 
 ```{r}
-#| label: tbl-rate_frail_elderly_high_la_beddays
+#| label: tbl-rate_la_beddays_frail_elderly_high
 #| tbl-cap: !expr get_caption_by_geography_table(cohort_title, "beddays", treatment_type, "la")
-targets::tar_read(summary_frail_elderly_high_la_beddays) |>
+targets::tar_read(summary_la_beddays_frail_elderly_high) |>
   get_summary_by_geography_table("beddays", treatment_type)
 ```
 :::
