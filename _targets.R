@@ -227,6 +227,7 @@ list(
                 )
               ) |>
                 sparklyr::collect() |>
+                mutate_mechanism_columns() |>
                 tidyr::pivot_longer(cols = !c(sex, age_range, resladst_ons, episodes, beddays),
                                     names_to = "cohorts",
                                     values_to = "value") |>
