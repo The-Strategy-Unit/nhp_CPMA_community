@@ -118,27 +118,31 @@ get_note_on_dashed_line <- function(metric_title, england_value) {
 #' the standardised rates per 100,000 population for a mitigator by ICB/LA.
 #'
 #' @param data Either `"icb_age_sex_standardised_rates_episodes"` or `"icb_age_sex_standardised_rates_beddays"` or LA equivalents.
-#' @param cohort A string for the mitigator cohort.
 #' @param total The `total_beddays_admissions_by_icb` object.
 #' @param activity_type Either `"admissions"` or `"beddays"`.
-#' @param treatment_type Either `"emergency"` or `"elective"`.
 #' @param geography Either `"icb"` or `"ladcode23"`.
+#' @param mitigator The mitigator or mechanism.
+#' @param treatment_lookup A dataframe of the mitigators and mechanisms and their treatment types.
 #'
 #' @return A dataframe.
 get_summary_by_geography <- function(data,
-                                     cohort,
+                                     mitigator,
                                      total,
                                      activity_type,
-                                     treatment_type,
-                                     geography) {
+                                     geography,
+                                     treatment_lookup) {
   if (activity_type == "admissions") {
     activity_type <- "episodes"
   }
   
+  treatment_type <- treatment_lookup |> 
+    dplyr::filter(mitigator_or_mechanism == mitigator) |>
+    dplyr::pull(treatment_type)
+  
   denominator <- glue::glue("total_{activity_type}_{treatment_type}")
   
   wrangled <- data |>
-    dplyr::filter(cohorts == cohort, year == "2023/24") |>
+    dplyr::filter(cohorts == mitigator, year == "2023/24") |>
     dplyr::left_join(total, geography) |>
     dplyr::mutate(perc = janitor::round_half_up(total_count * 100 / 
                                                   !!rlang::sym(denominator), 
