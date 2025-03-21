@@ -263,31 +263,7 @@ list(
   ## Overview of mitigator -----------------------------------------------------
   tar_target(
     total_beddays_admissions,
-    dplyr::tbl(
-      sc,
-      dbplyr::in_catalog(
-        "strategyunit",
-        "default",
-        "sl_af_describing_mitigators_final_2324_sex"
-      )
-    ) |>
-      dplyr::select(dplyr::starts_with("total")) |>
-      dplyr::distinct() |>
-      dplyr::summarise(dplyr::across(dplyr::everything(), ~ sum(.))) |>
-      sparklyr::collect() |>
-      tidyr::pivot_longer(
-        cols = dplyr::everything(),
-        names_to = "activity_treatment",
-        values_to = "total"
-      ) |>
-      tidyr::separate_wider_delim(activity_treatment, 
-                                  "_", 
-                                  names = c("a", 
-                                            "activity_type", 
-                                            "treatment_type")) |>
-      dplyr::mutate(activity_type = stringr::str_replace(activity_type,
-                                                         "episodes", 
-                                                         "admissions"))
+    get_total_beddays_admissions(sc)
   ),
   tarchetypes::tar_map(
     list(mitigator = mitigators_and_mechanisms),
