@@ -11,6 +11,7 @@
 #' @param treatment Needed if `metric == "perc`. Either `"emergency"` or `"elective"`.
 #' @param data_rate Either `"england_age_sex_standardised_rates_episodes"` or `"england_age_sex_standardised_rates_beddays"`.
 #' @param cohort A string for the mitigator cohort.
+#' @param data_perc This is `total_beddays_admissions`.
 #'
 #' @return A number.
 get_england_value <- function(metric,
@@ -114,8 +115,9 @@ get_note_on_dashed_line <- function(metric_title, england_value) {
   return(note)
 }
 
-#' Gets the number of mitigable admissions/beddays, the percentage over all emergency/elective and
-#' the standardised rates per 100,000 population for a mitigator by ICB/LA.
+#' Gets the number of mitigable admissions/beddays, the percentage over all 
+#' emergency/elective and the standardised rates per 100,000 population for a 
+#' mitigator/mechanism by ICB/LA.
 #'
 #' @param data Either `"icb_age_sex_standardised_rates_episodes"` or `"icb_age_sex_standardised_rates_beddays"` or LA equivalents.
 #' @param total The `total_beddays_admissions_by_icb` object.
