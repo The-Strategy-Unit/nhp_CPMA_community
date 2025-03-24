@@ -277,6 +277,7 @@ list(
     )
   ),
   
+  
   # Descriptive analysis -------------------------------------------------------
   ## Overview of mitigator -----------------------------------------------------
   tar_target(total_beddays_admissions, get_total_beddays_admissions(sc)),
@@ -397,6 +398,10 @@ list(
     Formatting_data_for_trends_analysis_total_mitigation("sl_af_describing_mitigators_fyear", icb_population_data)
   ),
   
+  tar_target(
+    numbers_over_time_local_authority,
+    Formatting_la_data_for_trends("SL_AF_describing_mitigators_local_authority_by_yr")
+  ),
   
   tar_target(
     denominator_over_time,

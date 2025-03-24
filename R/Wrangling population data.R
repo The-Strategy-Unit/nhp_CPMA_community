@@ -225,42 +225,32 @@ generating_england_age_sex_standardised_rates<-function(data, icb_pop, standard_
   
 }
 
-generating_la_age_sex_standardised_rates_for_trends <- function(data, la_pop, standard_pop, activity_type) {
-  
-  la_numbers_over_time <- dplyr::tbl(
-    sc,
-    dbplyr::in_catalog("strategyunit","default", "SL_AF_describing_mitigators_local_authority_by_yr")
-  )|> collect()|>
-    as.data.frame(la_numbers_over_time)
-  
-  la_numbers_over_time<- identify_whether_bedday_or_admissions_or_both(numbers_over_time, 5:33)|>
-    mutate(episodes=ifelse(activity_group=="beddays", 0, episodes))|>   #avoid counting admissions for efficiency only activity
-    select(-activity_group, -number_of_cohorts)|>
-    gather(key="cohorts", value="value", -fyear, -age_range, -sex, -resladst_ons, -episodes, -beddays)|>
-    filter(value==1)|>
-    filter(fyear>201415)|>
-    mutate(year=paste0(stringr::str_sub(fyear, 1, 4), "/", stringr::str_sub(fyear, 5, 6)))
-  
-  expanded_data<-la_numbers_over_time|>
-    expand(age_range, sex, cohorts, year,resladst_ons)
-  
-  standardised_data<-expanded_data|>
-  left_join(la_numbers_over_time, by=c("resladst_ons", "year", "age_range", "sex", "cohorts"))|>
-    dplyr::left_join(la_pop, by = c("resladst_ons"="ladcode23", "age_range", "sex", "year"="fyear")) |>
-    dplyr::left_join(standard_pop, by = c("age_range", "sex")) |>
-    dplyr::filter(!is.na(ladcode23),
-                  startsWith(ladcode23, "E"),
-                  age_range != "NA") |>
-    mutate(episodes=ifelse(is.na(episodes), 0, episodes),
-           beddays=ifelse(is.na(beddays), 0, beddays) )|>
-    dplyr::group_by(ladcode23, laname23, cohorts, year) |>
-    dplyr::rename(activity = {{activity_type}}) |>
-    dplyr::filter(!is.na(la_population)) |> #########################################################################
-  PHEindicatormethods::calculate_dsr(x = activity, # observed number of events
-                                     n = la_population, # non-standard pops for each stratum
-                                     stdpop = pop) |>   # standard populations for England for each stratum
-    mutate(value=round(value,0))   # standard populations for England for each stratum
-  
-  
-}
 
+  
+  generating_la_age_sex_standardised_rates_for_trends <- function(data, la_lookup, la_pop, standard_pop,  activity_type) {
+    
+    expanded_data<-data|>
+      expand(age_range, sex, cohorts, year,resladst_ons)
+    
+    standardised_data<-expanded_data|>
+      left_join(data, by=c("resladst_ons", "year", "age_range", "sex", "cohorts"))|>
+      left_join(la_lookup, by=c("resladst_ons"="old_la_code"))|>
+      mutate(resladst_ons=ifelse(is.na(new_la_code), resladst_ons, new_la_code))|>
+      dplyr::left_join(la_pop|>mutate(sex=as.character(sex)), by = c("resladst_ons"="ladcode23", "age_range", "sex", "year"="fyear")) #|>
+      dplyr::left_join(standard_pop, by = c("age_range", "sex")) |>
+      dplyr::filter(!is.na(resladst_ons),
+                    startsWith(resladst_ons, "E"),
+                    age_range != "NA") |>
+      mutate(episodes=ifelse(is.na(episodes), 0, episodes),
+            beddays=ifelse(is.na(beddays), 0, beddays) )#|>
+      dplyr::rename(activity = {{activity_type}}) |>
+      dplyr::group_by(resladst_ons, laname23, cohorts, year) |>
+      PHEindicatormethods::calculate_dsr(x = activity, # observed number of events
+                                         n = la_population, # non-standard pops for each stratum
+                                         stdpop = pop) |>   # standard populations for England for each stratum
+      mutate(value=round(value,0))   # standard populations for England for each stratum
+    
+    
+  }
+  
+  

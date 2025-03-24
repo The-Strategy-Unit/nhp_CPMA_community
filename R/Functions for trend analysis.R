@@ -90,6 +90,26 @@ numbers_over_time<- identify_whether_bedday_or_admissions_or_both(numbers_over_t
   
 }
 
+# Number by LA over time
+
+Formatting_la_data_for_trends <- function(table) {
+  
+  la_numbers_over_time <- dplyr::tbl(
+    sc,
+    dbplyr::in_catalog("strategyunit","default", table)
+  )|> collect()|>
+    as.data.frame()
+  
+  la_numbers_over_time<- identify_whether_bedday_or_admissions_or_both(  la_numbers_over_time, 5:33)|>
+    mutate(episodes=ifelse(activity_group=="beddays", 0, episodes))|>   #avoid counting admissions for efficiency only activity
+    select(-activity_group, -number_of_cohorts)|>
+    mutate_mechanism_columns() |> 
+    gather(key="cohorts", value="value", -fyear, -age_range, -sex, -resladst_ons, -episodes, -beddays)|>
+    filter(value==1)|>
+    filter(fyear>201819)|>
+    mutate(year=paste0(stringr::str_sub(fyear, 1, 4), "/", stringr::str_sub(fyear, 5, 6)))
+ 
+ }
 
 # Calculating numbers and percentages over time
 data_number_percentage_over_time_icb<-function(data1, data2, mitigator, treatment_type){

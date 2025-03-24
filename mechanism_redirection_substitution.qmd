@@ -765,7 +765,7 @@ icb_population_data<-tar_read(icb_population_data)
 
 number_percentage_over_time<-  data_number_percentage_over_time_icb(denominator_over_time, 
                                     numbers_over_time,
-                                       cohort,                                   
+                                       cohort,                 
                                     treatment_type)
 
 plot_of_number_over_time(number_percentage_over_time, episodes)
