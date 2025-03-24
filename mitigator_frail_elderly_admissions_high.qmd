@@ -21,6 +21,7 @@ source("R/Functions for cohort overlap.R")
 source("R/Functions for trend analysis.R")
 
 options(scipen = 999)
+
 ```
 
 ```{r global variables}
@@ -1133,7 +1134,7 @@ plotting_percentage_change_over_time_by_icb(icb_age_sex_standardised_rates_bedda
 
 ### Change in age and sex standardised rate over time relative to level of activity
 
-This chart shows the percentage change for each ICB relative to it's starting level of admissions/beddays to help demonstrate performance across ICBs. For example, those in the lower left quadrant already had relatively low standardised rates of admissions/beddays in 2018/19 and have continued to make further decreases over the last five years.
+This chart shows the percentage change for each ICB relative to it's starting level of admissions/beddays to help demonstrate performance across ICBs. Those ICBs in the lower left quadrant (shaded in green) could be considered as performing well; they already had relatively low standardised rates of admissions/beddays in 2018/19 and have continued to make further decreases over the last five years.
 
 ::: panel-tabset
 #### Admissions
