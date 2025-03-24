@@ -141,13 +141,16 @@ plot_of_number_over_time<-function(data,  activity_type){
   data2|>
     ggplot()+
     geom_line(aes(y=activity, x=year, group=1), linewidth=1.4)+
+    geom_rect(aes(NULL,NULL,xmin="2019/20",xmax="2021/22"),
+              ymin=0,ymax=max(data2$activity)*1.1, fill="#686f73", size=0.5, alpha=0.01)+
+    annotate("text", x ="2020/21", y = max(data2$activity)*1.08, label = "COVID-19 pandemic", size=2.7)+
     su_theme()+
     theme(axis.text=element_text(size=10),
           axis.title.y=element_text(size=12))+
     labs(y="Number",
          x=NULL,
          title=NULL)+ 
-    scale_y_continuous(expand=c(0,0), limits=c(0,max(data2$activity)*1.05), labels = label_comma())
+    scale_y_continuous(expand=c(0,0), limits=c(0,max(data2$activity)*1.1), labels = label_comma())
   
   
 }
@@ -165,13 +168,16 @@ data1<-data|>
 data1|>
     ggplot()+
     geom_line(aes(y=percentage, x=year, group=1), linewidth=1.4)+
+  geom_rect(aes(NULL,NULL,xmin="2019/20",xmax="2021/22"),
+            ymin=0,ymax=max(data1$percentage*1.1), fill="#686f73", size=0.5, alpha=0.01)+
+  annotate("text", x ="2020/21", y = max(data1$percentage)*1.08, label = "COVID-19 pandemic", size=2.7)+
     su_theme()+
     theme(axis.text=element_text(size=10),
           axis.title.y=element_text(size=12))+
     labs(y="Percentage",
          x=NULL,
          title=NULL)+ 
-    scale_y_continuous(expand=c(0,0), limits=c(0,max(data1$percentage)*1.05), labels = label_comma())
+    scale_y_continuous(expand=c(0,0), limits=c(0,max(data1$percentage)*1.1), labels = label_comma())
   
   
   
@@ -186,6 +192,9 @@ plot_of_standardised_rates_over_time<-function(data){
     ggplot(aes(y=value, x=year, group=1))+
     geom_ribbon(aes(ymin = lowercl, ymax = uppercl), fill = "#5881c1" )+
     geom_line(linewidth=1.4)+
+    geom_rect(aes(NULL,NULL,xmin="2019/20",xmax="2021/22"),
+              ymin=0,ymax=max(data1$value*1.1), fill="#686f73", size=0.5, alpha=0.01)+
+    annotate("text", x ="2020/21", y = max(data1$value)*1.08, label = "COVID-19 pandemic", size=2.7)+
     su_theme()+
     theme(axis.text=element_text(size=10),
           axis.title.y=element_text(size=12))+
@@ -193,7 +202,7 @@ plot_of_standardised_rates_over_time<-function(data){
          x=NULL,
          title=NULL,
          caption = "Blue ribbon indicates the 95% confidence intervals")+ 
-    scale_y_continuous(expand=c(0,0), limits=c(0,max(data1$uppercl)*1.05), labels = label_comma())
+    scale_y_continuous(expand=c(0,0), limits=c(0,max(data1$uppercl)*1.1), labels = label_comma())
   
   
   }
@@ -214,21 +223,26 @@ plotting_icb_over_time<-function(data, axis_title){
          footnote<-"Blue ribbon indicates the 95% confidence intervals", 
          footnote<-"")
   
-  data2|>
+ fig<- data2|>
     mutate(activity=round(activity,2))|>
     group_by(icb_2024_name)|>
     highlight_key(~icb_2024_name) |>
     plot_ly( x = ~year, y = ~activity, type = 'scatter',  mode = 'lines', text=~icb_2024_name,  line = list(color = "#686f73"), width=660, height=300)|>
     highlight(~icb_2024_name, on = "plotly_click", off="plotly_doubleclick", dynamic=FALSE)|>
     layout(
+      shapes = list(
+        list(type = "rect",
+             fillcolor = "#686f73", line = list(color = "#686f73"), opacity = 0.1,
+             x0 = "2019/20", x1 = "2021/22", xref = "x",
+             y0 = 0, y1 =max(data2$activity)*1.1, yref = "y")),
       xaxis = list(title="", showticklabels = TRUE, showline = TRUE, showgrid = F , linewidth=1.6),
       yaxis = list(title = axis_title, rangemode="tozero",showline = TRUE, showgrid = F , linewidth=1.6 ,zeroline = FALSE, tickformat = "digits", anchor="free", shift=100),
       annotations = 
-        list(x = 1, y = -0.16, 
-             text = footnote, 
+      list(x = "2020/21", y =max(data2$activity)*1.08, 
+             text = "COVID-19 pandemic", 
              showarrow = F, 
-             xref='paper', 
-             yref='paper'))|>
+            xref='x', 
+            yref='y'))|>
     add_ribbons(ymin = ~lower_ci,
                 ymax = ~upper_ci,
                 line=list(color= "#5881c1"),
@@ -236,8 +250,15 @@ plotting_icb_over_time<-function(data, axis_title){
                 opacity = 0.3, 
                 name = '95% ribbon',
                 showlegend = FALSE)
+ 
+ fig2<-fig|>
+   layout(annotations=list(x = 1, y = -0.16, 
+              text = footnote, 
+             showarrow = F, 
+             xref='paper', 
+             yref='paper'))
 
-  
+  fig2
 }
 
 
