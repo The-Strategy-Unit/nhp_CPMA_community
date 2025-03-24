@@ -277,6 +277,28 @@ list(
     )
   ),
   
+  tar_target(
+    la_age_sex_standardised_rates_episodes_over_time,
+    generating_la_age_sex_standardised_rates_for_trends(
+      numbers_over_time_local_authority,
+      la_code_lookup,
+      la_population_data,
+      standard_england_pop_2021_census,
+      episodes
+    )
+  ),
+  
+  tar_target(
+    la_age_sex_standardised_rates_beddays_over_time,
+    generating_la_age_sex_standardised_rates_for_trends(
+      numbers_over_time_local_authority,
+      la_code_lookup,
+      la_population_data,
+      standard_england_pop_2021_census,
+      beddays
+    )
+  ),
+ 
   
   # Descriptive analysis -------------------------------------------------------
   ## Overview of mitigator -----------------------------------------------------
