@@ -236,13 +236,14 @@ generating_england_age_sex_standardised_rates<-function(data, icb_pop, standard_
       left_join(data, by=c("resladst_ons", "year", "age_range", "sex", "cohorts"))|>
       left_join(la_lookup, by=c("resladst_ons"="old_la_code"))|>
       mutate(resladst_ons=ifelse(is.na(new_la_code), resladst_ons, new_la_code))|>
-      dplyr::left_join(la_pop|>mutate(sex=as.character(sex)), by = c("resladst_ons"="ladcode23", "age_range", "sex", "year"="fyear")) #|>
+      dplyr::left_join(la_pop|>mutate(sex=as.character(sex)), by = c("resladst_ons"="ladcode23", "age_range", "sex", "year"="fyear")) |>
       dplyr::left_join(standard_pop, by = c("age_range", "sex")) |>
       dplyr::filter(!is.na(resladst_ons),
                     startsWith(resladst_ons, "E"),
+                    resladst_ons!="E99999999",
                     age_range != "NA") |>
       mutate(episodes=ifelse(is.na(episodes), 0, episodes),
-            beddays=ifelse(is.na(beddays), 0, beddays) )#|>
+             beddays=ifelse(is.na(beddays), 0, beddays) )|>
       dplyr::rename(activity = {{activity_type}}) |>
       dplyr::group_by(resladst_ons, laname23, cohorts, year) |>
       PHEindicatormethods::calculate_dsr(x = activity, # observed number of events
