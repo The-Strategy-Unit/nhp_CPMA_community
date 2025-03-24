@@ -734,4 +734,323 @@ targets::tar_read(summary_la_beddays_redirection_substitution) |>
 
 ## Trend Analysis
 
-(Placeholder)
+We aim to understand whether there have been decreases, or increases, in potentially mitigable Redirection and Substitution activity over time. We have considered Redirection and Substitution admissions and beddays over the past 9 years in England as a whole and for each ICB, including:
+
+a\) the absolute number of Redirection and Substitution admissions/beddays,
+
+b\) these admissions/beddays as a proportion of emergency admissions,
+
+c\) the age and sex standardised rates of these admissions/beddays using the England 2021 census population.
+
+To help understand the variability between ICBs we have calculated for each ICB the percentage change in proportion of emergency admissions and in standardised rates between 2018/19 and 2023/24.
+
+### England
+
+::: panel-tabset
+#### Number over time
+
+::: panel-tabset
+#### Admissions
+
+```{r, fig.width=7, fig.height=3}
+#| label: fig-number_trends_spells_england
+#| fig-cap: The total number potentially mitigable Redirection and Substitution admissions in England over the last 9 years. 
+
+numbers_over_time<-tar_read(numbers_over_time)|>
+  filter(year!="2014/15")|>
+  filter(cohorts==cohort)
+
+denominator_over_time<-tar_read(denominator_over_time)
+icb_population_data<-tar_read(icb_population_data)
+
+number_percentage_over_time<-  data_number_percentage_over_time_icb(denominator_over_time, 
+                                    numbers_over_time,
+                                       cohort,                                   
+                                    treatment_type)
+
+plot_of_number_over_time(number_percentage_over_time, episodes)
+
+
+```
+
+#### Beddays
+
+```{r, fig.width=7, fig.height=3}
+#| label: fig-number_trends_beddays_england
+#| fig-cap: The number of beddays potentially mitigable Redirection and Substitution beddays in England over the last 9 years. 
+plot_of_number_over_time(number_percentage_over_time,  beddays)
+
+```
+:::
+
+#### Crude rate
+
+Potentially mitigable Redirection and Substitution activity as a percentage of total activity (elective and emergency admissions/beddays).
+
+::: panel-tabset
+#### Admissions
+
+```{r, fig.width=7, fig.height=3}
+#| label: fig-percent_trends_spells_england
+#| fig-cap: The percentage of admissions for potentially mitigable Redirection and Substitution activity in England over the last 9 years. 
+
+plot_of_percentage_over_time(number_percentage_over_time|>
+                               filter(!is.na(percentage_episodes)), 
+          episodes, total_episodes)
+
+```
+
+#### Beddays
+
+```{r, fig.width=7, fig.height=3}
+#| label: fig-percent_trends_beddays_england
+#| fig-cap: The percentage of beddays for potentially mitigable Redirection and Substitution activity in England over the last 9 years. 
+
+plot_of_percentage_over_time(number_percentage_over_time|>
+                               filter(!is.na(percentage_beddays)),  beddays, total_beddays)
+
+```
+:::
+
+#### Age and sex standardised rates over time
+
+::: panel-tabset
+#### Admissions
+
+```{r, fig.width=7, fig.height=3}
+#| label: fig-stardardised_trends_spells_england
+#| fig-cap: Age and sex standardised rate of potentially mitigable Redirection and Substitution admissions in England over the last 9 years. 
+
+plot_of_standardised_rates_over_time(england_age_sex_standardised_rates_episodes)
+
+```
+
+#### Beddays
+
+```{r, fig.width=7, fig.height=3}
+#| label: fig-stardardised_trends_beddays_england
+#| fig-cap: Age and sex standardised rate of potentially mitigable Redirection and Substitution beddays in England over the last 9 years.
+
+plot_of_standardised_rates_over_time(england_age_sex_standardised_rates_beddays)
+
+```
+:::
+:::
+
+### ICB
+
+Note: Low numbers of admissions/beddays for Frimley ICB in 2022/23 reflect an issue with data submissions for this period. 
+
+::: panel-tabset
+#### Number over time
+
+::: panel-tabset
+#### Admissions
+
+```{r, fig.width=5, fig.height=3}
+#| label: fig-number_trends_spells_icb
+#| fig-cap: The number of potentially mitigable Redirection and Substitution admissions by ICB over the last 9 years. 
+
+plotting_icb_over_time(number_percentage_over_time|>
+        mutate(activity=episodes),
+        'Number')
+
+```
+
+<br>
+
+```{r, fig.height=6, fig.width=8}
+#| label: fig-percent_change_number_spells
+#| fig-cap: The percentage change in the number of potentially mitigable Redirection and Substitution admissions by ICB between 2018/19 and 2023/24. 
+
+england_average_numbers_episodes<-calculating_england_average_numbers(number_percentage_over_time, episodes)
+
+
+plotting_percentage_change_over_time_by_icb(number_percentage_over_time|>filter(!is.na(icb_2024_name)), episodes, icb_2024_name , england_average_numbers_episodes$change, 1.2, 1.3)
+
+```
+
+
+#### Beddays
+
+```{r, fig.width=5, fig.height=3}
+#| label: fig-number_trends_beddays_icb
+#| fig-cap: The number of beddays for potentially mitigable Redirection and Substitution beddays by ICB over the last 9 years.
+
+plotting_icb_over_time(number_percentage_over_time|>
+        mutate(activity=beddays), 'Number')
+```
+
+<br>
+
+```{r, fig.height=6, fig.width=8}
+#| label: fig-percent_change_number_beddays
+#| fig-cap: The percentage change in the number of potentially mitigable Redirection and Substitution beddays by ICB between 2018/19 and 2023/24. 
+
+england_average_numbers_beddays<-calculating_england_average_numbers(number_percentage_over_time, beddays)
+
+
+plotting_percentage_change_over_time_by_icb(number_percentage_over_time|>filter(!is.na(icb_2024_name)), beddays, icb_2024_name, england_average_numbers_beddays$change, 1.5, 1.2)
+
+```
+
+:::
+
+#### Crude rate
+
+Potentially mitigable Redirection and Substitution activity as a percentage of total activity (elective and emergency activity) by ICB.
+
+::: panel-tabset
+#### Admissions
+
+```{r, fig.width=5, fig.height=3}
+#| label: fig-percent_trends_spells_icb
+#| fig-cap: The percentage of admissions for potentially mitigable Redirection and Substitution activity by ICB over the last 9 years. 
+
+plotting_icb_over_time(number_percentage_over_time|>
+        mutate(activity=percentage_episodes)|>
+          filter(!is.na(activity)), 'Percentage')
+
+```
+
+<br>
+
+```{r, fig.height=6, fig.width=8}
+#| label: fig-percent_change_percent_spells
+#| fig-cap: The percentage change in the proportion of potentially mitigable Redirection and Substitution admissions by ICB between 2018/19 and 2023/24. 
+
+england_average_percentage_episodes<-calculating_england_average_percentage(number_percentage_over_time|> filter(!is.na(total_episodes)), episodes, total_episodes)
+
+plotting_percentage_change_over_time_by_icb(number_percentage_over_time|>filter(!is.na(icb_2024_name)), percentage_episodes, icb_2024_name, england_average_percentage_episodes$change, 1.2, 1.3)
+
+
+```
+
+#### Beddays
+
+```{r, fig.width=5, fig.height=3}
+#| label: fig-percent_trends_beddays_icb
+#| fig-cap: The percentage of beddays for potentially mitigable Redirection and Substitution activity by ICB over the last 9 years. 
+
+plotting_icb_over_time(number_percentage_over_time|>
+        mutate(activity=percentage_beddays)|>
+          filter(!is.na(activity)), 'Percentage')
+
+```
+
+<br>
+
+```{r, fig.height=6, fig.width=8}
+#| label: fig-percent_change_percent_beddays
+#| fig-cap: The percentage change in the proportion of potentially mitigable Redirection and Substitution beddays by ICB between 2018/19 and 2023/24. 
+
+england_average_percentage_beddays<-calculating_england_average_percentage(number_percentage_over_time|>
+          filter(!is.na(percentage_beddays)), beddays, total_beddays)
+
+plotting_percentage_change_over_time_by_icb(number_percentage_over_time|>filter(!is.na(icb_2024_name)), percentage_beddays, icb_2024_name, england_average_percentage_beddays$change,  1.4, 1.1)
+
+
+```
+:::
+
+#### Age and sex standardised rates over time
+
+::: panel-tabset
+#### Admissions
+
+```{r, fig.width=5, fig.height=3}
+#| label: fig-stardardised_trends_spells_icb
+#| fig-cap: Age and sex standardised rate of potentially mitigable Redirection and Substitution admissions by ICB over the last 9 years. 
+
+icb_age_sex_standardised_rates_episodes<-tar_read(icb_age_sex_standardised_rates_episodes)
+
+plotting_icb_over_time(
+  (icb_age_sex_standardised_rates_episodes|> 
+     filter(cohorts==cohort)|>
+     mutate(activity=value)),
+  'Standardised rate per 100,000')
+
+```
+
+<br>
+
+```{r, fig.height=6, fig.width=8}
+#| label: fig-percent_change_standardised_spells
+#| fig-cap: The percentage change in the standardised rate of potentially mitigable Redirection and Substitution admissions by ICB between 2018/19 and 2023/24. 
+
+england_average_standardised_episodes<-calculating_england_average_standardised(england_age_sex_standardised_rates_episodes)
+
+plotting_percentage_change_over_time_by_icb(icb_age_sex_standardised_rates_episodes|> 
+     filter(cohorts==cohort), value, icb_2024_name, england_average_standardised_episodes$change, 1.3, 1.4)
+
+
+```
+
+#### Beddays
+
+```{r, fig.width=5, fig.height=3}
+#| label: fig-stardardised_trends_beddays_icb
+#| fig-cap: Age and sex standardised rate potentially mitigable Redirection and Substitution beddays by ICB over the last 9 years.
+
+icb_age_sex_standardised_rates_beddays<-tar_read(icb_age_sex_standardised_rates_beddays)
+
+plotting_icb_over_time(
+  (icb_age_sex_standardised_rates_beddays|> 
+     filter(cohorts==cohort)|>
+     mutate(activity=value)),
+  'Standardised rate per 100,000')
+
+```
+
+<br>
+
+```{r, fig.height=6, fig.width=8}
+#| label: fig-percent_change_standardised_beddays
+#| fig-cap: The percentage change in the standardised rate of potentially mitigable Redirection and Substitution beddays by ICB between 2018/19 and 2023/24. 
+
+england_average_standardised_beddays<-calculating_england_average_standardised(england_age_sex_standardised_rates_beddays)
+
+
+plotting_percentage_change_over_time_by_icb(icb_age_sex_standardised_rates_beddays|> 
+     filter(cohorts==cohort), value, icb_2024_name, england_average_standardised_beddays$change, 1.5, 1.2)
+
+
+```
+:::
+:::
+
+### Change in age and sex standardised rate over time relative to level of activity
+
+This chart shows the percentage change for each ICB relative to it's starting level of admissions/beddays to help demonstrate performance across ICBs. Those ICBs in the lower left quadrant (shaded in green) could be considered as performing well; they already had relatively low standardised rates of admissions/beddays in 2018/19 and have continued to make further decreases over the last five years.
+
+::: panel-tabset
+#### Admissions
+
+```{r, fig.width=5, fig.height=4}
+#| label: fig-activity_vs_rate_of_change_episodes
+#| fig-cap: The standardised rate of potentially mitigable Redirection and Substitution admissions (in 2018/19) versus the percentage change in admissions between 2018/19 and 2023/24 for ICBs. 
+
+plotting_total_activity_vs_percentage_change(icb_age_sex_standardised_rates_episodes, value)
+
+
+```
+#### Beddays
+
+```{r, fig.width=5, fig.height=4}
+#| label: fig-activity_vs_rate_of_change_beddays
+#| fig-cap:  The standardised rate of potentially mitigable Redirection and Substitution beddays (in 2018/19) versus the percentage change in beddays between 2018/19 and 2023/24 for ICBs.  
+#| 
+plotting_total_activity_vs_percentage_change(icb_age_sex_standardised_rates_beddays, value)
+
+
+```
+
+:::
+
+### Local Authority
+
+```{r}
+
+  
+
+```
