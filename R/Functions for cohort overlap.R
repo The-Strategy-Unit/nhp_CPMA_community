@@ -513,6 +513,50 @@ generate_venn_diagram<-function(data, activity_type){
   
 }
   
+plotting_barchart_number_of_mechanism_groups<-function(data, activity_type){
+  
+  name<-deparse(substitute(activity_type))
+  
+  if(name=="episodes"){
+    
+    data2<-data|>
+      generate_data_for_mechanism_cohort_overlaps()|>
+      select(-Efficiencies)|>
+      filter(episodes!=0)|>
+      mutate(number_of_cohorts = rowSums(pick(1:3), na.rm = TRUE))|>
+      summarise(activity=sum({{activity_type}}), .by=c(number_of_cohorts))
+  }
+  else{
+    data2<-data|>
+      generate_data_for_mechanism_cohort_overlaps()|>
+      mutate(number_of_cohorts = rowSums(pick(1:4), na.rm = TRUE))|>
+      summarise(activity=sum({{activity_type}}), .by=c(number_of_cohorts))
+  }
+  
+  data2<- data2 |>
+    mutate(percentage=round(activity/(sum(activity))*100,1))
+  
+  data2|>
+    ggplot(aes(x=number_of_cohorts, y=activity))+
+    geom_bar(stat="identity" , fill="#f9bf07")+
+    su_theme()+
+    theme(axis.text=element_text(size=9.5),
+          axis.title=element_text(size=10.5))+
+    labs(y="Number",
+         x="No. of mechanism groups the activity is part of",
+         title=NULL)+
+    geom_text(aes(label=paste0(scales::comma(activity), ' \n(',percentage, '%)')), vjust=-0.2, size=2.7)+
+    scale_y_continuous(limits=c(0, max(data2$activity)*1.2), expand=c(0,0), labels = label_comma())
+  
+  
+  
+}
+
+
+
+
+
+
   
 # Function for ggplots for summary overlap chart
 

@@ -140,6 +140,10 @@ total_cohort_numbers_2324|>
 
 #### Admissions
 
+::: columns
+
+::: {.column width="70%"}
+
 ```{r, fig.width=4, fig.height=4}
 #| label: fig-overlap_mechanism_cohorts_episodes
 #| fig-cap: Venn diagram showing the overlap in admissions between the mechanisms of mitigation groups.
@@ -147,20 +151,52 @@ total_cohort_numbers_2324|>
 total_cohort_numbers_2324<-tar_read(total_cohort_numbers_2324)
 
 generate_venn_diagram(total_cohort_numbers_2324, episodes)
- 
+
 ```
+:::
+
+::: {.column width="30%"}
+
+```{r, fig.width=3, fig.height=4}
+#| label: fig-number_of_mechanism_groups_episodes
+#| fig-cap: Number of mechanism groups the admissions are a part of.
+
+plotting_barchart_number_of_mechanism_groups(total_cohort_numbers_2324, episodes)
+
+```
+
+:::
 
 NB: Efficiency mitigators do not impact the number of admissions, only the length of stay, hence they do not overlap in terms of admissions with the other cohorts.
 
+:::
+
+
 #### Beddays
 
-```{r, fig.width=7, fig.height=6}
+::: columns
+
+::: {.column width="70%"}
+
+```{r, fig.width=6, fig.height=4}
 #| label: fig-overlap_mechanism_cohorts_beddays
 #| fig-cap: Venn diagram showing the overlap in beddays between the mechanisms of mitigation groups.
 
 generate_venn_diagram(total_cohort_numbers_2324, beddays)
 
 ```
+:::
+
+::: {.column width="30%"}
+```{r, fig.width=3, fig.height=4}
+#| label: fig-number_of_mechanism_groups_beddays
+#| fig-cap: Number of mechanism groups the beddays are a part of.
+
+plotting_barchart_number_of_mechanism_groups(total_cohort_numbers_2324, beddays)
+
+```
+:::
+:::
 
 
 ## Comparative Analysis
