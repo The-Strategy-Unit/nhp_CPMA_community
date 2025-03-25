@@ -106,9 +106,9 @@ Formatting_la_data_for_trends <- function(table) {
     mutate_mechanism_columns() |> 
     gather(key="cohorts", value="value", -fyear, -age_range, -sex, -resladst_ons, -episodes, -beddays)|>
     filter(value==1)|>
-    filter(fyear>201819)|>
     mutate(year=paste0(stringr::str_sub(fyear, 1, 4), "/", stringr::str_sub(fyear, 5, 6)))
  
+  return(la_numbers_over_time)
  }
 
 # Calculating numbers and percentages over time
