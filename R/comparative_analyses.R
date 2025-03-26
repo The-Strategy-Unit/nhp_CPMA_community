@@ -16,7 +16,7 @@
 #' @return A number.
 get_england_value <- function(metric,
                               data_number = NULL,
-                              data_perc = total_beddays_admissions,
+                              data_perc = NULL,
                               activity = NULL,
                               treatment = NULL,
                               data_rate = NULL,
@@ -28,15 +28,9 @@ get_england_value <- function(metric,
   }
   
   if (metric == "perc") {
-    numerator <- data_rate |>
-      dplyr::filter(year == "2023/24", cohorts == cohort)  |>
-      dplyr::pull(total_count)
-    
-    denominator <- data_perc |>
-      dplyr::filter(activity_type == activity, treatment_type == treatment) |>
-      dplyr::pull(total)
-    
-    england_value <- numerator * 100 / denominator
+    england_value <- data_perc |>
+      dplyr::filter(stringr::str_to_lower(activity_type) == "admissions") |>
+      dplyr::pull(perc)
   }
   
   if (metric == "value") {
