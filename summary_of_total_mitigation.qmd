@@ -35,6 +35,12 @@ england_age_sex_standardised_rates_beddays_total_mitigation<-tar_read(england_ag
 england_age_sex_standardised_rates_episodes_total_mitigation<-tar_read(england_age_sex_standardised_rates_episodes_total_mitigation)
 ```
 
+```{r global variables}
+#cohort <- "all"
+cohort_title <- "All Mitigation"
+treatment_type <- "both"
+```
+
 ## Mitigators included in this analysis
 
 The numbers of admissions and beddays give the potentially mitigable activity for England in 2023/24.
@@ -166,7 +172,7 @@ Many admissions meet the criteria to be included in more than one mechanism of m
 
 total_cohort_numbers_2324<-tar_read(total_cohort_numbers_2324)
 
-generate_venn_diagram(total_cohort_numbers_2324, episodes)
+#generate_venn_diagram(total_cohort_numbers_2324, episodes)
 
 ```
 :::
@@ -196,7 +202,7 @@ Overall three quarters of mitigable admissions fall into just one mechanism of m
 #| label: fig-overlap_mechanism_cohorts_beddays
 #| fig-cap: Venn diagram showing the overlap in beddays between the mechanisms of mitigation groups.
 
-generate_venn_diagram(total_cohort_numbers_2324, beddays)
+#generate_venn_diagram(total_cohort_numbers_2324, beddays)
 
 ```
 :::
@@ -219,133 +225,293 @@ One third of mitigable beddays are included with 3 mechanism of mitigation group
 :::
 ## Comparative Analysis
 
-TO BE CHANGED TO TOTAL MITIGATION
-
 ::: panel-tabset
 ### Admissions
 
+::: panel-tabset
+#### Integrated Care Board
+
 ```{r}
 #| output: false
-summary_icb_admissions_frail_elderly_high <- targets::tar_read(summary_icb_admissions_frail_elderly_high)
+summary_icb_all_admissions <- targets::tar_read(summary_icb_all_admissions)
 
 icb_23_shp <- sf::st_read("https://services1.arcgis.com/ESMARspQHYMw9BZ9/arcgis/rest/services/Integrated_Care_Boards_April_2023_EN_BGC/FeatureServer/0/query?outFields=*&where=1%3D1&f=geojson") |>
-  janitor::clean_names()
+  janitor::clean_names() |>
+  dplyr::mutate(icb23nm = simplify_icb_name(icb23nm))
 
-number_icb_admissions_frail_elderly_high_map <- summary_icb_admissions_frail_elderly_high |>
+number_icb_all_admissions_map <- summary_icb_all_admissions |>
   get_summary_by_icb_map(icb_23_shp, "total_count")
 
-perc_icb_admissions_frail_elderly_high_map <- summary_icb_admissions_frail_elderly_high |>
+perc_icb_all_admissions_map <- summary_icb_all_admissions |>
   get_summary_by_icb_map(icb_23_shp, "perc")
 
-rate_icb_admissions_frail_elderly_high_map <- summary_icb_admissions_frail_elderly_high |>
+rate_icb_all_admissions_map <- summary_icb_all_admissions |>
   get_summary_by_icb_map(icb_23_shp, "value")
 ```
 
 ::: panel-tabset
-#### Number of admissions
+##### Number of admissions
 
 ::: panel-tabset
-##### Bars
+###### Bars
 
 ```{r}
-#| label: fig-number_icb_admissions_frail_elderly_high_bar
-#| fig-cap: !expr get_caption_by_icb("Frail Elderly (high)", "number", "admissions")
-england_value <- get_england_value("total_count", 
-                                   data = summary_icb_admissions_frail_elderly_high)
+#| label: fig-number_icb_all_admissions_bar
+#| fig-cap: !expr get_caption_by_icb(cohort_title, "number", "admissions")
+england_value <- get_england_value(
+  "total_count", 
+  data = summary_icb_all_admissions)
 
-get_summary_by_icb_bar(summary_icb_admissions_frail_elderly_high, 
-                       "total_count", 
-                       "frail_elderly_high",
-                       england_value)
+get_summary_by_icb_bar(
+  summary_icb_all_admissions, 
+  "total_count", 
+  cohort,
+  england_value)
 
 rm(england_value)
 ```
 
-##### Map
+###### Map
 
 ```{r}
-#| label: fig-number_icb_admissions_frail_elderly_high_map
-#| fig-cap: !expr get_caption_by_icb("Frail Elderly (high)", "number", "admissions")
-number_icb_admissions_frail_elderly_high_map
+#| label: fig-number_icb_all_admissions_map
+#| fig-cap: !expr get_caption_by_icb(cohort_title, "number", "admissions")
+number_icb_all_admissions_map
 ```
 :::
 
-#### Percentage of emergency activity
+##### Percentage of emergency activity
 
 ::: panel-tabset
-##### Bars
+###### Bars
 
-```{r, eval=FALSE}
-#| label: fig-perc_icb_admissions_frail_elderly_high_bar
-#| fig-cap: !expr get_caption_by_icb("Frail Elderly (high)", "perc", "admissions")
+```{r}
+#| label: fig-perc_icb_all_admissions_bar
+#| fig-cap: !expr get_caption_by_icb(cohort_title, "perc", "admissions", treatment_type)
 total_beddays_admissions <- targets::tar_read(total_beddays_admissions)
 
-england_value <- get_england_value("perc", 
-                                   activity = "admissions",
-                                   treatment = "emergency",
-                                   data = targets::tar_read(overview_frail_elderly_high),
-                                   cohort = "frail_elderly_high")
+england_value <- 2
+# get_england_value(
+  # "perc", 
+  # activity = "admissions",
+  # treatment = treatment_type,
+  # data = overview_total,
+  # cohort = cohort)
 
-get_summary_by_icb_bar(summary_icb_admissions_frail_elderly_high, 
-                       "perc", 
-                       "frail_elderly_high",
-                       england_value)
+get_summary_by_icb_bar(
+  summary_icb_all_admissions, 
+  "perc", 
+  cohort,
+  england_value)
 
 rm(england_value)
 ```
 
-##### Map
+###### Map
 
 ```{r}
-#| label: fig-perc_icb_admissions_frail_elderly_high_map
-#| fig-cap: !expr get_caption_by_icb("Frail Elderly (high)", "perc", "admissions", "emergency")
-perc_icb_admissions_frail_elderly_high_map
+#| label: fig-perc_icb_all_admissions_map
+#| fig-cap: !expr get_caption_by_icb(cohort_title, "perc", "admissions", treatment_type)
+perc_icb_all_admissions_map
 ```
 :::
 
-#### Age and sex standardised rates per 100,000 population
+##### Age and sex standardised rates per 100,000 population
 
 ::: panel-tabset
-##### Bars
+###### Bars
 
-```{r, eval=FALSE}
-#| label: fig-rate_icb_admissions_frail_elderly_high_bar
-#| fig-cap: !expr get_caption_by_icb("Frail Elderly (high)", "SR", "admissions")
-england_value <- get_england_value("value",
-                                   data =  england_age_sex_standardised_rates_episodes,
-                                   cohort = "frail_elderly_high")
+```{r}
+#| label: fig-rate_icb_all_admissions_bar
+#| fig-cap: !expr get_caption_by_icb(cohort_title, "SR", "admissions")
+england_value <- 2
+# get_england_value(
+#   "value",
+#   data = england_age_sex_standardised_rates_episodes,
+#   cohort = cohort)
 
-get_summary_by_icb_bar(summary_icb_admissions_frail_elderly_high, 
-                       "value", 
-                       "frail_elderly_high",
-                       england_value)
+get_summary_by_icb_bar(
+  summary_icb_all_admissions, 
+  "value", 
+  cohort,
+  england_value)
 
 rm(england_value)
 ```
 
-##### Map
+###### Map
 
 ```{r}
-#| label: fig-rate_icb_admissions_frail_elderly_high_map
-#| fig-cap: !expr get_caption_by_icb("Frail Elderly (high)", "SR", "admissions")
-rate_icb_admissions_frail_elderly_high_map
+#| label: fig-rate_icb_all_admissions_map
+#| fig-cap: !expr get_caption_by_icb(cohort_title, "SR", "admissions")
+rate_icb_all_admissions_map
 ```
 :::
 
-#### Table
+##### Table
 
 ```{r}
-#| label: tbl-rate_icb_admissions_frail_elderly_high
-#| tbl-cap: !expr get_caption_by_geography_table("Frail Elderly (high)", "admissions", "emergency", "icb")
-get_summary_by_geography_table(summary_icb_admissions_frail_elderly_high, "episodes", "emergency")
+#| label: tbl-rate_icb_all_admissions
+#| tbl-cap: !expr get_caption_by_geography_table(cohort_title, "admissions", treatment_type, "icb")
+get_summary_by_geography_table(
+  summary_icb_all_admissions,
+  "episodes", 
+  treatment_type)
+```
+:::
+
+#### Local Authority
+
+```{r}
+#| label: tbl-rate_la_all_admissions
+#| tbl-cap: !expr get_caption_by_geography_table(cohort_title, "admissions", treatment_type, "la")
+targets::tar_read(summary_la_all_admissions) |>
+  get_summary_by_geography_table("episodes",
+                                 treatment_type)
 ```
 :::
 
 ### Beddays
 
-Coming soon. Want to get content right for admissions first.
+::: panel-tabset
+#### Integrated Care Board
+
+```{r}
+#| output: false
+summary_icb_all_beddays <- targets::tar_read(summary_icb_all_beddays)
+
+number_icb_all_beddays_map <- summary_icb_all_beddays |>
+  get_summary_by_icb_map(icb_23_shp, "total_count")
+
+perc_icb_all_beddays_map <- summary_icb_all_beddays |>
+  get_summary_by_icb_map(icb_23_shp, "perc")
+
+rate_icb_all_beddays_map <- summary_icb_all_beddays |>
+  get_summary_by_icb_map(icb_23_shp, "value")
+```
+
+::: panel-tabset
+##### Number of beddays
+
+::: panel-tabset
+###### Bars
+
+```{r}
+#| label: fig-number_icb_all_beddays_bar
+#| fig-cap: !expr get_caption_by_icb(cohort_title, "number", "beddays")
+england_value <- get_england_value(
+  "total_count", 
+  data = summary_icb_all_beddays)
+
+get_summary_by_icb_bar(
+  summary_icb_all_beddays, 
+  "total_count", 
+  cohort,
+  england_value)
+
+rm(england_value)
+```
+
+###### Map
+
+```{r}
+#| label: fig-number_icb_all_beddays_map
+#| fig-cap: !expr get_caption_by_icb(cohort_title, "number", "beddays")
+number_icb_all_beddays_map
+```
 :::
 
+##### Percentage of emergency activity
+
+::: panel-tabset
+###### Bars
+
+```{r}
+#| label: fig-perc_icb_all_beddays_bar
+#| fig-cap: !expr get_caption_by_icb(cohort_title, "perc", "beddays", treatment_type)
+total_beddays_admissions <- targets::tar_read(total_beddays_admissions)
+
+england_value <- 2 
+# get_england_value(
+#   "perc",
+#   activity = "beddays",
+#   treatment = treatment_type,
+#   data = overview_total,
+#   cohort = cohort
+# )
+
+get_summary_by_icb_bar(
+  summary_icb_all_beddays,
+  "perc",
+  cohort,
+  england_value)
+
+rm(england_value)
+```
+
+###### Map
+
+```{r}
+#| label: fig-perc_icb_all_beddays_map
+#| fig-cap: !expr get_caption_by_icb(cohort_title, "perc", "beddays", treatment_type)
+perc_icb_all_beddays_map
+```
+:::
+
+##### Age and sex standardised rates per 100,000 population
+
+::: panel-tabset
+###### Bars
+
+```{r}
+#| label: fig-rate_icb_all_beddays_bar
+#| fig-cap: !expr get_caption_by_icb(cohort_title, "SR", "beddays")
+england_value <- 2
+  # get_england_value(
+  # "value", 
+  # data = england_age_sex_standardised_rates_beddays, 
+  # cohort = cohort)
+
+get_summary_by_icb_bar(
+  summary_icb_all_beddays,
+  "value",
+  cohort,
+  england_value)
+
+rm(england_value)
+```
+
+###### Map
+
+```{r}
+#| label: fig-rate_icb_all_beddays_map
+#| fig-cap: !expr get_caption_by_icb(cohort_title, "SR", "beddays")
+rate_icb_all_beddays_map
+```
+:::
+
+##### Table
+
+```{r}
+#| label: tbl-rate_icb_all_beddays
+#| tbl-cap: !expr get_caption_by_geography_table(cohort_title, "beddays", treatment_type, "icb")
+get_summary_by_geography_table(
+  summary_icb_all_beddays, 
+  "beddays", 
+  treatment_type)
+```
+:::
+
+#### Local Authority
+
+```{r}
+#| label: tbl-rate_la_all_beddays
+#| tbl-cap: !expr get_caption_by_geography_table(cohort_title, "beddays", treatment_type, "la")
+targets::tar_read(summary_la_all_beddays) |>
+  get_summary_by_geography_table("beddays", treatment_type)
+```
+:::
+:::
 ## Trend Analysis
 
 We aim to understand whether there have been decreases, or increases, in potentially mitigable activity over time. We have considered total mitigable admissions and beddays over the past 9 years in England as a whole and for each ICB, including:

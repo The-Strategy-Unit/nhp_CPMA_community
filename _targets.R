@@ -249,6 +249,18 @@ list(
       beddays
     )
   ),
+  
+  tar_target(
+    la_age_sex_standardised_rates_episodes_total_mitigation,
+    generating_la_age_sex_standardised_rates_for_trends(
+      numbers_over_time_local_authority_total_mitigation |>
+        mutate(cohorts = "all"),
+      la_code_lookup,
+      la_population_data,
+      standard_england_pop_2021_census,
+      beddays
+      )
+    ),
  
   # Descriptive analysis -------------------------------------------------------
   ## Overview of mitigator -----------------------------------------------------
@@ -376,6 +388,11 @@ list(
   ),
   
   tar_target(
+    numbers_over_time_local_authority_total_mitigation,
+    Formatting_la_data_for_trends_total_mitigation("SL_AF_describing_mitigators_local_authority_by_yr", la_population_data)
+  ),
+  
+  tar_target(
     denominator_over_time,
     Formatting_data_for_trends_analysis_denominator(
       "sl_af_total_elective_emergency_activity",
@@ -482,5 +499,33 @@ list(
         mitigators_and_mechanisms_treatment_lookup
       )
     )
+  ),
+  ## For summary ---------------------------------------------------------------
+  tarchetypes::tar_map(
+    list(activity = c("admissions", "beddays")),
+    tar_target(
+      summary_icb_all,
+      get_summary_by_geography(
+        icb_age_sex_standardised_rates_episodes_total_mitigation,
+        "all",
+        total_beddays_admissions_by_icb,
+        activity,
+        "icb"
+      )
+    )
+  ),
+  tarchetypes::tar_map(
+    list(activity = c("admissions", "beddays")),
+    tar_target(
+      summary_la_all,
+      get_summary_by_geography(
+        la_age_sex_standardised_rates_episodes_total_mitigation,
+        "all",
+        total_beddays_admissions_by_la,
+        activity,
+        "ladcode23"
+      )
+    )
   )
+  
 )
