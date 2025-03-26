@@ -21,12 +21,14 @@ source("R/Functions for cohort overlap.R")
 source("R/Functions for trend analysis.R")
 
 options(scipen = 999)
+mitigator_summary_table <- readxl::read_excel("summary_mitigators_table.xlsx")
 ```
 
 ```{r global variables}
 cohort <- "redirection_substitution"
 cohort_title <- "Redirection and Substitution"
 treatment_type <- "both"
+cohort_overlap_numbers_redirection<-targets::tar_read(cohort_overlap_numbers_redirection)
 ```
 
 ```{r}
@@ -464,7 +466,60 @@ targets::tar_read(specialty_redirection_substitution_beddays) |>
 
 ## Cohort overlap
 
-(Placeholder)
+Many admissions meet the criteria to be included in more than one mitigator cohort. Since these potential mitigator cohorts are not mutually exclusive there is a need to understand which cohorts overlap and the degree of overlap between the cohorts.
+
+### Number and proportion within multiple other cohorts
+
+For the Redirection/Substitution mechanism group we show how much of the activity is included in other Redirection/Substitution groups. 
+
+::: panel-tabset
+#### Admissions
+
+```{r, fig.width=4, fig.height=4}
+#| label: fig-number_of_cohorts_spells
+#| fig-cap: The number of mitigator cohorts that the admissions within the Redirection/Substition mechanism group are part of. It includes only admissions for mitigator cohorts within this Redirection/Substition mechanism group (2023/24).
+
+plotting_barchart_number_of_cohorts_for_mechanism_group(cohort_overlap_numbers_redirection, episodes)
+```
+
+#### Beddays
+
+```{r, fig.width=4, fig.height=4}
+#| label: fig-number_of_cohorts_beddays
+#| fig-cap: The number of mitigator cohorts that the beddays within the Redirection/Substition mechanism group are part of. It includes only beddays for mitigator cohorts within this Redirection/Substition mechanism group (2023/24).
+
+plotting_barchart_number_of_cohorts_for_mechanism_group(cohort_overlap_numbers_redirection, beddays)
+```
+:::
+
+### Most common cohort overlaps
+
+Often overlap between a small number of groups can be visualised using Venn diagram. However, due to the large number of mitigator cohorts and therefore high numbers of potential combinations of overlaps we have used upset plots to show the largest overlaps between cohorts.
+
+The 15 most common cohort combinations for the Redirection/Substitution mechanism group are shown. 
+
+::: panel-tabset
+#### Admissions
+
+```{r, fig.width=10, fig.height=6}
+#| label: upset_plot_frail_elderly_high_episodes
+#| fig-cap: The 15 most common mitigator cohort overlaps for admissions in the Redirection/Substition mechanism group (2023/24).
+
+plot_upset_plot_mechanism_group(cohort_overlap_numbers_redirection,  mitigator_summary_table, episodes)
+
+```
+
+#### Beddays
+
+```{r, fig.width=10, fig.height=6}
+#| label: upset_plot_frail_elderly_high_bedday
+#| fig-cap: The 15 most common mitigator cohort overlaps for beddays in the Redirection/Substition mechanism group (2023/24).
+
+plot_upset_plot_mechanism_group(cohort_overlap_numbers_redirection,  mitigator_summary_table, beddays)
+
+
+```
+:::
 
 ## Comparative Analysis
 

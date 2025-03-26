@@ -192,7 +192,77 @@ plot_upset_plot<-function(dataset, mitigator_table, activity_type){
   
 }
 
-
+plot_upset_plot_mechanism_group<-function(dataset, mitigator_table, activity_type){
+  
+  data<-dataset|>
+    mutate(activity={{activity_type}})
+  
+  plot_data<-data|>
+    mutate(total_activity=sum(activity))|>
+    mutate(percentage=round((activity/total_activity)*100,0))|>
+    slice_max(activity,n=15)|>
+    arrange(desc(activity))|>
+    mutate(id=row_number())
+  
+  numbers_in_each_cohort<-data|>
+    gather(groups, values, -activity)|>
+    filter(values!=0)|>
+    group_by(groups)|>
+    summarise(total_activity=sum(activity))
+  
+  
+  top_plot<-plot_data|>
+    ggplot(aes(x=id, y=activity))+
+    geom_bar(stat="identity", fill="#f9bf07" )+
+    su_theme()+
+    theme(axis.text=element_text(size=11),
+          axis.title=element_text(size=12),
+          axis.text.x=element_blank(),
+          axis.ticks.x=element_blank(),
+          axis.title.y=element_text(vjust=-6))+
+    labs(y="Intersection size",
+         x=NULL,
+         title=NULL)+
+    geom_text(aes(label=paste0(scales::comma(activity), ' \n(',percentage, '%)')), vjust=-0.2, size=2.4)+
+    scale_y_continuous(limits=c(0,max(data$activity)*1.2), expand=c(0,0), labels = label_comma())+
+    scale_x_continuous(expand=c(0.01,0.01))
+  
+  data2<- plot_data|>
+    select(-percentage, -total_activity, -episodes, -beddays, -number_of_cohorts)|>
+    dplyr::select(where(~ any(. != 0)))|>
+    gather(groups, value, -id, -activity) |>
+    mutate(value=as.character(value))|>
+    left_join(numbers_in_each_cohort, by=c("groups"))|>
+    left_join(mitigator_table[,c("mitigator_code", "mitigator_name")], by=c("groups"="mitigator_code"))|>
+    arrange(id)|>
+    mutate(mitigator_name=reorder(mitigator_name, total_activity))
+  
+  
+  data3<-data2|>
+    filter(value==1)
+  
+  bottom_plot<- data2|>
+    ggplot(aes(x = id, y = mitigator_name,  group=value)) +
+    geom_point(aes(color=value),size=4 , show.legend = FALSE)+ 
+    geom_line(data=data3, aes(group=id), linewidth=1)+ 
+    su_theme()+
+    theme(axis.text.x=element_blank(),
+          legend_position="none",
+          axis.title=element_blank(),
+          axis.ticks.x=element_blank(),
+          axis.line=element_blank(),
+          panel.background = element_rect(fill ='#EEEEEE', colour='#EEEEEE'))+
+    labs(x=NULL, y=NULL)+
+    scale_colour_manual(values=c("1"="black", "0"="white"))
+  
+  layout <- c(
+    area(t = 0, l = 0, b = 24, r = 25),
+    area(t = 25, l = 0, b = 38, r = 25))
+  
+  # final plot arrangement
+  top_plot +  bottom_plot + plot_layout(design = layout)
+  
+}
 
 
 # Summary barchart of percentage of overlap with different groups
@@ -342,6 +412,28 @@ plotting_barchart_number_of_cohorts<-function(data, activity_type){
     scale_y_continuous(limits=c(0, max(data2$activity)*1.2), expand=c(0,0), labels = label_comma())
   
   
+  
+}
+
+plotting_barchart_number_of_cohorts_for_mechanism_group<-function(data, activity_type){
+  
+ data2<- data|>
+    mutate(number_of_cohorts=ifelse(number_of_cohorts>4, "5+", number_of_cohorts))|>
+    summarise(activity=sum({{activity_type}}), .by=c(number_of_cohorts))|>
+    mutate(percentage=round(activity/(sum(activity))*100,1))
+  
+  
+  data2|>
+    ggplot(aes(x=number_of_cohorts, y=activity))+
+    geom_bar(stat="identity" , fill=factor(ifelse(data2$number_of_cohorts=="0","#686f73","#f9bf07")))+
+    su_theme()+
+    theme(axis.text=element_text(size=11),
+          axis.title=element_text(size=12))+
+    labs(y="Number",
+         x="No. of other cohorts the activity is part of",
+         title=NULL)+
+    geom_text(aes(label=paste0(scales::comma(activity), ' \n(',percentage, '%)')), vjust=-0.2, size=2.7)+
+    scale_y_continuous(limits=c(0, max(data2$activity)*1.2), expand=c(0,0), labels = label_comma())
   
 }
 
