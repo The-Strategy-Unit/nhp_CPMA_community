@@ -382,96 +382,18 @@ identify_whether_bedday_or_admissions_or_both<-function(data, columns){
   
 }
 
-# Function to identify the mechanism group
-
-identify_mechanism_group<-function(data){
-  data|>
-    mutate(redirection=ifelse((ambulatory_care_conditions_acute==1|
-                              ambulatory_care_conditions_chronic==1|
-                              ambulatory_care_conditions_vaccine_preventable==1|
-                              eol_care_2_days==1|
-                              eol_care_3_to_14_days==1|
-                              falls_related_admissions==1|
-                              frail_elderly_high==1|
-                              frail_elderly_intermediate==1|
-                              medicines_related_admissions_explicit==1|
-                              medicines_related_admissions_implicit_anti_diabetics==1|
-                              medicines_related_admissions_implicit_benzodiasepines==1|
-                              medicines_related_admissions_implicit_diurectics==1|
-                              medicines_related_admissions_implicit_nsaids==1|
-                              readmission_within_28_days==1|
-                              zero_los_no_procedure_adult==1|
-                              zero_los_no_procedure_child==1), 
-                              "Redirection/Substitution",
-                              NA ) )|>
-    mutate(prevention=ifelse((alcohol_partially_attributable_acute==1|
-                               alcohol_partially_attributable_chronic==1|
-                               alcohol_wholly_attributable==1|
-                               obesity_related_admissions==1|
-                               smoking==1|
-                               raid_ae==1|
-                               intentional_self_harm==1|
-                               medically_unexplained_related_admissions==1), 
-                              "Prevention",
-                              NA ) )|>
-    mutate(relocation=ifelse((virtual_wards_activity_avoidance_ari==1|
-                              virtual_wards_activity_avoidance_heart_failure ==1), 
-                             "Relocation & Efficiencies",
-                             NA ) )|>
-    mutate(efficiencies=ifelse((emergency_elderly==1|
-                                stroke_early_supported_discharge==1|
-                                raid_ip==1), 
-                             "Efficiencies",
-                             NA ) )|>
-    mutate(cohort=paste0(redirection,"-" ,prevention, "-", relocation, "-", efficiencies))|>
-    group_by(cohort)|>
-    summarise(episodes=sum(episodes),
-              beddays=sum(beddays))
-}
-  
 # Generate data for cohort mechanisms overlap
 
 generate_data_for_mechanism_cohort_overlaps<-function(data){  
   
   data|>
-    mutate(Redirection=ifelse((ambulatory_care_conditions_acute==1|
-                                 ambulatory_care_conditions_chronic==1|
-                                 ambulatory_care_conditions_vaccine_preventable==1|
-                                 eol_care_2_days==1|
-                                 eol_care_3_to_14_days==1|
-                                 falls_related_admissions==1|
-                                 frail_elderly_high==1|
-                                 frail_elderly_intermediate==1|
-                                 medicines_related_admissions_explicit==1|
-                                 medicines_related_admissions_implicit_anti_diabetics==1|
-                                 medicines_related_admissions_implicit_benzodiasepines==1|
-                                 medicines_related_admissions_implicit_diurectics==1|
-                                 medicines_related_admissions_implicit_nsaids==1|
-                                 readmission_within_28_days==1|
-                                 zero_los_no_procedure_adult==1|
-                                 zero_los_no_procedure_child==1), 
-                              1,
-                              0 ) )|>
-    mutate(Prevention=ifelse((alcohol_partially_attributable_acute==1|
-                                alcohol_partially_attributable_chronic==1|
-                                alcohol_wholly_attributable==1|
-                                obesity_related_admissions==1|
-                                smoking==1|
-                                raid_ae==1|
-                                intentional_self_harm==1|
-                                medically_unexplained_related_admissions==1), 
-                             1,
-                             0 ) )|>
-    mutate(`Relocation&Efficiencies`=ifelse((virtual_wards_activity_avoidance_ari==1|
-                                virtual_wards_activity_avoidance_heart_failure ==1), 
-                             1,
-                             0 ) )|>
-    mutate(Efficiencies=ifelse((emergency_elderly==1|
-                                  stroke_early_supported_discharge==1|
-                                  raid_ip==1), 
-                               1,
-                               0 ) )|>
-    select(Redirection, Prevention, `Relocation&Efficiencies`, Efficiencies, episodes, beddays)
+    mutate_mechanism_columns() |>
+    select(Redirection = redirection_substitution,
+           Prevention = prevention,
+           `Relocation&Efficiencies` = efficiencies_relocation,
+           Efficiencies = efficiencies,
+           episodes, 
+           beddays)
   
 }
 
