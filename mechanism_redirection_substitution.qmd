@@ -92,7 +92,7 @@ perc_age_redirection_substitution_admissions |>
   get_perc_by_group_plot("age_range", "admissions")
 ```
 
-#### Rates per 100,000 population
+#### Crude rate
 
 ```{r}
 #| label: tbl-rate_redirection_substitution_age_admissions
@@ -133,7 +133,7 @@ perc_ethnicity_redirection_substitution_admissions |>
   get_perc_by_group_plot("Ethnic_Category", "admissions")
 ```
 
-#### Rates per 100,000 population
+#### Crude rate
 
 ```{r}
 #| label: tbl-rate_redirection_substitution_ethnicity_admissions
@@ -174,7 +174,7 @@ perc_imd_redirection_substitution_admissions |>
   get_perc_by_group_plot("imd19_decile", "admissions")
 ```
 
-#### Rates per 100,000 population
+#### Crude rate
 
 ```{r}
 #| label: tbl-rate_redirection_substitution_imd_admissions
@@ -215,7 +215,7 @@ perc_sex_redirection_substitution_admissions |>
   get_perc_by_group_plot("sex", "admissions")
 ```
 
-#### Rates per 100,000 population
+#### Crude rate
 
 ```{r}
 #| label: tbl-rate_redirection_substitution_sex_admissions
@@ -260,7 +260,7 @@ targets::tar_read(perc_age_redirection_substitution_beddays) |>
   get_perc_by_group_plot("age_range", "beddays")
 ```
 
-#### Rates per 100,000 population
+#### Crude rate
 
 ```{r}
 #| label: tbl-rate_redirection_substitution_age_beddays
@@ -301,7 +301,7 @@ targets::tar_read(perc_ethnicity_redirection_substitution_beddays) |>
   get_perc_by_group_plot("Ethnic_Category", "beddays")
 ```
 
-#### Rates per 100,000 population
+#### Crude rate
 
 ```{r}
 #| label: tbl-rate_redirection_substitution_ethnicity_beddays
@@ -342,7 +342,7 @@ targets::tar_read(perc_imd_redirection_substitution_beddays) |>
   get_perc_by_group_plot("imd19_decile", "beddays")
 ```
 
-#### Rates per 100,000 population
+#### Crude rate
 
 ```{r}
 #| label: tbl-rate_redirection_substitution_imd_beddays
@@ -383,7 +383,7 @@ targets::tar_read(perc_sex_redirection_substitution_beddays) |>
   get_perc_by_group_plot("sex", "beddays")
 ```
 
-#### Rates per 100,000 population
+#### Crude rate
 
 ```{r}
 #| label: tbl-rate_redirection_substitution_sex_beddays
