@@ -614,13 +614,15 @@ rate_icb_admissions_frail_elderly_high_map <- summary_icb_admissions_frail_elder
 ```{r}
 #| label: fig-number_icb_admissions_frail_elderly_high_bar
 #| fig-cap: !expr get_caption_by_icb(cohort_title, "number", "admissions")
-england_value <- get_england_value("total_count", 
-                                   data_number = summary_icb_admissions_frail_elderly_high)
+england_value <- get_england_value(
+  "total_count", 
+  data = summary_icb_admissions_frail_elderly_high)
 
-get_summary_by_icb_bar(summary_icb_admissions_frail_elderly_high, 
-                       "total_count", 
-                       cohort,
-                       england_value)
+get_summary_by_icb_bar(
+  summary_icb_admissions_frail_elderly_high, 
+  "total_count", 
+  cohort,
+  england_value)
 
 rm(england_value)
 ```
@@ -644,16 +646,18 @@ number_icb_admissions_frail_elderly_high_map
 #| fig-cap: !expr get_caption_by_icb(cohort_title, "perc", "admissions", treatment_type)
 total_beddays_admissions <- targets::tar_read(total_beddays_admissions)
 
-england_value <- get_england_value("perc", 
-                                   activity = "admissions",
-                                   treatment = treatment_type,
-                                   data_rate = england_age_sex_standardised_rates_episodes,
-                                   cohort = cohort)
+england_value <- get_england_value(
+  "perc", 
+  activity = "admissions",
+  treatment = treatment_type,
+  data = overview_frail_elderly_high,
+  cohort = cohort)
 
-get_summary_by_icb_bar(summary_icb_admissions_frail_elderly_high, 
-                       "perc", 
-                       cohort,
-                       england_value)
+get_summary_by_icb_bar(
+  summary_icb_admissions_frail_elderly_high, 
+  "perc", 
+  cohort,
+  england_value)
 
 rm(england_value)
 ```
@@ -675,14 +679,16 @@ perc_icb_admissions_frail_elderly_high_map
 ```{r}
 #| label: fig-rate_icb_admissions_frail_elderly_high_bar
 #| fig-cap: !expr get_caption_by_icb(cohort_title, "SR", "admissions")
-england_value <- get_england_value("value",
-                                   data_rate = england_age_sex_standardised_rates_episodes,
-                                   cohort = cohort)
+england_value <- get_england_value(
+  "value",
+  data = england_age_sex_standardised_rates_episodes,
+  cohort = cohort)
 
-get_summary_by_icb_bar(summary_icb_admissions_frail_elderly_high, 
-                       "value", 
-                       cohort,
-                       england_value)
+get_summary_by_icb_bar(
+  summary_icb_admissions_frail_elderly_high, 
+  "value", 
+  cohort,
+  england_value)
 
 rm(england_value)
 ```
@@ -701,7 +707,10 @@ rate_icb_admissions_frail_elderly_high_map
 ```{r}
 #| label: tbl-rate_icb_admissions_frail_elderly_high
 #| tbl-cap: !expr get_caption_by_geography_table(cohort_title, "admissions", treatment_type, "icb")
-get_summary_by_geography_table(summary_icb_admissions_frail_elderly_high, "episodes", treatment_type)
+get_summary_by_geography_table(
+  summary_icb_admissions_frail_elderly_high,
+  "episodes", 
+  treatment_type)
 ```
 :::
 
@@ -711,7 +720,8 @@ get_summary_by_geography_table(summary_icb_admissions_frail_elderly_high, "episo
 #| label: tbl-rate_la_admissions_frail_elderly_high
 #| tbl-cap: !expr get_caption_by_geography_table(cohort_title, "admissions", treatment_type, "la")
 targets::tar_read(summary_la_admissions_frail_elderly_high) |>
-  get_summary_by_geography_table("episodes", treatment_type)
+  get_summary_by_geography_table("episodes",
+                                 treatment_type)
 ```
 :::
 
@@ -743,13 +753,15 @@ rate_icb_beddays_frail_elderly_high_map <- summary_icb_beddays_frail_elderly_hig
 ```{r}
 #| label: fig-number_icb_beddays_frail_elderly_high_bar
 #| fig-cap: !expr get_caption_by_icb(cohort_title, "number", "beddays")
-england_value <- get_england_value("total_count", 
-                                   data_number = summary_icb_beddays_frail_elderly_high)
+england_value <- get_england_value(
+  "total_count", 
+  data = summary_icb_beddays_frail_elderly_high)
 
-get_summary_by_icb_bar(summary_icb_beddays_frail_elderly_high, 
-                       "total_count", 
-                       cohort,
-                       england_value)
+get_summary_by_icb_bar(
+  summary_icb_beddays_frail_elderly_high, 
+  "total_count", 
+  cohort,
+  england_value)
 
 rm(england_value)
 ```
@@ -773,16 +785,19 @@ number_icb_beddays_frail_elderly_high_map
 #| fig-cap: !expr get_caption_by_icb(cohort_title, "perc", "beddays", treatment_type)
 total_beddays_admissions <- targets::tar_read(total_beddays_admissions)
 
-england_value <- get_england_value("perc", 
-                                   activity = "beddays",
-                                   treatment = treatment_type,
-                                   data_rate = england_age_sex_standardised_rates_beddays,
-                                   cohort = cohort)
+england_value <- get_england_value(
+  "perc",
+  activity = "beddays",
+  treatment = treatment_type,
+  data = overview_frail_elderly_high,
+  cohort = cohort
+)
 
-get_summary_by_icb_bar(summary_icb_beddays_frail_elderly_high, 
-                       "perc", 
-                       cohort,
-                       england_value)
+get_summary_by_icb_bar(
+  summary_icb_beddays_frail_elderly_high,
+  "perc",
+  cohort,
+  england_value)
 
 rm(england_value)
 ```
@@ -804,14 +819,16 @@ perc_icb_beddays_frail_elderly_high_map
 ```{r}
 #| label: fig-rate_icb_beddays_frail_elderly_high_bar
 #| fig-cap: !expr get_caption_by_icb(cohort_title, "SR", "beddays")
-england_value <- get_england_value("value",
-                                   data_rate = england_age_sex_standardised_rates_beddays,
-                                   cohort = cohort)
+england_value <- get_england_value(
+  "value", 
+  data = england_age_sex_standardised_rates_beddays, 
+  cohort = cohort)
 
-get_summary_by_icb_bar(summary_icb_beddays_frail_elderly_high, 
-                       "value", 
-                       cohort,
-                       england_value)
+get_summary_by_icb_bar(
+  summary_icb_beddays_frail_elderly_high,
+  "value",
+  cohort,
+  england_value)
 
 rm(england_value)
 ```
@@ -830,7 +847,10 @@ rate_icb_beddays_frail_elderly_high_map
 ```{r}
 #| label: tbl-rate_icb_beddays_frail_elderly_high
 #| tbl-cap: !expr get_caption_by_geography_table(cohort_title, "beddays", treatment_type, "icb")
-get_summary_by_geography_table(summary_icb_beddays_frail_elderly_high, "beddays", treatment_type)
+get_summary_by_geography_table(
+  summary_icb_beddays_frail_elderly_high, 
+  "beddays", 
+  treatment_type)
 ```
 :::
 
