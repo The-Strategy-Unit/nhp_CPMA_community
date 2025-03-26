@@ -1152,7 +1152,7 @@ plotting_total_activity_vs_percentage_change(icb_age_sex_standardised_rates_epis
 ```{r, fig.width=5, fig.height=4}
 #| label: fig-activity_vs_rate_of_change_beddays
 #| fig-cap: The standardised rate of Frail Older People (high frailty) beddays (in 2018/19) versus the percentage change in beddays between 2018/19 and 2023/24 for ICBs. 
-#| 
+
 plotting_total_activity_vs_percentage_change(icb_age_sex_standardised_rates_beddays, value)
 
 
@@ -1161,14 +1161,28 @@ plotting_total_activity_vs_percentage_change(icb_age_sex_standardised_rates_bedd
 :::
 
 ### Local Authority
-
+::: panel-tabset
+#### Admissions
 ```{r}
-
+#| label: table-local_authority_over_time_episodes
+#| fig-cap: Table of the standardised rate of Frail Older People (high frailty) admissions over time for local authorities. 
 la_age_sex_standardised_rates_episodes_over_time<-tar_read(la_age_sex_standardised_rates_episodes_over_time)|>
   filter(cohorts==cohort)|>
   select(laname23, year, value)|>
   spread(key=year, value=value)
 
-
-
 ```
+
+
+#### Beddays
+```{r}
+#| label: table_local_authority_over_time_beddays
+#| fig-cap: Table of the standardised rate of Frail Older People (high frailty) admissions over time for local authorities. 
+la_age_sex_standardised_rates_beddays_over_time<-tar_read(la_age_sex_standardised_rates_episodes_over_time)|>
+  filter(cohorts==cohort)|>
+  select(laname23, year, value)|>
+  spread(key=year, value=value)
+```
+
+
+:::

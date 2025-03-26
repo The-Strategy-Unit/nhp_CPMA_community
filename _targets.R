@@ -407,6 +407,28 @@ list(
       filter(fyear == "202324")
   ),
   
+  tar_target(
+    cohort_overlap_numbers_redirection,
+    total_cohort_numbers_2324 |>
+      filter(fyear == "202324")|>
+      summarise(episodes=sum(episodes), beddays=sum(beddays), .by=c(ambulatory_care_conditions_acute,                                ambulatory_care_conditions_chronic,
+                                                                    ambulatory_care_conditions_vaccine_preventable,
+                                                                    eol_care_2_days,
+                                                                    eol_care_3_to_14_days,
+                                                                    falls_related_admissions,
+                                                                    frail_elderly_high,
+                                                                    frail_elderly_intermediate,
+                                                                    medicines_related_admissions_explicit,
+                                                                    medicines_related_admissions_implicit_anti_diabetics,
+                                                                    medicines_related_admissions_implicit_benzodiasepines,
+                                                                    medicines_related_admissions_implicit_diurectics,
+                                                                    medicines_related_admissions_implicit_nsaids,
+                                                                    readmission_within_28_days,
+                                                                    zero_los_no_procedure_adult,
+                                                                    zero_los_no_procedure_child ))|>
+      mutate(number_of_cohorts = rowSums(pick(1:16), na.rm = TRUE)) |>
+      filter(number_of_cohorts!=0)
+  ),
   
   # Trends analysis -------------------------------------------------------------
   
