@@ -29,17 +29,28 @@ numbers_over_time<-tar_read(numbers_over_time)
 numbers_over_time_total_mitigation<-targets::tar_read(numbers_over_time_total_mitigation)|>
   filter(fyear>"201415")
 total_cohort_numbers_2324<-tar_read(total_cohort_numbers_2324)
+icb_population_data<-tar_read(icb_population_data)
+denominator_over_time<-tar_read(denominator_over_time)
+england_age_sex_standardised_rates_beddays_total_mitigation<-tar_read(england_age_sex_standardised_rates_beddays_total_mitigation)
+england_age_sex_standardised_rates_episodes_total_mitigation<-tar_read(england_age_sex_standardised_rates_episodes_total_mitigation)
 ```
 
 ## Mitigators included in this analysis
 
-Numbers of admissions and beddays give the potentially mitigable activity for England in 2023/24.
+The numbers of admissions and beddays give the potentially mitigable activity for England in 2023/24.
 
-Redirection/Substitution, Prevention and Relocation mitigators will affect both the number of admission and also therefore also impact beddays.
+The mitigators are divided into 4 groups according to the mechanism by which mitigation could occur:
 
-Efficiency mitigators will only impact length of stay and therefore the number of beddays.
+-   Redirection/Substitution
+-   Prevention
+-   Relocation
+-   Efficiencies
 
-Virtual Wards mitigators are considered both a relocation mitigator and an efficiency mitigator.
+Redirection/Substitution, Prevention and Relocation mitigators will affect the number of admissions and will also therefore impact the number of beddays.
+
+Efficiency mitigators are focused on reducing length of stay and will therefore only impact the number of beddays.
+
+Virtual Ward mitigators are considered both a Relocation mitigator and an Efficiency mitigator.
 
 ```{r, fig.height=8, fig.width=10}
 
@@ -94,19 +105,9 @@ mitigator_summary_table|>
 
 ```
 
-NOTE: The sum of all the individual mitigator activity in this table does not add up to the total potential mitigable activity. This is because much of the activity is by included within multiple different mitigator cohorts and thus adding the total for each mitigator will lead to double counting of admissions and beddays.
+NOTE: The sum of all the individual mitigator activity in this table does not add up to the total potential mitigable activity. This is because much of the activity is included within multiple different mitigator cohorts and thus adding the total for each mitigator will lead to double counting of admissions and beddays.
 
-## Potential mitigable activity for England in 2023/24
-
-```{r}
-total_mitigator_activity<-numbers_over_time_total_mitigation|>
-  filter(year=="2023/24")|>
-  summarise(episodes=sum(episodes),
-            beddays=sum(beddays))
-
-```
-
-**In 2023/24 in England there were `r format(total_mitigator_activity$episodes, big.mark=",")` admissions and `r format(total_mitigator_activity$beddays, big.mark=",")` beddays for potentially mitigable activity.**
+#### Number of admissions and beddays for each mechanism of mitigation
 
 ```{r}
 total_cohort_numbers_2324|>
@@ -134,16 +135,31 @@ total_cohort_numbers_2324|>
 
 ```
 
+NOTE: As with the previous table the sum of all the admissions and beddays does not add up to the total potential mitigable activity, as much of the activity is included within more than one mechanism of mitigation group and and thus adding the numbers for each group will lead to double counting.
+
+## Potential mitigable activity for England in 2023/24
+
+```{r}
+total_mitigator_activity<-numbers_over_time_total_mitigation|>
+  filter(year=="2023/24")|>
+  summarise(episodes=sum(episodes),
+            beddays=sum(beddays))
+
+```
+
+In 2023/24 in England there were **`r format(total_mitigator_activity$episodes, big.mark=",")` admissions** and **`r format(total_mitigator_activity$beddays, big.mark=",")` beddays** for potentially mitigable activity. This total excludes any double counting as a result of activity being including in multiple mitigator cohorts.
+
+## Overlap between the mechanism of mitigation groups
+
+Many admissions meet the criteria to be included in more than one mechanism of mitigation group. Since these potential mechanism of mitigation groups are not mutually exclusive there is a need to understand which groups overlap and the degree of overlap between the cohorts.
 
 
-## Cohort overlap
+:::panel-tabset
 
 #### Admissions
 
 ::: columns
-
 ::: {.column width="70%"}
-
 ```{r, fig.width=4, fig.height=4}
 #| label: fig-overlap_mechanism_cohorts_episodes
 #| fig-cap: Venn diagram showing the overlap in admissions between the mechanisms of mitigation groups.
@@ -156,7 +172,6 @@ generate_venn_diagram(total_cohort_numbers_2324, episodes)
 :::
 
 ::: {.column width="30%"}
-
 ```{r, fig.width=3, fig.height=4}
 #| label: fig-number_of_mechanism_groups_episodes
 #| fig-cap: Number of mechanism groups the admissions are a part of.
@@ -164,20 +179,19 @@ generate_venn_diagram(total_cohort_numbers_2324, episodes)
 plotting_barchart_number_of_mechanism_groups(total_cohort_numbers_2324, episodes)
 
 ```
-
 :::
 
 NB: Efficiency mitigators do not impact the number of admissions, only the length of stay, hence they do not overlap in terms of admissions with the other cohorts.
-
 :::
 
+The majority of mitigable admissions (59%) are purely for activity that could be prevented. 
+
+Overall three quarters of mitigable admissions fall into just one mechanism of mitigation group.
 
 #### Beddays
 
 ::: columns
-
 ::: {.column width="70%"}
-
 ```{r, fig.width=7, fig.height=4}
 #| label: fig-overlap_mechanism_cohorts_beddays
 #| fig-cap: Venn diagram showing the overlap in beddays between the mechanisms of mitigation groups.
@@ -198,7 +212,11 @@ plotting_barchart_number_of_mechanism_groups(total_cohort_numbers_2324, beddays)
 :::
 :::
 
+The majority of mitigable beddays are included in multiple mechanism of mitigation groups, just over a quarter of mitgable beddays are within a single mechanism group. 
 
+One third of mitigable beddays are included with 3 mechanism of mitigation groups (Redirection/Substitution, Prevention and Efficiencies)
+
+:::
 ## Comparative Analysis
 
 TO BE CHANGED TO TOTAL MITIGATION
@@ -328,7 +346,6 @@ get_summary_by_geography_table(summary_icb_admissions_frail_elderly_high, "episo
 Coming soon. Want to get content right for admissions first.
 :::
 
-
 ## Trend Analysis
 
 We aim to understand whether there have been decreases, or increases, in potentially mitigable activity over time. We have considered total mitigable admissions and beddays over the past 9 years in England as a whole and for each ICB, including:
@@ -346,20 +363,7 @@ To help understand the variability between ICBs we have calculated for each ICB 
 ::: panel-tabset
 #### Number over time
 
-::: panel-tabset
-#### Admissions
-
-```{r, fig.width=7, fig.height=3}
-#| label: fig-number_trends_spells_england_all_mitigators
-#| fig-cap: The number of admissions for all mitigable activity in England over the last 9 years. 
-
-denominator_over_time<-tar_read(denominator_over_time)|>
-  filter(age_range!="NA")
-icb_population_data<-tar_read(icb_population_data)
-
-
-denominator_over_time<-tar_read(denominator_over_time)
-
+```{r}
 
 number_percentage_over_time<-numbers_over_time_total_mitigation|>
   left_join(denominator_over_time, by=c("age_range", "sex", "year", "icb", "icb_2024_name"))|>
@@ -373,6 +377,34 @@ number_percentage_over_time<-numbers_over_time_total_mitigation|>
          percentage_beddays=round((beddays/total_beddays)*100,1))|>
   as.data.frame()
 
+# England average numbers and % change
+england_average_numbers_episodes<-calculating_england_average_numbers(number_percentage_over_time, episodes)
+
+england_average_numbers_beddays<-calculating_england_average_numbers(number_percentage_over_time, beddays)
+
+# England average percentages and % change
+england_average_percentage_beddays<-calculating_england_average_percentage(number_percentage_over_time|>filter(!is.nan(percentage_episodes)), beddays, total_beddays)
+
+england_average_percentage_episodes<-calculating_england_average_percentage(number_percentage_over_time|>filter(!is.nan(percentage_episodes)), episodes, total_episodes)
+
+
+# England standardised rate and % change
+england_average_standardised_episodes_total_mitigation<-calculating_england_average_standardised(england_age_sex_standardised_rates_episodes_total_mitigation)
+
+
+england_average_standardised_beddays_total_mitigation<-calculating_england_average_standardised(england_age_sex_standardised_rates_beddays_total_mitigation)
+
+```
+
+Over the last 5 years (2018/19 to 2023/24), there has been a `r england_average_numbers_episodes$change` % in the percentage of admissions that are for potentially mitigable activity and a `r england_average_numbers_beddays$change` % increase in the percentage of beddays that are for potentially mitigable activity.
+
+::: panel-tabset
+#### Admissions
+
+```{r, fig.width=7, fig.height=3}
+#| label: fig-number_trends_spells_england_all_mitigators
+#| fig-cap: The number of admissions for all mitigable activity in England over the last 9 years.
+
 plot_of_number_over_time(number_percentage_over_time, episodes)
 
 ```
@@ -384,13 +416,14 @@ plot_of_number_over_time(number_percentage_over_time, episodes)
 #| fig-cap: The number of beddays for all mitigable activity cohort in England over the last 9 years. 
 plot_of_number_over_time(number_percentage_over_time,  beddays)
 
-
 ```
 :::
 
 #### Crude rate
 
 Total mitigable activity as a percentage of total activity (elective and emergency admissions/beddays).
+
+Over the last 5 years (2018/19 to 2023/24), there has been a `r england_average_percentage_episodes$change` % increase in potentially mitigable admissions and a `r england_average_percentage_beddays$change` % increase in potentially mitigable beddays.
 
 ::: panel-tabset
 #### Admissions
@@ -399,8 +432,7 @@ Total mitigable activity as a percentage of total activity (elective and emergen
 #| label: fig-percent_trends_spells_england
 #| fig-cap: The percentage of admissions for potentially mitigable activity in England over the last 9 years. 
 
-plot_of_percentage_over_time(number_percentage_over_time|>
-                               filter(!is.na(percentage_episodes)), episodes, total_episodes)
+plot_of_percentage_over_time(number_percentage_over_time|>          filter(!is.na(percentage_episodes)), episodes, total_episodes)
 
 ```
 
@@ -418,6 +450,9 @@ plot_of_percentage_over_time(number_percentage_over_time|>
 
 #### Standardised rate over time
 
+Over the last 5 years (2018/19 to 2023/24), when accounting for changes in the population age and sex, there has been a `r england_average_standardised_episodes_total_mitigation$change` % increase in potentially mitigable admissions. However, there has been a `r england_average_standardised_beddays_total_mitigation$change` % decrease in potentially mitigable beddays, suggesting reduced length of stays for mitigable activity.
+
+
 ::: panel-tabset
 #### Admissions
 
@@ -425,7 +460,6 @@ plot_of_percentage_over_time(number_percentage_over_time|>
 #| label: fig-stardardised_trends_spells_england
 #| fig-cap: Age and sex standardised rate of potentially mitigable admissions in England over the last 9 years. 
 
-england_age_sex_standardised_rates_episodes_total_mitigation<-tar_read(england_age_sex_standardised_rates_episodes_total_mitigation)
 
 plot_of_standardised_rates_over_time(
   england_age_sex_standardised_rates_episodes_total_mitigation)
@@ -438,17 +472,16 @@ plot_of_standardised_rates_over_time(
 #| label: fig-stardardised_trends_beddays_england
 #| fig-cap: Age and sex standardised rate of potentially mitigable beddays in England over the last 9 years.
 
-england_age_sex_standardised_rates_beddays_total_mitigation<-tar_read(england_age_sex_standardised_rates_beddays_total_mitigation)
-
 plot_of_standardised_rates_over_time(
   england_age_sex_standardised_rates_beddays_total_mitigation)
-
 
 ```
 :::
 :::
 
 ### ICB
+
+Total potentially mitigable activity over time is shown for each ICB to demonstrate the patterns of change and the degree of variability between ICBs over time. The percentage change in total potentially mitigable activity between 2018/19 and 2023/24 is compared across ICBs and shown relative to the England average. 
 
 Note: Low numbers of admissions/beddays for Frimley ICB in 2022/23 reflect an issue with data submissions for this period.
 
@@ -478,12 +511,10 @@ plotting_icb_over_time(number_percentage_over_time_removing_icb_na|>
 #| label: fig-percent_change_number_spells
 #| fig-cap: The percentage change in the number of potentially mitigable admissions by ICB between 2018/19 and 2023/24. 
 
-england_average_numbers_episodes<-calculating_england_average_numbers(number_percentage_over_time, episodes)
 
 plotting_percentage_change_over_time_by_icb(number_percentage_over_time|>filter(!is.na(icb_2024_name)), episodes, icb_2024_name , england_average_numbers_episodes$change, 1.3, 1.3)
 
 ```
-
 
 #### Beddays
 
@@ -501,13 +532,9 @@ plotting_icb_over_time(number_percentage_over_time_removing_icb_na|>
 #| label: fig-percent_change_number_beddays
 #| fig-cap: The percentage change in the number of potentially mitigable beddays by ICB between 2018/19 and 2023/24. 
 
-england_average_numbers_beddays<-calculating_england_average_numbers(number_percentage_over_time, beddays)
-
-
 plotting_percentage_change_over_time_by_icb(number_percentage_over_time|>filter(!is.na(icb_2024_name)), beddays, icb_2024_name, england_average_numbers_beddays$change, 1.3, 1.3)
 
 ```
-
 :::
 
 #### Crude rate
@@ -533,7 +560,6 @@ plotting_icb_over_time(number_percentage_over_time_removing_icb_na|>
 #| label: fig-percent_change_percent_spells
 #| fig-cap: The percentage change in the proportion emergency admissions that are for potentially mitigable admissions by ICB between 2018/19 and 2023/24. 
 
-england_average_percentage_episodes<-calculating_england_average_percentage(number_percentage_over_time|>filter(!is.nan(percentage_episodes)), episodes, total_episodes)
 
 plotting_percentage_change_over_time_by_icb(number_percentage_over_time_removing_icb_na, percentage_episodes, icb_2024_name, england_average_percentage_episodes$change, 2.3, 1.3)
 
@@ -558,7 +584,6 @@ plotting_icb_over_time(number_percentage_over_time_removing_icb_na|>
 #| label: fig-percent_change_percent_beddays
 #| fig-cap: The percentage change in the proportion emergency beddays that are for potentially mitigable beddays by ICB between 2018/19 and 2023/24. 
 
-england_average_percentage_beddays<-calculating_england_average_percentage(number_percentage_over_time|>filter(!is.nan(percentage_episodes)), beddays, total_beddays)
 
 plotting_percentage_change_over_time_by_icb(number_percentage_over_time_removing_icb_na, percentage_beddays, icb_2024_name, england_average_percentage_beddays$change,  1.6, 1.3)
 
@@ -589,7 +614,6 @@ plotting_icb_over_time(
 #| label: fig-percent_change_standardised_spells
 #| fig-cap: The percentage change in the standardised rate of potentially mitigable admissions by ICB between 2018/19 and 2023/24. 
 
-england_average_standardised_episodes_total_mitigation<-calculating_england_average_standardised(england_age_sex_standardised_rates_episodes_total_mitigation)
 
 plotting_percentage_change_over_time_by_icb(icb_age_sex_standardised_rates_episodes_total_mitigation, value, icb_2024_name, england_average_standardised_episodes_total_mitigation$change, 1.3, 1.2)
 
@@ -616,9 +640,6 @@ plotting_icb_over_time(
 #| label: fig-percent_change_standardised_beddays
 #| fig-cap: The percentage change in the standardised rate of potentially mitigable beddays by ICB between 2018/19 and 2023/24. 
 
-
-england_average_standardised_beddays_total_mitigation<-calculating_england_average_standardised(england_age_sex_standardised_rates_beddays_total_mitigation)
-
 plotting_percentage_change_over_time_by_icb(icb_age_sex_standardised_rates_beddays_total_mitigation, value,icb_2024_name, england_average_standardised_beddays_total_mitigation$change, 1.3, 1.3)
 
 
@@ -628,8 +649,9 @@ plotting_percentage_change_over_time_by_icb(icb_age_sex_standardised_rates_bedda
 
 ### Change in age and sex standardised rate over time relative to level of activity
 
-This chart shows the percentage change for each ICB relative to it's starting level of admissions/beddays to help demonstrate performance across ICBs. Those ICBs in the lower left quadrant (shaded in green) could be considered as performing well; they already had relatively low standardised rates of admissions/beddays in 2018/19 and have continued to make further decreases over the last five years.
+This chart shows the percentage change for each ICB (between 2018/19 and 2023/24) relative to it's starting level of admissions/beddays (in 2018/19) to help demonstrate performance across ICBs. 
 
+Those ICBs in the lower left quadrant (shaded in green) could be considered as performing well; they already had relatively low standardised rates of admissions/beddays in 2018/19 and have continued to make further decreases over the last five years.
 
 ::: panel-tabset
 #### Admissions
@@ -642,6 +664,7 @@ plotting_total_activity_vs_percentage_change(icb_age_sex_standardised_rates_epis
 
 
 ```
+
 #### Beddays
 
 ```{r, fig.width=5, fig.height=4}
@@ -652,9 +675,4 @@ plotting_total_activity_vs_percentage_change(icb_age_sex_standardised_rates_bedd
 
 
 ```
-
 :::
-
-
-
-
