@@ -411,7 +411,8 @@ list(
     cohort_overlap_numbers_redirection,
     total_cohort_numbers_2324 |>
       filter(fyear == "202324")|>
-      summarise(episodes=sum(episodes), beddays=sum(beddays), .by=c(ambulatory_care_conditions_acute,                                ambulatory_care_conditions_chronic,
+      summarise(episodes=sum(episodes), beddays=sum(beddays), .by=c(ambulatory_care_conditions_acute,                           
+                                                                    ambulatory_care_conditions_chronic,
                                                                     ambulatory_care_conditions_vaccine_preventable,
                                                                     eol_care_2_days,
                                                                     eol_care_3_to_14_days,
@@ -429,6 +430,44 @@ list(
       mutate(number_of_cohorts = rowSums(pick(1:16), na.rm = TRUE)) |>
       filter(number_of_cohorts!=0)
   ),
+  
+  tar_target(
+    cohort_overlap_numbers_prevention,
+    total_cohort_numbers_2324 |>
+      filter(fyear == "202324")|>
+      summarise(episodes=sum(episodes), beddays=sum(beddays), .by=c(alcohol_partially_attributable_acute,
+                                                                      alcohol_partially_attributable_chronic,
+                                                                      alcohol_wholly_attributable,
+                                                                      obesity_related_admissions,
+                                                                      smoking,
+                                                                      raid_ae,
+                                                                      intentional_self_harm,
+                                                                      medically_unexplained_related_admissions) )|>
+      mutate(number_of_cohorts = rowSums(pick(1:8), na.rm = TRUE)) |>
+      filter(number_of_cohorts!=0)
+  ),
+  
+  tar_target(
+    cohort_overlap_numbers_relocation,
+    total_cohort_numbers_2324 |>
+      filter(fyear == "202324")|>
+      summarise(episodes=sum(episodes), beddays=sum(beddays), .by=c(virtual_wards_activity_avoidance_ari,
+                                                                      virtual_wards_activity_avoidance_heart_failure) )|>
+      mutate(number_of_cohorts = rowSums(pick(1:2), na.rm = TRUE)) |>
+      filter(number_of_cohorts!=0)
+  ),
+  
+  tar_target(
+    cohort_overlap_numbers_efficiencies,
+    total_cohort_numbers_2324 |>
+      filter(fyear == "202324")|>
+      summarise(episodes=sum(episodes), beddays=sum(beddays), .by=c(emergency_elderly,
+                                                                      stroke_early_supported_discharge,
+                                                                      raid_ip) )|>
+      mutate(number_of_cohorts = rowSums(pick(1:3), na.rm = TRUE)) |>
+      filter(number_of_cohorts!=0)
+  ),
+  
   
   # Trends analysis -------------------------------------------------------------
   

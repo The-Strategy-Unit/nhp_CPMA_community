@@ -517,7 +517,14 @@ plot_upset_plot_mechanism_group(cohort_overlap_numbers_redirection,  mitigator_s
 
 plot_upset_plot_mechanism_group(cohort_overlap_numbers_redirection,  mitigator_summary_table, beddays)
 
+cohort_overlap_numbers_prevention<-tar_read(cohort_overlap_numbers_prevention)
+cohort_overlap_numbers_prevention<-tar_read(cohort_overlap_numbers_relocation)
+cohort_overlap_numbers_prevention<-tar_read(cohort_overlap_numbers_efficiencies)
 
+plotting_barchart_number_of_cohorts_for_mechanism_group(cohort_overlap_numbers_prevention, beddays)
+plotting_barchart_number_of_cohorts_for_mechanism_group(cohort_overlap_numbers_prevention, beddays)
+plot_upset_plot_mechanism_group(cohort_overlap_numbers_prevention,  mitigator_summary_table, episodes)
+plot_upset_plot_mechanism_group(cohort_overlap_numbers_prevention,  mitigator_summary_table, beddays)
 ```
 :::
 
