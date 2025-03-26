@@ -122,14 +122,18 @@ get_summary_by_geography <- function(data,
                                      total,
                                      activity_type,
                                      geography,
-                                     treatment_lookup) {
+                                     treatment_lookup = NULL) {
   if (activity_type == "admissions") {
     activity_type <- "episodes"
   }
   
-  treatment_type <- treatment_lookup |> 
-    dplyr::filter(mitigator_or_mechanism == mitigator) |>
-    dplyr::pull(treatment_type)
+  treatment_type <- if(mitigator == "all") {
+    "both"
+  } else {
+    treatment_lookup |> 
+      dplyr::filter(mitigator_or_mechanism == mitigator) |>
+      dplyr::pull(treatment_type)
+  }
   
   denominator <- glue::glue("total_{activity_type}_{treatment_type}")
   

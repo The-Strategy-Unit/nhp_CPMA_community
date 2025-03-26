@@ -482,5 +482,17 @@ list(
         mitigators_and_mechanisms_treatment_lookup
       )
     )
+  ),
+  ## For summary ---------------------------------------------------------------
+  
+  tar_target(
+    summary_icb_admissions_all,
+    get_summary_by_geography(
+      icb_age_sex_standardised_rates_episodes_total_mitigation,
+      "all",
+      total_beddays_admissions_by_icb,
+      "admissions",
+      "icb"
+    )
   )
 )
