@@ -419,7 +419,7 @@ plot_of_number_over_time(number_percentage_over_time,  beddays)
 ```
 :::
 
-#### Crude rate
+#### Percentage of total admissions
 
 Total mitigable activity as a percentage of total activity (elective and emergency admissions/beddays).
 
@@ -537,7 +537,7 @@ plotting_percentage_change_over_time_by_icb(number_percentage_over_time|>filter(
 ```
 :::
 
-#### Crude rate
+#### Percentage of total admissions
 
 Total mitigable activity as a percentage of total elective and emergency admissions/beddays.
 
