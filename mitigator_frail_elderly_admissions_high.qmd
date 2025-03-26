@@ -68,7 +68,7 @@ overview_frail_elderly_high |>
 
 ### Patient Characteristics
 
-In this section, the number and percentage of mitigable activity for the Frail Older People (high frailty) cohort are shown by patient characteristics: age, ethnic category, IMD decile and sex. Rates per 100,000 population are also provided for context.
+In this section, the number and percentage of mitigable activity for the Frail Older People (high frailty) cohort are shown by patient characteristics: age, ethnic category, IMD decile and sex. Crude rates per 100,000 population are also provided for context.
 
 Outputs are presented for both admissions and beddays, but patterns are broadly similar across the two.
 
@@ -102,7 +102,7 @@ perc_age_frail_elderly_high_admissions |>
   get_perc_by_group_plot("age_range", "admissions")
 ```
 
-#### Rates per 100,000 population
+#### Crude rate
 
 ```{r}
 #| label: tbl-rate_frail_elderly_high_age_admissions
@@ -145,7 +145,7 @@ perc_ethnicity_frail_elderly_high_admissions |>
   get_perc_by_group_plot("Ethnic_Category", "admissions")
 ```
 
-#### Rates per 100,000 population
+#### Crude rate
 
 ```{r}
 #| label: tbl-rate_frail_elderly_high_ethnicity_admissions
@@ -188,7 +188,7 @@ perc_imd_frail_elderly_high_admissions |>
   get_perc_by_group_plot("imd19_decile", "admissions")
 ```
 
-#### Rates per 100,000 population
+#### Crude rate
 
 ```{r}
 #| label: tbl-rate_frail_elderly_high_imd_admissions
@@ -231,7 +231,7 @@ perc_sex_frail_elderly_high_admissions |>
   get_perc_by_group_plot("sex", "admissions")
 ```
 
-#### Rates per 100,000 population
+#### Crude rate
 
 ```{r}
 #| label: tbl-rate_frail_elderly_high_sex_admissions
@@ -278,7 +278,7 @@ targets::tar_read(perc_age_frail_elderly_high_beddays) |>
   get_perc_by_group_plot("age_range", "beddays")
 ```
 
-#### Rates per 100,000 population
+#### Crude rate
 
 ```{r}
 #| label: tbl-rate_frail_elderly_high_age_beddays
@@ -321,7 +321,7 @@ targets::tar_read(perc_ethnicity_frail_elderly_high_beddays) |>
   get_perc_by_group_plot("Ethnic_Category", "beddays")
 ```
 
-#### Rates per 100,000 population
+#### Crude rate
 
 ```{r}
 #| label: tbl-rate_frail_elderly_high_ethnicity_beddays
@@ -364,7 +364,7 @@ targets::tar_read(perc_imd_frail_elderly_high_beddays) |>
   get_perc_by_group_plot("imd19_decile", "beddays")
 ```
 
-#### Rates per 100,000 population
+#### Crude rate
 
 ```{r}
 #| label: tbl-rate_frail_elderly_high_imd_beddays
@@ -407,7 +407,7 @@ targets::tar_read(perc_sex_frail_elderly_high_beddays) |>
   get_perc_by_group_plot("sex", "beddays")
 ```
 
-#### Rates per 100,000 population
+#### Crude rate
 
 ```{r}
 #| label: tbl-rate_frail_elderly_high_sex_beddays
