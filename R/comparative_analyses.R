@@ -144,6 +144,7 @@ get_summary_by_geography <- function(data,
   denominator <- glue::glue("total_{activity_type}_{treatment_type}")
   
   wrangled <- data |>
+    dplyr::rename(dplyr::any_of(c(ladcode23 = "resladst_ons"))) |>
     dplyr::filter(cohorts == mitigator, year == "2023/24") |>
     dplyr::left_join(total, geography) |>
     dplyr::mutate(perc = janitor::round_half_up(total_count * 100 / 

@@ -229,55 +229,6 @@ list(
   
   ### LA -----------------------------------------------------------------------
   tar_target(
-    la_numbers,
-    dplyr::tbl(
-      sc,
-      dbplyr::in_catalog(
-        "strategyunit",
-        "default",
-        "SL_AF_describing_mitigators_2324_local_authority"
-      )
-    ) |>
-      sparklyr::collect() |>
-      mutate_mechanism_columns() |>
-      tidyr::pivot_longer(
-        cols = !c(sex, age_range, resladst_ons, episodes, beddays),
-        names_to = "cohorts",
-        values_to = "value"
-      ) |>
-      dplyr::filter(value == 1) |>
-      dplyr::summarise(
-        episodes = sum(episodes),
-        beddays = sum(beddays),
-        .by = c(age_range, sex, resladst_ons, cohorts)
-      ) |>
-      dplyr::rename(ladcode23 = resladst_ons)
-  ),
-  
-  tar_target(
-    la_age_sex_standardised_rates_episodes,
-    generating_la_age_sex_standardised_rates(
-      la_numbers,
-      la_population_data |>
-        dplyr::mutate(sex = as.character(sex)) |>
-        dplyr::filter(fyear == "2023/24"),
-      standard_england_pop_2021_census,
-      episodes
-    )
-  ),
-  tar_target(
-    la_age_sex_standardised_rates_beddays,
-    generating_la_age_sex_standardised_rates(
-      la_numbers,
-      la_population_data |>
-        dplyr::mutate(sex = as.character(sex)) |>
-        dplyr::filter(fyear == "2023/24"),
-      standard_england_pop_2021_census,
-      beddays
-    )
-  ),
-  
-  tar_target(
     la_age_sex_standardised_rates_episodes_over_time,
     generating_la_age_sex_standardised_rates_for_trends(
       numbers_over_time_local_authority,
@@ -299,7 +250,6 @@ list(
     )
   ),
  
-  
   # Descriptive analysis -------------------------------------------------------
   ## Overview of mitigator -----------------------------------------------------
   tar_target(total_beddays_admissions, get_total_beddays_admissions(sc)),
@@ -510,7 +460,7 @@ list(
     tar_target(
       summary_la_admissions,
       get_summary_by_geography(
-        la_age_sex_standardised_rates_episodes,
+        la_age_sex_standardised_rates_episodes_over_time,
         mitigator,
         total_beddays_admissions_by_la,
         "admissions",
@@ -524,7 +474,7 @@ list(
     tar_target(
       summary_la_beddays,
       get_summary_by_geography(
-        la_age_sex_standardised_rates_beddays,
+        la_age_sex_standardised_rates_beddays_over_time,
         mitigator,
         total_beddays_admissions_by_la,
         "beddays",

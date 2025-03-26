@@ -175,31 +175,6 @@ generating_icb_age_sex_standardised_rates<-function(data, icb_pop, standard_pop,
   
 }
 
-generating_la_age_sex_standardised_rates <- function(data, la_pop, standard_pop, activity_type) {
-  
-  expanded_data<-data|>
-    expand(age_range, sex, cohorts, ladcode23)
-
-    standardised_data<-expanded_data |>
-    left_join(data, by=c("ladcode23",  "age_range", "sex", "cohorts"))|>
-    mutate(episodes=ifelse(is.na(episodes), 0, episodes),
-           beddays=ifelse(is.na(beddays), 0, beddays) )|>
-    dplyr::left_join(la_pop, by = c("ladcode23", "age_range", "sex")) |>
-    dplyr::left_join(standard_pop, by = c("age_range", "sex")) |>
-    dplyr::filter(!is.na(ladcode23),
-                  startsWith(ladcode23, "E"),
-                  age_range != "NA") |>
-    dplyr::group_by(ladcode23, laname23, cohorts) |>
-    dplyr::rename(activity = {{activity_type}}) |>
-    dplyr::filter(!is.na(la_population)) |> #########################################################################
-    PHEindicatormethods::calculate_dsr(x = activity, # observed number of events
-                                       n = la_population, # non-standard pops for each stratum
-                                       stdpop = pop) |>   # standard populations for England for each stratum
-  dplyr::mutate(year = "2023/24")
-  
-  
-}
-
 generating_england_age_sex_standardised_rates<-function(data, icb_pop, standard_pop, activity_type){
   
   expanded_data<-data|>
