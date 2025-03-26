@@ -109,7 +109,36 @@ Formatting_la_data_for_trends <- function(table) {
     mutate(year=paste0(stringr::str_sub(fyear, 1, 4), "/", stringr::str_sub(fyear, 5, 6)))
  
   return(la_numbers_over_time)
- }
+}
+
+Formatting_la_data_for_trends_total_mitigation<-function(table, la_pop){
+  
+  la_numbers_over_time <- dplyr::tbl(
+    sc,
+    dbplyr::in_catalog("strategyunit","default", table)
+  )|> collect()|>
+    filter(fyear>201819)|>
+    as.data.frame()
+  
+  
+  la_numbers_over_time<- identify_whether_bedday_or_admissions_or_both(la_numbers_over_time, 5:33)|>
+    mutate(episodes=ifelse(activity_group=="beddays", 0, episodes))|>   #avoid counting admissions for efficiency only activity
+    select(-activity_group, -number_of_cohorts)|>
+    left_join(la_pop[,c("ladcode23", "laname23")]|>
+                distinct(ladcode23, laname23), by=c("resladst_ons"="ladcode23"))|>
+    group_by(age_range, 
+             sex,
+             fyear,
+             resladst_ons)|>
+    summarise(episodes=sum(episodes),
+              beddays=sum(beddays))|>
+    mutate(year=paste0(stringr::str_sub(fyear, 1, 4), "/", stringr::str_sub(fyear, 5, 6)))|>
+    ungroup()|>
+    as.data.frame() 
+  
+  return(la_numbers_over_time)
+  
+}
 
 # Calculating numbers and percentages over time
 data_number_percentage_over_time_icb<-function(data1, data2, mitigator, treatment_type){
