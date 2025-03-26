@@ -251,7 +251,7 @@ rate_icb_admissions_frail_elderly_high_map <- summary_icb_admissions_frail_elder
 #| label: fig-number_icb_admissions_frail_elderly_high_bar
 #| fig-cap: !expr get_caption_by_icb("Frail Elderly (high)", "number", "admissions")
 england_value <- get_england_value("total_count", 
-                                   data_number = summary_icb_admissions_frail_elderly_high)
+                                   data = summary_icb_admissions_frail_elderly_high)
 
 get_summary_by_icb_bar(summary_icb_admissions_frail_elderly_high, 
                        "total_count", 
@@ -283,7 +283,7 @@ total_beddays_admissions <- targets::tar_read(total_beddays_admissions)
 england_value <- get_england_value("perc", 
                                    activity = "admissions",
                                    treatment = "emergency",
-                                   data_rate = england_age_sex_standardised_rates_episodes,
+                                   data = targets::tar_read(overview_frail_elderly_high),
                                    cohort = "frail_elderly_high")
 
 get_summary_by_icb_bar(summary_icb_admissions_frail_elderly_high, 
@@ -312,7 +312,7 @@ perc_icb_admissions_frail_elderly_high_map
 #| label: fig-rate_icb_admissions_frail_elderly_high_bar
 #| fig-cap: !expr get_caption_by_icb("Frail Elderly (high)", "SR", "admissions")
 england_value <- get_england_value("value",
-                                   data_rate = england_age_sex_standardised_rates_episodes,
+                                   data =  england_age_sex_standardised_rates_episodes,
                                    cohort = "frail_elderly_high")
 
 get_summary_by_icb_bar(summary_icb_admissions_frail_elderly_high, 

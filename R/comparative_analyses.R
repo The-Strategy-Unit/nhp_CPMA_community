@@ -6,35 +6,31 @@
 #' parameters need to be supplied.
 #'
 #' @param metric Either `"total_count"`, `"perc"` or `"rate"`.
-#' @param data_number Either `summary_MITIGATOR_elderly_high_icb_admissions` or ``summary_MITIGATOR_elderly_high_icb_beddays`.
+#' @param data A dataframe used to calculate the number, perc or rate.
 #' @param activity Needed if `metric == "perc`. Either `"admissions"` or `"beddays"`.
 #' @param treatment Needed if `metric == "perc`. Either `"emergency"` or `"elective"`.
-#' @param data_rate Either `"england_age_sex_standardised_rates_episodes"` or `"england_age_sex_standardised_rates_beddays"`.
 #' @param cohort A string for the mitigator cohort.
-#' @param data_perc This is `total_beddays_admissions`.
 #'
 #' @return A number.
 get_england_value <- function(metric,
-                              data_number = NULL,
-                              data_perc = NULL,
+                              data,
                               activity = NULL,
                               treatment = NULL,
-                              data_rate = NULL,
                               cohort = NULL) {
   if (metric == "total_count") {
-    england_value <- data_number |>
+    england_value <- data |>
       dplyr::summarise(mean = mean(total_count)) |>
       dplyr::pull()
   }
   
   if (metric == "perc") {
-    england_value <- data_perc |>
-      dplyr::filter(stringr::str_to_lower(activity_type) == "admissions") |>
+    england_value <- data |>
+      dplyr::filter(stringr::str_to_lower(activity_type) == activity) |>
       dplyr::pull(perc)
   }
   
   if (metric == "value") {
-    england_value <- data_rate |>
+    england_value <- data |>
       dplyr::filter(year == "2023/24", cohorts == cohort) |>
       dplyr::pull(!!rlang::sym(metric))
   }
