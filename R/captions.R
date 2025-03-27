@@ -120,7 +120,15 @@ get_caption_by_geography_table <- function(cohort,
     "Local Authority"
   }
   
-  caption <- glue::glue("The number of mitigable {activity_type}, the percentage by {treatment_type} {activity_type} and the age and sex standardised rates per 100,000 population for {cohort} by {geography} in 2023-24.")
+  if(cohort == "All Mitigation") {
+    cohort <- ""
+    all <- "all "
+  } else {
+    cohort <- glue::glue(" for {cohort}")
+    all <- ""
+  }
+  
+  caption <- glue::glue("The number of {all}mitigable {activity_type}, the percentage by {treatment_type} {activity_type} and the age and sex standardised rates per 100,000 population{cohort} by {geography} in 2023-24.")
   
   return(caption)
   
