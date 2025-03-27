@@ -1164,7 +1164,7 @@ This chart shows the percentage change for each ICB relative to it's starting le
 #| label: fig-activity_vs_rate_of_change_episodes_icb
 #| fig-cap: The standardised rate of Frail Older People (high frailty) admissions (in 2018/19) versus the percentage change in admissions between 2018/19 and 2023/24 for ICBs. 
 
-plotting_total_activity_vs_percentage_change(icb_age_sex_standardised_rates_episodes, value)
+plotting_total_activity_vs_percentage_change(icb_age_sex_standardised_rates_episodes, icb_2024_name)
 
 
 ```
@@ -1174,7 +1174,7 @@ plotting_total_activity_vs_percentage_change(icb_age_sex_standardised_rates_epis
 #| label: fig-activity_vs_rate_of_change_beddays_icb
 #| fig-cap: The standardised rate of Frail Older People (high frailty) beddays (in 2018/19) versus the percentage change in beddays between 2018/19 and 2023/24 for ICBs. 
 
-plotting_total_activity_vs_percentage_change(icb_age_sex_standardised_rates_beddays, value)
+plotting_total_activity_vs_percentage_change(icb_age_sex_standardised_rates_beddays, icb_2024_name)
 
 
 ```
@@ -1212,29 +1212,3 @@ DT::datatable(la_beddays_table)
 
 :::
 
-#### Change in age and sex standardised rate over time relative to level of activity by Local Authority
-
-This chart shows the percentage change for each LA relative to it's starting level of admissions/beddays to help demonstrate performance across LAs. Those LAs in the lower left quadrant (shaded in green) could be considered as performing well; they already had relatively low standardised rates of admissions/beddays in 2018/19 and have continued to make further decreases over the last five years.
-
-::: panel-tabset
-#### Admissions
-
-```{r, fig.width=5, fig.height=4}
-#| label: fig-activity_vs_rate_of_change_episodes_la
-#| fig-cap: The standardised rate of Frail Older People (high frailty) admissions (in 2018/19) versus the percentage change in admissions between 2018/19 and 2023/24 for for Local Authorities. 
-
-
-
-```
-#### Beddays
-
-```{r, fig.width=5, fig.height=4}
-#| label: fig-activity_vs_rate_of_change_beddays_la
-#| fig-cap: The standardised rate of Frail Older People (high frailty) beddays (in 2018/19) versus the percentage change in beddays between 2018/19 and 2023/24 for Local Authorities. 
-
-
-
-
-```
-
-:::
