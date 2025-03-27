@@ -36,7 +36,7 @@ england_age_sex_standardised_rates_episodes_total_mitigation<-tar_read(england_a
 ```
 
 ```{r global variables}
-#cohort <- "all"
+cohort <- "all"
 cohort_title <- "All Mitigation"
 treatment_type <- "both"
 ```
@@ -324,11 +324,10 @@ perc_icb_all_admissions_map
 ```{r}
 #| label: fig-rate_icb_all_admissions_bar
 #| fig-cap: !expr get_caption_by_icb(cohort_title, "SR", "admissions")
-england_value <- 2
-# get_england_value(
-#   "value",
-#   data = england_age_sex_standardised_rates_episodes,
-#   cohort = cohort)
+england_value <- get_england_value(
+  "value",
+  data = england_age_sex_standardised_rates_episodes_total_mitigation,
+  cohort = cohort)
 
 get_summary_by_icb_bar(
   summary_icb_all_admissions, 
@@ -466,11 +465,10 @@ perc_icb_all_beddays_map
 ```{r}
 #| label: fig-rate_icb_all_beddays_bar
 #| fig-cap: !expr get_caption_by_icb(cohort_title, "SR", "beddays")
-england_value <- 2
-  # get_england_value(
-  # "value", 
-  # data = england_age_sex_standardised_rates_beddays, 
-  # cohort = cohort)
+england_value <- get_england_value(
+  "value",
+  data = england_age_sex_standardised_rates_beddays_total_mitigation,
+  cohort = cohort)
 
 get_summary_by_icb_bar(
   summary_icb_all_beddays,
