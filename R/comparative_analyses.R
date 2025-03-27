@@ -35,6 +35,20 @@ get_england_value <- function(metric,
       dplyr::pull(!!rlang::sym(metric))
   }
   
+  if(metric == "perc_total_mitigation"){
+    if (activity == "admissions") {
+      activity <- "episodes"
+    }
+    
+    denominator <- glue::glue("total_{activity}")
+    
+    england_value <- data |>
+      summarise(number = sum(!!rlang::sym(activity)), 
+                               total_number = sum(!!rlang::sym(denominator))) |>
+      mutate(perc = janitor::round_half_up(number * 100 / total_number, 2)) |>
+      dplyr::pull(perc)
+  }
+  
   return(england_value)
 }
 

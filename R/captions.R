@@ -76,7 +76,7 @@ format_treatment_for_caption <- function(treatment_type) {
 #' @param treatment_type  Either `"emergency"` or `"elective"`.
 #'
 #' @return A string.
-get_caption_by_icb <- function(cohort, metric, activity_type, treatment_type = NULL) {
+get_caption_by_geography <- function(cohort, metric, activity_type, treatment_type = NULL) {
   
   if(metric == "perc"){
     treatment_type <- format_treatment_for_caption(treatment_type)
@@ -86,7 +86,15 @@ get_caption_by_icb <- function(cohort, metric, activity_type, treatment_type = N
   
   metric <- format_metric_for_caption(metric)
   
-  caption <- glue::glue("{metric} of mitigable {activity_type}{denominator} for {cohort} for ICBs in 2023/24.")
+  if(cohort == "All Mitigation") {
+    cohort <- ""
+    all <- "all "
+    } else {
+    cohort <- glue::glue(" for {cohort}")
+    all <- ""
+    }
+  
+  caption <- glue::glue("{metric} of {all}mitigable {activity_type}{denominator}{cohort} for ICBs in 2023/24.")
   
   return(caption)
 }
@@ -112,7 +120,15 @@ get_caption_by_geography_table <- function(cohort,
     "Local Authority"
   }
   
-  caption <- glue::glue("The number of mitigable {activity_type}, the percentage by {treatment_type} {activity_type} and the age and sex standardised rates per 100,000 population for {cohort} by {geography} in 2023-24.")
+  if(cohort == "All Mitigation") {
+    cohort <- ""
+    all <- "all "
+  } else {
+    cohort <- glue::glue(" for {cohort}")
+    all <- ""
+  }
+  
+  caption <- glue::glue("The number of {all}mitigable {activity_type}, the percentage by {treatment_type} {activity_type} and the age and sex standardised rates per 100,000 population{cohort} by {geography} in 2023-24.")
   
   return(caption)
   

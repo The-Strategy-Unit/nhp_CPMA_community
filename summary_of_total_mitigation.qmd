@@ -36,9 +36,24 @@ england_age_sex_standardised_rates_episodes_total_mitigation<-tar_read(england_a
 ```
 
 ```{r global variables}
-#cohort <- "all"
+cohort <- "all"
 cohort_title <- "All Mitigation"
 treatment_type <- "both"
+treatment_type_title <- format_treatment_for_caption(treatment_type)
+```
+
+```{r}
+number_percentage_over_time<-numbers_over_time_total_mitigation|>
+  left_join(denominator_over_time, by=c("age_range", "sex", "year", "icb", "icb_2024_name"))|>
+  summarise(episodes=sum(episodes, na.rm=TRUE),
+            beddays=sum(beddays, na.rm=TRUE),
+            total_episodes=sum(total_episodes_all, na.rm=TRUE),
+            total_beddays=sum(total_beddays_all, na.rm=TRUE),
+            .by=c(icb, icb_2024_name, year))|>
+  filter(year!="2014/15")|>
+  mutate(percentage_episodes=round((episodes/total_episodes)*100,1),
+         percentage_beddays=round((beddays/total_beddays)*100,1))|>
+  as.data.frame()
 ```
 
 ## Mitigators included in this analysis
@@ -233,19 +248,19 @@ One third of mitigable beddays are included with 3 mechanism of mitigation group
 
 ```{r}
 #| output: false
-summary_icb_all_admissions <- targets::tar_read(summary_icb_all_admissions)
+summary_icb_admissions_all <- targets::tar_read(summary_icb_admissions_all)
 
 icb_23_shp <- sf::st_read("https://services1.arcgis.com/ESMARspQHYMw9BZ9/arcgis/rest/services/Integrated_Care_Boards_April_2023_EN_BGC/FeatureServer/0/query?outFields=*&where=1%3D1&f=geojson") |>
   janitor::clean_names() |>
   dplyr::mutate(icb23nm = simplify_icb_name(icb23nm))
 
-number_icb_all_admissions_map <- summary_icb_all_admissions |>
+number_icb_admissions_all_map <- summary_icb_admissions_all |>
   get_summary_by_icb_map(icb_23_shp, "total_count")
 
-perc_icb_all_admissions_map <- summary_icb_all_admissions |>
+perc_icb_admissions_all_map <- summary_icb_admissions_all |>
   get_summary_by_icb_map(icb_23_shp, "perc")
 
-rate_icb_all_admissions_map <- summary_icb_all_admissions |>
+rate_icb_admissions_all_map <- summary_icb_admissions_all |>
   get_summary_by_icb_map(icb_23_shp, "value")
 ```
 
@@ -256,14 +271,14 @@ rate_icb_all_admissions_map <- summary_icb_all_admissions |>
 ###### Bars
 
 ```{r}
-#| label: fig-number_icb_all_admissions_bar
-#| fig-cap: !expr get_caption_by_icb(cohort_title, "number", "admissions")
+#| label: fig-number_icb_admissions_all_bar
+#| fig-cap: !expr get_caption_by_geography(cohort_title, "number", "admissions")
 england_value <- get_england_value(
   "total_count", 
-  data = summary_icb_all_admissions)
+  data = summary_icb_admissions_all)
 
 get_summary_by_icb_bar(
-  summary_icb_all_admissions, 
+  summary_icb_admissions_all, 
   "total_count", 
   cohort,
   england_value)
@@ -274,32 +289,30 @@ rm(england_value)
 ###### Map
 
 ```{r}
-#| label: fig-number_icb_all_admissions_map
-#| fig-cap: !expr get_caption_by_icb(cohort_title, "number", "admissions")
-number_icb_all_admissions_map
+#| label: fig-number_icb_admissions_all_map
+#| fig-cap: !expr get_caption_by_geography(cohort_title, "number", "admissions")
+number_icb_admissions_all_map
 ```
 :::
 
-##### Percentage of emergency activity
+##### Percentage of `r treatment_type_title` activity
 
 ::: panel-tabset
 ###### Bars
 
 ```{r}
-#| label: fig-perc_icb_all_admissions_bar
-#| fig-cap: !expr get_caption_by_icb(cohort_title, "perc", "admissions", treatment_type)
+#| label: fig-perc_icb_admissions_all_bar
+#| fig-cap: !expr get_caption_by_geography(cohort_title, "perc", "admissions", treatment_type)
 total_beddays_admissions <- targets::tar_read(total_beddays_admissions)
 
-england_value <- 2
-# get_england_value(
-  # "perc", 
-  # activity = "admissions",
-  # treatment = treatment_type,
-  # data = overview_total,
-  # cohort = cohort)
+england_value <- get_england_value(
+  "perc_total_mitigation",
+  activity = "admissions",
+  treatment = treatment_type,
+  data = number_percentage_over_time)
 
 get_summary_by_icb_bar(
-  summary_icb_all_admissions, 
+  summary_icb_admissions_all, 
   "perc", 
   cohort,
   england_value)
@@ -310,9 +323,9 @@ rm(england_value)
 ###### Map
 
 ```{r}
-#| label: fig-perc_icb_all_admissions_map
-#| fig-cap: !expr get_caption_by_icb(cohort_title, "perc", "admissions", treatment_type)
-perc_icb_all_admissions_map
+#| label: fig-perc_icb_admissions_all_map
+#| fig-cap: !expr get_caption_by_geography(cohort_title, "perc", "admissions", treatment_type)
+perc_icb_admissions_all_map
 ```
 :::
 
@@ -322,16 +335,15 @@ perc_icb_all_admissions_map
 ###### Bars
 
 ```{r}
-#| label: fig-rate_icb_all_admissions_bar
-#| fig-cap: !expr get_caption_by_icb(cohort_title, "SR", "admissions")
-england_value <- 2
-# get_england_value(
-#   "value",
-#   data = england_age_sex_standardised_rates_episodes,
-#   cohort = cohort)
+#| label: fig-rate_icb_admissions_all_bar
+#| fig-cap: !expr get_caption_by_geography(cohort_title, "SR", "admissions")
+england_value <- get_england_value(
+  "value",
+  data = england_age_sex_standardised_rates_episodes_total_mitigation,
+  cohort = cohort)
 
 get_summary_by_icb_bar(
-  summary_icb_all_admissions, 
+  summary_icb_admissions_all, 
   "value", 
   cohort,
   england_value)
@@ -342,19 +354,19 @@ rm(england_value)
 ###### Map
 
 ```{r}
-#| label: fig-rate_icb_all_admissions_map
-#| fig-cap: !expr get_caption_by_icb(cohort_title, "SR", "admissions")
-rate_icb_all_admissions_map
+#| label: fig-rate_icb_admissions_all_map
+#| fig-cap: !expr get_caption_by_geography(cohort_title, "SR", "admissions")
+rate_icb_admissions_all_map
 ```
 :::
 
 ##### Table
 
 ```{r}
-#| label: tbl-rate_icb_all_admissions
+#| label: tbl-rate_icb_admissions_all
 #| tbl-cap: !expr get_caption_by_geography_table(cohort_title, "admissions", treatment_type, "icb")
 get_summary_by_geography_table(
-  summary_icb_all_admissions,
+  summary_icb_admissions_all,
   "episodes", 
   treatment_type)
 ```
@@ -363,9 +375,9 @@ get_summary_by_geography_table(
 #### Local Authority
 
 ```{r}
-#| label: tbl-rate_la_all_admissions
+#| label: tbl-rate_la_admissions_all
 #| tbl-cap: !expr get_caption_by_geography_table(cohort_title, "admissions", treatment_type, "la")
-targets::tar_read(summary_la_all_admissions) |>
+targets::tar_read(summary_la_admissions_all) |>
   get_summary_by_geography_table("episodes",
                                  treatment_type)
 ```
@@ -378,15 +390,15 @@ targets::tar_read(summary_la_all_admissions) |>
 
 ```{r}
 #| output: false
-summary_icb_all_beddays <- targets::tar_read(summary_icb_all_beddays)
+summary_icb_beddays_all <- targets::tar_read(summary_icb_beddays_all)
 
-number_icb_all_beddays_map <- summary_icb_all_beddays |>
+number_icb_beddays_all_map <- summary_icb_beddays_all |>
   get_summary_by_icb_map(icb_23_shp, "total_count")
 
-perc_icb_all_beddays_map <- summary_icb_all_beddays |>
+perc_icb_beddays_all_map <- summary_icb_beddays_all |>
   get_summary_by_icb_map(icb_23_shp, "perc")
 
-rate_icb_all_beddays_map <- summary_icb_all_beddays |>
+rate_icb_beddays_all_map <- summary_icb_beddays_all |>
   get_summary_by_icb_map(icb_23_shp, "value")
 ```
 
@@ -397,14 +409,14 @@ rate_icb_all_beddays_map <- summary_icb_all_beddays |>
 ###### Bars
 
 ```{r}
-#| label: fig-number_icb_all_beddays_bar
-#| fig-cap: !expr get_caption_by_icb(cohort_title, "number", "beddays")
+#| label: fig-number_icb_beddays_all_bar
+#| fig-cap: !expr get_caption_by_geography(cohort_title, "number", "beddays")
 england_value <- get_england_value(
   "total_count", 
-  data = summary_icb_all_beddays)
+  data = summary_icb_beddays_all)
 
 get_summary_by_icb_bar(
-  summary_icb_all_beddays, 
+  summary_icb_beddays_all, 
   "total_count", 
   cohort,
   england_value)
@@ -415,33 +427,30 @@ rm(england_value)
 ###### Map
 
 ```{r}
-#| label: fig-number_icb_all_beddays_map
-#| fig-cap: !expr get_caption_by_icb(cohort_title, "number", "beddays")
-number_icb_all_beddays_map
+#| label: fig-number_icb_beddays_all_map
+#| fig-cap: !expr get_caption_by_geography(cohort_title, "number", "beddays")
+number_icb_beddays_all_map
 ```
 :::
 
-##### Percentage of emergency activity
+##### Percentage of `r treatment_type_title` activity
 
 ::: panel-tabset
 ###### Bars
 
 ```{r}
-#| label: fig-perc_icb_all_beddays_bar
-#| fig-cap: !expr get_caption_by_icb(cohort_title, "perc", "beddays", treatment_type)
+#| label: fig-perc_icb_beddays_all_bar
+#| fig-cap: !expr get_caption_by_geography(cohort_title, "perc", "beddays", treatment_type)
 total_beddays_admissions <- targets::tar_read(total_beddays_admissions)
 
-england_value <- 2 
-# get_england_value(
-#   "perc",
-#   activity = "beddays",
-#   treatment = treatment_type,
-#   data = overview_total,
-#   cohort = cohort
-# )
+england_value <- get_england_value(
+  "perc_total_mitigation",
+  activity = "beddays",
+  treatment = treatment_type,
+  data = number_percentage_over_time)
 
 get_summary_by_icb_bar(
-  summary_icb_all_beddays,
+  summary_icb_beddays_all,
   "perc",
   cohort,
   england_value)
@@ -452,9 +461,9 @@ rm(england_value)
 ###### Map
 
 ```{r}
-#| label: fig-perc_icb_all_beddays_map
-#| fig-cap: !expr get_caption_by_icb(cohort_title, "perc", "beddays", treatment_type)
-perc_icb_all_beddays_map
+#| label: fig-perc_icb_beddays_all_map
+#| fig-cap: !expr get_caption_by_geography(cohort_title, "perc", "beddays", treatment_type)
+perc_icb_beddays_all_map
 ```
 :::
 
@@ -464,16 +473,15 @@ perc_icb_all_beddays_map
 ###### Bars
 
 ```{r}
-#| label: fig-rate_icb_all_beddays_bar
-#| fig-cap: !expr get_caption_by_icb(cohort_title, "SR", "beddays")
-england_value <- 2
-  # get_england_value(
-  # "value", 
-  # data = england_age_sex_standardised_rates_beddays, 
-  # cohort = cohort)
+#| label: fig-rate_icb_beddays_all_bar
+#| fig-cap: !expr get_caption_by_geography(cohort_title, "SR", "beddays")
+england_value <- get_england_value(
+  "value",
+  data = england_age_sex_standardised_rates_beddays_total_mitigation,
+  cohort = cohort)
 
 get_summary_by_icb_bar(
-  summary_icb_all_beddays,
+  summary_icb_beddays_all,
   "value",
   cohort,
   england_value)
@@ -484,19 +492,19 @@ rm(england_value)
 ###### Map
 
 ```{r}
-#| label: fig-rate_icb_all_beddays_map
-#| fig-cap: !expr get_caption_by_icb(cohort_title, "SR", "beddays")
-rate_icb_all_beddays_map
+#| label: fig-rate_icb_beddays_all_map
+#| fig-cap: !expr get_caption_by_geography(cohort_title, "SR", "beddays")
+rate_icb_beddays_all_map
 ```
 :::
 
 ##### Table
 
 ```{r}
-#| label: tbl-rate_icb_all_beddays
+#| label: tbl-rate_icb_beddays_all
 #| tbl-cap: !expr get_caption_by_geography_table(cohort_title, "beddays", treatment_type, "icb")
 get_summary_by_geography_table(
-  summary_icb_all_beddays, 
+  summary_icb_beddays_all, 
   "beddays", 
   treatment_type)
 ```
@@ -505,9 +513,9 @@ get_summary_by_geography_table(
 #### Local Authority
 
 ```{r}
-#| label: tbl-rate_la_all_beddays
+#| label: tbl-rate_la_beddays_all
 #| tbl-cap: !expr get_caption_by_geography_table(cohort_title, "beddays", treatment_type, "la")
-targets::tar_read(summary_la_all_beddays) |>
+targets::tar_read(summary_la_beddays_all) |>
   get_summary_by_geography_table("beddays", treatment_type)
 ```
 :::
@@ -530,19 +538,6 @@ To help understand the variability between ICBs we have calculated for each ICB 
 #### Number over time
 
 ```{r}
-
-number_percentage_over_time<-numbers_over_time_total_mitigation|>
-  left_join(denominator_over_time, by=c("age_range", "sex", "year", "icb", "icb_2024_name"))|>
-  summarise(episodes=sum(episodes, na.rm=TRUE),
-            beddays=sum(beddays, na.rm=TRUE),
-            total_episodes=sum(total_episodes_all, na.rm=TRUE),
-            total_beddays=sum(total_beddays_all, na.rm=TRUE),
-            .by=c(icb, icb_2024_name, year))|>
-  filter(year!="2014/15")|>
-  mutate(percentage_episodes=round((episodes/total_episodes)*100,1),
-         percentage_beddays=round((beddays/total_beddays)*100,1))|>
-  as.data.frame()
-
 # England average numbers and % change
 england_average_numbers_episodes<-calculating_england_average_numbers(number_percentage_over_time, episodes)
 
