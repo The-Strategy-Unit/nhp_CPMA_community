@@ -842,3 +842,38 @@ plotting_total_activity_vs_percentage_change(icb_age_sex_standardised_rates_bedd
 
 ```
 :::
+
+
+### Local Authority
+
+Age and sex standardised rates of activity for local authority areas 
+::: panel-tabset
+#### Admissions
+```{r}
+#| label: table-local_authority_over_time_episodes
+#| fig-cap: Table of the standardised rate of potentially mitigable admissions over time by local authority area. 
+
+la_age_sex_standardised_rates_episodes_total_mitigation<-tar_read(la_age_sex_standardised_rates_episodes_total_mitigation)
+
+la_episode_table<-generating_la_table(la_age_sex_standardised_rates_episodes_total_mitigation, cohort)
+ 
+DT::datatable(la_episode_table)
+
+
+```
+
+
+#### Beddays
+```{r}
+#| label: table_local_authority_over_time_beddays
+#| fig-cap: Table of the standardised rate of potentially mitigable beddays over time by local authority area. 
+
+la_age_sex_standardised_rates_beddays_total_mitigation<-tar_read(la_age_sex_standardised_rates_beddays_total_mitigation)
+
+la_beddays_table<-generating_la_table(la_age_sex_standardised_rates_beddays_total_mitigation, cohort)
+ 
+DT::datatable(la_beddays_table)
+
+```
+
+:::

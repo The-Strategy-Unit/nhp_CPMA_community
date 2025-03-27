@@ -1103,7 +1103,7 @@ This chart shows the percentage change for each ICB relative to it's starting le
 #| label: fig-activity_vs_rate_of_change_episodes
 #| fig-cap: The standardised rate of potentially mitigable Redirection and Substitution admissions (in 2018/19) versus the percentage change in admissions between 2018/19 and 2023/24 for ICBs. 
 
-plotting_total_activity_vs_percentage_change(icb_age_sex_standardised_rates_episodes, value)
+plotting_total_activity_vs_percentage_change(icb_age_sex_standardised_rates_episodes, icb_2024_name)
 
 
 ```
@@ -1113,7 +1113,7 @@ plotting_total_activity_vs_percentage_change(icb_age_sex_standardised_rates_epis
 #| label: fig-activity_vs_rate_of_change_beddays
 #| fig-cap:  The standardised rate of potentially mitigable Redirection and Substitution beddays (in 2018/19) versus the percentage change in beddays between 2018/19 and 2023/24 for ICBs.  
 #| 
-plotting_total_activity_vs_percentage_change(icb_age_sex_standardised_rates_beddays, value)
+plotting_total_activity_vs_percentage_change(icb_age_sex_standardised_rates_beddays, icb_2024_name)
 
 
 ```
@@ -1122,8 +1122,35 @@ plotting_total_activity_vs_percentage_change(icb_age_sex_standardised_rates_bedd
 
 ### Local Authority
 
-```{r}
+Age and sex standardised rates of activity for local authority areas 
 
-  
+::: panel-tabset
+#### Admissions
+```{r}
+#| label: table-local_authority_over_time_episodes
+#| fig-cap: Table of the standardised rate of Frail Older People (high frailty) admissions over time by local authority area.
+
+la_age_sex_standardised_rates_episodes_over_time<-tar_read(la_age_sex_standardised_rates_episodes_over_time)
+
+la_episode_table<-generating_la_table(la_age_sex_standardised_rates_episodes_over_time, cohort)
+ 
+DT::datatable(la_episode_table)
+
 
 ```
+
+
+#### Beddays
+```{r}
+#| label: table_local_authority_over_time_beddays
+#| fig-cap: Table of the standardised rate of Frail Older People (high frailty) admissions over time by local authority area.  
+
+la_age_sex_standardised_rates_beddays_over_time<-tar_read(la_age_sex_standardised_rates_beddays_over_time)
+
+la_beddays_table<-generating_la_table(la_age_sex_standardised_rates_beddays_over_time, cohort)
+ 
+DT::datatable(la_beddays_table)
+
+```
+
+:::

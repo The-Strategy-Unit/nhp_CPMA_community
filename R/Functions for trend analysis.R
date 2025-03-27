@@ -90,6 +90,7 @@ numbers_over_time<- identify_whether_bedday_or_admissions_or_both(numbers_over_t
   
 }
 
+
 # Number by LA over time
 
 Formatting_la_data_for_trends <- function(table) {
