@@ -263,9 +263,21 @@ list(
       la_code_lookup,
       la_population_data,
       standard_england_pop_2021_census,
-      beddays
+      episodes
       )
     ),
+  
+  tar_target(
+    la_age_sex_standardised_rates_beddays_total_mitigation,
+    generating_la_age_sex_standardised_rates_for_trends(
+      numbers_over_time_local_authority_total_mitigation |>
+        mutate(cohorts = "all"),
+      la_code_lookup,
+      la_population_data,
+      standard_england_pop_2021_census,
+      beddays
+    )
+  ),
  
   # Descriptive analysis -------------------------------------------------------
   ## Overview of mitigator -----------------------------------------------------

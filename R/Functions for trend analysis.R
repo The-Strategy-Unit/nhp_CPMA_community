@@ -90,6 +90,7 @@ numbers_over_time<- identify_whether_bedday_or_admissions_or_both(numbers_over_t
   
 }
 
+
 # Number by LA over time
 
 Formatting_la_data_for_trends <- function(table) {
@@ -405,24 +406,24 @@ calculating_england_average_standardised<-function(data){
 
 # Plot of total starting activity vs percentage change over the last 5 years
 
-plotting_total_activity_vs_percentage_change<-function(data, activity_type){
+plotting_total_activity_vs_percentage_change<-function(data, geography){
   
   plot_data<-  data|>
     filter(year=="2018/19"| year=="2023/24")|>
-    pivot_wider(names_from = c(year), values_from = {{activity_type}})|>
+    pivot_wider(names_from = c(year), values_from = value)|>
     summarise(`2018/19`=max(`2018/19`, na.rm=TRUE),
               `2023/24`=max(`2023/24`, na.rm=TRUE),
-              .by=c(icb_2024_name))|>
+              .by=c({{geography}}))|>
     mutate(change=round(((`2023/24`-`2018/19`)/`2018/19`)*100,1))|>
     filter(!is.nan(change))|>
     filter(change!="-Inf")|>
     arrange(change)|>
-    mutate(icb_2024_name=factor(icb_2024_name))
+    mutate(geo_name=factor({{geography}}))
   
   p<- plot_data|>
     ggplot()+
     annotate("rect", xmin =(min(plot_data$`2018/19`)-(min(plot_data$`2018/19`)*0.1)) , xmax = mean(plot_data$`2018/19`), ymin =min(plot_data$change)*1.2 , ymax = 0 , fill= "#c9e7d9")+ 
-    geom_point(aes(x=`2018/19`, y=change, label=icb_2024_name), colour="#686f73")+
+    geom_point(aes(x=`2018/19`, y=change, label=geo_name), colour="#686f73")+
     labs(x="Standardised rate for 2018/2019",
          y= "% change between 2018/19 and 2023/24")+
     su_theme()+
