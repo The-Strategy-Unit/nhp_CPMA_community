@@ -76,7 +76,7 @@ format_treatment_for_caption <- function(treatment_type) {
 #' @param treatment_type  Either `"emergency"` or `"elective"`.
 #'
 #' @return A string.
-get_caption_by_icb <- function(cohort, metric, activity_type, treatment_type = NULL) {
+get_caption_by_geography <- function(cohort, metric, activity_type, treatment_type = NULL) {
   
   if(metric == "perc"){
     treatment_type <- format_treatment_for_caption(treatment_type)
@@ -86,7 +86,15 @@ get_caption_by_icb <- function(cohort, metric, activity_type, treatment_type = N
   
   metric <- format_metric_for_caption(metric)
   
-  caption <- glue::glue("{metric} of mitigable {activity_type}{denominator} for {cohort} for ICBs in 2023/24.")
+  if(cohort == "All Mitigation") {
+    cohort <- ""
+    all <- "all "
+    } else {
+    cohort <- glue::glue(" for {cohort}")
+    all <- ""
+    }
+  
+  caption <- glue::glue("{metric} of {all}mitigable {activity_type}{denominator}{cohort} for ICBs in 2023/24.")
   
   return(caption)
 }

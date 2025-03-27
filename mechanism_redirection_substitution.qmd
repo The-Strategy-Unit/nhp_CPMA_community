@@ -555,7 +555,7 @@ rate_icb_admissions_redirection_substitution_map <- summary_icb_admissions_redir
 
 ```{r}
 #| label: fig-number_icb_admissions_redirection_substitution_bar
-#| fig-cap: !expr get_caption_by_icb(cohort_title, "number", "admissions")
+#| fig-cap: !expr get_caption_by_geography(cohort_title, "number", "admissions")
 england_value <- get_england_value(
   "total_count", 
   data = summary_icb_admissions_redirection_substitution)
@@ -573,7 +573,7 @@ rm(england_value)
 
 ```{r}
 #| label: fig-number_icb_admissions_redirection_substitution_map
-#| fig-cap: !expr get_caption_by_icb(cohort_title, "number", "admissions")
+#| fig-cap: !expr get_caption_by_geography(cohort_title, "number", "admissions")
 number_icb_admissions_redirection_substitution_map
 ```
 :::
@@ -585,7 +585,7 @@ number_icb_admissions_redirection_substitution_map
 
 ```{r}
 #| label: fig-perc_icb_admissions_redirection_substitution_bar
-#| fig-cap: !expr get_caption_by_icb(cohort_title, "perc", "admissions", treatment_type)
+#| fig-cap: !expr get_caption_by_geography(cohort_title, "perc", "admissions", treatment_type)
 total_beddays_admissions <- targets::tar_read(total_beddays_admissions)
 
 england_value <- get_england_value(
@@ -608,7 +608,7 @@ rm(england_value)
 
 ```{r}
 #| label: fig-perc_icb_admissions_redirection_substitution_map
-#| fig-cap: !expr get_caption_by_icb(cohort_title, "perc", "admissions", treatment_type)
+#| fig-cap: !expr get_caption_by_geography(cohort_title, "perc", "admissions", treatment_type)
 perc_icb_admissions_redirection_substitution_map
 ```
 :::
@@ -620,7 +620,7 @@ perc_icb_admissions_redirection_substitution_map
 
 ```{r}
 #| label: fig-rate_icb_admissions_redirection_substitution_bar
-#| fig-cap: !expr get_caption_by_icb(cohort_title, "SR", "admissions")
+#| fig-cap: !expr get_caption_by_geography(cohort_title, "SR", "admissions")
 england_value <- get_england_value(
   "value",
   data = england_age_sex_standardised_rates_episodes,
@@ -639,7 +639,7 @@ rm(england_value)
 
 ```{r}
 #| label: fig-rate_icb_admissions_redirection_substitution_map
-#| fig-cap: !expr get_caption_by_icb(cohort_title, "SR", "admissions")
+#| fig-cap: !expr get_caption_by_geography(cohort_title, "SR", "admissions")
 rate_icb_admissions_redirection_substitution_map
 ```
 :::
@@ -694,7 +694,7 @@ rate_icb_beddays_redirection_substitution_map <- summary_icb_beddays_redirection
 
 ```{r}
 #| label: fig-number_icb_beddays_redirection_substitution_bar
-#| fig-cap: !expr get_caption_by_icb(cohort_title, "number", "beddays")
+#| fig-cap: !expr get_caption_by_geography(cohort_title, "number", "beddays")
 england_value <- get_england_value(
   "total_count", 
   data = summary_icb_beddays_redirection_substitution)
@@ -712,7 +712,7 @@ rm(england_value)
 
 ```{r}
 #| label: fig-number_icb_beddays_redirection_substitution_map
-#| fig-cap: !expr get_caption_by_icb(cohort_title, "number", "beddays")
+#| fig-cap: !expr get_caption_by_geography(cohort_title, "number", "beddays")
 number_icb_beddays_redirection_substitution_map
 ```
 :::
@@ -724,7 +724,7 @@ number_icb_beddays_redirection_substitution_map
 
 ```{r}
 #| label: fig-perc_icb_beddays_redirection_substitution_bar
-#| fig-cap: !expr get_caption_by_icb(cohort_title, "perc", "beddays", treatment_type)
+#| fig-cap: !expr get_caption_by_geography(cohort_title, "perc", "beddays", treatment_type)
 total_beddays_admissions <- targets::tar_read(total_beddays_admissions)
 
 england_value <- get_england_value(
@@ -748,7 +748,7 @@ rm(england_value)
 
 ```{r}
 #| label: fig-perc_icb_beddays_redirection_substitution_map
-#| fig-cap: !expr get_caption_by_icb(cohort_title, "perc", "beddays", treatment_type)
+#| fig-cap: !expr get_caption_by_geography(cohort_title, "perc", "beddays", treatment_type)
 perc_icb_beddays_redirection_substitution_map
 ```
 :::
@@ -760,7 +760,7 @@ perc_icb_beddays_redirection_substitution_map
 
 ```{r}
 #| label: fig-rate_icb_beddays_redirection_substitution_bar
-#| fig-cap: !expr get_caption_by_icb(cohort_title, "SR", "beddays")
+#| fig-cap: !expr get_caption_by_geography(cohort_title, "SR", "beddays")
 england_value <- get_england_value(
   "value", 
   data = england_age_sex_standardised_rates_beddays, 
@@ -779,7 +779,7 @@ rm(england_value)
 
 ```{r}
 #| label: fig-rate_icb_beddays_redirection_substitution_map
-#| fig-cap: !expr get_caption_by_icb(cohort_title, "SR", "beddays")
+#| fig-cap: !expr get_caption_by_geography(cohort_title, "SR", "beddays")
 rate_icb_beddays_redirection_substitution_map
 ```
 :::
