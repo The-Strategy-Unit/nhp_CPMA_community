@@ -860,6 +860,7 @@ get_summary_by_geography_table(
 ```{r}
 #| label: tbl-rate_la_beddays_frail_elderly_high
 #| tbl-cap: !expr get_caption_by_geography_table(cohort_title, "beddays", treatment_type, "la")
+
 targets::tar_read(summary_la_beddays_frail_elderly_high) |>
   get_summary_by_geography_table("beddays", treatment_type)
 ```
