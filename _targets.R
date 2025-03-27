@@ -71,7 +71,12 @@ list(
     )
   ),
   
-  tar_target(la_code_lookup, read_excel("la_code_lookup.xlsx")),
+  tarchetypes::tar_file(my_filepath, "la_code_lookup.xlsx"),
+  tar_target(
+    la_code_lookup,
+    read_excel(my_filepath)
+  ),
+
   
   tar_target(
     icb_population_data,
