@@ -187,7 +187,7 @@ Many admissions meet the criteria to be included in more than one mechanism of m
 
 total_cohort_numbers_2324<-tar_read(total_cohort_numbers_2324)
 
-#generate_venn_diagram(total_cohort_numbers_2324, episodes)
+generate_venn_diagram(total_cohort_numbers_2324, episodes)
 
 ```
 :::
@@ -217,7 +217,7 @@ Overall three quarters of mitigable admissions fall into just one mechanism of m
 #| label: fig-overlap_mechanism_cohorts_beddays
 #| fig-cap: Venn diagram showing the overlap in beddays between the mechanisms of mitigation groups.
 
-#generate_venn_diagram(total_cohort_numbers_2324, beddays)
+generate_venn_diagram(total_cohort_numbers_2324, beddays)
 
 ```
 :::
