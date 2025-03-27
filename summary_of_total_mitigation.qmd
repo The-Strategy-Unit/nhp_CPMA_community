@@ -39,6 +39,7 @@ england_age_sex_standardised_rates_episodes_total_mitigation<-tar_read(england_a
 cohort <- "all"
 cohort_title <- "All Mitigation"
 treatment_type <- "both"
+treatment_type_title <- format_treatment_for_caption(treatment_type)
 ```
 
 ```{r}
@@ -294,7 +295,7 @@ number_icb_admissions_all_map
 ```
 :::
 
-##### Percentage of emergency activity
+##### Percentage of `r treatment_type_title` activity
 
 ::: panel-tabset
 ###### Bars
@@ -432,7 +433,7 @@ number_icb_beddays_all_map
 ```
 :::
 
-##### Percentage of emergency activity
+##### Percentage of `r treatment_type_title` activity
 
 ::: panel-tabset
 ###### Bars
