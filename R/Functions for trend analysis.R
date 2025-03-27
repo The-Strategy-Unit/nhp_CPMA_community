@@ -117,7 +117,6 @@ Formatting_la_data_for_trends_total_mitigation<-function(table, la_pop){
     sc,
     dbplyr::in_catalog("strategyunit","default", table)
   )|> collect()|>
-    filter(fyear>201819)|>
     as.data.frame()
   
   
@@ -441,5 +440,17 @@ plotting_total_activity_vs_percentage_change<-function(data, activity_type){
   
 }
 
-
+generating_la_table<-function(data, cohort){
+  
+  table_data<-data|>
+    filter(cohorts==cohort)|>
+    select(laname23, year, value)|>
+    spread(key=year, value=value) |>
+    rename(`Local Authority`=laname23)|>
+    mutate(`Percentage Change`=round(((`2023/24`-`2018/19`)/`2018/19`)*100,1))|>
+    as.data.frame()
+  
+  return(table_data)
+  
+}
 
