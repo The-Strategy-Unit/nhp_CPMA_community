@@ -41,6 +41,20 @@ cohort_title <- "All Mitigation"
 treatment_type <- "both"
 ```
 
+```{r}
+number_percentage_over_time<-numbers_over_time_total_mitigation|>
+  left_join(denominator_over_time, by=c("age_range", "sex", "year", "icb", "icb_2024_name"))|>
+  summarise(episodes=sum(episodes, na.rm=TRUE),
+            beddays=sum(beddays, na.rm=TRUE),
+            total_episodes=sum(total_episodes_all, na.rm=TRUE),
+            total_beddays=sum(total_beddays_all, na.rm=TRUE),
+            .by=c(icb, icb_2024_name, year))|>
+  filter(year!="2014/15")|>
+  mutate(percentage_episodes=round((episodes/total_episodes)*100,1),
+         percentage_beddays=round((beddays/total_beddays)*100,1))|>
+  as.data.frame()
+```
+
 ## Mitigators included in this analysis
 
 The numbers of admissions and beddays give the potentially mitigable activity for England in 2023/24.
@@ -290,13 +304,11 @@ number_icb_admissions_all_map
 #| fig-cap: !expr get_caption_by_icb(cohort_title, "perc", "admissions", treatment_type)
 total_beddays_admissions <- targets::tar_read(total_beddays_admissions)
 
-england_value <- 2
-# get_england_value(
-  # "perc", 
-  # activity = "admissions",
-  # treatment = treatment_type,
-  # data = overview_total,
-  # cohort = cohort)
+england_value <- get_england_value(
+  "perc_total_mitigation",
+  activity = "admissions",
+  treatment = treatment_type,
+  data = number_percentage_over_time)
 
 get_summary_by_icb_bar(
   summary_icb_admissions_all, 
@@ -430,14 +442,11 @@ number_icb_beddays_all_map
 #| fig-cap: !expr get_caption_by_icb(cohort_title, "perc", "beddays", treatment_type)
 total_beddays_admissions <- targets::tar_read(total_beddays_admissions)
 
-england_value <- 2 
-# get_england_value(
-#   "perc",
-#   activity = "beddays",
-#   treatment = treatment_type,
-#   data = overview_total,
-#   cohort = cohort
-# )
+england_value <- get_england_value(
+  "perc_total_mitigation",
+  activity = "beddays",
+  treatment = treatment_type,
+  data = number_percentage_over_time)
 
 get_summary_by_icb_bar(
   summary_icb_beddays_all,
@@ -528,19 +537,6 @@ To help understand the variability between ICBs we have calculated for each ICB 
 #### Number over time
 
 ```{r}
-
-number_percentage_over_time<-numbers_over_time_total_mitigation|>
-  left_join(denominator_over_time, by=c("age_range", "sex", "year", "icb", "icb_2024_name"))|>
-  summarise(episodes=sum(episodes, na.rm=TRUE),
-            beddays=sum(beddays, na.rm=TRUE),
-            total_episodes=sum(total_episodes_all, na.rm=TRUE),
-            total_beddays=sum(total_beddays_all, na.rm=TRUE),
-            .by=c(icb, icb_2024_name, year))|>
-  filter(year!="2014/15")|>
-  mutate(percentage_episodes=round((episodes/total_episodes)*100,1),
-         percentage_beddays=round((beddays/total_beddays)*100,1))|>
-  as.data.frame()
-
 # England average numbers and % change
 england_average_numbers_episodes<-calculating_england_average_numbers(number_percentage_over_time, episodes)
 
