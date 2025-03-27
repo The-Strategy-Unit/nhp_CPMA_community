@@ -258,10 +258,20 @@ list(
       la_code_lookup,
       la_population_data,
       standard_england_pop_2021_census,
-      beddays
+      episodes
       )
     ),
- 
+  tar_target(
+    la_age_sex_standardised_rates_beddays_total_mitigation,
+    generating_la_age_sex_standardised_rates_for_trends(
+      numbers_over_time_local_authority_total_mitigation |>
+        mutate(cohorts = "all"),
+      la_code_lookup,
+      la_population_data,
+      standard_england_pop_2021_census,
+      beddays
+    )
+  ),
   # Descriptive analysis -------------------------------------------------------
   ## Overview of mitigator -----------------------------------------------------
   tar_target(total_beddays_admissions, get_total_beddays_admissions(sc)),
@@ -562,30 +572,45 @@ list(
     )
   ),
   ## For summary ---------------------------------------------------------------
-  tarchetypes::tar_map(
-    list(activity = c("admissions", "beddays")),
-    tar_target(
-      summary_icb_all,
-      get_summary_by_geography(
-        icb_age_sex_standardised_rates_episodes_total_mitigation,
-        "all",
-        total_beddays_admissions_by_icb,
-        activity,
-        "icb"
-      )
+  
+  tar_target(
+    summary_icb_admissions_all,
+    get_summary_by_geography(
+      icb_age_sex_standardised_rates_episodes_total_mitigation,
+      "all",
+      total_beddays_admissions_by_icb,
+      "admissions",
+      "icb"
     )
   ),
-  tarchetypes::tar_map(
-    list(activity = c("admissions", "beddays")),
-    tar_target(
-      summary_la_all,
-      get_summary_by_geography(
-        la_age_sex_standardised_rates_episodes_total_mitigation,
-        "all",
-        total_beddays_admissions_by_la,
-        activity,
-        "ladcode23"
-      )
+  tar_target(
+    summary_icb_beddays_all,
+    get_summary_by_geography(
+      icb_age_sex_standardised_rates_beddays_total_mitigation,
+      "all",
+      total_beddays_admissions_by_icb,
+      "beddays",
+      "icb"
+    )
+  ),
+  tar_target(
+    summary_la_admissions_all,
+    get_summary_by_geography(
+      la_age_sex_standardised_rates_episodes_total_mitigation,
+      "all",
+      total_beddays_admissions_by_la,
+      "admissions",
+      "ladcode23"
+    )
+  ),
+  tar_target(
+    summary_la_beddays_all,
+    get_summary_by_geography(
+      la_age_sex_standardised_rates_beddays_total_mitigation,
+      "all",
+      total_beddays_admissions_by_la,
+      "beddays",
+      "ladcode23"
     )
   )
   
