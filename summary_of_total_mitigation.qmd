@@ -846,7 +846,7 @@ Age and sex standardised rates of activity for local authority areas
 #### Admissions
 ```{r}
 #| label: table-local_authority_over_time_episodes
-#| fig-cap: Table of the standardised rate of potentially mitigable admissions over time by local authority area. 
+#| fig-cap: Table of the standardised rate of all potentially mitigable admissions by Local Authority over the last 5 years, including the percentage change between 2018/19 and 2023/24.  
 
 la_age_sex_standardised_rates_episodes_total_mitigation<-tar_read(la_age_sex_standardised_rates_episodes_total_mitigation)
 
@@ -861,7 +861,7 @@ DT::datatable(la_episode_table)
 #### Beddays
 ```{r}
 #| label: table_local_authority_over_time_beddays
-#| fig-cap: Table of the standardised rate of potentially mitigable beddays over time by local authority area. 
+#| fig-cap: Table of the standardised rate of all potentially mitigable beddays by Local Authority over the last 5 years, including the percentage change between 2018/19 and 2023/24.  
 
 la_age_sex_standardised_rates_beddays_total_mitigation<-tar_read(la_age_sex_standardised_rates_beddays_total_mitigation)
 
