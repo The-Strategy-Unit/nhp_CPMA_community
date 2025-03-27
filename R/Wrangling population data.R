@@ -211,6 +211,8 @@ generating_england_age_sex_standardised_rates<-function(data, icb_pop, standard_
       left_join(data, by=c("resladst_ons", "year", "age_range", "sex", "cohorts"))|>
       left_join(la_lookup, by=c("resladst_ons"="old_la_code"))|>
       mutate(resladst_ons=ifelse(is.na(new_la_code), resladst_ons, new_la_code))|>
+      summarise(episodes=sum(episodes), beddays=sum(beddays),
+                .by=c(age_range, sex, resladst_ons, cohorts, year, fyear))|>
       dplyr::left_join(la_pop|>mutate(sex=as.character(sex)), by = c("resladst_ons"="ladcode23", "age_range", "sex", "year"="fyear")) |>
       dplyr::left_join(standard_pop, by = c("age_range", "sex")) |>
       dplyr::filter(!is.na(resladst_ons),
