@@ -1,5 +1,6 @@
 # Functions used to generate captions for outputs.
 
+# General formatting -----------------------------------------------------------
 #' Gets the denominator of the percentage for the caption.
 #' 
 #' If the metric is a percentage, creates the phrase for the denominator of the percentage.
@@ -17,6 +18,24 @@ format_denominator_for_caption <- function(metric, activity_type, treatment_type
   }
   
   return(denominator)
+}
+
+#' Formats the geography so can be used in a caption.
+#'
+#' @param geography Either `"icb"`,`"la"` or other.
+#'
+#' @return A string.
+format_geography_for_caption <- function(geography) {
+  
+  caption <- if(geography == "icb") {
+    "Integrated Care Board"
+  } else if (geography == "la") {
+    "Local Authority"
+  } else {
+    geography
+  }
+  
+  return(caption)
 }
 
 #' Formats the group name to a phrase more suitable for captions.
@@ -74,6 +93,7 @@ format_treatment_for_caption <- function(treatment_type) {
   return(caption)
 }
 
+# Comparative ------------------------------------------------------------------
 #' Get a caption for the tables of number/percentage/rates of mitigable admissions/beddays by mitigator by ICB.
 #'
 #' @param cohort A string for the mitigator cohort.
@@ -95,10 +115,10 @@ get_caption_by_geography <- function(cohort, metric, activity_type, treatment_ty
   if(cohort == "All Mitigation") {
     cohort <- ""
     all <- "all "
-    } else {
+  } else {
     cohort <- glue::glue(" for {cohort}")
     all <- ""
-    }
+  }
   
   caption <- glue::glue("{metric} of {all}mitigable {activity_type}{denominator}{cohort} for ICBs in 2023/24.")
   
@@ -136,6 +156,7 @@ get_caption_by_geography_table <- function(cohort,
   
 }
 
+# Descriptive ------------------------------------------------------------------
 #' Get a caption for the plots/tables of percentage/rates of mitigable admissions/beddays by group .
 #'
 #' @param metric Either `"perc"` or` "rate"`.
@@ -189,8 +210,7 @@ get_caption_top_ten_specialties <- function(cohort, activity_type) {
   return(caption)
 }
 
-
-
+# Overlap ----------------------------------------------------------------------
 #' Get caption for the number of cohorts charts.
 #'
 #' @param cohort A string for the mitigator cohort.
@@ -227,6 +247,38 @@ get_caption_upset_plots <- function(cohort, activity_type){
   return(caption)
 }
 
+# Trends -----------------------------------------------------------------------
+
+#' Get caption for the total activity vs percentage change plots.
+#'
+#' @param cohort A string for the mitigator cohort.
+#' @param activity_type Either `"admissions"` or `"beddays"`.
+#'
+#' @return A string.
+get_caption_activity_vs_perc_change <- function(cohort,
+                                                activity_type) {
+  caption <- glue::glue("The standardised rate of {cohort} {activity_type} (in 2018/19) versus the percentage change in {activity_type} between 2018/19 and 2023/24 for ICBs.")
+  
+  return(caption)
+}
+
+
+
+
+
+#' Get caption for the local authority trends tables.
+#'
+#' @param cohort A string for the mitigator cohort.
+#' @param activity_type Either `"admissions"` or `"beddays"`.
+#'
+#' @return A string.
+get_caption_la_trends <- function(cohort,
+                                  activity_type) {
+  caption <- glue::glue("Table of the standardised rate of {cohort} {activity_type} by Local Authority over the last 5 years, including the percentage change between 2018/19 and 2023/24.")
+  
+  return(caption)
+}
+
 #' Get caption for the trends plots.
 #'
 #' @param cohort A string for the mitigator cohort.
@@ -235,7 +287,7 @@ get_caption_upset_plots <- function(cohort, activity_type){
 #' @param geography Either `"England"`, `"icb"` or `"la"`.
 #'
 #' @return A string.
-get_caption_for_trends <- function(cohort, metric, activity_type, geography) {
+get_caption_trends <- function(cohort, metric, activity_type, geography) {
   
   metric <- format_metric_for_caption(metric) |>
     stringr::str_to_lower()
@@ -244,27 +296,9 @@ get_caption_for_trends <- function(cohort, metric, activity_type, geography) {
     "in England"
   } else {
     glue::glue("by {format_geography_for_caption(geography)}")
-    }
+  }
   
   caption <- glue::glue("The {metric} of {activity_type} for the {cohort} cohort {geography} over the last 9 years.")
-  
-  return(caption)
-}
-
-#' Formats the geography so can be used in a caption.
-#'
-#' @param geography Either `"icb"`,`"la"` or other.
-#'
-#' @return A string.
-format_geography_for_caption <- function(geography) {
-  
-  caption <- if(geography == "icb") {
-    "Integrated Care Board"
-  } else if (geography == "la") {
-    "Local Authority"
-  } else {
-    geography
-  }
   
   return(caption)
 }
@@ -276,10 +310,10 @@ format_geography_for_caption <- function(geography) {
 #' @param activity_type Either `"admissions"` or `"beddays"`.
 #'
 #' @return A string.
-get_caption_for_trends_percentage_change <- function(cohort, 
-                                                     metric, 
-                                                     activity_type, 
-                                                     treatment_type = NULL) {
+get_caption_trends_percentage_change <- function(cohort, 
+                                                 metric, 
+                                                 activity_type, 
+                                                 treatment_type = NULL) {
   metric <- format_metric_for_caption(metric, activity_type, treatment_type) |>
     stringr::str_to_lower()
   
@@ -288,28 +322,3 @@ get_caption_for_trends_percentage_change <- function(cohort,
   return(caption)
 }
 
-#' Get caption for the total activity vs percentage change plots.
-#'
-#' @param cohort A string for the mitigator cohort.
-#' @param activity_type Either `"admissions"` or `"beddays"`.
-#'
-#' @return A string.
-get_caption_for_activity_vs_perc_change <- function(cohort,
-                                                    activity_type) {
-  caption <- glue::glue("The standardised rate of {cohort} {activity_type} (in 2018/19) versus the percentage change in {activity_type} between 2018/19 and 2023/24 for ICBs.")
-  
-  return(caption)
-}
-
-#' Get caption for the local authority trends tables.
-#'
-#' @param cohort A string for the mitigator cohort.
-#' @param activity_type Either `"admissions"` or `"beddays"`.
-#'
-#' @return A string.
-get_caption_for_la_trends <- function(cohort,
-                                      activity_type) {
-  caption <- glue::glue("Table of the standardised rate of {cohort} {activity_type} by Local Authority over the last 5 years, including the percentage change between 2018/19 and 2023/24.")
-  
-  return(caption)
-}
