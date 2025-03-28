@@ -918,7 +918,7 @@ plot_of_number_over_time(number_percentage_over_time,  beddays)
 ```
 :::
 
-#### Percentage of emergency admissions
+#### Percentage of `r treatment_type_title` activity
 
 Frail Older People (high frailty) activity as a percentage of total emergency activity.
 
@@ -1031,7 +1031,7 @@ plotting_percentage_change_over_time_by_icb(number_percentage_over_time|>filter(
 
 :::
 
-#### Percentage of emergency admissions
+#### Percentage of `r treatment_type_title` activity
 
 Frail Older People (high frailty) activity as a percentage of total emergency activity by ICB.
 
