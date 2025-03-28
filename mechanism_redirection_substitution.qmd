@@ -95,7 +95,7 @@ perc_age_redirection_substitution_admissions |>
   get_perc_by_group_plot("age_range", "admissions")
 ```
 
-#### Crude rate
+#### Percentage of `r treatment_type_title` activity
 
 ```{r}
 #| label: tbl-rate_redirection_substitution_age_admissions
@@ -136,7 +136,7 @@ perc_ethnicity_redirection_substitution_admissions |>
   get_perc_by_group_plot("Ethnic_Category", "admissions")
 ```
 
-#### Crude rate
+#### Percentage of `r treatment_type_title` activity
 
 ```{r}
 #| label: tbl-rate_redirection_substitution_ethnicity_admissions
@@ -177,7 +177,7 @@ perc_imd_redirection_substitution_admissions |>
   get_perc_by_group_plot("imd19_decile", "admissions")
 ```
 
-#### Crude rate
+#### Percentage of `r treatment_type_title` activity
 
 ```{r}
 #| label: tbl-rate_redirection_substitution_imd_admissions
@@ -218,7 +218,7 @@ perc_sex_redirection_substitution_admissions |>
   get_perc_by_group_plot("sex", "admissions")
 ```
 
-#### Crude rate
+#### Percentage of `r treatment_type_title` activity
 
 ```{r}
 #| label: tbl-rate_redirection_substitution_sex_admissions
@@ -263,7 +263,7 @@ targets::tar_read(perc_age_redirection_substitution_beddays) |>
   get_perc_by_group_plot("age_range", "beddays")
 ```
 
-#### Crude rate
+#### Percentage of `r treatment_type_title` activity
 
 ```{r}
 #| label: tbl-rate_redirection_substitution_age_beddays
@@ -304,7 +304,7 @@ targets::tar_read(perc_ethnicity_redirection_substitution_beddays) |>
   get_perc_by_group_plot("Ethnic_Category", "beddays")
 ```
 
-#### Crude rate
+#### Percentage of `r treatment_type_title` activity
 
 ```{r}
 #| label: tbl-rate_redirection_substitution_ethnicity_beddays
@@ -345,7 +345,7 @@ targets::tar_read(perc_imd_redirection_substitution_beddays) |>
   get_perc_by_group_plot("imd19_decile", "beddays")
 ```
 
-#### Crude rate
+#### Percentage of `r treatment_type_title` activity
 
 ```{r}
 #| label: tbl-rate_redirection_substitution_imd_beddays
@@ -386,7 +386,7 @@ targets::tar_read(perc_sex_redirection_substitution_beddays) |>
   get_perc_by_group_plot("sex", "beddays")
 ```
 
-#### Crude rate
+#### Percentage of `r treatment_type_title` activity
 
 ```{r}
 #| label: tbl-rate_redirection_substitution_sex_beddays
@@ -478,7 +478,7 @@ For the Redirection/Substitution mechanism group we show how much of the activit
 
 ```{r, fig.width=4, fig.height=4}
 #| label: fig-number_of_cohorts_spells
-#| fig-cap: The number of mitigator cohorts that the admissions within the Redirection/Substition mechanism group are part of. It includes only admissions for mitigator cohorts within this Redirection/Substition mechanism group (2023/24).
+#| fig-cap: !expr glue::glue("{get_caption_number_of_cohorts(cohort_title, 'admissions')} It includes only admissions for mitigator cohorts within this {cohort_title} group.")
 
 plotting_barchart_number_of_cohorts_for_mechanism_group(cohort_overlap_numbers_redirection, episodes)
 ```
@@ -487,7 +487,7 @@ plotting_barchart_number_of_cohorts_for_mechanism_group(cohort_overlap_numbers_r
 
 ```{r, fig.width=4, fig.height=4}
 #| label: fig-number_of_cohorts_beddays
-#| fig-cap: The number of mitigator cohorts that the beddays within the Redirection/Substition mechanism group are part of. It includes only beddays for mitigator cohorts within this Redirection/Substition mechanism group (2023/24).
+#| fig-cap: !expr glue::glue("{get_caption_number_of_cohorts(cohort_title, 'beddays')} It includes only beddays for mitigator cohorts within this {cohort_title} group.")
 
 plotting_barchart_number_of_cohorts_for_mechanism_group(cohort_overlap_numbers_redirection, beddays)
 ```
@@ -504,7 +504,7 @@ The 15 most common cohort combinations for the Redirection/Substitution mechanis
 
 ```{r, fig.width=10, fig.height=6}
 #| label: upset_plot_frail_elderly_high_episodes
-#| fig-cap: The 15 most common mitigator cohort overlaps for admissions in the Redirection/Substition mechanism group (2023/24).
+#| fig-cap: !expr get_caption_upset_plots(cohort_title, "admissions")
 
 plot_upset_plot_mechanism_group(cohort_overlap_numbers_redirection,  mitigator_summary_table, episodes)
 
@@ -514,7 +514,7 @@ plot_upset_plot_mechanism_group(cohort_overlap_numbers_redirection,  mitigator_s
 
 ```{r, fig.width=10, fig.height=6}
 #| label: upset_plot_frail_elderly_high_bedday
-#| fig-cap: The 15 most common mitigator cohort overlaps for beddays in the Redirection/Substition mechanism group (2023/24).
+#| fig-cap: !expr get_caption_upset_plots(cohort_title, "beddays")
 
 plot_upset_plot_mechanism_group(cohort_overlap_numbers_redirection,  mitigator_summary_table, beddays)
 
@@ -828,7 +828,7 @@ To help understand the variability between ICBs we have calculated for each ICB 
 
 ```{r, fig.width=7, fig.height=3}
 #| label: fig-number_trends_spells_england
-#| fig-cap: The total number potentially mitigable Redirection and Substitution admissions in England over the last 9 years. 
+#| fig-cap: !expr get_caption_trends(cohort_title, "number", "admissions", "England")
 
 numbers_over_time<-tar_read(numbers_over_time)|>
   filter(year!="2014/15")|>
@@ -851,13 +851,13 @@ plot_of_number_over_time(number_percentage_over_time, episodes)
 
 ```{r, fig.width=7, fig.height=3}
 #| label: fig-number_trends_beddays_england
-#| fig-cap: The number of beddays potentially mitigable Redirection and Substitution beddays in England over the last 9 years. 
+#| fig-cap: !expr get_caption_trends(cohort_title, "number", "beddays", "England")
 plot_of_number_over_time(number_percentage_over_time,  beddays)
 
 ```
 :::
 
-#### Crude rate
+#### Percentage of `r treatment_type_title` activity
 
 Potentially mitigable Redirection and Substitution activity as a percentage of total activity (elective and emergency admissions/beddays).
 
@@ -866,7 +866,7 @@ Potentially mitigable Redirection and Substitution activity as a percentage of t
 
 ```{r, fig.width=7, fig.height=3}
 #| label: fig-percent_trends_spells_england
-#| fig-cap: The percentage of admissions for potentially mitigable Redirection and Substitution activity in England over the last 9 years. 
+#| fig-cap: !expr get_caption_trends(cohort_title, "perc", "admissions", "England")
 
 plot_of_percentage_over_time(number_percentage_over_time|>
                                filter(!is.na(percentage_episodes)), 
@@ -878,7 +878,7 @@ plot_of_percentage_over_time(number_percentage_over_time|>
 
 ```{r, fig.width=7, fig.height=3}
 #| label: fig-percent_trends_beddays_england
-#| fig-cap: The percentage of beddays for potentially mitigable Redirection and Substitution activity in England over the last 9 years. 
+#| fig-cap: !expr get_caption_trends(cohort_title, "perc", "beddays", "England")
 
 plot_of_percentage_over_time(number_percentage_over_time|>
                                filter(!is.na(percentage_beddays)),  beddays, total_beddays)
@@ -893,7 +893,7 @@ plot_of_percentage_over_time(number_percentage_over_time|>
 
 ```{r, fig.width=7, fig.height=3}
 #| label: fig-stardardised_trends_spells_england
-#| fig-cap: Age and sex standardised rate of potentially mitigable Redirection and Substitution admissions in England over the last 9 years. 
+#| fig-cap: !expr get_caption_trends(cohort_title, "SR", "admissions", "England") 
 
 plot_of_standardised_rates_over_time(england_age_sex_standardised_rates_episodes)
 
@@ -903,7 +903,7 @@ plot_of_standardised_rates_over_time(england_age_sex_standardised_rates_episodes
 
 ```{r, fig.width=7, fig.height=3}
 #| label: fig-stardardised_trends_beddays_england
-#| fig-cap: Age and sex standardised rate of potentially mitigable Redirection and Substitution beddays in England over the last 9 years.
+#| fig-cap: !expr get_caption_trends(cohort_title, "SR", "beddays", "England")
 
 plot_of_standardised_rates_over_time(england_age_sex_standardised_rates_beddays)
 
@@ -923,7 +923,7 @@ Note: Low numbers of admissions/beddays for Frimley ICB in 2022/23 reflect an is
 
 ```{r, fig.width=5, fig.height=3}
 #| label: fig-number_trends_spells_icb
-#| fig-cap: The number of potentially mitigable Redirection and Substitution admissions by ICB over the last 9 years. 
+#| fig-cap: !expr get_caption_trends(cohort_title, "number", "admissions", "icb") 
 
 plotting_icb_over_time(number_percentage_over_time|>
         mutate(activity=episodes),
@@ -935,7 +935,7 @@ plotting_icb_over_time(number_percentage_over_time|>
 
 ```{r, fig.height=6, fig.width=8}
 #| label: fig-percent_change_number_spells
-#| fig-cap: The percentage change in the number of potentially mitigable Redirection and Substitution admissions by ICB between 2018/19 and 2023/24. 
+#| fig-cap: !expr get_caption_trends_percentage_change(cohort_title, "number", "admissions")
 
 england_average_numbers_episodes<-calculating_england_average_numbers(number_percentage_over_time, episodes)
 
@@ -949,7 +949,7 @@ plotting_percentage_change_over_time_by_icb(number_percentage_over_time|>filter(
 
 ```{r, fig.width=5, fig.height=3}
 #| label: fig-number_trends_beddays_icb
-#| fig-cap: The number of beddays for potentially mitigable Redirection and Substitution beddays by ICB over the last 9 years.
+#| fig-cap: !expr get_caption_trends(cohort_title, "number", "beddays", "icb")
 
 plotting_icb_over_time(number_percentage_over_time|>
         mutate(activity=beddays), 'Number')
@@ -959,7 +959,7 @@ plotting_icb_over_time(number_percentage_over_time|>
 
 ```{r, fig.height=6, fig.width=8}
 #| label: fig-percent_change_number_beddays
-#| fig-cap: The percentage change in the number of potentially mitigable Redirection and Substitution beddays by ICB between 2018/19 and 2023/24. 
+#| fig-cap: !expr get_caption_trends_percentage_change(cohort_title, "number", "beddays") 
 
 england_average_numbers_beddays<-calculating_england_average_numbers(number_percentage_over_time, beddays)
 
@@ -970,7 +970,7 @@ plotting_percentage_change_over_time_by_icb(number_percentage_over_time|>filter(
 
 :::
 
-#### Crude rate
+#### Percentage of `r treatment_type_title` activity
 
 Potentially mitigable Redirection and Substitution activity as a percentage of total activity (elective and emergency activity) by ICB.
 
@@ -979,7 +979,7 @@ Potentially mitigable Redirection and Substitution activity as a percentage of t
 
 ```{r, fig.width=5, fig.height=3}
 #| label: fig-percent_trends_spells_icb
-#| fig-cap: The percentage of admissions for potentially mitigable Redirection and Substitution activity by ICB over the last 9 years. 
+#| fig-cap: !expr get_caption_trends(cohort_title, "percentage", "admissions", "icb")
 
 plotting_icb_over_time(number_percentage_over_time|>
         mutate(activity=percentage_episodes)|>
@@ -991,7 +991,7 @@ plotting_icb_over_time(number_percentage_over_time|>
 
 ```{r, fig.height=6, fig.width=8}
 #| label: fig-percent_change_percent_spells
-#| fig-cap: The percentage change in the proportion of potentially mitigable Redirection and Substitution admissions by ICB between 2018/19 and 2023/24. 
+#| fig-cap: !expr get_caption_trends_percentage_change(cohort_title, "prop", "admissions", treatment_type) 
 
 england_average_percentage_episodes<-calculating_england_average_percentage(number_percentage_over_time|> filter(!is.na(total_episodes)), episodes, total_episodes)
 
@@ -1004,7 +1004,7 @@ plotting_percentage_change_over_time_by_icb(number_percentage_over_time|>filter(
 
 ```{r, fig.width=5, fig.height=3}
 #| label: fig-percent_trends_beddays_icb
-#| fig-cap: The percentage of beddays for potentially mitigable Redirection and Substitution activity by ICB over the last 9 years. 
+#| fig-cap: !expr get_caption_trends(cohort_title, "percentage", "beddays", "icb")
 
 plotting_icb_over_time(number_percentage_over_time|>
         mutate(activity=percentage_beddays)|>
@@ -1016,7 +1016,7 @@ plotting_icb_over_time(number_percentage_over_time|>
 
 ```{r, fig.height=6, fig.width=8}
 #| label: fig-percent_change_percent_beddays
-#| fig-cap: The percentage change in the proportion of potentially mitigable Redirection and Substitution beddays by ICB between 2018/19 and 2023/24. 
+#| fig-cap: !expr get_caption_trends_percentage_change(cohort_title, "prop", "beddays", treatment_type) 
 
 england_average_percentage_beddays<-calculating_england_average_percentage(number_percentage_over_time|>
           filter(!is.na(percentage_beddays)), beddays, total_beddays)
@@ -1034,7 +1034,7 @@ plotting_percentage_change_over_time_by_icb(number_percentage_over_time|>filter(
 
 ```{r, fig.width=5, fig.height=3}
 #| label: fig-stardardised_trends_spells_icb
-#| fig-cap: Age and sex standardised rate of potentially mitigable Redirection and Substitution admissions by ICB over the last 9 years. 
+#| fig-cap: !expr get_caption_trends(cohort_title, "SR", "admissions", "icb")
 
 icb_age_sex_standardised_rates_episodes<-tar_read(icb_age_sex_standardised_rates_episodes)
 
@@ -1050,7 +1050,7 @@ plotting_icb_over_time(
 
 ```{r, fig.height=6, fig.width=8}
 #| label: fig-percent_change_standardised_spells
-#| fig-cap: The percentage change in the standardised rate of potentially mitigable Redirection and Substitution admissions by ICB between 2018/19 and 2023/24. 
+#| fig-cap: !expr get_caption_trends_percentage_change(cohort_title, "SR", "admissions")
 
 england_average_standardised_episodes<-calculating_england_average_standardised(england_age_sex_standardised_rates_episodes)
 
@@ -1064,7 +1064,7 @@ plotting_percentage_change_over_time_by_icb(icb_age_sex_standardised_rates_episo
 
 ```{r, fig.width=5, fig.height=3}
 #| label: fig-stardardised_trends_beddays_icb
-#| fig-cap: Age and sex standardised rate potentially mitigable Redirection and Substitution beddays by ICB over the last 9 years.
+#| fig-cap: !expr get_caption_trends(cohort_title, "SR", "beddays", "icb")
 
 icb_age_sex_standardised_rates_beddays<-tar_read(icb_age_sex_standardised_rates_beddays)
 
@@ -1080,7 +1080,7 @@ plotting_icb_over_time(
 
 ```{r, fig.height=6, fig.width=8}
 #| label: fig-percent_change_standardised_beddays
-#| fig-cap: The percentage change in the standardised rate of potentially mitigable Redirection and Substitution beddays by ICB between 2018/19 and 2023/24. 
+#| fig-cap: !expr get_caption_trends_percentage_change(cohort_title, "SR", "beddays") 
 
 england_average_standardised_beddays<-calculating_england_average_standardised(england_age_sex_standardised_rates_beddays)
 
@@ -1102,7 +1102,7 @@ This chart shows the percentage change for each ICB relative to it's starting le
 
 ```{r, fig.width=5, fig.height=4}
 #| label: fig-activity_vs_rate_of_change_episodes
-#| fig-cap: The standardised rate of potentially mitigable Redirection and Substitution admissions (in 2018/19) versus the percentage change in admissions between 2018/19 and 2023/24 for ICBs. 
+#| fig-cap: !expr get_caption_activity_vs_perc_change(cohort_title, "admissions")
 
 plotting_total_activity_vs_percentage_change(icb_age_sex_standardised_rates_episodes, icb_2024_name)
 
@@ -1112,7 +1112,7 @@ plotting_total_activity_vs_percentage_change(icb_age_sex_standardised_rates_epis
 
 ```{r, fig.width=5, fig.height=4}
 #| label: fig-activity_vs_rate_of_change_beddays
-#| fig-cap:  The standardised rate of potentially mitigable Redirection and Substitution beddays (in 2018/19) versus the percentage change in beddays between 2018/19 and 2023/24 for ICBs.  
+#| fig-cap: !expr get_caption_activity_vs_perc_change(cohort_title, "beddays")  
 #| 
 plotting_total_activity_vs_percentage_change(icb_age_sex_standardised_rates_beddays, icb_2024_name)
 
@@ -1129,7 +1129,7 @@ Age and sex standardised rates of activity for local authority areas.
 #### Admissions
 ```{r}
 #| label: table-local_authority_over_time_episodes
-#| fig-cap: Table of the standardised rate of potentially mitigable Redirection and Substitution admissions by Local Authority over the last 5 years, including the percentage change between 2018/19 and 2023/24. 
+#| fig-cap: !expr get_caption_la_trends(cohort_title, "admissions") 
 
 la_age_sex_standardised_rates_episodes_over_time<-tar_read(la_age_sex_standardised_rates_episodes_over_time)
 
@@ -1144,7 +1144,7 @@ DT::datatable(la_episode_table)
 #### Beddays
 ```{r}
 #| label: table_local_authority_over_time_beddays
-#| fig-cap: Table of the standardised rate of potentially mitigable Redirection and Substitution beddays by Local Authority over the last 5 years, including the percentage change between 2018/19 and 2023/24.   
+#| fig-cap: !expr get_caption_la_trends(cohort_title, "beddays")   
 
 la_age_sex_standardised_rates_beddays_over_time<-tar_read(la_age_sex_standardised_rates_beddays_over_time)
 

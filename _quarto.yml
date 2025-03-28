@@ -11,7 +11,7 @@ book:
     - summary_of_total_mitigation.qmd
     - part: mechanism_redirection_substitution.qmd
       chapters: 
-        - mitigator_frail_elderly_admissions_high.qmd
+        - mitigator_frail_elderly_high.qmd
 
 title-block-banner: "#f9bf07"
 title-block-banner-color: "#333739"
