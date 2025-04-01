@@ -107,7 +107,7 @@ get_icb_tooltip <- function(data, metric) {
 #' @return A string.
 get_note_on_dashed_line <- function(metric_title, england_value) {
   metric <- ifelse(metric_title == "Number",
-                   "average number",
+                   "ICB average",
                    stringr::str_to_lower(metric_title))
   
   symbol <- ifelse(metric_title == "Percentage", "%", "")
