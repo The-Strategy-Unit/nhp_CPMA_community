@@ -107,7 +107,7 @@ get_icb_tooltip <- function(data, metric) {
 #' @return A string.
 get_note_on_dashed_line <- function(metric_title, england_value) {
   metric <- ifelse(metric_title == "Number",
-                   "average number",
+                   "ICB average",
                    stringr::str_to_lower(metric_title))
   
   symbol <- ifelse(metric_title == "Percentage", "%", "")
@@ -253,7 +253,7 @@ get_summary_by_icb_map <- function(data, boundaries, metric) {
     ggplot2::ggplot(ggplot2::aes(fill = metric_colour, tooltip = ICB)) +
     ggplot2::geom_sf() +
     ggplot2::theme_void() +
-    ggplot2::labs(metric = metric_title)
+    ggplot2::labs(fill = metric_title)
   
   plot <- plotly::ggplotly(plot, tooltip = "tooltip") |>
     plotly::style(hoveron = "metrics")
