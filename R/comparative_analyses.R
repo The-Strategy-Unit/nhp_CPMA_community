@@ -253,7 +253,7 @@ get_summary_by_icb_map <- function(data, boundaries, metric) {
     ggplot2::ggplot(ggplot2::aes(fill = metric_colour, tooltip = ICB)) +
     ggplot2::geom_sf() +
     ggplot2::theme_void() +
-    ggplot2::labs(metric = metric_title)
+    ggplot2::labs(fill = metric_title)
   
   plot <- plotly::ggplotly(plot, tooltip = "tooltip") |>
     plotly::style(hoveron = "metrics")
