@@ -721,9 +721,9 @@ get_summary_by_geography_table(
 ```{r}
 #| label: tbl-rate_la_admissions_frail_elderly_high
 #| tbl-cap: !expr get_caption_by_geography_table(cohort_title, "admissions", treatment_type, "la")
-# targets::tar_read(summary_la_admissions_frail_elderly_high) |>
-#   get_summary_by_geography_table("episodes",
-#                                  treatment_type)
+targets::tar_read(summary_la_admissions_frail_elderly_high) |>
+  get_summary_by_geography_table("episodes",
+                                 treatment_type)
 ```
 :::
 
@@ -785,8 +785,6 @@ number_icb_beddays_frail_elderly_high_map
 ```{r}
 #| label: fig-perc_icb_beddays_frail_elderly_high_bar
 #| fig-cap: !expr get_caption_by_geography(cohort_title, "perc", "beddays", treatment_type)
-total_beddays_admissions <- targets::tar_read(total_beddays_admissions)
-
 england_value <- get_england_value(
   "perc",
   activity = "beddays",
@@ -861,9 +859,8 @@ get_summary_by_geography_table(
 ```{r}
 #| label: tbl-rate_la_beddays_frail_elderly_high
 #| tbl-cap: !expr get_caption_by_geography_table(cohort_title, "beddays", treatment_type, "la")
-
-# targets::tar_read(summary_la_beddays_frail_elderly_high) |>
-#   get_summary_by_geography_table("beddays", treatment_type)
+targets::tar_read(summary_la_beddays_frail_elderly_high) |>
+  get_summary_by_geography_table("beddays", treatment_type)
 ```
 :::
 :::
