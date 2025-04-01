@@ -1,0 +1,135 @@
+::: panel-tabset
+
+#### Integrated Care Board
+
+```{r}
+#| output: false
+number_icb_map <- summary_icb |>
+  get_summary_by_icb_map(icb_23_shp, "total_count")
+
+perc_icb_map <- summary_icb |>
+  get_summary_by_icb_map(icb_23_shp, "perc")
+
+rate_icb_map <- summary_icb |>
+  get_summary_by_icb_map(icb_23_shp, "value")
+```
+
+::: panel-tabset
+##### Number of admissions
+
+::: panel-tabset
+###### Bars
+
+```{r}
+#| label: fig-number_icb_bar
+#| fig-cap: !expr get_caption_by_geography(cohort_title, "number", activity_type)
+england_value <- get_england_value(
+  "total_count", 
+  data = summary_icb)
+
+get_summary_by_icb_bar(
+  summary_icb, 
+  "total_count", 
+  cohort,
+  england_value)
+
+rm(england_value)
+```
+
+###### Map
+
+```{r}
+#| label: fig-number_icb_map
+#| fig-cap: !expr get_caption_by_geography(cohort_title, "number", activity_type)
+number_icb_map
+```
+:::
+
+##### Percentage of `r treatment_type_title` activity
+
+::: panel-tabset
+###### Bars
+
+```{r}
+#| label: fig-perc_icb_bar
+#| fig-cap: !expr get_caption_by_geography(cohort_title, "perc", activity_type, treatment_type)
+
+england_value <- get_england_value(
+  "perc", 
+  activity = activity_type,
+  treatment = treatment_type,
+  data = overview,
+  cohort = cohort)
+
+get_summary_by_icb_bar(
+  summary_icb, 
+  "perc", 
+  cohort,
+  england_value)
+
+rm(england_value)
+```
+
+###### Map
+
+```{r}
+#| label: fig-perc_icb_map
+#| fig-cap: !expr get_caption_by_geography(cohort_title, "perc", activity_type, treatment_type)
+perc_icb_map
+```
+:::
+
+##### Age and sex standardised rates per 100,000 population
+
+::: panel-tabset
+###### Bars
+
+```{r}
+#| label: fig-rate_icb_bar
+#| fig-cap: !expr get_caption_by_geography(cohort_title, "SR", activity_type)
+england_value <- get_england_value(
+  "value",
+  data = standardised_rates,
+  cohort = cohort)
+
+get_summary_by_icb_bar(
+  summary_icb, 
+  "value", 
+  cohort,
+  england_value)
+
+rm(england_value)
+```
+
+###### Map
+
+```{r}
+#| label: fig-rate_icb_map
+#| fig-cap: !expr get_caption_by_geography(cohort_title, "SR", activity_type)
+rate_icb_map
+```
+:::
+
+##### Table
+
+```{r}
+#| label: tbl-rate_icb
+#| tbl-cap: !expr get_caption_by_geography_table(cohort_title, activity_type, treatment_type, "icb")
+get_summary_by_geography_table(
+  summary_icb,
+  "admissions", 
+  treatment_type)
+```
+
+:::
+
+#### Local Authority
+
+```{r}
+#| label: tbl-rate_la
+#| tbl-cap: !expr get_caption_by_geography_table(cohort_title, activity_type, treatment_type, "la")
+# summary_la |>
+#   get_summary_by_geography_table("admissions",
+#                                  treatment_type)
+```
+:::
