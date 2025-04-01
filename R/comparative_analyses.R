@@ -170,6 +170,10 @@ get_summary_by_geography <- function(data,
 #' @param activity_type Either `"admissions"` or `"beddays"`.
 #' @param treatment_type Either `"emergency"` or `"elective"`.
 get_summary_by_geography_table <- function(data, activity_type, treatment_type) {
+  if(activity_type == "admissions") {
+    activity_type <- "episodes"
+  }
+  
   table <- data |>
     dplyr::select(
       dplyr::any_of(c(
