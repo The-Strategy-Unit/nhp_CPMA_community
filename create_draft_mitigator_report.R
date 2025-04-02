@@ -129,7 +129,8 @@ get_treatment_type <- function(mitigator, lookup){
 data <- c(
   "```{r data}",
   "#| output: false",
-  "mitigator_summary_table <- readxl::read_excel(\"summary_mitigators_table.xlsx\")",
+  "mitigator_summary_table <- readxl::read_excel(\"summary_mitigators_table.xlsx\") |>
+  dplyr::mutate(mechanism = snakecase::to_snake_case(mechanism))",
   "",
   "england_age_sex_standardised_rates_episodes <- tar_read(england_age_sex_standardised_rates_episodes) |>
     filter(cohorts == cohort)",
@@ -213,7 +214,7 @@ invisible(purrr::map(
   mitigators_and_mechanisms, 
   ~ create_draft_mitigator_qmd(
     ., 
-    my_file = get_filename(mitigators), 
+    my_file = get_filename(mitigators_and_mechanisms), 
     summary_table = mitigator_summary_table,
     treatment_lookup = mitigators_and_mechanisms_treatment_lookup)))
 
