@@ -617,30 +617,12 @@ knitr::knit_child(
 
 Age and sex standardised rates of activity for local authority areas. 
 
-::: panel-tabset
-#### Admissions
 ```{r}
-#| label: table-local_authority_over_time_episodes
-#| fig-cap: !expr get_caption_la_trends(cohort_title, "admissions") 
-
-la_age_sex_standardised_rates_episodes_over_time<-tar_read(la_age_sex_standardised_rates_episodes_over_time)
-
-la_episode_table<-generating_la_table(la_age_sex_standardised_rates_episodes_over_time, cohort)
-
-DT::datatable(la_episode_table)
+#| output: asis
+knitr::knit_child(
+  input = "child-dir/_child-trends_local-authority.qmd",
+  envir = environment(),
+  quiet = TRUE
+  ) |>
+  cat(sep = '\n')
 ```
-
-
-#### Beddays
-```{r}
-#| label: table_local_authority_over_time_beddays
-#| fig-cap: !expr get_caption_la_trends(cohort_title, "beddays")   
-
-la_age_sex_standardised_rates_beddays_over_time<-tar_read(la_age_sex_standardised_rates_beddays_over_time)
-
-la_beddays_table<-generating_la_table(la_age_sex_standardised_rates_beddays_over_time, cohort)
-
-DT::datatable(la_beddays_table)
-```
-
-:::
