@@ -1,0 +1,41 @@
+# Introduction
+
+## The New Hospitals Programme (NHP)
+
+The government has committed to building more than 40 new hospitals by 2030. The New Hospital Programme (NHP), a partnership between DHSC and NHSE, aims to ensure that this new hospital infrastructure will meet the future needs of the population and represents value for money.
+
+Estimating future activity levels is a critical early step in scaling and designing new hospital infrastructure. The Demand and Capacity Modelling Tool has been developed by the Strategy Unit to support DHSC and its stakeholders to make robust and auditable assessments of activity that hospitals may need to accommodate in future.
+
+## Activity Mitigation
+
+One component of the Demand and Capactity Modelling Tool is activity mitigation.
+
+A key principle in current healthcare planning is the need to shift care delivery away from acute hospital settings and toward alternative community-based settings. This approach assumes that certain subsets of hospital activity can be addressed through redirection to other services, substitution with alternative provisions (existing or new), or through prevention and de-adoption efforts.
+
+The Strategy Unit has developed a set of algorithms to identify subsets of mitigable hospital activity using routine datasets, such as Hospital Episode Statistics (HES). These algorithms, refined over several years and informed by diverse evidence sources, underpin the mitigation components of the New Hospitals Demand and Capacity Model.
+
+This analysis focuses on activity related to 29 of the inpatient mitigators. This analysis includes all potential activity that meets the criteria for mitigable activity, but it should be noted that only a proportion of this activity would be mitigable in practice.
+
+## Aims
+
+The aim of this work is to understanding the scale, trends, and regional variations of potentially mitigable hospital activity at national and sub-national levels to provide critical intelligence for strategic healthcare planning.
+
+Specifically,
+
+-   Quantify the current scale (2023/24) of mitigable activity in terms of hospital admissions and beddays, both nationally and sub-nationally. Including totals across all identified mitigators as well as individual mitigators.
+
+-   Provide descriptive analysis of the demographic and clinical characteristics of activity within each mitigator cohort.
+
+-   Identify and quantify overlaps between mitigators to highlight potential scale and risks of double counting opportunities.
+
+-   Conduct comparative analysis of mitigable activity levels in total and for each mitigator across sub-national regions.
+
+-   Examine trends over time in mitigable activity at national and sub-national levels, both in aggregate and for individual mitigators.
+
+## Report layout
+
+This report includes:
+
+-   **Summary of total potential mitigation**, this summarises the total mitigable activity for England, including trends and comparative analysis of total potential mitigation for ICB and LA areas. It also illustrates the potential for double counting of activity.
+-   **Summary of total potential mitigation by mechanism of mitigation group**. The mitigators can be divided into 4 groups based on the mechanism by which mitigation could occurs: Redirection/Substitution, Prevention, Relocation & Efficiencies and Efficiencies. Therefore there are 4 pages that each summarise the total potential mitigation for each Mechanism of mitigation group.
+-   29 pages one for each **Individual mitigator cohort** included within this analysis

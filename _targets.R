@@ -236,7 +236,8 @@ list(
   tar_target(
     la_age_sex_standardised_rates_episodes_over_time,
     generating_la_age_sex_standardised_rates_for_trends(
-      numbers_over_time_local_authority,
+      numbers_over_time_local_authority_sex1,
+      numbers_over_time_local_authority_sex2,
       la_code_lookup,
       la_population_data,
       standard_england_pop_2021_census,
@@ -247,19 +248,22 @@ list(
   tar_target(
     la_age_sex_standardised_rates_beddays_over_time,
     generating_la_age_sex_standardised_rates_for_trends(
-      numbers_over_time_local_authority,
+      numbers_over_time_local_authority_sex1,
+      numbers_over_time_local_authority_sex2,
       la_code_lookup,
       la_population_data,
       standard_england_pop_2021_census,
       beddays
     )
   ),
+
   
   tar_target(
     la_age_sex_standardised_rates_episodes_total_mitigation,
     generating_la_age_sex_standardised_rates_for_trends(
       numbers_over_time_local_authority_total_mitigation |>
         mutate(cohorts = "all"),
+      NA,
       la_code_lookup,
       la_population_data,
       standard_england_pop_2021_census,
@@ -271,6 +275,7 @@ list(
     generating_la_age_sex_standardised_rates_for_trends(
       numbers_over_time_local_authority_total_mitigation |>
         mutate(cohorts = "all"),
+      NA,
       la_code_lookup,
       la_population_data,
       standard_england_pop_2021_census,
@@ -459,8 +464,13 @@ list(
   ),
   
   tar_target(
-    numbers_over_time_local_authority,
-    Formatting_la_data_for_trends("SL_AF_describing_mitigators_local_authority_by_yr")
+    numbers_over_time_local_authority_sex1,
+    Formatting_la_data_for_trends("SL_AF_describing_mitigators_local_authority_by_yr", 1)
+  ),
+  
+  tar_target(
+    numbers_over_time_local_authority_sex2,
+    Formatting_la_data_for_trends("SL_AF_describing_mitigators_local_authority_by_yr", 2)
   ),
   
   tar_target(

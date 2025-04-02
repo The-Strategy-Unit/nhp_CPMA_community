@@ -199,10 +199,17 @@ generating_england_age_sex_standardised_rates<-function(data, icb_pop, standard_
   
   
 }
-
-
   
-  generating_la_age_sex_standardised_rates_for_trends <- function(data, la_lookup, la_pop, standard_pop,  activity_type) {
+  generating_la_age_sex_standardised_rates_for_trends <- function(data1, data2, la_lookup, la_pop, standard_pop,  activity_type) {
+    
+    dataset_name<-deparse(substitute(data2))
+    
+    if(dataset_name=="NA"){
+      data<-data1
+    }
+    if(dataset_name!="NA"){
+      data<-rbind(data1, data2)
+    }
     
     expanded_data<-data|>
       expand(age_range, sex, cohorts, year,resladst_ons)
@@ -211,14 +218,19 @@ generating_england_age_sex_standardised_rates<-function(data, icb_pop, standard_
       left_join(data, by=c("resladst_ons", "year", "age_range", "sex", "cohorts"))|>
       left_join(la_lookup, by=c("resladst_ons"="old_la_code"))|>
       mutate(resladst_ons=ifelse(is.na(new_la_code), resladst_ons, new_la_code))|>
-      summarise(episodes=sum(episodes), beddays=sum(beddays),
+      summarise(episodes=sum(episodes, na.rm=TRUE), beddays=sum(beddays, na.rm=TRUE),
                 .by=c(age_range, sex, resladst_ons, cohorts, year, fyear))|>
       dplyr::left_join(la_pop|>mutate(sex=as.character(sex)), by = c("resladst_ons"="ladcode23", "age_range", "sex", "year"="fyear")) |>
       dplyr::left_join(standard_pop, by = c("age_range", "sex")) |>
       dplyr::filter(!is.na(resladst_ons),
                     startsWith(resladst_ons, "E"),
                     resladst_ons!="E99999999",
-                    age_range != "NA") |>
+                    age_range != "NA",
+                    episodes != "NA",
+                    beddays!="NA",
+                    !is.na(sex),
+                    !is.na(cohorts),
+                    !is.na(year)) |>
       mutate(episodes=ifelse(is.na(episodes), 0, episodes),
              beddays=ifelse(is.na(beddays), 0, beddays) )|>
       dplyr::rename(activity = {{activity_type}}) |>
