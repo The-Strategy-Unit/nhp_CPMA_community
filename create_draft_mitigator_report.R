@@ -39,14 +39,18 @@ get_comparative_section <- function(activity_type) {
 }
 
 get_filename <- function(mitigator) {
-  filename <- if(mitigator %in% c("redirection_subsititution",
-                                  "prevention",
-                                  "efficiencies",
-                                  "efficiencies_relocation")) {
-    glue::glue("mechanism_{mitigator}.qmd")
+  type <- if (mitigator %in% c(
+    "redirection_subsititution",
+    "prevention",
+    "efficiencies",
+    "efficiencies_relocation"
+  )) {
+    "mechanism"
   } else {
-    glue::glue("mitigator_{mitigator}.qmd")
+    "mitigator"
   }
+  
+  filename <- glue::glue("DRAFT_{type}_{mitigator}.qmd") # will remove draft prefix after testing
   
   return(filename)
 }
@@ -203,6 +207,7 @@ mitigators_and_mechanisms <- mitigators_and_mechanisms_treatment_lookup |>
 # Creating draft quarto reports ------------------------------------------------
 # Whilst testing have limited to just one mitigator:
 mitigators_and_mechanisms <- c("eol_care_2_days") 
+# exclude already existing ones?
 
 invisible(purrr::map(
   mitigators_and_mechanisms, 
