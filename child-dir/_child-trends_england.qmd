@@ -1,3 +1,17 @@
+```{r}
+numbers_over_time <- tar_read(numbers_over_time) |>
+  filter(year != "2014/15")
+
+denominator_over_time <- tar_read(denominator_over_time)
+icb_population_data <- tar_read(icb_population_data)
+
+number_percentage_over_time <-  data_number_percentage_over_time_icb(
+  denominator_over_time,
+  numbers_over_time,
+  cohort,
+  treatment_type)
+```
+
 ::: panel-tabset
 #### Number over time
 

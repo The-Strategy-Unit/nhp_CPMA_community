@@ -1,3 +1,9 @@
+```{r}
+icb_age_sex_standardised_rates_episodes <- tar_read(icb_age_sex_standardised_rates_episodes)
+
+icb_age_sex_standardised_rates_beddays <- tar_read(icb_age_sex_standardised_rates_beddays)
+```
+
 ::: panel-tabset
 #### Number over time
 

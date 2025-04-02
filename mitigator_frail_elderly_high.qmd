@@ -568,8 +568,6 @@ knitr::knit_child(
 ```{r}
 #| output: asis
 activity_type <- "admissions"
-summary_icb <- targets::tar_read_raw(glue::glue("summary_icb_{activity_type}_{cohort}"))
-summary_la <- targets::tar_read_raw(glue::glue("summary_la_{activity_type}_{cohort}"))
 standardised_rates <- england_age_sex_standardised_rates_episodes
 
 knitr::knit_child(
@@ -585,8 +583,6 @@ knitr::knit_child(
 ```{r}
 #| output: asis
 activity_type <- "beddays"
-summary_icb <- targets::tar_read_raw(glue::glue("summary_icb_{activity_type}_{cohort}"))
-summary_la <- targets::tar_read_raw(glue::glue("summary_la_{activity_type}_{cohort}"))
 standardised_rates <- england_age_sex_standardised_rates_beddays
 
 knitr::knit_child(
@@ -614,21 +610,6 @@ To help understand the variability between ICBs we have calculated for each ICB 
 ### England
 
 ```{r}
-numbers_over_time <- tar_read(numbers_over_time) |>
-  filter(year != "2014/15")
-
-denominator_over_time <- tar_read(denominator_over_time)
-
-icb_population_data <- tar_read(icb_population_data)
-
-number_percentage_over_time <- data_number_percentage_over_time_icb(
-  denominator_over_time,
-  numbers_over_time,
-  cohort,
-  treatment_type)
-```
-
-```{r}
 #| output: asis
 knitr::knit_child(
   input = "child-dir/_child-trends_england.qmd",
@@ -641,12 +622,6 @@ knitr::knit_child(
 ### ICB
 
 Note: Low numbers of admissions/beddays for Frimley ICB in 2022/23 reflect an issue with data submissions for this period. 
-
-```{r}
-icb_age_sex_standardised_rates_episodes <- tar_read(icb_age_sex_standardised_rates_episodes)
-
-icb_age_sex_standardised_rates_beddays <- tar_read(icb_age_sex_standardised_rates_beddays)
-```
 
 ```{r}
 #| output: asis
@@ -671,4 +646,3 @@ knitr::knit_child(
   ) |>
   cat(sep = '\n')
 ```
-
