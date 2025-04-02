@@ -550,26 +550,15 @@ Often overlap between a small number of groups can be visualised using Venn diag
 
 The 15 most common cohort combinations for the Elderly Frail High cohort are shown. For this cohort there are a very large number of different cohort combinations, so there are many smaller size cohort combinations that are not shown (all combinations together would add to 100%).
 
-::: panel-tabset
-#### Admissions
-
-```{r, fig.width=10, fig.height=6}
-#| label: upset_plot_frail_elderly_high_episodes
-#| fig-cap: !expr get_caption_upset_plots(cohort_title, "admissions")
-
-plot_upset_plot(overlap_numbers,  mitigator_summary_table, episodes)
-
+```{r}
+#| output: asis
+knitr::knit_child(
+  input = "child-dir/_child-overlap_most-common.qmd",
+  envir = environment(),
+  quiet = TRUE
+  ) |>
+  cat(sep = '\n')
 ```
-
-#### Beddays
-
-```{r, fig.width=10, fig.height=6}
-#| label: upset_plot_frail_elderly_high_bedday
-#| fig-cap: !expr get_caption_upset_plots(cohort_title, "beddays")
-
-plot_upset_plot(overlap_numbers,  mitigator_summary_table, beddays)
-```
-:::
 
 ## Comparative Analysis
 
@@ -580,7 +569,7 @@ plot_upset_plot(overlap_numbers,  mitigator_summary_table, beddays)
 #| output: asis
 activity_type <- "admissions"
 summary_icb <- targets::tar_read_raw(glue::glue("summary_icb_{activity_type}_{cohort}"))
-#summary_la <- targets::tar_read_raw(glue::glue("summary_la_{activity_type}_{cohort}"))
+summary_la <- targets::tar_read_raw(glue::glue("summary_la_{activity_type}_{cohort}"))
 standardised_rates <- england_age_sex_standardised_rates_episodes
 
 knitr::knit_child(
@@ -597,7 +586,7 @@ knitr::knit_child(
 #| output: asis
 activity_type <- "beddays"
 summary_icb <- targets::tar_read_raw(glue::glue("summary_icb_{activity_type}_{cohort}"))
-#summary_la <- targets::tar_read_raw(glue::glue("summary_la_{activity_type}_{cohort}"))
+summary_la <- targets::tar_read_raw(glue::glue("summary_la_{activity_type}_{cohort}"))
 standardised_rates <- england_age_sex_standardised_rates_beddays
 
 knitr::knit_child(
@@ -935,11 +924,11 @@ Age and sex standardised rates of activity for local authority areas
 #| label: table-local_authority_over_time_episodes
 #| fig-cap: !expr get_caption_la_trends(cohort_title, "admissions") 
 
-# la_age_sex_standardised_rates_episodes_over_time<-tar_read(la_age_sex_standardised_rates_episodes_over_time)
-# 
-# la_episode_table<-generating_la_table(la_age_sex_standardised_rates_episodes_over_time, cohort)
-# 
-# DT::datatable(la_episode_table)
+la_age_sex_standardised_rates_episodes_over_time<-tar_read(la_age_sex_standardised_rates_episodes_over_time)
+
+la_episode_table<-generating_la_table(la_age_sex_standardised_rates_episodes_over_time, cohort)
+
+DT::datatable(la_episode_table)
 
 
 ```
@@ -949,12 +938,12 @@ Age and sex standardised rates of activity for local authority areas
 ```{r}
 #| label: table_local_authority_over_time_beddays
 #| fig-cap: !expr get_caption_la_trends(cohort_title, "beddays")  
-# 
-# la_age_sex_standardised_rates_beddays_over_time<-tar_read(la_age_sex_standardised_rates_beddays_over_time)
-# 
-# la_beddays_table<-generating_la_table(la_age_sex_standardised_rates_beddays_over_time, cohort)
-# 
-# DT::datatable(la_beddays_table)
+ 
+la_age_sex_standardised_rates_beddays_over_time<-tar_read(la_age_sex_standardised_rates_beddays_over_time)
+
+la_beddays_table<-generating_la_table(la_age_sex_standardised_rates_beddays_over_time, cohort)
+
+DT::datatable(la_beddays_table)
 
 ```
 

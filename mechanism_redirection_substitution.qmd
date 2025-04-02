@@ -506,27 +506,15 @@ Often overlap between a small number of groups can be visualised using Venn diag
 
 The 15 most common cohort combinations for the Redirection/Substitution mechanism group are shown. 
 
-::: panel-tabset
-#### Admissions
-
-```{r, fig.width=10, fig.height=6}
-#| label: upset_plot_frail_elderly_high_episodes
-#| fig-cap: !expr get_caption_upset_plots(cohort_title, "admissions")
-
-plot_upset_plot_mechanism_group(overlap_numbers,  mitigator_summary_table, episodes)
-
+```{r}
+#| output: asis
+knitr::knit_child(
+  input = "child-dir/_child-overlap_most-common.qmd",
+  envir = environment(),
+  quiet = TRUE
+  ) |>
+  cat(sep = '\n')
 ```
-
-#### Beddays
-
-```{r, fig.width=10, fig.height=6}
-#| label: upset_plot_frail_elderly_high_bedday
-#| fig-cap: !expr get_caption_upset_plots(cohort_title, "beddays")
-
-plot_upset_plot_mechanism_group(overlap_numbers,  mitigator_summary_table, beddays)
-
-```
-:::
 
 ## Comparative Analysis
 
