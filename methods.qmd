@@ -35,7 +35,7 @@ Where the activity for the cohort is given as a percentage of total activity, th
 ### Descriptive analysis
 
 - Weighting by population
-  - For age and gender used the Office of National Statistics Mid year population estimates were used- <https://www.ons.gov.uk/peoplepopulationandcommunity/populationandmigration/populationestimates/datasets/clinicalcommissioninggroupmidyearpopulationestimates..
+  - For age and gender used the Office of National Statistics Mid year population estimates were used- <https://www.ons.gov.uk/peoplepopulationandcommunity/populationandmigration/populationestimates/datasets/clinicalcommissioninggroupmidyearpopulationestimates>.
   - For IMD used the Office of National Statistics Monthly populations by Index of Multiple Deprivation (IMD) decile, England 2022 were used- <https://www.ons.gov.uk/peoplepopulationandcommunity/populationandmigration/populationprojections/adhocs/15363monthlypopulationsbyindexofmultipledeprivationimddecileenglandjanuary2019toaugust2022> 
   - For ethnicity the Office of National Statistics Ethnic group, England and Wales: Census 2021 dataset was used-
     <https://www.ons.gov.uk/peoplepopulationandcommunity/culturalidentity/ethnicity/bulletins/ethnicgroupenglandandwales/census2021> Data was recoded into NHS ethnic categories.
