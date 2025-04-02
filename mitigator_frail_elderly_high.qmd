@@ -534,27 +534,15 @@ This shows whether the activity within the Elderly Frail High activity is also i
 
 For example, Elderly Frail High cohort overlaps with all but 2 of the other mitigator cohorts. All the Elderly Frail High cohort activity is also included in the Emergency Elderly cohort, and 63% of this cohort are in the Alcohol Partially Attributable Chronic cohort.
 
-::: panel-tabset
-#### Admissions
-
-```{r, fig.width=10, fig.height=6 }
-#| label: fig-prop_other_cohorts_frail_spells
-#| fig-cap: !expr get_caption_number_of_cohorts(cohort_title, "admissions")
-
-plotting_barchart_summary_of_overlaps(overlap_numbers,cohort, episodes, mitigator_summary_table )
-
+```{r}
+#| output: asis
+knitr::knit_child(
+  input = "child-dir/_child-overlap_inclusion-within-others.qmd",
+  envir = environment(),
+  quiet = TRUE
+  ) |>
+  cat(sep = '\n')
 ```
-
-#### Beddays
-
-```{r, fig.width=10, fig.height=7 }
-#| label: fig-prop_other_cohorts_frail_beddays
-#| fig-cap: !expr get_caption_number_of_cohorts(cohort_title, "beddays")
-
-plotting_barchart_summary_of_overlaps(overlap_numbers,cohort, beddays, mitigator_summary_table)
-
-```
-:::
 
 ### Most common cohort overlaps
 
