@@ -21,9 +21,7 @@ get_comparative_section <- function(activity_type) {
     "```{r}",
     "#| output: asis",
     glue::glue("activity_type <- \"{activity_type}\""),
-    "summary_icb <- targets::tar_read_raw(glue::glue(\"summary_icb_{activity_type}_{cohort}\"))",
-    "summary_la <- targets::tar_read_raw(glue::glue(\"summary_la_{activity_type}_{cohort}\"))",
-    "standardised_rates <- england_age_sex_standardised_rates_beddays",
+    glue::glue("standardised_rates <- england_age_sex_standardised_rates_{activity_type}"),
     "",
     "knitr::knit_child(
         input = \"child-dir/_child-comparative.qmd\",
