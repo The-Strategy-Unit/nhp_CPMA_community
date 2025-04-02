@@ -1,43 +1,59 @@
-# Methods
+# Methodology
 
 NOTE: This chapter is NOT in the book yet. We will need to add it the `_quarto.yml` file once ready to share.
 
-## General
+## Hospital activity data
 
+All data on hospital activity are taken from the New Hospitals Programme (NHP) demand and capacity model data, which is derived from the Hospital Episode Statistics dataset. 
 
-Admissions and beddays are taken from the Hospital Episode Statistics dataset used for the New Hospitals Programme model. 
+The potentially mitigable activity is taken from the dataset used for the NHP demand and capacity model. All activity that meets the criteria for being potentially mitigable is included, but it should be noted that in practice only a proportion of this activity would be truly mitigable. The code used to define the potentially mitigable activity can be found here- https://github.com/The-Strategy-Unit/nhp_data/tree/main/raw_data/mitigators/ip
 
-ICB populations for each year are the Office of National Statistics mid year population estimates-  https://www.ons.gov.uk/peoplepopulationandcommunity/populationandmigration/populationestimates/datasets/clinicalcommissioninggroupmidyearpopulationestimates. As 2023/24 ICB population data was not available the 2022/23 data was used.
+Where data is given for Integrated Care Boards (ICBs) these are based on the 2024 ICBs. 
+Where data is given for  Local Authorities (LAs) these are the 2023 LAs; LA data is missing in approximately 1% of records.
+Where Index of Multiple Deprivation (IMD) deciles are shown these are the 2019 values.  
 
-The age and sex standardised rates are calculated using population data for England from the 2021 census as the standard population - https://www.ons.gov.uk/peoplepopulationandcommunity/populationandmigration/populationestimates/bulletins/populationandhouseholdestimatesenglandandwales/census2021.   In a small number of cases where age or sex is not recorded the data has been excluded from the standardised rates.
+Admissions are calculated, as per the NHP model, by using the last episode in a spell, where a spell consists on more than one episode. 
 
-Where the activity for the cohort is given as a percentage of total activity, the percentage of admissions for each cohort are calculated relative to the total number of emergency admissions or total number of elective and emergency admissions depending on whether the mitigator cohort is defined as being only emergency admissions or can be either elective or emergency admissions. (see table of mitigators)
+The beddays for an admission are calculated based from the number of days between admission date and discharge date, so if a person was admitted and discharged on the same day the beddays for the admission would be counted as zero.
 
-Where Index of Multiple Deprivation, IMD, deciles used these are the 2019 values.  
-The ICBs used are based on the 2024 ICBs.
+## Population data 
 
-The beddays for an admission are calculated based from the number of days between admission date and discharge date, so if a person was admitted and discharged on the same day the beddays for the admission would be zero.
+ICB populations for each year are from the Office of National Statistics mid year population estimates-  https://www.ons.gov.uk/peoplepopulationandcommunity/populationandmigration/populationestimates/datasets/clinicalcommissioninggroupmidyearpopulationestimates. As 2023/24 ICB population data was not available the 2022/23 data was also used for 2023/24.
 
-## Descriptive analysis
+Local authority populations for each year are from the Office of National Statistics Estimates of the population for England and Wales dataset. https://www.ons.gov.uk/peoplepopulationandcommunity/populationandmigration/populationestimates/datasets/estimatesofthepopulationforenglandandwales
+
+The age and sex standardised rates are calculated using population data for England from the 2021 census as the standard population - https://www.ons.gov.uk/peoplepopulationandcommunity/populationandmigration/populationestimates/bulletins/populationandhouseholdestimatesenglandandwales/census2021. In a small number of cases where age or sex is not recorded the data has been excluded from the standardised rates.
+
+Where the activity for the cohort is given as a percentage of total activity, the percentage of admissions for each cohort are calculated relative to the total number of emergency admissions or total number of elective and emergency admissions depending on whether the mitigator cohort is defined as being only emergency admissions or can be either elective or emergency admissions. (See table of mitigators)
+
+## Analysis
+
+The majority of the mitigators are for activity avoidance, therefore these mitigators will impact the number of admissions, and through changes in admissions will therefore also influence the number of beddays. However, 3 mitigators (Emergency Admission of Older People, Stroke Early Supported Discharge and Admissions with Mental Health Comorbidities) are efficiency mitigators, meaning that the admissions can't be avoided but the the length of stay and therefore number of beddays could be reduced. For these 3 mitigators we therefore only consider the number of beddays and not the number of admissions.  
+
+### Descriptive analysis
 
 - Weighting by population
-  - For age and gender, used the icb population file already had
-  - For IMD used: https://www.ons.gov.uk/peoplepopulationandcommunity/populationandmigration/populationprojections/adhocs/15363monthlypopulationsbyindexofmultipledeprivationimddecileenglandjanuary2019toaugust2022 
-  - For ethnicity used: 
-    - https://www.ons.gov.uk/peoplepopulationandcommunity/culturalidentity/ethnicity/bulletins/ethnicgroupenglandandwales/census2021
-    - https://www.ons.gov.uk/datasets/TS021/editions/2021/versions/1/filter-outputs/d5d755dd-baf8-4634-82cd-dedbb544e09f?f=get-data#get-data
-    - Had to recode into NHS ethnic categories
+  - For age and gender used: the Office of National Statistics Mid year population estimates https://www.ons.gov.uk/peoplepopulationandcommunity/populationandmigration/populationestimates/datasets/clinicalcommissioninggroupmidyearpopulationestimates.
+  - For IMD used: Office of National Statistics Monthly populations by Index of Multiple Deprivation (IMD) decile, England. 2022https://www.ons.gov.uk/peoplepopulationandcommunity/populationandmigration/populationprojections/adhocs/15363monthlypopulationsbyindexofmultipledeprivationimddecileenglandjanuary2019toaugust2022 
+  - For ethnicity used: Office of National Statistics Ethnic group, England and Wales: Census 2021 dataset
+    - https://www.ons.gov.uk/peoplepopulationandcommunity/culturalidentity/ethnicity/bulletins/ethnicgroupenglandandwales/census2021 With data recorded into NHS ethnic categories
+```{r}
+#  - https://www.ons.gov.uk/datasets/TS021/editions/2021/versions/1/filter-outputs/d5d755dd-baf8-4634-82cd-dedbb544e#09f?f=get-data#get-data
+  
+```
 
-- Excluded NULLs
+Data with NULL values were excluded 
 
-## Trend analysis
+### Comparative analysis
 
-Crude rate is mitigable activity as a proportion of total emergency or total emergency and elective activity for the whole population.
-
-Standardised rates gives the rate in that population. So for total mitigable activity the whole population will be included. However, in for example the frail elderly cohorts where there are age criteria the standardised rate is for the population included in that group so over 75s.
-
-## Comparative analysis
-
-- Using 2023 ICB shapefile, but 2024 ICB codes/names
+Maps of ICBS areas are plotted using the 2023 ICB shapefile, but 2024 ICB codes/names are used.
   - https://services1.arcgis.com/ESMARspQHYMw9BZ9/arcgis/rest/services/Integrated_Care_Boards_April_2023_EN_BGC/FeatureServer/0/query?outFields=*&where=1%3D1&f=geojson
-- LA shapefile: https://geoportal.statistics.gov.uk/datasets/6a05f93297cf4a438d08e972099f54b9_0/explore
+
+Maps of Local Authority areas are plotted using the 2024 LA shapefile, but 2023 LA names/codes are used.
+LA shapefile: https://geoportal.statistics.gov.uk/datasets/6a05f93297cf4a438d08e972099f54b9_0/explore
+
+### Trend analysis
+
+The mitigable activity is given as a proportion of either total emergency activity or total emergency and elective activity for the whole population, dependent on whether the mitigable activity is defined as only emergency activity or can be either emergency or elective.
+
+Standardised rates gives the rate for the whole population of England. 
