@@ -34,7 +34,12 @@ treatment_type_title <- format_treatment_for_caption(treatment_type)
 
 ```{r}
 #| output: false
-mitigator_summary_table <- readxl::read_excel("summary_mitigators_table.xlsx")
+mitigator_summary_table <- readxl::read_excel("summary_mitigators_table.xlsx") |>
+  dplyr::mutate(mechanism = snakecase::to_snake_case(mechanism))
+
+mechanisms <- mitigator_summary_table |> 
+  dplyr::pull(mechanism) |> 
+  unique()
 
 england_age_sex_standardised_rates_episodes <- tar_read(england_age_sex_standardised_rates_episodes) |>
   filter(cohorts == cohort)
@@ -508,29 +513,20 @@ Many admissions meet the criteria to be included in more than one mitigator coho
 
 For the Frail Older People (high frailty) activity we show how much of the activity is included in multiple other mitigable cohorts. There are some differences between cohort overlap for admissions and beddays, this is because efficiency mitigators are not included in admissions data as they do not impact the number of admissions, but are included in the beddays data as they influence length of stay. 
 
-::: panel-tabset
-#### Admissions
-
-```{r, fig.width=4, fig.height=4}
-#| label: fig-number_of_cohorts_spells
-#| fig-cap: !expr get_caption_number_of_cohorts(cohort_title, "admissions")
-
-total_cohort_numbers_2324<-targets::tar_read(total_cohort_numbers_2324)|>
-  filter(!!rlang::sym(cohort)==1)
-
-plotting_barchart_number_of_cohorts(total_cohort_numbers_2324, episodes)
-
+```{r}
+overlap_numbers <- targets::tar_read(total_cohort_numbers_2324)|>
+  filter(!!rlang::sym(cohort) == 1)
 ```
 
-#### Beddays
-
-```{r, fig.width=4, fig.height=4}
-#| label: fig-number_of_cohorts_beddays
-#| fig-cap: !expr get_caption_number_of_cohorts(cohort_title, "beddays")
-
-plotting_barchart_number_of_cohorts(total_cohort_numbers_2324, beddays)
+```{r}
+#| output: asis
+knitr::knit_child(
+  input = "child-dir/_child-overlap_number-within-others.qmd",
+  envir = environment(),
+  quiet = TRUE
+  ) |>
+  cat(sep = '\n')
 ```
-:::
 
 ### Inclusion within other mitigable activity cohorts
 
@@ -545,7 +541,7 @@ For example, Elderly Frail High cohort overlaps with all but 2 of the other miti
 #| label: fig-prop_other_cohorts_frail_spells
 #| fig-cap: !expr get_caption_number_of_cohorts(cohort_title, "admissions")
 
-plotting_barchart_summary_of_overlaps(total_cohort_numbers_2324,cohort, episodes, mitigator_summary_table )
+plotting_barchart_summary_of_overlaps(overlap_numbers,cohort, episodes, mitigator_summary_table )
 
 ```
 
@@ -555,7 +551,7 @@ plotting_barchart_summary_of_overlaps(total_cohort_numbers_2324,cohort, episodes
 #| label: fig-prop_other_cohorts_frail_beddays
 #| fig-cap: !expr get_caption_number_of_cohorts(cohort_title, "beddays")
 
-plotting_barchart_summary_of_overlaps(total_cohort_numbers_2324,cohort, beddays, mitigator_summary_table)
+plotting_barchart_summary_of_overlaps(overlap_numbers,cohort, beddays, mitigator_summary_table)
 
 ```
 :::
@@ -573,7 +569,7 @@ The 15 most common cohort combinations for the Elderly Frail High cohort are sho
 #| label: upset_plot_frail_elderly_high_episodes
 #| fig-cap: !expr get_caption_upset_plots(cohort_title, "admissions")
 
-plot_upset_plot(total_cohort_numbers_2324,  mitigator_summary_table, episodes)
+plot_upset_plot(overlap_numbers,  mitigator_summary_table, episodes)
 
 ```
 
@@ -583,7 +579,7 @@ plot_upset_plot(total_cohort_numbers_2324,  mitigator_summary_table, episodes)
 #| label: upset_plot_frail_elderly_high_bedday
 #| fig-cap: !expr get_caption_upset_plots(cohort_title, "beddays")
 
-plot_upset_plot(total_cohort_numbers_2324,  mitigator_summary_table, beddays)
+plot_upset_plot(overlap_numbers,  mitigator_summary_table, beddays)
 ```
 :::
 
@@ -596,7 +592,7 @@ plot_upset_plot(total_cohort_numbers_2324,  mitigator_summary_table, beddays)
 #| output: asis
 activity_type <- "admissions"
 summary_icb <- targets::tar_read_raw(glue::glue("summary_icb_{activity_type}_{cohort}"))
-summary_la <- targets::tar_read_raw(glue::glue("summary_la_{activity_type}_{cohort}"))
+#summary_la <- targets::tar_read_raw(glue::glue("summary_la_{activity_type}_{cohort}"))
 standardised_rates <- england_age_sex_standardised_rates_episodes
 
 knitr::knit_child(
@@ -613,7 +609,7 @@ knitr::knit_child(
 #| output: asis
 activity_type <- "beddays"
 summary_icb <- targets::tar_read_raw(glue::glue("summary_icb_{activity_type}_{cohort}"))
-summary_la <- targets::tar_read_raw(glue::glue("summary_la_{activity_type}_{cohort}"))
+#summary_la <- targets::tar_read_raw(glue::glue("summary_la_{activity_type}_{cohort}"))
 standardised_rates <- england_age_sex_standardised_rates_beddays
 
 knitr::knit_child(
@@ -951,11 +947,11 @@ Age and sex standardised rates of activity for local authority areas
 #| label: table-local_authority_over_time_episodes
 #| fig-cap: !expr get_caption_la_trends(cohort_title, "admissions") 
 
-la_age_sex_standardised_rates_episodes_over_time<-tar_read(la_age_sex_standardised_rates_episodes_over_time)
-
-la_episode_table<-generating_la_table(la_age_sex_standardised_rates_episodes_over_time, cohort)
-
-DT::datatable(la_episode_table)
+# la_age_sex_standardised_rates_episodes_over_time<-tar_read(la_age_sex_standardised_rates_episodes_over_time)
+# 
+# la_episode_table<-generating_la_table(la_age_sex_standardised_rates_episodes_over_time, cohort)
+# 
+# DT::datatable(la_episode_table)
 
 
 ```
@@ -965,12 +961,12 @@ DT::datatable(la_episode_table)
 ```{r}
 #| label: table_local_authority_over_time_beddays
 #| fig-cap: !expr get_caption_la_trends(cohort_title, "beddays")  
-
-la_age_sex_standardised_rates_beddays_over_time<-tar_read(la_age_sex_standardised_rates_beddays_over_time)
-
-la_beddays_table<-generating_la_table(la_age_sex_standardised_rates_beddays_over_time, cohort)
-
-DT::datatable(la_beddays_table)
+# 
+# la_age_sex_standardised_rates_beddays_over_time<-tar_read(la_age_sex_standardised_rates_beddays_over_time)
+# 
+# la_beddays_table<-generating_la_table(la_age_sex_standardised_rates_beddays_over_time, cohort)
+# 
+# DT::datatable(la_beddays_table)
 
 ```
 
