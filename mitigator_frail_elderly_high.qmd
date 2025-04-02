@@ -631,7 +631,7 @@ number_percentage_over_time <- data_number_percentage_over_time_icb(
 ```{r}
 #| output: asis
 knitr::knit_child(
-  input = "child-dir/_child-trends.qmd",
+  input = "child-dir/_child-trends_england.qmd",
   envir = environment(),
   quiet = TRUE
   ) |>
