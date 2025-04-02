@@ -301,22 +301,22 @@ plotting_barchart_summary_of_overlaps<-function(data, cohort_name, activity_type
   }
   
   redirection<-data2|>
-    filter(mechanism=="Redirection/Substitution")
+    filter(mechanism=="redirection_substitution")
   
   plot_redirection<-overlap_ggplot_facets(redirection, cohort_name , "Redirection/Substitution" , 5)
   
   prevention<-data2|>
-    filter(mechanism=="Prevention")
+    filter(mechanism=="prevention")
   
   plot_prevention<-overlap_ggplot_facets(prevention,cohort_name , "Prevention" ,4)
   
   relocation<-data2|>
-    filter(mechanism=="Efficiencies & Relocation")
+    filter(mechanism=="efficiencies_relocation")
   
   plot_relocation<-overlap_ggplot_facets(relocation,cohort_name, "Relocation & Efficiencies",2 )
   
   efficiencies<-data2|>
-    filter(mechanism=="Efficiencies")
+    filter(mechanism=="efficiencies")
   
   plot_efficiencies<-overlap_ggplot_facets(efficiencies,cohort_name , "Efficiencies",1 )+
     labs(y="Percentage of cohort of interest present in other cohorts")
