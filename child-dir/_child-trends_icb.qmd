@@ -1,0 +1,240 @@
+```{r}
+icb_age_sex_standardised_rates_episodes <- tar_read(icb_age_sex_standardised_rates_episodes)
+
+icb_age_sex_standardised_rates_beddays <- tar_read(icb_age_sex_standardised_rates_beddays)
+```
+
+::: panel-tabset
+#### Number over time
+
+::: panel-tabset
+#### Admissions
+
+```{r, fig.width=5, fig.height=3}
+#| label: fig-number_trends_spells_icb
+#| fig-cap: !expr get_caption_trends(cohort_title, "number", "admissions", "icb") 
+plotting_icb_over_time(number_percentage_over_time |>
+                         mutate(activity = episodes),
+                       'Number')
+```
+
+<br>
+
+```{r, fig.height=6, fig.width=8}
+#| label: fig-percent_change_number_spells
+#| fig-cap: !expr get_caption_trends_percentage_change(cohort_title, "number", "admissions")
+
+england_average_numbers_episodes <- calculating_england_average_numbers(number_percentage_over_time, episodes)
+
+plotting_percentage_change_over_time_by_icb(
+  number_percentage_over_time |> filter(!is.na(icb_2024_name)),
+  episodes,
+  icb_2024_name ,
+  england_average_numbers_episodes$change,
+  1.6,
+  1.3
+)
+```
+
+
+#### Beddays
+
+```{r, fig.width=5, fig.height=3}
+#| label: fig-number_trends_beddays_icb
+#| fig-cap: !expr get_caption_trends(cohort_title, "number", "beddays", "icb")
+plotting_icb_over_time(number_percentage_over_time |>
+                         mutate(activity = beddays),
+                       'Number')
+```
+
+<br>
+
+```{r, fig.height=6, fig.width=8}
+#| label: fig-percent_change_number_beddays
+#| fig-cap: !expr get_caption_trends_percentage_change(cohort_title, "number", "beddays") 
+
+england_average_numbers_beddays <- calculating_england_average_numbers(number_percentage_over_time, beddays)
+
+plotting_percentage_change_over_time_by_icb(
+  number_percentage_over_time |> filter(!is.na(icb_2024_name)),
+  beddays,
+  icb_2024_name,
+  england_average_numbers_beddays$change,
+  1.6,
+  1.3
+)
+```
+
+:::
+
+#### Percentage of `r treatment_type_title` activity
+
+`r cohort_title` as a percentage of `r treatment_type_title` activity.
+
+::: panel-tabset
+#### Admissions
+
+```{r, fig.width=5, fig.height=3}
+#| label: fig-percent_trends_spells_icb
+#| fig-cap: !expr get_caption_trends(cohort_title, "percentage", "admissions", "icb")
+plotting_icb_over_time(
+  number_percentage_over_time |>
+    mutate(activity = percentage_episodes) |>
+    filter(!is.na(activity)),
+  'Percentage'
+)
+```
+
+<br>
+
+```{r, fig.height=6, fig.width=8}
+#| label: fig-percent_change_percent_spells
+#| fig-cap: !expr get_caption_trends_percentage_change(cohort_title, "prop", "admissions", treatment_type) 
+
+england_average_percentage_episodes <- calculating_england_average_percentage(
+  number_percentage_over_time |> 
+    filter(!is.na(total_episodes)),
+  episodes,
+  total_episodes)
+
+plotting_percentage_change_over_time_by_icb(
+  number_percentage_over_time |> filter(!is.na(icb_2024_name)),
+  percentage_episodes,
+  icb_2024_name,
+  england_average_percentage_episodes$change,
+  1.6,
+  1.3
+)
+```
+
+#### Beddays
+
+```{r, fig.width=5, fig.height=3}
+#| label: fig-percent_trends_beddays_icb
+#| fig-cap: !expr get_caption_trends(cohort_title, "percentage", "beddays", "icb")
+plotting_icb_over_time(
+  number_percentage_over_time |>
+    mutate(activity = percentage_beddays) |>
+    filter(!is.na(activity)),
+  'Percentage'
+)
+```
+
+<br>
+
+```{r, fig.height=6, fig.width=8}
+#| label: fig-percent_change_percent_beddays
+#| fig-cap: !expr get_caption_trends_percentage_change(cohort_title, "prop", "beddays", treatment_type) 
+
+england_average_percentage_beddays <- calculating_england_average_percentage(
+  number_percentage_over_time |>
+    filter(!is.na(percentage_beddays)),
+  beddays,
+  total_beddays)
+
+plotting_percentage_change_over_time_by_icb(
+  number_percentage_over_time |> filter(!is.na(icb_2024_name)),
+  percentage_beddays,
+  icb_2024_name,
+  england_average_percentage_beddays$change,
+  1.6,
+  1.3
+)
+```
+:::
+
+#### Age and sex standardised rates over time
+
+::: panel-tabset
+#### Admissions
+
+```{r, fig.width=5, fig.height=3}
+#| label: fig-stardardised_trends_spells_icb
+#| fig-cap: !expr get_caption_trends(cohort_title, "SR", "admissions", "icb")
+plotting_icb_over_time(
+  (icb_age_sex_standardised_rates_episodes |>
+      filter(cohorts == cohort) |>
+      mutate(activity = value)
+  ),
+  'Standardised rate per 100,000'
+)
+```
+
+<br>
+
+```{r, fig.height=6, fig.width=8}
+#| label: fig-percent_change_standardised_spells
+#| fig-cap: !expr get_caption_trends_percentage_change(cohort_title, "SR", "admissions") 
+
+england_average_standardised_episodes <- calculating_england_average_standardised(england_age_sex_standardised_rates_episodes)
+
+plotting_percentage_change_over_time_by_icb(
+  icb_age_sex_standardised_rates_episodes |>
+    filter(cohorts == cohort),
+  value,
+  icb_2024_name,
+  england_average_standardised_episodes$change,
+  1.6,
+  1.7
+)
+```
+
+#### Beddays
+
+```{r, fig.width=5, fig.height=3}
+#| label: fig-stardardised_trends_beddays_icb
+#| fig-cap: !expr get_caption_trends(cohort_title, "SR", "beddays", "icb")
+plotting_icb_over_time(
+  (icb_age_sex_standardised_rates_beddays |>
+      filter(cohorts == cohort) |>
+      mutate(activity = value)
+  ),
+  'Standardised rate per 100,000'
+)
+```
+
+<br>
+
+```{r, fig.height=6, fig.width=8}
+#| label: fig-percent_change_standardised_beddays
+#| fig-cap: !expr get_caption_trends_percentage_change(cohort_title, "SR", "beddays") 
+england_average_standardised_beddays <- calculating_england_average_standardised(england_age_sex_standardised_rates_beddays)
+
+plotting_percentage_change_over_time_by_icb(
+  icb_age_sex_standardised_rates_beddays |>
+    filter(cohorts == cohort),
+  value,
+  icb_2024_name,
+  england_average_standardised_beddays$change,
+  1.6,
+  1.6
+)
+```
+:::
+:::
+
+#### Change in age and sex standardised rate over time relative to level of activity by ICB
+
+This chart shows the percentage change for each ICB relative to it's starting level of admissions/beddays to help demonstrate performance across ICBs. Those ICBs in the lower left quadrant (shaded in green) could be considered as performing well; they already had relatively low standardised rates of admissions/beddays in 2018/19 and have continued to make further decreases over the last five years.
+
+::: panel-tabset
+#### Admissions
+
+```{r, fig.width=5, fig.height=4}
+#| label: fig-activity_vs_rate_of_change_episodes_icb
+#| fig-cap: !expr get_caption_activity_vs_perc_change(cohort_title, "admissions") 
+plotting_total_activity_vs_percentage_change(
+  icb_age_sex_standardised_rates_episodes, 
+  icb_2024_name)
+```
+#### Beddays
+
+```{r, fig.width=5, fig.height=4}
+#| label: fig-activity_vs_rate_of_change_beddays_icb
+#| fig-cap: !expr get_caption_activity_vs_perc_change(cohort_title, "beddays")
+plotting_total_activity_vs_percentage_change(
+  icb_age_sex_standardised_rates_beddays, 
+  icb_2024_name)
+```
+
+:::

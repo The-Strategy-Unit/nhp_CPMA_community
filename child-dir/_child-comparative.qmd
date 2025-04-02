@@ -1,3 +1,8 @@
+```{r}
+summary_icb <- targets::tar_read_raw(glue::glue("summary_icb_{activity_type}_{cohort}"))
+summary_la <- targets::tar_read_raw(glue::glue("summary_la_{activity_type}_{cohort}"))
+```
+
 ::: panel-tabset
 
 #### Integrated Care Board
