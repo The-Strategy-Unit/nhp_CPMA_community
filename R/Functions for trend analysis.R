@@ -93,12 +93,14 @@ numbers_over_time<- identify_whether_bedday_or_admissions_or_both(numbers_over_t
 
 # Number by LA over time
 
-Formatting_la_data_for_trends <- function(table) {
+Formatting_la_data_for_trends <- function(table, sex_group) {
   
   la_numbers_over_time <- dplyr::tbl(
     sc,
     dbplyr::in_catalog("strategyunit","default", table)
-  )|> collect()|>
+  )|> 
+    filter(sex==sex_group)|>
+    collect()|>
     as.data.frame()
   
   la_numbers_over_time<- identify_whether_bedday_or_admissions_or_both(  la_numbers_over_time, 5:33)|>
