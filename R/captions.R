@@ -274,7 +274,7 @@ get_caption_activity_vs_perc_change <- function(cohort,
 #' @return A string.
 get_caption_la_trends <- function(cohort,
                                   activity_type) {
-  caption <- glue::glue("Table of the standardised rate of {cohort} {activity_type} by Local Authority over the last 5 years, including the percentage change between 2018/19 and 2023/24.")
+  caption <- glue::glue("Table of the age and sex standardised rates of {cohort} {activity_type} per 100,000 population by Local Authority over the last 5 years, including the percentage change between 2018/19 and 2023/24.")
   
   return(caption)
 }
