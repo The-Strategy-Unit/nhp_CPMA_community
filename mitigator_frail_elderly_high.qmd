@@ -213,14 +213,8 @@ knitr::knit_child(
 
 ### Integrated Care Board
 
-::: panel-tabset
-#### Admissions
-
 ```{r}
 #| output: asis
-activity_type <- "admissions"
-standardised_rates <- england_age_sex_standardised_rates_episodes
-
 knitr::knit_child(
                   input = "child-dir/_child-comparative_icb.qmd",
                   envir = environment(),
@@ -228,23 +222,6 @@ knitr::knit_child(
                 ) |>
                   cat(sep = '\n')
 ```
-
-#### Beddays
-
-```{r}
-#| output: asis
-activity_type <- "beddays"
-standardised_rates <- england_age_sex_standardised_rates_beddays
-
-knitr::knit_child(
-                  input = "child-dir/_child-comparative_icb.qmd",
-                  envir = environment(),
-                  quiet = TRUE
-                ) |>
-                  cat(sep = '\n')
-```
-
-:::
 
 ### Local Authority
 
