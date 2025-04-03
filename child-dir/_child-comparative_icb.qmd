@@ -1,11 +1,6 @@
 ```{r}
 summary_icb <- targets::tar_read_raw(glue::glue("summary_icb_{activity_type}_{cohort}"))
-summary_la <- targets::tar_read_raw(glue::glue("summary_la_{activity_type}_{cohort}"))
 ```
-
-::: panel-tabset
-
-#### Integrated Care Board
 
 ```{r}
 #| output: false
@@ -122,19 +117,9 @@ rate_icb_map
 #| tbl-cap: !expr get_caption_by_geography_table(cohort_title, activity_type, treatment_type, "icb")
 get_summary_by_geography_table(
   summary_icb,
-  "admissions", 
+  activity_type, 
   treatment_type)
 ```
 
 :::
 
-#### Local Authority
-
-```{r}
-#| label: tbl-rate_la
-#| tbl-cap: !expr get_caption_by_geography_table(cohort_title, activity_type, treatment_type, "la")
-summary_la |>
-  get_summary_by_geography_table("admissions",
-                                 treatment_type)
-```
-:::

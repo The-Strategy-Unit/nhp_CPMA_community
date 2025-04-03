@@ -187,8 +187,10 @@ knitr::knit_child(
 
 ## Comparative Analysis
 
+### Integrated Care Board
+
 ::: panel-tabset
-### Admissions
+#### Admissions
 
 ```{r}
 #| output: asis
@@ -196,14 +198,14 @@ activity_type <- "admissions"
 standardised_rates <- england_age_sex_standardised_rates_episodes
 
 knitr::knit_child(
-                  input = "child-dir/_child-comparative.qmd",
+                  input = "child-dir/_child-comparative_icb.qmd",
                   envir = environment(),
                   quiet = TRUE
                 ) |>
                   cat(sep = '\n')
 ```
 
-### Beddays
+#### Beddays
 
 ```{r}
 #| output: asis
@@ -211,7 +213,7 @@ activity_type <- "beddays"
 standardised_rates <- england_age_sex_standardised_rates_beddays
 
 knitr::knit_child(
-                  input = "child-dir/_child-comparative.qmd",
+                  input = "child-dir/_child-comparative_icb.qmd",
                   envir = environment(),
                   quiet = TRUE
                 ) |>
@@ -219,6 +221,18 @@ knitr::knit_child(
 ```
 
 :::
+
+### Local Authority
+
+```{r}
+#| output: asis
+knitr::knit_child(
+                  input = "child-dir/_child-comparative_local-authority.qmd",
+                  envir = environment(),
+                  quiet = TRUE
+                ) |>
+                  cat(sep = '\n')
+```
 
 ## Trend Analysis
 
