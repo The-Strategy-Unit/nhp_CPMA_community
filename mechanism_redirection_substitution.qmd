@@ -57,19 +57,19 @@ This analysis includes mitigators where the mechanism of action is through Redir
 
 The 16 mitigators included in this analysis are:
 
--   Ambulatory Care Sensitive Admissions- Acute Conditions/ Chronic Conditions/Vacci e Preventable
+-   Ambulatory Care Sensitive Admissions: Acute Conditions / Chronic Conditions / Vaccine Preventable
 
--   End of Life Care Admissions- died within 2 days/ died within 3-14 days
+-   End of Life Care Admissions: died within 2 days / died within 3-14 days
 
 -   Falls Related Admissions
 
--   Frail Elderly Admissions- High Frailty Risk/ Intermediate Frailty Risk
+-   Frail Elderly Admissions: High Frailty Risk / Intermediate Frailty Risk
 
--   Medicines Related Admissions- Explicit/ Implicit - Anti-Diabetics/ Implicit - Benzodiazepines/ Implicit - Diuretics/ Implicit - NSAIDs
+-   Medicines Related Admissions: Explicit / Implicit - Anti-Diabetics / Implicit - Benzodiazepines / Implicit - Diuretics / Implicit - NSAIDs
 
 -   Emergency Readmissions Within 28 Days
 
--   Admission With No Overnight Stay and No Procedure - Adults/ Children
+-   Admission With No Overnight Stay and No Procedure: Adults / Children
 
 ## Descriptive Analysis of Mitigable Activity
 
