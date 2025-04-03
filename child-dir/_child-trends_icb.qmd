@@ -143,7 +143,7 @@ plotting_percentage_change_over_time_by_icb(
 ```
 :::
 
-#### Age and sex standardised rates over time
+#### Age and sex standardised rates per 100,000 population
 
 ::: panel-tabset
 #### Admissions
