@@ -557,7 +557,7 @@ plotting_barchart_number_of_mechanism_groups<-function(data, activity_type){
     theme(axis.text=element_text(size=9.5),
           axis.title=element_text(size=10.5))+
     labs(y="Number",
-         x="No. of mechanism groups the activity is part of",
+         x="No. of mechanism groups the\n activity is part of",
          title=NULL)+
     geom_text(aes(label=paste0(scales::comma(activity), ' \n(',percentage, '%)')), vjust=-0.2, size=2.7)+
     scale_y_continuous(limits=c(0, max(data2$activity)*1.2), expand=c(0,0), labels = label_comma())
