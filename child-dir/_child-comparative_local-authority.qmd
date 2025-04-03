@@ -1,0 +1,26 @@
+```{r}
+summary_la_admissions <- targets::tar_read_raw(glue::glue("summary_la_admissions_{cohort}"))
+summary_la_beddays <- targets::tar_read_raw(glue::glue("summary_la_beddays_{cohort}"))
+```
+
+::: panel-tabset
+### Admissions
+
+```{r}
+#| label: tbl-rate_la
+#| tbl-cap: !expr get_caption_by_geography_table(cohort_title, "admissions", treatment_type, "la")
+summary_la_admissions |>
+  get_summary_by_geography_table("admissions",
+                                 treatment_type)
+```
+
+### Beddays
+
+```{r}
+#| label: tbl-rate_la
+#| tbl-cap: !expr get_caption_by_geography_table(cohort_title, "beddays", treatment_type, "la")
+summary_la_beddays |>
+  get_summary_by_geography_table("beddays",
+                                 treatment_type)
+```
+:::

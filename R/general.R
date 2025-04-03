@@ -13,7 +13,7 @@ create_dt <- function(x) {
       dom = "Blfrtip",
       lengthChange = FALSE,
       autoWidth = TRUE,
-      paging = FALSE,
+      #paging = FALSE,
       bInfo = FALSE,
       class = 'cell-border stripe',
       columnDefs = list(list(
