@@ -56,7 +56,7 @@ number_percentage_over_time<-numbers_over_time_total_mitigation|>
   as.data.frame()
 ```
 
-## Mitigators included in this analysis
+## Mitigatable activity
 
 The numbers of admissions and beddays give the potentially mitigable activity for England in 2023/24.
 
@@ -64,7 +64,7 @@ The mitigators are divided into 4 groups according to the mechanism by which mit
 
 -   Redirection/Substitution
 -   Prevention
--   Relocation
+-   Relocation & Efficiencies
 -   Efficiencies
 
 Redirection/Substitution, Prevention and Relocation mitigators will affect the number of admissions and will also therefore impact the number of beddays.
@@ -158,7 +158,7 @@ total_cohort_numbers_2324|>
 
 NOTE: As with the previous table the sum of all the admissions and beddays does not add up to the total potential mitigable activity, as much of the activity is included within more than one mechanism of mitigation group and and thus adding the numbers for each group will lead to double counting.
 
-## Potential mitigable activity for England in 2023/24
+## Total potential mitigable activity for England 
 
 ```{r}
 total_mitigator_activity<-numbers_over_time_total_mitigation|>
@@ -240,11 +240,10 @@ One third of mitigable beddays are included with 3 mechanism of mitigation group
 :::
 ## Comparative Analysis
 
-::: panel-tabset
-### Admissions
+### Integrated Care Board
 
 ::: panel-tabset
-#### Integrated Care Board
+#### Admissions
 
 ```{r}
 #| output: false
@@ -265,7 +264,7 @@ rate_icb_admissions_all_map <- summary_icb_admissions_all |>
 ```
 
 ::: panel-tabset
-##### Number of admissions
+##### Number
 
 ::: panel-tabset
 ###### Bars
@@ -372,21 +371,7 @@ get_summary_by_geography_table(
 ```
 :::
 
-#### Local Authority
-
-```{r}
-#| label: tbl-rate_la_admissions_all
-#| tbl-cap: !expr get_caption_by_geography_table(cohort_title, "admissions", treatment_type, "la")
-targets::tar_read(summary_la_admissions_all) |>
-  get_summary_by_geography_table("episodes",
-                                 treatment_type)
-```
-:::
-
-### Beddays
-
-::: panel-tabset
-#### Integrated Care Board
+#### Beddays
 
 ```{r}
 #| output: false
@@ -403,7 +388,7 @@ rate_icb_beddays_all_map <- summary_icb_beddays_all |>
 ```
 
 ::: panel-tabset
-##### Number of beddays
+##### Number
 
 ::: panel-tabset
 ###### Bars
@@ -510,16 +495,30 @@ get_summary_by_geography_table(
 ```
 :::
 
-#### Local Authority
+:::
 
+### Local Authority
+::: panel-tabset
+
+#### Admissions
+```{r}
+#| label: tbl-rate_la_admissions_all
+#| tbl-cap: !expr get_caption_by_geography_table(cohort_title, "admissions", treatment_type, "la")
+targets::tar_read(summary_la_admissions_all) |>
+  get_summary_by_geography_table("episodes",
+                                 treatment_type)
+```
+
+#### Beddays
 ```{r}
 #| label: tbl-rate_la_beddays_all
 #| tbl-cap: !expr get_caption_by_geography_table(cohort_title, "beddays", treatment_type, "la")
 targets::tar_read(summary_la_beddays_all) |>
   get_summary_by_geography_table("beddays", treatment_type)
 ```
+
 :::
-:::
+
 ## Trend Analysis
 
 We aim to understand whether there have been decreases, or increases, in potentially mitigable activity over time. We have considered total mitigable admissions and beddays over the past 9 years in England as a whole and for each ICB, including:
@@ -609,7 +608,7 @@ plot_of_percentage_over_time(number_percentage_over_time|>
 ```
 :::
 
-#### Standardised rate over time
+#### Age and sex standardised rates per 100,000 population
 
 Over the last 5 years (2018/19 to 2023/24), when accounting for changes in the population age and sex, there has been a `r england_average_standardised_episodes_total_mitigation$change` % increase in potentially mitigable admissions. However, there has been a `r england_average_standardised_beddays_total_mitigation$change` % decrease in potentially mitigable beddays, suggesting reduced length of stays for mitigable activity.
 
@@ -640,7 +639,7 @@ plot_of_standardised_rates_over_time(
 :::
 :::
 
-### ICB
+### Integrated Care Board
 
 Total potentially mitigable activity over time is shown for each ICB to demonstrate the patterns of change and the degree of variability between ICBs over time. The percentage change in total potentially mitigable activity between 2018/19 and 2023/24 is compared across ICBs and shown relative to the England average. 
 
@@ -751,7 +750,7 @@ plotting_percentage_change_over_time_by_icb(number_percentage_over_time_removing
 ```
 :::
 
-#### Standardised rate over time
+#### Age and sex standardised rates per 100,000 population
 
 ::: panel-tabset
 #### Admissions
@@ -842,7 +841,9 @@ plotting_total_activity_vs_percentage_change(icb_age_sex_standardised_rates_bedd
 ### Local Authority
 
 Age and sex standardised rates of activity for local authority areas 
+
 ::: panel-tabset
+
 #### Admissions
 ```{r}
 #| label: table-local_authority_over_time_episodes
