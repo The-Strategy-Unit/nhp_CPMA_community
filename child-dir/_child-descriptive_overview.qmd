@@ -1,0 +1,20 @@
+```{r}
+overview <- targets::tar_read_raw(glue::glue("overview_{cohort}"))
+
+frail_elderly_high_admissions_perc <- overview |>
+  dplyr::filter(activity_type == "Admissions") |>
+  dplyr::pull(perc)
+
+frail_elderly_high_beddays_perc <- overview |>
+  dplyr::filter(activity_type == "Beddays") |>
+  dplyr::pull(perc)
+```
+
+In 2023/24, `r frail_elderly_high_admissions_perc`% of all emergency admissions and `r frail_elderly_high_beddays_perc`% of all emergency beddays fall under mitigable activity for the Frail Older People (high frailty) cohort.
+
+```{r}
+#| label: tbl-overview
+#| tbl-cap: !expr get_caption_overview(cohort_title, treatment_type)
+overview |>
+  get_table_perc()
+```

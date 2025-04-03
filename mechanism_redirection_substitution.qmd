@@ -58,364 +58,81 @@ What this mechanism is...
 ## Descriptive Analysis of Mitigable Activity
 
 ```{r}
-overview <- targets::tar_read(overview_redirection_substitution)
-
-redirection_substitution_admissions_perc <- overview |>
-  dplyr::filter(activity_type == "Admissions") |>
-  dplyr::pull(perc)
-
-redirection_substitution_beddays_perc <- overview |>
-  dplyr::filter(activity_type == "Beddays") |>
-  dplyr::pull(perc)
-```
-
-In 2023/24, `r redirection_substitution_admissions_perc`% of all (both emergency and elective) admissions and `r redirection_substitution_beddays_perc`% of all beddays fall under mitigable activity for the Redirection and Substitution group (@tbl-perc_redirection_substitution).
-
-```{r}
-#| label: tbl-perc_redirection_substitution
-#| tbl-cap: !expr get_caption_overview(cohort_title, treatment_type)
-overview |>
-  get_table_perc()
+#| output: asis
+knitr::knit_child(
+  input = "child-dir/_child-descriptive_overview.qmd",
+  envir = environment(),
+  quiet = TRUE
+  ) |>
+  cat(sep = '\n')
 ```
 
 ### Patient Characteristics
 
 ::: panel-tabset
-### Admissions
-
-::: panel-tabset
-### Age
-
+#### Age
 ```{r}
-perc_age_redirection_substitution_admissions <- targets::tar_read(perc_age_redirection_substitution_admissions)
-rates_age_redirection_substitution_admissions <- targets::tar_read(rates_age_redirection_substitution_admissions)
-```
-
-::: panel-tabset
-#### Percentage of `r treatment_type_title` activity
-
-```{r}
-#| label: tbl-perc_age_redirection_substitution_admissions
-#| tbl-cap: !expr get_caption_by_group("perc", cohort_title, "admissions", "age group", treatment_type)
-perc_age_redirection_substitution_admissions |>
-  get_table_perc() 
+patient_characteristic <- "age"
+patient_characteristic_col_name <- "age_range"
 ```
 
 ```{r}
-#| label: fig-perc_age_redirection_substitution_admissions
-#| fig-cap: !expr get_caption_by_group("perc", cohort_title, "admissions", "age group", treatment_type)
-perc_age_redirection_substitution_admissions |>
-  get_perc_by_group_plot("age_range", "admissions")
+#| output: asis
+knitr::knit_child(
+  input = "child-dir/_child-descriptive_patient-characteristic.qmd",
+  envir = environment(),
+  quiet = TRUE
+  ) |>
+  cat(sep = '\n')
 ```
 
-#### Percentage of `r treatment_type_title` activity
-
+#### Ethnicity
 ```{r}
-#| label: tbl-rate_redirection_substitution_age_admissions
-#| tbl-cap: !expr get_caption_by_group("rate", cohort_title, "admissions", "age group")
-rates_age_redirection_substitution_admissions |>
-  get_rates_by_group_table() 
-```
-
-```{r}
-#| label: fig-rate_redirection_substitution_age_admissions
-#| fig-cap: !expr get_caption_by_group("rate", cohort_title, "admissions", "age group")
-rates_age_redirection_substitution_admissions |>
-  get_rates_by_group_plot("age_range")
-```
-:::
-
-### Ethnicity
-
-```{r}
-perc_ethnicity_redirection_substitution_admissions <- targets::tar_read(perc_ethnicity_redirection_substitution_admissions)
-rates_ethnicity_redirection_substitution_admissions <- targets::tar_read(rates_ethnicity_redirection_substitution_admissions)
-```
-
-::: panel-tabset
-#### Percentage of `r treatment_type_title` activity
-
-```{r}
-#| label: tbl-perc_ethnicity_redirection_substitution_admissions
-#| tbl-cap: !expr get_caption_by_group("perc", cohort_title, "admissions", "ethnicity", treatment_type)
-perc_ethnicity_redirection_substitution_admissions |>
-  get_table_perc() 
+patient_characteristic <- "ethnicity"
+patient_characteristic_col_name <- "Ethnic_Category"
 ```
 
 ```{r}
-#| label: fig-perc_ethnicity_redirection_substitution_admissions
-#| fig-cap: !expr get_caption_by_group("perc", cohort_title, "admissions", "ethnicity", treatment_type)
-perc_ethnicity_redirection_substitution_admissions |>
-  get_perc_by_group_plot("Ethnic_Category", "admissions")
+#| output: asis
+knitr::knit_child(
+  input = "child-dir/_child-descriptive_patient-characteristic.qmd",
+  envir = environment(),
+  quiet = TRUE
+  ) |>
+  cat(sep = '\n')
 ```
 
-#### Percentage of `r treatment_type_title` activity
-
+#### IMD
 ```{r}
-#| label: tbl-rate_redirection_substitution_ethnicity_admissions
-#| tbl-cap: !expr get_caption_by_group("rate", cohort_title, "admissions", "ethnicity")
-rates_ethnicity_redirection_substitution_admissions |>
-  get_rates_by_group_table() 
-```
-
-```{r}
-#| label: fig-rate_redirection_substitution_ethnicity_admissions
-#| fig-cap: !expr get_caption_by_group("rate", cohort_title, "admissions", "ethnicity")
-rates_ethnicity_redirection_substitution_admissions |>
-  get_rates_by_group_plot("Ethnic_Category")
-```
-:::
-
-### IMD
-
-```{r}
-perc_imd_redirection_substitution_admissions <- targets::tar_read(perc_imd_redirection_substitution_admissions)
-rates_imd_redirection_substitution_admissions <- targets::tar_read(rates_imd_redirection_substitution_admissions)
-```
-
-::: panel-tabset
-#### Percentage of `r treatment_type_title` activity
-
-```{r}
-#| label: tbl-perc_imd_redirection_substitution_admissions
-#| tbl-cap: !expr get_caption_by_group("perc", cohort_title, "admissions", "imd", treatment_type)
-perc_imd_redirection_substitution_admissions |>
-  get_table_perc() 
+patient_characteristic <- "imd"
+patient_characteristic_col_name <- "imd19_decile"
 ```
 
 ```{r}
-#| label: fig-perc_imd_redirection_substitution_admissions
-#| fig-cap: !expr get_caption_by_group("perc", cohort_title, "admissions", "imd", treatment_type)
-perc_imd_redirection_substitution_admissions |>
-  get_perc_by_group_plot("imd19_decile", "admissions")
+#| output: asis
+knitr::knit_child(
+  input = "child-dir/_child-descriptive_patient-characteristic.qmd",
+  envir = environment(),
+  quiet = TRUE
+  ) |>
+  cat(sep = '\n')
 ```
 
-#### Percentage of `r treatment_type_title` activity
-
+#### Sex
 ```{r}
-#| label: tbl-rate_redirection_substitution_imd_admissions
-#| tbl-cap: !expr get_caption_by_group("rate", cohort_title, "admissions", "imd")
-rates_imd_redirection_substitution_admissions |>
-  get_rates_by_group_table() 
-```
-
-```{r}
-#| label: fig-rate_redirection_substitution_imd_admissions
-#| fig-cap: !expr get_caption_by_group("rate", cohort_title, "admissions", "imd")
-rates_imd_redirection_substitution_admissions |>
-  get_rates_by_group_plot("imd19_decile")
-```
-:::
-
-### Sex
-
-```{r}
-perc_sex_redirection_substitution_admissions <- targets::tar_read(perc_sex_redirection_substitution_admissions)
-rates_sex_redirection_substitution_admissions <- targets::tar_read(rates_sex_redirection_substitution_admissions)
-```
-
-::: panel-tabset
-#### Percentage of `r treatment_type_title` activity
-
-```{r}
-#| label: tbl-perc_sex_redirection_substitution_admissions
-#| tbl-cap: !expr get_caption_by_group("perc", cohort_title, "admissions", "sex", treatment_type)
-perc_sex_redirection_substitution_admissions |>
-  get_table_perc() 
+patient_characteristic <- "sex"
+patient_characteristic_col_name <- "sex"
 ```
 
 ```{r}
-#| label: fig-perc_sex_redirection_substitution_admissions
-#| fig-cap: !expr get_caption_by_group("perc", cohort_title, "admissions", "sex", treatment_type)
-perc_sex_redirection_substitution_admissions |>
-  get_perc_by_group_plot("sex", "admissions")
+#| output: asis
+knitr::knit_child(
+  input = "child-dir/_child-descriptive_patient-characteristic.qmd",
+  envir = environment(),
+  quiet = TRUE
+  ) |>
+  cat(sep = '\n')
 ```
-
-#### Percentage of `r treatment_type_title` activity
-
-```{r}
-#| label: tbl-rate_redirection_substitution_sex_admissions
-#| tbl-cap: !expr get_caption_by_group("rate", cohort_title, "admissions", "sex")
-rates_sex_redirection_substitution_admissions |>
-  get_rates_by_group_table() 
-```
-
-```{r}
-#| label: fig-rate_redirection_substitution_sex_admissions
-#| fig-cap: !expr get_caption_by_group("rate", cohort_title, "admissions", "sex")
-rates_sex_redirection_substitution_admissions |>
-  get_rates_by_group_plot("sex")
-```
-:::
-:::
-
-### Beddays
-
-::: panel-tabset
-### Age
-
-```{r}
-perc_age_redirection_substitution_beddays <- targets::tar_read(perc_age_redirection_substitution_beddays)
-rates_age_redirection_substitution_beddays <- targets::tar_read(rates_age_redirection_substitution_beddays)
-```
-
-::: panel-tabset
-#### Percentage of `r treatment_type_title` activity
-
-```{r}
-#| label: tbl-perc_age_redirection_substitution_beddays
-#| tbl-cap: !expr get_caption_by_group("perc", cohort_title, "beddays", "age group", treatment_type)
-targets::tar_read(perc_age_redirection_substitution_beddays) |>
-  get_table_perc() 
-```
-
-```{r}
-#| label: fig-perc_age_redirection_substitution_beddays
-#| fig-cap: !expr get_caption_by_group("perc", cohort_title, "beddays", "age group", treatment_type)
-targets::tar_read(perc_age_redirection_substitution_beddays) |>
-  get_perc_by_group_plot("age_range", "beddays")
-```
-
-#### Percentage of `r treatment_type_title` activity
-
-```{r}
-#| label: tbl-rate_redirection_substitution_age_beddays
-#| tbl-cap: !expr get_caption_by_group("rate", cohort_title, "beddays", "age group")
-targets::tar_read(rates_age_redirection_substitution_beddays) |>
-  get_rates_by_group_table() 
-```
-
-```{r}
-#| label: fig-rate_redirection_substitution_age_beddays
-#| fig-cap: !expr get_caption_by_group("rate", cohort_title, "beddays", "age group")
-targets::tar_read(rates_age_redirection_substitution_beddays) |>
-  get_rates_by_group_plot("age_range")
-```
-:::
-
-### Ethnicity
-
-```{r}
-perc_ethnicity_redirection_substitution_beddays <- targets::tar_read(perc_ethnicity_redirection_substitution_beddays)
-rates_ethnicity_redirection_substitution_beddays <- targets::tar_read(rates_ethnicity_redirection_substitution_beddays)
-```
-
-::: panel-tabset
-#### Percentage of `r treatment_type_title` activity
-
-```{r}
-#| label: tbl-perc_ethnicity_redirection_substitution_beddays
-#| tbl-cap: !expr get_caption_by_group("perc", cohort_title, "beddays", "ethnicity", treatment_type)
-targets::tar_read(perc_ethnicity_redirection_substitution_beddays) |>
-  get_table_perc() 
-```
-
-```{r}
-#| label: fig-perc_ethnicity_redirection_substitution_beddays
-#| fig-cap: !expr get_caption_by_group("perc", cohort_title, "beddays", "ethnicity", treatment_type)
-targets::tar_read(perc_ethnicity_redirection_substitution_beddays) |>
-  get_perc_by_group_plot("Ethnic_Category", "beddays")
-```
-
-#### Percentage of `r treatment_type_title` activity
-
-```{r}
-#| label: tbl-rate_redirection_substitution_ethnicity_beddays
-#| tbl-cap: !expr get_caption_by_group("rate", cohort_title, "beddays", "ethnicity")
-targets::tar_read(rates_ethnicity_redirection_substitution_beddays) |>
-  get_rates_by_group_table() 
-```
-
-```{r}
-#| label: fig-rate_redirection_substitution_ethnicity_beddays
-#| fig-cap: !expr get_caption_by_group("rate", cohort_title, "beddays", "ethnicity")
-targets::tar_read(rates_ethnicity_redirection_substitution_beddays) |>
-  get_rates_by_group_plot("Ethnic_Category")
-```
-:::
-
-### IMD
-
-```{r}
-perc_imd_redirection_substitution_beddays <- targets::tar_read(perc_imd_redirection_substitution_beddays)
-rates_imd_redirection_substitution_beddays <- targets::tar_read(rates_imd_redirection_substitution_beddays)
-```
-
-::: panel-tabset
-#### Percentage of `r treatment_type_title` activity
-
-```{r}
-#| label: tbl-perc_imd_redirection_substitution_beddays
-#| tbl-cap: !expr get_caption_by_group("perc", cohort_title, "beddays", "imd", treatment_type)
-targets::tar_read(perc_imd_redirection_substitution_beddays) |>
-  get_table_perc() 
-```
-
-```{r}
-#| label: fig-perc_imd_redirection_substitution_beddays
-#| fig-cap: !expr get_caption_by_group("perc", cohort_title, "beddays", "imd", treatment_type)
-targets::tar_read(perc_imd_redirection_substitution_beddays) |>
-  get_perc_by_group_plot("imd19_decile", "beddays")
-```
-
-#### Percentage of `r treatment_type_title` activity
-
-```{r}
-#| label: tbl-rate_redirection_substitution_imd_beddays
-#| tbl-cap: !expr get_caption_by_group("rate", cohort_title, "beddays", "imd")
-targets::tar_read(rates_imd_redirection_substitution_beddays) |>
-  get_rates_by_group_table() 
-```
-
-```{r}
-#| label: fig-rate_redirection_substitution_imd_beddays
-#| fig-cap: !expr get_caption_by_group("rate", cohort_title, "beddays", "imd")
-targets::tar_read(rates_imd_redirection_substitution_beddays) |>
-  get_rates_by_group_plot("imd19_decile")
-```
-:::
-
-### Sex
-
-```{r}
-perc_sex_redirection_substitution_beddays <- targets::tar_read(perc_sex_redirection_substitution_beddays)
-rates_sex_redirection_substitution_beddays <- targets::tar_read(rates_sex_redirection_substitution_beddays)
-```
-
-::: panel-tabset
-#### Percentage of `r treatment_type_title` activity
-
-```{r}
-#| label: tbl-perc_sex_redirection_substitution_beddays
-#| tbl-cap: !expr get_caption_by_group("perc", cohort_title, "beddays", "sex", treatment_type)
-targets::tar_read(perc_sex_redirection_substitution_beddays) |>
-  get_table_perc() 
-```
-
-```{r}
-#| label: fig-perc_sex_redirection_substitution_beddays
-#| fig-cap: !expr get_caption_by_group("perc", cohort_title, "beddays", "sex", treatment_type)
-targets::tar_read(perc_sex_redirection_substitution_beddays) |>
-  get_perc_by_group_plot("sex", "beddays")
-```
-
-#### Percentage of `r treatment_type_title` activity
-
-```{r}
-#| label: tbl-rate_redirection_substitution_sex_beddays
-#| tbl-cap: !expr get_caption_by_group("rate", cohort_title, "beddays", "sex")
-targets::tar_read(rates_sex_redirection_substitution_beddays) |>
-  get_rates_by_group_table() 
-```
-
-```{r}
-#| label: fig-rate_redirection_substitution_sex_beddays
-#| fig-cap: !expr get_caption_by_group("rate", cohort_title, "beddays", "sex")
-targets::tar_read(rates_sex_redirection_substitution_beddays) |>
-  get_rates_by_group_plot("sex")
-```
-:::
-:::
 :::
 
 ### Admission Characteristics
