@@ -27,6 +27,8 @@ The age and sex standardised rates are calculated using population data for Engl
 
 ## Analysis
 
+The analysis uses the most recent year of data available, 2023/24, except for trends analysis where analysis includes data from the last 9 years.
+
 The majority of the mitigators are for activity avoidance, therefore these mitigators will impact the number of admissions, and through changes in admissions will also influence the number of beddays. However, 3 mitigators (Emergency Admission of Older People, Stroke Early Supported Discharge and Admissions with Mental Health Comorbidities) are efficiency mitigators, meaning that the admissions can't be avoided but the the length of stay could be reduced impacting the number of beddays. For these 3 mitigators we therefore only consider the number of beddays and not the number of admissions.
 
 
@@ -59,3 +61,5 @@ LA shapefile: <https://geoportal.statistics.gov.uk/datasets/6a05f93297cf4a438d08
 The mitigable activity is given as a proportion of either total emergency activity or total emergency and elective activity for the whole population, dependent on whether the mitigable activity is defined as only emergency activity or can be either emergency or elective.
 
 The age and sex standardised rates are the rate of admissions/beddays for the whole population of England, standardised to the England population from the 2021 census. 
+
+Where percentage changes over time are calculated, the changes are calculated for the most recent 5 years, 2018/19 to 2023/25. 
