@@ -63,7 +63,7 @@ plot_of_percentage_over_time(
 ```
 :::
 
-#### Age and sex standardised rates over time
+#### Age and sex standardised rates per 100,000 population
 
 ::: panel-tabset
 #### Admissions
