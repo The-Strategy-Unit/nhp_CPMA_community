@@ -85,7 +85,7 @@ format_metric_for_caption <- function(metric,
 
 format_treatment_for_caption <- function(treatment_type) {
   caption <- if(treatment_type == "both") {
-    "all (both elective and emergency)"
+    "all (elective and emergency)"
   } else {
     treatment_type
   }
