@@ -1,0 +1,30 @@
+```{r}
+overview <- targets::tar_read_raw(glue::glue("overview_{cohort}"))
+
+if(cohort != "efficiencies") {
+  admissions_perc <- overview |>
+  dplyr::filter(activity_type == "Admissions") |>
+  dplyr::pull(perc)
+}
+
+beddays_perc <- overview |>
+  dplyr::filter(activity_type == "Beddays") |>
+  dplyr::pull(perc)
+
+statement <- if(cohort == "efficiencies") { 
+  glue::glue("{beddays_perc}% of all emergency beddays") 
+} else if (cohort == "zero_los_no_procedure_adult" | cohort == "zero_los_no_procedure_child") {
+  glue::glue("{admissions_perc}% of all emergency admissions")
+} else {
+  glue::glue("{admissions_perc}% of all emergency admissions and {beddays_perc}% of all emergency beddays")
+}
+```
+
+In 2023/24, `r statement` fall under mitigable activity for the Frail Older People (high frailty) cohort.
+
+```{r}
+#| label: tbl-overview
+#| tbl-cap: !expr get_caption_overview(cohort_title, treatment_type)
+overview |>
+  get_table_perc()
+```

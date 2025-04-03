@@ -1,0 +1,81 @@
+```{r}
+perc_patient_characteristic_admissions <- targets::tar_read_raw(glue::glue("perc_{patient_characteristic}_{cohort}_admissions"))
+rates_patient_characteristic_admissions <- targets::tar_read_raw(glue::glue("rates_{patient_characteristic}_{cohort}_admissions"))
+perc_patient_characteristic_beddays <- targets::tar_read_raw(glue::glue("perc_{patient_characteristic}_{cohort}_beddays"))
+rates_patient_characteristic_beddays <- targets::tar_read_raw(glue::glue("rates_{patient_characteristic}_{cohort}_beddays"))
+```
+
+::: panel-tabset
+#### Percentage of `r treatment_type_title` activity
+
+::: panel-tabset
+##### Admissions
+
+```{r}
+#| label: tbl-perc_patient_characteristic_admissions
+#| tbl-cap: !expr get_caption_by_group("perc", cohort_title, "admissions", "age group", treatment_type)
+perc_patient_characteristic_admissions |>
+  get_table_perc() 
+```
+
+```{r}
+#| label: fig-perc_patient_characteristic_admissions
+#| fig-cap: !expr get_caption_by_group("perc", cohort_title, "admissions", "age group", treatment_type)
+perc_patient_characteristic_admissions |>
+  get_perc_by_group_plot(patient_characteristic_col_name, "admissions")
+```
+
+##### Beddays
+
+```{r}
+#| label: tbl-perc_patient_characteristic_beddays
+#| tbl-cap: !expr get_caption_by_group("perc", cohort_title, "beddays", "age group", treatment_type)
+perc_patient_characteristic_beddays |>
+  get_table_perc() 
+```
+
+```{r}
+#| label: fig-perc_patient_characteristic_beddays
+#| fig-cap: !expr get_caption_by_group("perc", cohort_title, "beddays", "age group", treatment_type)
+perc_patient_characteristic_beddays |>
+  get_perc_by_group_plot(patient_characteristic_col_name, "beddays")
+```
+:::
+
+#### Crude rate
+
+::: panel-tabset
+##### Admissions
+
+```{r}
+#| label: tbl-rate_patient_characteristic_admissions
+#| tbl-cap: !expr get_caption_by_group("rate", cohort_title, "admissions", "age group")
+rates_patient_characteristic_admissions |>
+  get_rates_by_group_table() 
+```
+
+```{r}
+#| label: fig-rate_patient_characteristic_admissions
+#| fig-cap: !expr get_caption_by_group("rate", cohort_title, "admissions", "age group")
+rates_patient_characteristic_admissions |>
+  get_rates_by_group_plot(patient_characteristic_col_name)
+```
+
+##### Beddays
+
+```{r}
+#| label: tbl-rate_patient_characteristic_beddays
+#| tbl-cap: !expr get_caption_by_group("rate", cohort_title, "beddays", "age group")
+rates_patient_characteristic_beddays |>
+  get_rates_by_group_table() 
+```
+
+```{r}
+#| label: fig-rate_patient_characteristic_beddays
+#| fig-cap: !expr get_caption_by_group("rate", cohort_title, "beddays", "age group")
+rates_patient_characteristic_beddays |>
+  get_rates_by_group_plot(patient_characteristic_col_name)
+```
+
+:::
+:::
