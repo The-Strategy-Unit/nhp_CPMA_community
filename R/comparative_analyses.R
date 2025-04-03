@@ -254,7 +254,8 @@ get_summary_by_icb_map <- function(data, boundaries, metric) {
     dplyr::rename(icb_2024_name = icb23nm) |>
     dplyr::left_join(data, by = "icb_2024_name") |>
     get_icb_tooltip(metric) |>
-    ggplot2::ggplot(ggplot2::aes(fill = metric_colour, tooltip = ICB)) +
+    ggplot2::ggplot(ggplot2::aes(fill = metric_colour, tooltip = ICB))  +
+    ggplot2::scale_fill_continuous(trans = 'reverse') +
     ggplot2::geom_sf() +
     ggplot2::theme_void() +
     ggplot2::labs(fill = metric_title)
