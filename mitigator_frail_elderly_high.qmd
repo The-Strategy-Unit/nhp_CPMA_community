@@ -619,7 +619,7 @@ knitr::knit_child(
   cat(sep = '\n')
 ```
 
-### ICB
+### Integrated Care Boards
 
 Note: Low numbers of admissions/beddays for Frimley ICB in 2022/23 reflect an issue with data submissions for this period. 
 
