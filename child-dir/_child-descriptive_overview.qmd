@@ -15,12 +15,14 @@ statement <- if(cohort == "efficiencies") {
   glue::glue("{beddays_perc}% of all emergency beddays") 
 } else if (cohort == "zero_los_no_procedure_adult" | cohort == "zero_los_no_procedure_child") {
   glue::glue("{admissions_perc}% of all emergency admissions")
+}  else if(cohort=="redirection_substitution"| cohort=="prevention"){
+  glue::glue("{admissions_perc}% of all admissions (emergency and elective) and {beddays_perc}% of all beddays (emergency and elective)")
 } else {
   glue::glue("{admissions_perc}% of all emergency admissions and {beddays_perc}% of all emergency beddays")
 }
 ```
 
-In 2023/24, `r statement` fall under mitigable activity for the Frail Older People (high frailty) cohort.
+In 2023/24, `r statement` fall under mitigable activity for the `r cohort_title` cohort.
 
 ```{r}
 #| label: tbl-overview
