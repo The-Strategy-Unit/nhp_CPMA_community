@@ -807,9 +807,9 @@ plotting_percentage_change_over_time_by_icb(icb_age_sex_standardised_rates_bedda
 :::
 :::
 
-### Change in age and sex standardised rate over time relative to level of activity
+#### Change in standardised rate relative over the last 5 years, relative to the starting rate in 2018/19, by ICB.
 
-This chart shows the percentage change for each ICB (between 2018/19 and 2023/24) relative to it's starting level of admissions/beddays (in 2018/19) to help demonstrate performance across ICBs. 
+This chart shows the percentage change in the age and sex standardised rate per 100,000 population for each ICB (between 2018/19 and 2023/24) relative to it's starting rate in 2018/19, to help demonstrate performance across ICBs. 
 
 Those ICBs in the lower left quadrant (shaded in green) could be considered as performing well; they already had relatively low standardised rates of admissions/beddays in 2018/19 and have continued to make further decreases over the last five years.
 
@@ -840,7 +840,7 @@ plotting_total_activity_vs_percentage_change(icb_age_sex_standardised_rates_bedd
 
 ### Local Authority
 
-Age and sex standardised rates of activity per 100,000 for local authority areas. 
+Age and sex standardised rates of activity per 100,000 population for local authority areas. 
 
 ::: panel-tabset
 

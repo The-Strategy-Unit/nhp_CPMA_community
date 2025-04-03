@@ -53,7 +53,7 @@ icb_23_shp <- sf::st_read("https://services1.arcgis.com/ESMARspQHYMw9BZ9/arcgis/
   dplyr::mutate(icb23nm = simplify_icb_name(icb23nm))
 ```
 
-What this mechanism is...
+This analysis includes mitigators where the mechanism of action is through Redirection/Substitution of activity. This means that some of the admissions in this group could be avoided by greater use of other services/provisions in the community (either existing or new).
 
 ## Descriptive Analysis of Mitigable Activity
 
@@ -244,7 +244,7 @@ knitr::knit_child(
   cat(sep = '\n')
 ```
 
-### Integrated Care Boards
+### Integrated Care Board
 
 Note: Low numbers of admissions/beddays for Frimley ICB in 2022/23 reflect an issue with data submissions for this period. 
 
@@ -260,7 +260,7 @@ knitr::knit_child(
 
 ### Local Authority
 
-Age and sex standardised rates of activity per 100,000 for local authority areas. 
+Age and sex standardised rates of activity per 100,000 population for local authority areas. 
 
 ```{r}
 #| output: asis
