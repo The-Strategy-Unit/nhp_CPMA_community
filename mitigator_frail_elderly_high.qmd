@@ -84,7 +84,7 @@ patient_characteristic_col_name <- "age_range"
 ```{r}
 #| output: asis
 knitr::knit_child(
-  input = "child-dir/_child-descriptive_patient-characteristic.qmd",
+  input = "child-dir/_child-descriptive_patient-characteristics.qmd",
   envir = environment(),
   quiet = TRUE
   ) |>
@@ -100,7 +100,7 @@ patient_characteristic_col_name <- "Ethnic_Category"
 ```{r}
 #| output: asis
 knitr::knit_child(
-  input = "child-dir/_child-descriptive_patient-characteristic.qmd",
+  input = "child-dir/_child-descriptive_patient-characteristics.qmd",
   envir = environment(),
   quiet = TRUE
   ) |>
@@ -116,7 +116,7 @@ patient_characteristic_col_name <- "imd19_decile"
 ```{r}
 #| output: asis
 knitr::knit_child(
-  input = "child-dir/_child-descriptive_patient-characteristic.qmd",
+  input = "child-dir/_child-descriptive_patient-characteristics.qmd",
   envir = environment(),
   quiet = TRUE
   ) |>
@@ -132,7 +132,7 @@ patient_characteristic_col_name <- "sex"
 ```{r}
 #| output: asis
 knitr::knit_child(
-  input = "child-dir/_child-descriptive_patient-characteristic.qmd",
+  input = "child-dir/_child-descriptive_patient-characteristics.qmd",
   envir = environment(),
   quiet = TRUE
   ) |>
