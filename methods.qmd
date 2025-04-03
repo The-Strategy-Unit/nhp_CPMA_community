@@ -1,4 +1,4 @@
-# Methodology
+# Methodology {#sec-methods .unnumbered}
 
 ## Hospital activity data
 
