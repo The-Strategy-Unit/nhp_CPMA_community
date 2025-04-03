@@ -144,67 +144,15 @@ knitr::knit_child(
 
 In this section, mitigable activity for the Frail Older People (high frailty) cohort are shown by admission characteristics.
 
-::: panel-tabset
-#### Length Of Stay
-
 ```{r}
-perc_los_frail_elderly_high <- targets::tar_read(perc_los_frail_elderly_high)
+#| output: asis
+knitr::knit_child(
+  input = "child-dir/_child-descriptive_admission-characteristics.qmd",
+  envir = environment(),
+  quiet = TRUE
+  ) |>
+  cat(sep = '\n')
 ```
-
-Of the 2023/24 mitigable admissions for Frail Older People (high frailty) cohort, most (`r perc_los_frail_elderly_high |> dplyr::filter(weeks == 1) |> dplyr::pull(perc_weeks) |> purrr::pluck(1)`%) length of stays are under 1 week and `r perc_los_frail_elderly_high |> dplyr::filter(los_range == 0) |> dplyr::pull(perc)`% are less than 1 day.
-
-```{r}
-#| label: tbl-perc_los_frail_elderly_high
-#| tbl-cap: !expr get_caption_by_group("perc", cohort_title, "admissions", "los", treatment_type)
-perc_los_frail_elderly_high |>
-  get_perc_by_los_table()
-```
-
-```{r}
-#| label: fig-perc_los_frail_elderly_high
-#| fig-cap: !expr get_caption_by_group("perc", cohort_title, "admissions", "los", treatment_type)
-perc_los_frail_elderly_high |>
-  get_perc_by_los_plot()
-```
-
-#### Specialty
-
-Across both admissions and beddays, the largest two treatment functions for mitigable activity for the Frail Older People (high frailty) cohort are Elderly Medicine Service and General Internal Medicine Service.
-
-::: panel-tabset
-##### Admissions
-
-```{r}
-#| label: tbl-perc_specialty_frail_elderly_high_admissions
-#| tbl-cap: !expr get_caption_top_ten_specialties(cohort_title, "admissions")
-targets::tar_read(specialty_frail_elderly_high_admissions) |>
-  get_table_perc() 
-```
-
-```{r}
-#| label: fig-perc_specialty_frail_elderly_high_admissions
-#| fig-cap: !expr get_caption_top_ten_specialties(cohort_title, "admissions")
-targets::tar_read(specialty_frail_elderly_high_admissions)  |>
-  get_top_ten_specialties_plot("admissions")
-```
-
-##### Beddays
-
-```{r}
-#| label: tbl-perc_specialty_frail_elderly_high_beddays
-#| tbl-cap: !expr get_caption_top_ten_specialties(cohort_title, "beddays")
-targets::tar_read(specialty_frail_elderly_high_beddays) |>
-  get_table_perc() 
-```
-
-```{r}
-#| label: fig-perc_specialty_frail_elderly_high_beddays
-#| fig-cap: !expr get_caption_top_ten_specialties(cohort_title, "beddays")
-targets::tar_read(specialty_frail_elderly_high_beddays) |>
-  get_top_ten_specialties_plot("beddays")
-```
-:::
-:::
 
 ## Cohort overlap
 

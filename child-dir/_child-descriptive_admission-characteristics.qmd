@@ -1,0 +1,65 @@
+::: panel-tabset
+#### Length Of Stay
+
+```{r}
+perc_los <- targets::tar_read_raw(glue::glue("perc_los_{cohort}"))
+```
+
+```{r}
+#| label: tbl-perc_los
+#| tbl-cap: !expr get_caption_by_group("perc", cohort_title, "admissions", "los", treatment_type)
+perc_los |>
+  get_perc_by_los_table()
+```
+
+```{r}
+#| label: fig-perc_los
+#| fig-cap: !expr get_caption_by_group("perc", cohort_title, "admissions", "los", treatment_type)
+perc_los |>
+  get_perc_by_los_plot()
+```
+
+#### Specialty
+
+::: panel-tabset
+##### Admissions
+
+```{r}
+specialty_admissions <- targets::tar_read_raw(glue::glue("specialty_{cohort}_admissions"))
+```
+
+```{r}
+#| label: tbl-perc_specialty_admissions
+#| tbl-cap: !expr get_caption_top_ten_specialties(cohort_title, "admissions")
+specialty_admissions |>
+  get_table_perc() 
+```
+
+```{r}
+#| label: fig-perc_specialty_admissions
+#| fig-cap: !expr get_caption_top_ten_specialties(cohort_title, "admissions")
+specialty_admissions |>
+  get_top_ten_specialties_plot("admissions")
+```
+
+##### Beddays
+
+```{r}
+specialty_beddays <- targets::tar_read_raw(glue::glue("specialty_{cohort}_beddays"))
+```
+
+```{r}
+#| label: tbl-perc_specialty_beddays
+#| tbl-cap: !expr get_caption_top_ten_specialties(cohort_title, "beddays")
+specialty_beddays |>
+  get_table_perc() 
+```
+
+```{r}
+#| label: fig-perc_specialty_beddays
+#| fig-cap: !expr get_caption_top_ten_specialties(cohort_title, "beddays")
+specialty_beddays |>
+  get_top_ten_specialties_plot("beddays")
+```
+:::
+:::

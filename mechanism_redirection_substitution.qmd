@@ -137,63 +137,15 @@ knitr::knit_child(
 
 ### Admission Characteristics
 
-::: panel-tabset
-### Length Of Stay
-
 ```{r}
-perc_los_redirection_substitution <- targets::tar_read(perc_los_redirection_substitution)
+#| output: asis
+knitr::knit_child(
+  input = "child-dir/_child-descriptive_admission-characteristics.qmd",
+  envir = environment(),
+  quiet = TRUE
+  ) |>
+  cat(sep = '\n')
 ```
-
-```{r}
-#| label: tbl-perc_los_redirection_substitution
-#| tbl-cap: !expr get_caption_by_group("perc", cohort_title, "admissions", "los", treatment_type)
-perc_los_redirection_substitution |>
-  get_perc_by_los_table()
-```
-
-```{r}
-#| label: fig-perc_los_redirection_substitution
-#| fig-cap: !expr get_caption_by_group("perc", cohort_title, "admissions", "los", treatment_type)
-perc_los_redirection_substitution |>
-  get_perc_by_los_plot()
-```
-
-### Specialty
-
-::: panel-tabset
-#### Admissions
-
-```{r}
-#| label: tbl-perc_specialty_redirection_substitution_admissions
-#| tbl-cap: !expr get_caption_top_ten_specialties(cohort_title, "admissions")
-targets::tar_read(specialty_redirection_substitution_admissions) |>
-  get_table_perc() 
-```
-
-```{r}
-#| label: fig-perc_specialty_redirection_substitution_admissions
-#| fig-cap: !expr get_caption_top_ten_specialties(cohort_title, "admissions")
-targets::tar_read(specialty_redirection_substitution_admissions)  |>
-  get_top_ten_specialties_plot("admissions")
-```
-
-#### Beddays
-
-```{r}
-#| label: tbl-perc_specialty_redirection_substitution_beddays
-#| tbl-cap: !expr get_caption_top_ten_specialties(cohort_title, "beddays")
-targets::tar_read(specialty_redirection_substitution_beddays) |>
-  get_table_perc() 
-```
-
-```{r}
-#| label: fig-perc_specialty_redirection_substitution_beddays
-#| fig-cap: !expr get_caption_top_ten_specialties(cohort_title, "beddays")
-targets::tar_read(specialty_redirection_substitution_beddays) |>
-  get_top_ten_specialties_plot("beddays")
-```
-:::
-:::
 
 ## Cohort overlap
 
