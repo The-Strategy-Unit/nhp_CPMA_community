@@ -635,7 +635,7 @@ knitr::knit_child(
 
 ### Local Authority
 
-Age and sex standardised rates of activity for local authority areas 
+Age and sex standardised rates of activity per 100,000 for local authority areas. 
 
 ```{r}
 #| output: asis

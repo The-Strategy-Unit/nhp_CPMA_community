@@ -840,7 +840,7 @@ plotting_total_activity_vs_percentage_change(icb_age_sex_standardised_rates_bedd
 
 ### Local Authority
 
-Age and sex standardised rates of activity for local authority areas 
+Age and sex standardised rates of activity per 100,000 for local authority areas. 
 
 ::: panel-tabset
 
