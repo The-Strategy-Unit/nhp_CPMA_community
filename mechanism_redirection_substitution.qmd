@@ -1,4 +1,4 @@
-# Redirection and Substitution
+# Redirection and Substitution 
 
 ```{r}
 library("flextable")
@@ -55,6 +55,22 @@ icb_23_shp <- sf::st_read("https://services1.arcgis.com/ESMARspQHYMw9BZ9/arcgis/
 
 This analysis includes mitigators where the mechanism of action is through Redirection/Substitution of activity. This means that some of the admissions in this group could be avoided by greater use of other services/provisions in the community (either existing or new).
 
+The 16 mitigators included in this analysis are:
+
+-   Ambulatory Care Sensitive Admissions- Acute Conditions/ Chronic Conditions/Vacci e Preventable
+
+-   End of Life Care Admissions- died within 2 days/ died within 3-14 days
+
+-   Falls Related Admissions
+
+-   Frail Elderly Admissions- High Frailty Risk/ Intermediate Frailty Risk
+
+-   Medicines Related Admissions- Explicit/ Implicit - Anti-Diabetics/ Implicit - Benzodiazepines/ Implicit - Diuretics/ Implicit - NSAIDs
+
+-   Emergency Readmissions Within 28 Days
+
+-   Admission With No Overnight Stay and No Procedure - Adults/ Children
+
 ## Descriptive Analysis of Mitigable Activity
 
 ```{r}
@@ -71,6 +87,7 @@ knitr::knit_child(
 
 ::: panel-tabset
 #### Age
+
 ```{r}
 patient_characteristic <- "age"
 patient_characteristic_col_name <- "age_range"
@@ -87,6 +104,7 @@ knitr::knit_child(
 ```
 
 #### Ethnicity
+
 ```{r}
 patient_characteristic <- "ethnicity"
 patient_characteristic_col_name <- "Ethnic_Category"
@@ -103,6 +121,7 @@ knitr::knit_child(
 ```
 
 #### IMD
+
 ```{r}
 patient_characteristic <- "imd"
 patient_characteristic_col_name <- "imd19_decile"
@@ -119,6 +138,7 @@ knitr::knit_child(
 ```
 
 #### Sex
+
 ```{r}
 patient_characteristic <- "sex"
 patient_characteristic_col_name <- "sex"
@@ -153,7 +173,7 @@ Many admissions meet the criteria to be included in more than one mitigator coho
 
 ### Number and proportion within multiple other cohorts
 
-For the Redirection/Substitution mechanism group we show how much of the activity is included in other Redirection/Substitution groups. 
+For the Redirection/Substitution mechanism group we show how much of the activity is included in other Redirection/Substitution mitgators cohorts.
 
 ```{r}
 overlap_numbers <- targets::tar_read(cohort_overlap_numbers_redirection)
@@ -173,7 +193,7 @@ knitr::knit_child(
 
 Often overlap between a small number of groups can be visualised using Venn diagram. However, due to the large number of mitigator cohorts and therefore high numbers of potential combinations of overlaps we have used upset plots to show the largest overlaps between cohorts.
 
-The 15 most common cohort combinations for the Redirection/Substitution mechanism group are shown. 
+The 15 most common mitigator cohort combinations within the Redirection/Substitution mechanism group are shown.
 
 ```{r}
 #| output: asis
@@ -237,7 +257,7 @@ knitr::knit_child(
 
 ### Integrated Care Board
 
-Note: Low numbers of admissions/beddays for Frimley ICB in 2022/23 reflect an issue with data submissions for this period. 
+Note: Low numbers of admissions/beddays for Frimley ICB in 2022/23 reflect an issue with data submissions for this period.
 
 ```{r}
 #| output: asis
@@ -251,7 +271,7 @@ knitr::knit_child(
 
 ### Local Authority
 
-Age and sex standardised rates of activity per 100,000 population for local authority areas. 
+Age and sex standardised rates of activity per 100,000 population for local authority areas.
 
 ```{r}
 #| output: asis
