@@ -56,7 +56,7 @@ number_percentage_over_time<-numbers_over_time_total_mitigation|>
   as.data.frame()
 ```
 
-## Mitigatable activity
+## Mitigable activity
 
 The numbers of admissions and beddays give the potentially mitigable activity for England in 2023/24.
 
@@ -166,9 +166,16 @@ total_mitigator_activity<-numbers_over_time_total_mitigation|>
   summarise(episodes=sum(episodes),
             beddays=sum(beddays))
 
+
+england_average_percentage_beddays<-calculating_england_average_percentage(number_percentage_over_time|>filter(!is.nan(percentage_episodes)), beddays, total_beddays)|>
+  rename(percentage=`2023/24`)
+
+england_average_percentage_episodes<-calculating_england_average_percentage(number_percentage_over_time|>filter(!is.nan(percentage_episodes)), episodes, total_episodes)|>
+  rename(percentage=`2023/24`)
+
 ```
 
-In 2023/24 in England there were **`r format(total_mitigator_activity$episodes, big.mark=",")` admissions** and **`r format(total_mitigator_activity$beddays, big.mark=",")` beddays** for potentially mitigable activity. This total excludes any double counting as a result of activity being including in multiple mitigator cohorts.
+In 2023/24 in England there were **`r format(total_mitigator_activity$episodes, big.mark=",")` admissions (`r england_average_percentage_episodes$percentage`%)** and **`r format(total_mitigator_activity$beddays, big.mark=",")` beddays (`r england_average_percentage_beddays$percentage`%)** for potentially mitigable activity. This total excludes any double counting as a result of activity being including in multiple mitigator cohorts.
 
 ## Overlap between the mechanism of mitigation groups
 
@@ -513,7 +520,7 @@ We aim to understand whether there have been decreases, or increases, in potenti
 
 a\) the absolute number of admissions/beddays,
 
-b\) the crude rate of admissions/beddays (i.e. as proportion of total admissions),
+b\) these admissions/beddays as a proportion of total admissions,
 
 c\) the age and sex standardised rates of these admissions/beddays using the England 2021 census population.
 
@@ -567,7 +574,7 @@ plot_of_number_over_time(number_percentage_over_time,  beddays)
 ```
 :::
 
-#### Percentage of total admissions
+#### Percentage of total activity
 
 Total mitigable activity as a percentage of total activity (elective and emergency admissions/beddays).
 
@@ -685,7 +692,7 @@ plotting_percentage_change_over_time_by_icb(number_percentage_over_time|>filter(
 ```
 :::
 
-#### Percentage of total admissions
+#### Percentage of total activity
 
 Total mitigable activity as a percentage of total elective and emergency admissions/beddays.
 
