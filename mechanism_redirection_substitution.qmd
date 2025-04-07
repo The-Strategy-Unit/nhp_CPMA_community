@@ -1,4 +1,4 @@
-# Redirection and Substitution 
+# Redirection and Substitution
 
 ```{r}
 library("flextable")
@@ -237,7 +237,7 @@ We aim to understand whether there have been decreases, or increases, in potenti
 
 a\) the absolute number of Redirection and Substitution admissions/beddays,
 
-b\) these admissions/beddays as a proportion of emergency admissions,
+b\) these admissions/beddays as a proportion of total admissions,
 
 c\) the age and sex standardised rates of these admissions/beddays using the England 2021 census population.
 
