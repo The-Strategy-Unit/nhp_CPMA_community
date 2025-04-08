@@ -2,38 +2,13 @@
 # Once drafts are created, we can tweak each file individually and add narrative.
 
 # Building blocks --------------------------------------------------------------
-
-get_overview_section <- function(mitigator){
+## Functions -------------------------------------------------------------------
+get_cohort_title <- function(mitigator, summary) {
+  title <- summary |>
+    dplyr::filter(mitigator_code == mitigator) |>
+    dplyr::pull(mitigator_name)
   
-  code <- c("```{r}",
-  paste0("overview <- targets::tar_read(overview_",
-         mitigator,
-         ")"),
-  "```",
-  "")
-  
-  return(code)
-}
-
-get_comparative_section <- function(activity_type) {
-  code <- c(
-    glue::glue("### {stringr::str_to_title(activity_type)}"),
-    "```{r}",
-    "#| output: asis",
-    glue::glue("activity_type <- \"{activity_type}\""),
-    glue::glue("standardised_rates <- england_age_sex_standardised_rates_{activity_type}"),
-    "",
-    "knitr::knit_child(
-        input = \"child-dir/_child-comparative.qmd\",
-        envir = environment(),
-        quiet = TRUE
-        ) |>
-        cat(sep = '\\n')",
-    "```",
-    ""
-  )
-  
-  return(code)
+  return(title)
 }
 
 get_filename <- function(mitigator) {
@@ -53,7 +28,131 @@ get_filename <- function(mitigator) {
   return(filename)
 }
 
-packages_and_options <- c( 
+get_global_variables <- function(mitigator,
+                                 summary_table,
+                                 treatment_lookup) {
+  treatment_type <- get_treatment_type(mitigator, treatment_lookup)
+  
+  code <- c(
+    "```{r global_variables}",
+    paste0("cohort <- \"", mitigator, "\""),
+    paste0(
+      "cohort_title <- \"",
+      get_cohort_title(mitigator, summary_table),
+      "\""
+    ),
+    paste0("treatment_type <- \"", treatment_type, "\""),
+    paste0(
+      "treatment_type_title <- format_treatment_for_caption(\"",
+      treatment_type,
+      "\")"
+    ),
+    "```",
+    ""
+  )
+  
+  return(code)
+}
+
+get_treatment_type <- function(mitigator, lookup) {
+  treatment_type <- lookup |>
+    dplyr::filter(mitigator_or_mechanism == mitigator) |>
+    dplyr::pull(treatment_type)
+  
+  return(treatment_type)
+}
+
+rename_admissions_as_episodes <- function(activity_type) {
+  renamed_activity_type <- if (activity_type == "admissions") {
+    "episodes"
+  } else {
+    activity_type
+  }
+  
+  return(renamed_activity_type)
+}
+
+## Strings ---------------------------------------------------------------------
+
+admission_characteristics_section <- c(
+  "### Admission Characteristics",
+  "",
+  "In this section, mitigable activity for the `r cohort_title` cohort are shown by admission characteristics.",
+  "",
+  "```{r}",
+  "#| output: asis",
+  "knitr::knit_child(
+    input = \"child-dir/_child-descriptive_admission-characteristics.qmd\",
+    envir = environment(),
+    quiet = TRUE
+  ) |>
+  cat(sep = '\\n')",
+  "```",
+  ""
+)
+
+comparative_section <- c(
+  "### Integrated Care Board",
+  "",
+  "```{r}",
+  "#| output: asis",
+  "knitr::knit_child(
+                  input = \"child-dir/_child-comparative_icb.qmd\",
+                  envir = environment(),
+                  quiet = TRUE
+                ) |>
+                  cat(sep = '\\n')",
+  "```",
+  "",
+  "### Local Authority",
+  "",
+  "```{r}",
+  "#| output: asis",
+  "knitr::knit_child(
+                  input = \"child-dir/_child-comparative_local-authority.qmd\",
+                  envir = environment(),
+                  quiet = TRUE
+                ) |>
+                  cat(sep = '\\n')",
+  "```",
+  ""
+)
+
+data <- c(
+  "```{r data}",
+  "#| output: false",
+  "mitigator_summary_table <- readxl::read_excel(\"summary_mitigators_table.xlsx\") |>
+  dplyr::mutate(mechanism = snakecase::to_snake_case(mechanism))",
+  "",
+  "england_age_sex_standardised_rates_episodes <- tar_read(england_age_sex_standardised_rates_episodes) |>
+    filter(cohorts == cohort)",
+  "",
+  "england_age_sex_standardised_rates_beddays <- tar_read(england_age_sex_standardised_rates_beddays) |>
+    filter(cohorts == cohort)",
+  "",
+  "total_beddays_admissions <- targets::tar_read(total_beddays_admissions)",
+  "",
+  "icb_23_shp <- sf::st_read(\"https://services1.arcgis.com/ESMARspQHYMw9BZ9/arcgis/rest/services/Integrated_Care_Boards_April_2023_EN_BGC/FeatureServer/0/query?outFields=*&where=1%3D1&f=geojson\") |>
+    janitor::clean_names() |>
+    dplyr::mutate(icb23nm = simplify_icb_name(icb23nm))",
+  "```",
+  ""
+)
+
+overview_section <-  c(
+  "```{r}",
+  "#| output: asis",
+  "knitr::knit_child(
+      input = \"child-dir/_child-descriptive_overview.qmd\",
+      envir = environment(),
+      quiet = TRUE
+    ) |>
+      cat(sep = '\\n')",
+  "```",
+  ""
+)
+
+packages_and_options <- c(
   "```{r packages_and_options}",
   "library(\"flextable\")",
   "library(\"tidyr\")",
@@ -79,95 +178,111 @@ packages_and_options <- c(
   "options(knitr.duplicate.label = \"allow\")",
   "```",
   ""
-  )
+)
 
-get_global_variables <- function(mitigator, 
-                                 summary_table,
-                                 treatment_lookup){
-  treatment_type <- get_treatment_type(mitigator, treatment_lookup)
-  
-  code <- c(
-    "```{r global_variables}",
-    paste0("cohort <- \"",
-           mitigator, 
-           "\""),
-    paste0("cohort_title <- \"", 
-           get_cohort_title(mitigator, summary_table), 
-           "\""),
-    paste0("treatment_type <- \"", 
-           treatment_type, 
-           "\""),
-    paste0("treatment_type_title <- format_treatment_for_caption(\"", 
-           treatment_type,
-           "\")"),
-    "```",
-    ""
-  )
-    
-  return(code)
-}
-
-get_cohort_title <- function(mitigator, summary) {
-  
-  title <- summary |>
-    dplyr::filter(mitigator_code == mitigator) |>
-    dplyr::pull(mitigator_name)
-  
-  return(title)
-}
-
-get_treatment_type <- function(mitigator, lookup){
-  treatment_type <- lookup |> 
-    dplyr::filter(mitigator_or_mechanism == mitigator) |>
-    dplyr::pull(treatment_type)
-  
-  return(treatment_type)
-}
-
-data <- c(
-  "```{r data}",
-  "#| output: false",
-  "mitigator_summary_table <- readxl::read_excel(\"summary_mitigators_table.xlsx\") |>
-  dplyr::mutate(mechanism = snakecase::to_snake_case(mechanism))",
+patient_characteristics_section <- c(
+  "### Patient Characteristics",
   "",
-  "england_age_sex_standardised_rates_episodes <- tar_read(england_age_sex_standardised_rates_episodes) |>
-    filter(cohorts == cohort)",
+  "In this section, the number and percentage of mitigable activity for the `r cohort_title` cohort are shown by patient characteristics: age, ethnic category, IMD decile and sex. Crude rates per 100,000 population are also provided for context.",
   "",
-  "england_age_sex_standardised_rates_beddays <- tar_read(england_age_sex_standardised_rates_beddays) |>
-    filter(cohorts == cohort)",
+  "Outputs are presented for both admissions and beddays, but patterns are broadly similar across the two.",
   "",
-  "total_beddays_admissions <- targets::tar_read(total_beddays_admissions)",
-  "",
-  "icb_23_shp <- sf::st_read(\"https://services1.arcgis.com/ESMARspQHYMw9BZ9/arcgis/rest/services/Integrated_Care_Boards_April_2023_EN_BGC/FeatureServer/0/query?outFields=*&where=1%3D1&f=geojson\") |>
-    janitor::clean_names() |>
-    dplyr::mutate(icb23nm = simplify_icb_name(icb23nm))",
+  "::: panel-tabset",
+  
+  "#### Age",
+  "```{r}",
+  "patient_characteristic <- \"age\"",
+  "patient_characteristic_col_name <- \"age_range\"",
   "```",
+  "",
+  "```{r}",
+  "#| output: asis",
+  "knitr::knit_child(
+              input = \"child-dir/_child-descriptive_patient-characteristics.qmd\",
+              envir = environment(),
+              quiet = TRUE
+             ) |>
+            cat(sep = '\\n')",
+  "```",
+  "",
+  
+  "#### Ethnicity",
+  "```{r}",
+  "patient_characteristic <- \"ethnicity\"",
+  "patient_characteristic_col_name <- \"Ethnic_Category\"",
+  "```",
+  "",
+  "```{r}",
+  "#| output: asis",
+  "knitr::knit_child(
+              input = \"child-dir/_child-descriptive_patient-characteristics.qmd\",
+              envir = environment(),
+              quiet = TRUE
+             ) |>
+            cat(sep = '\\n')",
+  "```",
+  "",
+  
+  "#### IMD Decile",
+  "```{r}",
+  "patient_characteristic <- \"imd\"",
+  "patient_characteristic_col_name <- \"imd19_decile\"",
+  "```",
+  "",
+  "```{r}",
+  "#| output: asis",
+  "knitr::knit_child(
+              input = \"child-dir/_child-descriptive_patient-characteristics.qmd\",
+              envir = environment(),
+              quiet = TRUE
+             ) |>
+            cat(sep = '\\n')",
+  "```",
+  "",
+  
+  "#### Sex",
+  "```{r}",
+  "patient_characteristic <- \"sex\"",
+  "patient_characteristic_col_name <- \"sex\"",
+  "```",
+  "",
+  "```{r}",
+  "#| output: asis",
+  "knitr::knit_child(
+              input = \"child-dir/_child-descriptive_patient-characteristics.qmd\",
+              envir = environment(),
+              quiet = TRUE
+             ) |>
+            cat(sep = '\\n')",
+  "```",
+  "",
+  ":::",
   ""
 )
 
 # Function for creating draft reports ------------------------------------------
-create_draft_mitigator_qmd <- function(mitigator, 
-                                       my_file, 
+create_draft_mitigator_qmd <- function(mitigator,
+                                       my_file,
                                        summary_table,
                                        treatment_lookup) {
   code <- cat(
-    paste0("## ", get_cohort_title(mitigator, summary_table)),
+    paste0("## ", get_cohort_title(mitigator, summary_table), " {#sec-", cohort, " .unnumbered}"),
     "",
     packages_and_options,
-    get_global_variables(mitigator, 
-                         summary_table,
-                         treatment_lookup),
+    get_global_variables(mitigator, summary_table, treatment_lookup),
     data,
+    
     "## Descriptive Analysis",
     "",
-    get_overview_section(mitigator),
+    overview_section,
+    patient_characteristics_section,
+    admission_characteristics_section,
     "",
+    
     "## Comparative Analysis",
     "",
-    "::: panel-tabset",
-    get_comparative_section("admissions"),
-    get_comparative_section("beddays"),
-    ":::",
+    comparative_section,
+    
     sep = "\n",
     append = FALSE,
     file = my_file
@@ -205,14 +320,15 @@ mitigators_and_mechanisms <- mitigators_and_mechanisms_treatment_lookup |>
 
 # Creating draft quarto reports ------------------------------------------------
 # Whilst testing have limited to just one mitigator:
-mitigators_and_mechanisms <- c("eol_care_2_days") 
+mitigators_and_mechanisms <- c("eol_care_2_days")
 # exclude already existing ones?
 
 invisible(purrr::map(
-  mitigators_and_mechanisms, 
+  mitigators_and_mechanisms,
   ~ create_draft_mitigator_qmd(
-    ., 
-    my_file = get_filename(mitigators_and_mechanisms), 
+    .,
+    my_file = get_filename(mitigators_and_mechanisms),
     summary_table = mitigator_summary_table,
-    treatment_lookup = mitigators_and_mechanisms_treatment_lookup)))
-
+    treatment_lookup = mitigators_and_mechanisms_treatment_lookup
+  )
+))
