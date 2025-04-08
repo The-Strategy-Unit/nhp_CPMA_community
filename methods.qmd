@@ -18,9 +18,9 @@ The beddays for an admission are calculated based from the number of days betwee
 
 ## Population data 
 
-ICB populations for each year are from the Office of National Statistics mid year population estimates-  <https://www.ons.gov.uk/peoplepopulationandcommunity/populationandmigration/populationestimates/datasets/clinicalcommissioninggroupmidyearpopulationestimates>. As 2023/24 ICB population data was not available the 2022/23 data was also used for 2023/24.
+ICB populations for each year are from the Office of National Statistics mid year population estimates -  <https://www.ons.gov.uk/peoplepopulationandcommunity/populationandmigration/populationestimates/datasets/clinicalcommissioninggroupmidyearpopulationestimates>. As 2023/24 ICB population data was not available the 2022/23 data was also used for 2023/24.
 
-Local authority populations for each year are from the Office of National Statistics Estimates of the population for England and Wales dataset-  <https://www.ons.gov.uk/peoplepopulationandcommunity/populationandmigration/populationestimates/datasets/estimatesofthepopulationforenglandandwales>
+Local authority populations for each year are from the Office of National Statistics Estimates of the population for England and Wales dataset -  <https://www.ons.gov.uk/peoplepopulationandcommunity/populationandmigration/populationestimates/datasets/estimatesofthepopulationforenglandandwales>
 
 The age and sex standardised rates are calculated using population data for England from the 2021 census as the standard population - <https://www.ons.gov.uk/peoplepopulationandcommunity/populationandmigration/populationestimates/bulletins/populationandhouseholdestimatesenglandandwales/census2021>. In a small number of cases where age or sex is not recorded the data has been excluded from the standardised rates.
 
@@ -36,17 +36,12 @@ Where the activity for the cohort is given as a percentage of total activity, th
 
 ### Descriptive analysis
 
-- Weighting by population
-  - For age and gender used the Office of National Statistics Mid year population estimates were used- <https://www.ons.gov.uk/peoplepopulationandcommunity/populationandmigration/populationestimates/datasets/clinicalcommissioninggroupmidyearpopulationestimates>.
-  - For IMD used the Office of National Statistics Monthly populations by Index of Multiple Deprivation (IMD) decile, England 2022 were used- <https://www.ons.gov.uk/peoplepopulationandcommunity/populationandmigration/populationprojections/adhocs/15363monthlypopulationsbyindexofmultipledeprivationimddecileenglandjanuary2019toaugust2022> 
-  - For ethnicity the Office of National Statistics Ethnic group, England and Wales: Census 2021 dataset was used-
-    <https://www.ons.gov.uk/peoplepopulationandcommunity/culturalidentity/ethnicity/bulletins/ethnicgroupenglandandwales/census2021> Data was recoded into NHS ethnic categories.
-```{r}
-#  - https://www.ons.gov.uk/datasets/TS021/editions/2021/versions/1/filter-outputs/d5d755dd-baf8-4634-82cd-dedbb544e#09f?f=get-data#get-data
-  
-```
+To calculate crude rates of mitigable activity per 100,000 population by age and gender the Office of National Statistics Mid year population estimates were used - <https://www.ons.gov.uk/peoplepopulationandcommunity/populationandmigration/populationestimates/datasets/clinicalcommissioninggroupmidyearpopulationestimates>. 
 
-Data with NULL values were excluded 
+For crude rates by IMD decile the Office of National Statistics Monthly populations by Index of Multiple Deprivation (IMD) decile, England 2022 were used - <https://www.ons.gov.uk/peoplepopulationandcommunity/populationandmigration/populationprojections/adhocs/15363monthlypopulationsbyindexofmultipledeprivationimddecileenglandjanuary2019toaugust2022>.  
+For ethnicity the Office of National Statistics Ethnic group, England and Wales: Census 2021 dataset was used - <https://www.ons.gov.uk/peoplepopulationandcommunity/culturalidentity/ethnicity/bulletins/ethnicgroupenglandandwales/census2021>. Data was recoded into [NHS ethnic categories](https://digital.nhs.uk/data-and-information/data-collections-and-data-sets/data-sets/mental-health-services-data-set/submit-data/data-quality-of-protected-characteristics-and-other-vulnerable-groups/ethnicity#how-to-collect-and-record-ethnicity-data).
+
+In all descriptive analyses NULL and unknown values were excluded.
 
 ### Comparative analysis
 
