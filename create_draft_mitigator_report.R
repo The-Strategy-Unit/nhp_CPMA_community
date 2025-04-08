@@ -260,13 +260,73 @@ patient_characteristics_section <- c(
   ""
 )
 
+trend_section <- c(
+  "We aim to understand whether there have been decreases, or increases, in potentially mitigable `r cohort_title` activity over time. We have considered `r cohort_title` admissions and beddays over the past 9 years in England as a whole and for each ICB, including:",
+  "",
+  "a\\) the absolute number of `r cohort_title` admissions/beddays,",
+  "",
+  "b\\) these admissions/beddays as a proportion of `r treatment_type_title` admissions",
+  "",
+  "c\\) the age and sex standardised rates of these admissions/beddays using the England 2021 census population.",
+  "",
+  "To help understand the variability between ICBs we have calculated for each ICB the percentage change in proportion of emergency admissions and in standardised rates between 2018/19 and 2023/24.",
+  "",
+  
+  "### England",
+  "",
+  "```{r}",
+  "#| output: asis",
+  "knitr::knit_child(
+              input = \"child-dir/_child-trends_england.qmd\",
+              envir = environment(),
+              quiet = TRUE
+             ) |>
+            cat(sep = '\\n')",
+  "```",
+  "",
+  
+  "### ICB",
+  "",
+  "Note: Low numbers of admissions/beddays for Frimley ICB in 2022/23 reflect an issue with data submissions for this period.",
+  "",
+  "```{r}",
+  "#| output: asis",
+  "knitr::knit_child(
+              input = \"child-dir/_child-trends_icb.qmd\",
+              envir = environment(),
+              quiet = TRUE
+             ) |>
+            cat(sep = '\\n')",
+  "```",
+  "",
+  
+  "### Local Authority",
+  "",
+  "Age and sex standardised rates of activity per 100,000 population for local authority areas.",
+  "",
+  "```{r}",
+  "#| output: asis",
+  "knitr::knit_child(
+              input = \"child-dir/_child-trends_local-authority.qmd\",
+              envir = environment(),
+              quiet = TRUE
+             ) |>
+            cat(sep = '\\n')",
+  "```",
+  ""
+)
+
 # Function for creating draft reports ------------------------------------------
 create_draft_mitigator_qmd <- function(mitigator,
                                        my_file,
                                        summary_table,
                                        treatment_lookup) {
   code <- cat(
-    paste0("## ", get_cohort_title(mitigator, summary_table), " {#sec-", cohort, " .unnumbered}"),
+    paste0("## ", 
+           get_cohort_title(mitigator, summary_table), 
+           " {#sec-", 
+           cohort, 
+           " .unnumbered}"),
     "",
     packages_and_options,
     get_global_variables(mitigator, summary_table, treatment_lookup),
@@ -282,6 +342,10 @@ create_draft_mitigator_qmd <- function(mitigator,
     "## Comparative Analysis",
     "",
     comparative_section,
+    
+    "## Trend Analysis",
+    "",
+    trend_section,
     
     sep = "\n",
     append = FALSE,
