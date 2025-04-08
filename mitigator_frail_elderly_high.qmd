@@ -107,7 +107,7 @@ knitr::knit_child(
   cat(sep = '\n')
 ```
 
-#### IMD
+#### IMD Decile
 ```{r}
 patient_characteristic <- "imd"
 patient_characteristic_col_name <- "imd19_decile"
