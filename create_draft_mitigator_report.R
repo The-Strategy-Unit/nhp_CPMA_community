@@ -41,6 +41,7 @@ get_cohort_overlap_section <- function(mitigator) {
     "",
     "For the `r cohort_title` activity we show how much of the activity is included in multiple other mitigable cohorts. There are some differences between cohort overlap for admissions and beddays, this is because efficiency mitigators are not included in admissions data as they do not impact the number of admissions, but are included in the beddays data as they influence length of stay. ",
     "",
+    "```{r}",
     paste0(
       "overlap_numbers <- targets::tar_read(",
       data,
@@ -201,6 +202,10 @@ data <- c(
   "#| output: false",
   "mitigator_summary_table <- readxl::read_excel(\"summary_mitigators_table.xlsx\") |>
   dplyr::mutate(mechanism = snakecase::to_snake_case(mechanism))",
+  "",
+  "mechanisms <- mitigator_summary_table |> 
+  dplyr::pull(mechanism) |> 
+  unique()",
   "",
   "england_age_sex_standardised_rates_episodes <- tar_read(england_age_sex_standardised_rates_episodes) |>
     filter(cohorts == cohort)",
@@ -404,7 +409,7 @@ create_draft_mitigator_qmd <- function(mitigator,
       "## ",
       get_cohort_title(mitigator, summary_table),
       " {#sec-",
-      cohort,
+      mitigator,
       " .unnumbered}"
     ),
     "",
@@ -417,12 +422,10 @@ create_draft_mitigator_qmd <- function(mitigator,
     overview_section,
     patient_characteristics_section,
     admission_characteristics_section,
-    "",
     
     "## Cohort overlap",
     "",
     get_cohort_overlap_section(mitigator),
-    "",
     
     "## Comparative Analysis",
     "",
@@ -480,3 +483,4 @@ invisible(purrr::map(
     treatment_lookup = mitigators_and_mechanisms_treatment_lookup
   )
 ))
+
