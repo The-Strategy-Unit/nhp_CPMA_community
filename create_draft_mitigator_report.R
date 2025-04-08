@@ -3,6 +3,85 @@
 
 # Building blocks --------------------------------------------------------------
 ## Functions -------------------------------------------------------------------
+get_cohort_overlap_section <- function(mitigator) {
+  if (mitigator %in% c(
+    "redirection_subsititution",
+    "prevention",
+    "efficiencies",
+    "efficiencies_relocation"
+  )) {
+    data <- glue::glue("cohort_overlap_{mitigator}")
+    inclusion_subsection <- ""
+  } else {
+    data <- "total_cohort_numbers_2324"
+    
+    inclusion_subsection <- c(
+      "### Inclusion within other mitigable activity cohorts",
+      "",
+      "This shows whether the activity within the `r cohort_title` activity is also included in other mitigator cohorts, including where this occurs the number and percentage of `r cohort_title` activity that is also included within other mitigator cohorts.",
+      "",
+      "```{r}",
+      "#| output: asis",
+      "knitr::knit_child(
+                  input = \"child-dir/_child-overlap_inclusion-within-others.qmd\",
+                  envir = environment(),
+                  quiet = TRUE
+                ) |>
+                  cat(sep = '\\n')",
+      "```",
+      ""
+    )
+  }
+  
+  code <- c(
+    "Many admissions meet the criteria to be included in more than one mitigator cohort. Since these potential mitigator cohorts are not mutually exclusive there is a need to understand which cohorts overlap and the degree of overlap between the cohorts.",
+    "",
+    
+    "### Number and proportion within multiple other cohorts",
+    "",
+    "For the `r cohort_title` activity we show how much of the activity is included in multiple other mitigable cohorts. There are some differences between cohort overlap for admissions and beddays, this is because efficiency mitigators are not included in admissions data as they do not impact the number of admissions, but are included in the beddays data as they influence length of stay. ",
+    "",
+    paste0(
+      "overlap_numbers <- targets::tar_read(",
+      data,
+      ") |>
+    filter(!!rlang::sym(cohort) == 1)"
+    ),
+    "```",
+    "",
+    "```{r}",
+    "#| output: asis",
+    "knitr::knit_child(
+                  input = \"child-dir/_child-overlap_number-within-others.qmd\",
+                  envir = environment(),
+                  quiet = TRUE
+                ) |>
+                  cat(sep = '\\n')",
+    "```",
+    "",
+    
+    inclusion_subsection,
+    
+    "### Most common cohort overlaps",
+    "Often overlap between a small number of groups can be visualised using Venn diagram. However, due to the large number of mitigator cohorts and therefore high numbers of potential combinations of overlaps we have used upset plots to show the largest overlaps between cohorts.",
+    "",
+    "The 15 most common cohort combinations for the `r cohort_title` cohort are shown.",
+    "",
+    "```{r}",
+    "#| output: asis",
+    "knitr::knit_child(
+                  input = \"child-dir/_child-overlap_most-common.qmd\",
+                  envir = environment(),
+                  quiet = TRUE
+                ) |>
+                  cat(sep = '\\n')",
+    "```",
+    ""
+  )
+  
+  return(code)
+}
+
 get_cohort_title <- function(mitigator, summary) {
   title <- summary |>
     dplyr::filter(mitigator_code == mitigator) |>
@@ -23,7 +102,7 @@ get_filename <- function(mitigator) {
     "mitigator"
   }
   
-  filename <- glue::glue("DRAFT_{type}_{mitigator}.qmd") # will remove draft prefix after testing
+  filename <- glue::glue("DRAFT_{type}_{mitigator}.qmd")
   
   return(filename)
 }
@@ -73,7 +152,6 @@ rename_admissions_as_episodes <- function(activity_type) {
 }
 
 ## Strings ---------------------------------------------------------------------
-
 admission_characteristics_section <- c(
   "### Admission Characteristics",
   "",
@@ -322,11 +400,13 @@ create_draft_mitigator_qmd <- function(mitigator,
                                        summary_table,
                                        treatment_lookup) {
   code <- cat(
-    paste0("## ", 
-           get_cohort_title(mitigator, summary_table), 
-           " {#sec-", 
-           cohort, 
-           " .unnumbered}"),
+    paste0(
+      "## ",
+      get_cohort_title(mitigator, summary_table),
+      " {#sec-",
+      cohort,
+      " .unnumbered}"
+    ),
     "",
     packages_and_options,
     get_global_variables(mitigator, summary_table, treatment_lookup),
@@ -337,6 +417,11 @@ create_draft_mitigator_qmd <- function(mitigator,
     overview_section,
     patient_characteristics_section,
     admission_characteristics_section,
+    "",
+    
+    "## Cohort overlap",
+    "",
+    get_cohort_overlap_section(mitigator),
     "",
     
     "## Comparative Analysis",
@@ -385,7 +470,6 @@ mitigators_and_mechanisms <- mitigators_and_mechanisms_treatment_lookup |>
 # Creating draft quarto reports ------------------------------------------------
 # Whilst testing have limited to just one mitigator:
 mitigators_and_mechanisms <- c("eol_care_2_days")
-# exclude already existing ones?
 
 invisible(purrr::map(
   mitigators_and_mechanisms,
