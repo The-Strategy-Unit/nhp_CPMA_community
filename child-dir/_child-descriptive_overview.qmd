@@ -1,23 +1,30 @@
 ```{r}
 overview <- targets::tar_read_raw(glue::glue("overview_{cohort}"))
 
-if(cohort != "efficiencies") {
-  admissions_perc <- overview |>
+admissions_perc <- overview |>
   dplyr::filter(activity_type == "Admissions") |>
   dplyr::pull(perc)
-}
 
 beddays_perc <- overview |>
   dplyr::filter(activity_type == "Beddays") |>
   dplyr::pull(perc)
 
-statement <- if(cohort == "efficiencies") { 
-  glue::glue("{beddays_perc}% of {treatment_type_title} beddays") 
-} else if (cohort == "zero_los_no_procedure_adult" | cohort == "zero_los_no_procedure_child") {
-  glue::glue("{admissions_perc}% of {treatment_type_title} admissions")
+if (check_if_efficiency_mitigator(cohort, mitigator_summary_table)) {
+  overview <- overview |>
+    dplyr::filter(activity_type == "Beddays")
+  
+  statement <- glue::glue("{beddays_perc}% of {treatment_type_title} beddays")
+} else_if (cohort == "zero_los_no_procedure_adult" |
+             cohort == "zero_los_no_procedure_child") {
+  overview <- overview |>
+    dplyr::filter(activity_type == "Admissions")
+  statement <- glue::glue("{admissions_perc}% of {treatment_type_title} admissions")
 }  else {
-  glue::glue("{admissions_perc}% of {treatment_type_title} admissions and {beddays_perc}% of {treatment_type_title} beddays")
+  statement <- glue::glue(
+    "{admissions_perc}% of {treatment_type_title} admissions and {beddays_perc}% of {treatment_type_title} beddays"
+  )
 }
+
 ```
 
 In 2023/24, `r statement` fall under mitigable activity for the `r cohort_title` cohort.
