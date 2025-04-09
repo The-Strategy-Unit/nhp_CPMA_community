@@ -1,6 +1,6 @@
 ```{r}
 #| output: asis
-#| eval: !expr include_admissions_and_beddays
+#| eval: !expr include_beddays
 cat("::: panel-tabset")
 cat("\n")
 cat("#### Length of Stay")
@@ -19,7 +19,7 @@ knitr::knit_child(
 
 ```{r}
 #| output: asis
-#| eval: !expr include_admissions_and_beddays
+#| eval: !expr include_beddays
 cat("#### Specialty")
 ```
 
@@ -77,6 +77,6 @@ cat(":::")
 
 ```{r}
 #| output: asis
-#| eval: !expr include_admissions_and_beddays
+#| eval: !expr include_beddays
 cat(":::")
 ```
