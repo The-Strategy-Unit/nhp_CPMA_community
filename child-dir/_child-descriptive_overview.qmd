@@ -14,8 +14,7 @@ if (check_if_efficiency_mitigator(cohort, mitigator_summary_table)) {
     dplyr::filter(activity_type == "Beddays")
   
   statement <- glue::glue("{beddays_perc}% of {treatment_type_title} beddays")
-} else_if (cohort == "zero_los_no_procedure_adult" |
-             cohort == "zero_los_no_procedure_child") {
+} else_if (check_if_zero_los_mitigator(mitigator)) {
   overview <- overview |>
     dplyr::filter(activity_type == "Admissions")
   statement <- glue::glue("{admissions_perc}% of {treatment_type_title} admissions")
