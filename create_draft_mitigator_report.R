@@ -2,6 +2,8 @@
 # Once drafts are created, we can tweak each file individually and add narrative.
 
 # Building blocks --------------------------------------------------------------
+source("R/general.R")
+
 ## Functions -------------------------------------------------------------------
 get_cohort_overlap_section <- function(mitigator) {
   if (mitigator %in% c(
@@ -140,16 +142,6 @@ get_treatment_type <- function(mitigator, lookup) {
     dplyr::pull(treatment_type)
   
   return(treatment_type)
-}
-
-rename_admissions_as_episodes <- function(activity_type) {
-  renamed_activity_type <- if (activity_type == "admissions") {
-    "episodes"
-  } else {
-    activity_type
-  }
-  
-  return(renamed_activity_type)
 }
 
 ## Strings ---------------------------------------------------------------------
@@ -469,11 +461,6 @@ mitigators_and_mechanisms_treatment_lookup <- mitigators |>
 
 mitigators_and_mechanisms <- mitigators_and_mechanisms_treatment_lookup |>
   dplyr::pull(mitigator_or_mechanism)
-
-efficiency_mitigators <- mitigator_summary_table |>
-  dplyr::filter(mechanism == "efficiencies") |>
-  dplyr::pull(mitigator_code) |>
-  c("efficiencies")
 
 # Creating draft quarto reports ------------------------------------------------
 # Whilst testing have limited to just one mitigator:

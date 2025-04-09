@@ -1,5 +1,27 @@
 # Functions used for general tasks, like creating tables.
 
+check_if_efficiency_mitigator <- function(mitigator, summary_table){
+  
+  efficiency_mitigators <- summary_table |>
+    dplyr::filter(mechanism == "efficiencies") |>
+    dplyr::pull(mitigator_code) |>
+    c("efficiencies")
+  
+  check <- mitigator %in% efficiency_mitigators
+  
+  return(check)
+}
+
+rename_admissions_as_episodes <- function(activity_type) {
+  renamed_activity_type <- if (activity_type == "admissions") {
+    "episodes"
+  } else {
+    activity_type
+  }
+  
+  return(renamed_activity_type)
+}
+
 #' Convert a dataframe into a datatable.
 #'
 #' @param A dataframe.
