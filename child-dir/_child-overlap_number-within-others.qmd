@@ -1,4 +1,3 @@
-::: panel-tabset
 ```{r}
 caption_admissions <- get_caption_number_of_cohorts(cohort_title, "admissions")
 caption_beddays <- get_caption_number_of_cohorts(cohort_title, "beddays")
@@ -9,9 +8,16 @@ if(cohort %in% mechanisms) {
 }
 ```
 
-#### Admissions
+```{r}
+#| output: asis
+#| eval: !expr include_admissions_and_beddays
+cat("::: panel-tabset")
+cat("\n")
+cat("##### Admissions")
+```
 
 ```{r, fig.width=4, fig.height=4}
+#| eval: !expr include_admissions
 #| label: fig-number_of_cohorts_spells
 #| fig-cap: !expr caption_admissions
 
@@ -23,9 +29,14 @@ if(cohort %in% mechanisms) {
 }
 ```
 
-#### Beddays
+```{r}
+#| output: asis
+#| eval: !expr include_admissions_and_beddays
+cat("##### Beddays")
+```
 
 ```{r, fig.width=4, fig.height=4}
+#| eval: !expr include_beddays
 #| label: fig-number_of_cohorts_beddays
 #| fig-cap: !expr caption_beddays
 
@@ -36,4 +47,9 @@ if(cohort %in% mechanisms) {
   plotting_barchart_number_of_cohorts(overlap_numbers, beddays)
 }
 ```
-:::
+
+```{r}
+#| output: asis
+#| eval: !expr include_admissions_and_beddays
+cat(":::")
+```

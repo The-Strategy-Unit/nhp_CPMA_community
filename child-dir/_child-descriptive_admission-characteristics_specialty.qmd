@@ -1,0 +1,13 @@
+```{r}
+#| label: tbl-perc_specialty
+#| tbl-cap: !expr get_caption_top_ten_specialties(cohort_title, activity_type)
+specialty |>
+  get_table_perc() 
+```
+
+```{r}
+#| label: fig-perc_specialty
+#| fig-cap: !expr get_caption_top_ten_specialties(cohort_title, activity_type)
+specialty |>
+  get_top_ten_specialties_plot(activity_type)
+```

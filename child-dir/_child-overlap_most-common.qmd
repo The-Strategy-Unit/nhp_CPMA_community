@@ -1,7 +1,13 @@
-::: panel-tabset
-#### Admissions
+```{r}
+#| output: asis
+#| eval: !expr include_admissions_and_beddays
+cat("::: panel-tabset")
+cat("\n")
+cat("##### Admissions")
+```
 
 ```{r, fig.width=10, fig.height=6}
+#| eval: !expr include_admissions
 #| label: upset_plot_frail_elderly_high_episodes
 #| fig-cap: !expr get_caption_upset_plots(cohort_title, "admissions")
 if(cohort %in% mechanisms) {
@@ -15,9 +21,14 @@ if(cohort %in% mechanisms) {
 }
 ```
 
-#### Beddays
+```{r}
+#| output: asis
+#| eval: !expr include_admissions_and_beddays
+cat("##### Beddays")
+```
 
 ```{r, fig.width=10, fig.height=6}
+#| eval: !expr include_beddays
 #| label: upset_plot_frail_elderly_high_bedday
 #| fig-cap: !expr get_caption_upset_plots(cohort_title, "beddays")
 if(cohort %in% mechanisms) {
@@ -30,4 +41,9 @@ if(cohort %in% mechanisms) {
                   beddays)
 }
 ```
-:::
+
+```{r}
+#| output: asis
+#| eval: !expr include_admissions_and_beddays
+cat(":::")
+```

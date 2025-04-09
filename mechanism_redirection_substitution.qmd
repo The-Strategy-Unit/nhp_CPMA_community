@@ -53,6 +53,12 @@ icb_23_shp <- sf::st_read("https://services1.arcgis.com/ESMARspQHYMw9BZ9/arcgis/
   dplyr::mutate(icb23nm = simplify_icb_name(icb23nm))
 ```
 
+```{r including_activity_types}
+include_admissions <- check_include_admissions(cohort, mitigator_summary_table)
+include_beddays <- check_include_beddays(cohort)
+include_admissions_and_beddays <- include_admissions & include_beddays
+```
+
 This analysis includes mitigators where the mechanism of action is through Redirection/Substitution of activity. This means that some of the admissions in this group could be avoided by greater use of other services/provisions in the community (either existing or new).
 
 The 16 mitigators included in this analysis are:

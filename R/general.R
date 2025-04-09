@@ -1,5 +1,65 @@
 # Functions used for general tasks, like creating tables.
 
+#' Checks if the mitigator or mechanism is the efficiency mechanism or one of 
+#' its mitigators.
+#'
+#' @param mitigator The mitigator or mechanism.
+#' @param summary_table The `mitigator_summary_table`.
+#'
+#' @return Boolean.
+check_if_efficiency_mitigator <- function(mitigator, summary_table){
+  
+  efficiency_mitigators <- summary_table |>
+    dplyr::filter(mechanism == "efficiencies") |>
+    dplyr::pull(mitigator_code) |>
+    c("efficiencies")
+  
+  check <- mitigator %in% efficiency_mitigators
+  
+  return(check)
+}
+
+#' Checks if the mitigator or mechanism is a zero length of stay mitigator.
+#'
+#' @param mitigator The mitigator or mechanism.
+#'
+#' @return Boolean.
+check_if_zero_los_mitigator <- function(mitigator){
+  
+  check <- startsWith(mitigator, "zero_los_no_procedure")
+  
+  return(check)
+}
+
+#' Check if admissions are applicable for the mitigator.
+#' 
+#' This uses `check_if_efficiency_mitigator()` but also allows for other 
+#' criteria to be added.
+#'
+#' @param mitigator The mitigator or mechanism.
+#' @param summary_table The `mitigator_summary_table`.
+#'
+#' @return Boolean.
+check_include_admissions <- function(mitigator, summary_table) {
+  check <- !check_if_efficiency_mitigator(mitigator, summary_table)
+  
+  return(check)
+}
+
+#' Check if beddays are applicable for the mitigator.
+#'
+#' This uses `check_if_zero_los_mitigator()` but also allows for other criteria 
+#' to be added.
+#' 
+#' @param mitigator The mitigator or mechanism.
+#'
+#' @return Boolean.
+check_include_beddays <- function(mitigator) {
+  check <- !check_if_zero_los_mitigator(mitigator)
+  
+  return(check)
+}
+
 #' Convert a dataframe into a datatable.
 #'
 #' @param A dataframe.
@@ -227,6 +287,21 @@ order_levels_of_factors <- function(data) {
     )
   
   return(wrangled)
+}
+
+#' Renames `"admissions"` to `"episodes"`.
+#'
+#' @param activity_type A string.
+#'
+#' @return A string.
+rename_admissions_as_episodes <- function(activity_type) {
+  renamed_activity_type <- if (activity_type == "admissions") {
+    "episodes"
+  } else {
+    activity_type
+  }
+  
+  return(renamed_activity_type)
 }
 
 #' Scrape excel data from URL.

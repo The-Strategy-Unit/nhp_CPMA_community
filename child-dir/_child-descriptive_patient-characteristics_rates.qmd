@@ -1,0 +1,13 @@
+```{r}
+#| label: tbl-rate_patient_characteristic
+#| tbl-cap: !expr get_caption_by_group("rate", cohort_title, activity_type, group_title)
+rates_patient_characteristic |>
+  get_rates_by_group_table() 
+```
+
+```{r}
+#| label: fig-rate_patient_characteristic
+#| fig-cap: !expr get_caption_by_group("rate", cohort_title, activity_type, group_title)
+rates_patient_characteristic |>
+  get_rates_by_group_plot(patient_characteristic_col_name)
+```

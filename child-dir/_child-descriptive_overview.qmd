@@ -1,22 +1,36 @@
 ```{r}
 overview <- targets::tar_read_raw(glue::glue("overview_{cohort}"))
 
-if(cohort != "efficiencies") {
+if(include_admissions) {
   admissions_perc <- overview |>
   dplyr::filter(activity_type == "Admissions") |>
   dplyr::pull(perc)
+  
+  admissions_statement <- glue::glue("{admissions_perc}% of {treatment_type_title} admissions")
+} else {
+  admissions_statement <- ""
 }
 
-beddays_perc <- overview |>
+if(include_beddays) {
+  beddays_perc <- overview |>
   dplyr::filter(activity_type == "Beddays") |>
   dplyr::pull(perc)
+  
+  beddays_statement <- glue::glue("{beddays_perc}% of {treatment_type_title} beddays")
+} else {
+  beddays_statement <- ""
+}
 
-statement <- if(cohort == "efficiencies") { 
-  glue::glue("{beddays_perc}% of {treatment_type_title} beddays") 
-} else if (cohort == "zero_los_no_procedure_adult" | cohort == "zero_los_no_procedure_child") {
-  glue::glue("{admissions_perc}% of {treatment_type_title} admissions")
-}  else {
-  glue::glue("{admissions_perc}% of {treatment_type_title} admissions and {beddays_perc}% of {treatment_type_title} beddays")
+statement <- glue::glue("{admissions_statement}{ifelse(include_admissions_and_beddays, ' and ', '')}{beddays_statement}")
+
+if (include_admissions_and_beddays) {
+  overview_table <- overview
+} else if(include_admissions & !include_admissions_and_beddays) {
+  overview_table <- overview |>
+    dplyr::filter(activity_type == "Admissions")
+} else if(include_beddays & !include_admissions_and_beddays) {
+  overview_table <- overview |>
+    dplyr::filter(activity_type == "Beddays")
 }
 ```
 
@@ -25,6 +39,6 @@ In 2023/24, `r statement` fall under mitigable activity for the `r cohort_title`
 ```{r}
 #| label: tbl-overview
 #| tbl-cap: !expr get_caption_overview(cohort_title, treatment_type)
-overview |>
+overview_table |>
   get_table_perc()
 ```

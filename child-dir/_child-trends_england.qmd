@@ -15,32 +15,54 @@ number_percentage_over_time <-  data_number_percentage_over_time_icb(
 ::: panel-tabset
 #### Number over time
 
-::: panel-tabset
-#### Admissions
+```{r}
+#| output: asis
+#| eval: !expr include_admissions_and_beddays
+cat("::: panel-tabset")
+cat("\n")
+cat("##### Admissions")
+```
 
 ```{r, fig.width=7, fig.height=3}
+#| eval: !expr include_admissions
 #| label: fig-number_trends_spells_england
 #| fig-cap: !expr get_caption_trends(cohort_title, "number", "admissions", "England")
 plot_of_number_over_time(number_percentage_over_time, episodes)
 ```
 
-#### Beddays
+```{r}
+#| output: asis
+#| eval: !expr include_beddays
+cat("##### Beddays")
+```
 
 ```{r, fig.width=7, fig.height=3}
+#| eval: !expr include_beddays
 #| label: fig-number_trends_beddays_england
 #| fig-cap: !expr get_caption_trends(cohort_title, "number", "beddays", "England")
 plot_of_number_over_time(number_percentage_over_time, beddays)
 ```
-:::
+
+```{r}
+#| output: asis
+#| eval: !expr include_admissions_and_beddays
+cat(":::")
+```
 
 #### Percentage of `r treatment_type_title` activity
 
 `r cohort_title` as a percentage of `r treatment_type_title` activity.
 
-::: panel-tabset
-#### Admissions
+```{r}
+#| output: asis
+#| eval: !expr include_admissions_and_beddays
+cat("::: panel-tabset")
+cat("\n")
+cat("##### Admissions")
+```
 
 ```{r, fig.width=7, fig.height=3}
+#| eval: !expr include_admissions
 #| label: fig-percent_trends_spells_england
 #| fig-cap: !expr get_caption_trends(cohort_title, "perc", "admissions", "England")
 plot_of_percentage_over_time(
@@ -50,9 +72,14 @@ plot_of_percentage_over_time(
   total_episodes)
 ```
 
-#### Beddays
+```{r}
+#| output: asis
+#| eval: !expr include_beddays
+cat("##### Beddays")
+```
 
 ```{r, fig.width=7, fig.height=3}
+#| eval: !expr include_beddays
 #| label: fig-percent_trends_beddays_england
 #| fig-cap: !expr get_caption_trends(cohort_title, "perc", "beddays", "England")
 plot_of_percentage_over_time(
@@ -61,25 +88,46 @@ plot_of_percentage_over_time(
   beddays,
   total_beddays)
 ```
-:::
+
+```{r}
+#| output: asis
+#| eval: !expr include_admissions_and_beddays
+cat(":::")
+```
 
 #### Age and sex standardised rates per 100,000 population
 
-::: panel-tabset
-#### Admissions
+```{r}
+#| output: asis
+#| eval: !expr include_admissions_and_beddays
+cat("::: panel-tabset")
+cat("\n")
+cat("##### Admissions")
+```
 
 ```{r, fig.width=7, fig.height=3}
+#| eval: !expr include_admissions
 #| label: fig-stardardised_trends_spells_england
 #| fig-cap: !expr get_caption_trends(cohort_title, "SR", "admissions", "England")
 plot_of_standardised_rates_over_time(england_age_sex_standardised_rates_episodes)
 ```
 
-#### Beddays
+```{r}
+#| output: asis
+#| eval: !expr include_beddays
+cat("##### Beddays")
+```
 
 ```{r, fig.width=7, fig.height=3}
+#| eval: !expr include_beddays
 #| label: fig-stardardised_trends_beddays_england
 #| fig-cap: !expr get_caption_trends(cohort_title, "SR", "beddays", "England")
 plot_of_standardised_rates_over_time(england_age_sex_standardised_rates_beddays)
 ```
-:::
+
+```{r}
+#| output: asis
+#| eval: !expr include_admissions_and_beddays
+cat(":::")
+```
 :::

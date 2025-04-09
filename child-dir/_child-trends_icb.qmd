@@ -7,10 +7,16 @@ icb_age_sex_standardised_rates_beddays <- tar_read(icb_age_sex_standardised_rate
 ::: panel-tabset
 #### Number over time
 
-::: panel-tabset
-#### Admissions
+```{r}
+#| output: asis
+#| eval: !expr include_admissions_and_beddays
+cat("::: panel-tabset")
+cat("\n")
+cat("##### Admissions")
+```
 
 ```{r, fig.width=5, fig.height=3}
+#| eval: !expr include_admissions
 #| label: fig-number_trends_spells_icb
 #| fig-cap: !expr get_caption_trends(cohort_title, "number", "admissions", "icb") 
 plotting_icb_over_time(number_percentage_over_time |>
@@ -21,6 +27,7 @@ plotting_icb_over_time(number_percentage_over_time |>
 <br>
 
 ```{r, fig.height=6, fig.width=8}
+#| eval: !expr include_admissions
 #| label: fig-percent_change_number_spells
 #| fig-cap: !expr get_caption_trends_percentage_change(cohort_title, "number", "admissions")
 
@@ -36,10 +43,14 @@ plotting_percentage_change_over_time_by_icb(
 )
 ```
 
-
-#### Beddays
+```{r}
+#| output: asis
+#| eval: !expr include_admissions_and_beddays
+cat("##### Beddays")
+```
 
 ```{r, fig.width=5, fig.height=3}
+#| eval: !expr include_beddays
 #| label: fig-number_trends_beddays_icb
 #| fig-cap: !expr get_caption_trends(cohort_title, "number", "beddays", "icb")
 plotting_icb_over_time(number_percentage_over_time |>
@@ -50,6 +61,7 @@ plotting_icb_over_time(number_percentage_over_time |>
 <br>
 
 ```{r, fig.height=6, fig.width=8}
+#| eval: !expr include_beddays
 #| label: fig-percent_change_number_beddays
 #| fig-cap: !expr get_caption_trends_percentage_change(cohort_title, "number", "beddays") 
 
@@ -65,16 +77,26 @@ plotting_percentage_change_over_time_by_icb(
 )
 ```
 
-:::
+```{r}
+#| output: asis
+#| eval: !expr include_admissions_and_beddays
+cat(":::")
+```
 
 #### Percentage of `r treatment_type_title` activity
 
 `r cohort_title` as a percentage of `r treatment_type_title` activity.
 
-::: panel-tabset
-#### Admissions
+```{r}
+#| output: asis
+#| eval: !expr include_admissions_and_beddays
+cat("::: panel-tabset")
+cat("\n")
+cat("##### Admissions")
+```
 
 ```{r, fig.width=5, fig.height=3}
+#| eval: !expr include_admissions
 #| label: fig-percent_trends_spells_icb
 #| fig-cap: !expr get_caption_trends(cohort_title, "percentage", "admissions", "icb")
 plotting_icb_over_time(
@@ -88,6 +110,7 @@ plotting_icb_over_time(
 <br>
 
 ```{r, fig.height=6, fig.width=8}
+#| eval: !expr include_admissions
 #| label: fig-percent_change_percent_spells
 #| fig-cap: !expr get_caption_trends_percentage_change(cohort_title, "prop", "admissions", treatment_type) 
 
@@ -107,9 +130,14 @@ plotting_percentage_change_over_time_by_icb(
 )
 ```
 
-#### Beddays
+```{r}
+#| output: asis
+#| eval: !expr include_admissions_and_beddays
+cat("##### Beddays")
+```
 
 ```{r, fig.width=5, fig.height=3}
+#| eval: !expr include_beddays
 #| label: fig-percent_trends_beddays_icb
 #| fig-cap: !expr get_caption_trends(cohort_title, "percentage", "beddays", "icb")
 plotting_icb_over_time(
@@ -123,6 +151,7 @@ plotting_icb_over_time(
 <br>
 
 ```{r, fig.height=6, fig.width=8}
+#| eval: !expr include_beddays
 #| label: fig-percent_change_percent_beddays
 #| fig-cap: !expr get_caption_trends_percentage_change(cohort_title, "prop", "beddays", treatment_type) 
 
@@ -141,14 +170,25 @@ plotting_percentage_change_over_time_by_icb(
   1.3
 )
 ```
-:::
+
+```{r}
+#| output: asis
+#| eval: !expr include_admissions_and_beddays
+cat(":::")
+```
 
 #### Age and sex standardised rates per 100,000 population
 
-::: panel-tabset
-#### Admissions
+```{r}
+#| output: asis
+#| eval: !expr include_admissions_and_beddays
+cat("::: panel-tabset")
+cat("\n")
+cat("##### Admissions")
+```
 
 ```{r, fig.width=5, fig.height=3}
+#| eval: !expr include_admissions
 #| label: fig-stardardised_trends_spells_icb
 #| fig-cap: !expr get_caption_trends(cohort_title, "SR", "admissions", "icb")
 plotting_icb_over_time(
@@ -163,6 +203,7 @@ plotting_icb_over_time(
 <br>
 
 ```{r, fig.height=6, fig.width=8}
+#| eval: !expr include_admissions
 #| label: fig-percent_change_standardised_spells
 #| fig-cap: !expr get_caption_trends_percentage_change(cohort_title, "SR", "admissions") 
 
@@ -179,9 +220,14 @@ plotting_percentage_change_over_time_by_icb(
 )
 ```
 
-#### Beddays
+```{r}
+#| output: asis
+#| eval: !expr include_admissions_and_beddays
+cat("##### Beddays")
+```
 
 ```{r, fig.width=5, fig.height=3}
+#| eval: !expr include_beddays
 #| label: fig-stardardised_trends_beddays_icb
 #| fig-cap: !expr get_caption_trends(cohort_title, "SR", "beddays", "icb")
 plotting_icb_over_time(
@@ -196,6 +242,7 @@ plotting_icb_over_time(
 <br>
 
 ```{r, fig.height=6, fig.width=8}
+#| eval: !expr include_beddays
 #| label: fig-percent_change_standardised_beddays
 #| fig-cap: !expr get_caption_trends_percentage_change(cohort_title, "SR", "beddays") 
 england_average_standardised_beddays <- calculating_england_average_standardised(england_age_sex_standardised_rates_beddays)
@@ -210,7 +257,12 @@ plotting_percentage_change_over_time_by_icb(
   1.6
 )
 ```
-:::
+
+```{r}
+#| output: asis
+#| eval: !expr include_admissions_and_beddays
+cat(":::")
+```
 :::
 
 #### Change in standardised rate relative over the last 5 years, relative to the starting rate in 2018/19, by ICB.
@@ -219,19 +271,31 @@ This chart shows the percentage change in the age and sex standardised rate per 
 
 Those ICBs in the lower left quadrant (shaded in green) could be considered as performing well; they already had relatively low standardised rates of admissions/beddays in 2018/19 and have continued to make further decreases over the last five years.
 
-::: panel-tabset
-#### Admissions
+```{r}
+#| output: asis
+#| eval: !expr include_admissions_and_beddays
+cat("::: panel-tabset")
+cat("\n")
+cat("##### Admissions")
+```
 
 ```{r, fig.width=5, fig.height=4}
+#| eval: !expr include_admissions
 #| label: fig-activity_vs_rate_of_change_episodes_icb
 #| fig-cap: !expr get_caption_activity_vs_perc_change(cohort_title, "admissions") 
 plotting_total_activity_vs_percentage_change(
   icb_age_sex_standardised_rates_episodes, 
   icb_2024_name)
 ```
-#### Beddays
+
+```{r}
+#| output: asis
+#| eval: !expr include_admissions_and_beddays
+cat("##### Beddays")
+```
 
 ```{r, fig.width=5, fig.height=4}
+#| eval: !expr include_beddays
 #| label: fig-activity_vs_rate_of_change_beddays_icb
 #| fig-cap: !expr get_caption_activity_vs_perc_change(cohort_title, "beddays")
 plotting_total_activity_vs_percentage_change(
@@ -239,4 +303,8 @@ plotting_total_activity_vs_percentage_change(
   icb_2024_name)
 ```
 
-:::
+```{r}
+#| output: asis
+#| eval: !expr include_admissions_and_beddays
+cat(":::")
+```

@@ -2,6 +2,8 @@
 # Once drafts are created, we can tweak each file individually and add narrative.
 
 # Building blocks --------------------------------------------------------------
+source("R/general.R")
+
 ## Functions -------------------------------------------------------------------
 get_cohort_overlap_section <- function(mitigator) {
   if (mitigator %in% c(
@@ -91,6 +93,51 @@ get_cohort_title <- function(mitigator, summary) {
   return(title)
 }
 
+get_data_section <- function(mitigator, summary_table) {
+  standardised_rates_episodes <- if (check_if_efficiency_mitigator(mitigator, summary_table)) {
+    ""
+  } else {
+    c(
+      "england_age_sex_standardised_rates_episodes <- tar_read(england_age_sex_standardised_rates_episodes) |>
+    filter(cohorts == cohort)",
+      ""
+    )
+  }
+  
+  standardised_rates_beddays <- if (check_if_zero_los_mitigator(mitigator)) {
+    ""
+  } else {
+    c(
+      "england_age_sex_standardised_rates_beddays <- tar_read(england_age_sex_standardised_rates_beddays) |>
+    filter(cohorts == cohort)",
+      ""
+    )
+  }
+  
+  code <- c(
+    "```{r data}",
+    "#| output: false",
+    "mitigator_summary_table <- readxl::read_excel(\"summary_mitigators_table.xlsx\") |>
+  dplyr::mutate(mechanism = snakecase::to_snake_case(mechanism))",
+    "",
+    "mechanisms <- mitigator_summary_table |>
+  dplyr::pull(mechanism) |>
+  unique()",
+    "",
+    standardised_rates_episodes,
+    standardised_rates_beddays,
+    "total_beddays_admissions <- targets::tar_read(total_beddays_admissions)",
+    "",
+    "icb_23_shp <- sf::st_read(\"https://services1.arcgis.com/ESMARspQHYMw9BZ9/arcgis/rest/services/Integrated_Care_Boards_April_2023_EN_BGC/FeatureServer/0/query?outFields=*&where=1%3D1&f=geojson\") |>
+    janitor::clean_names() |>
+    dplyr::mutate(icb23nm = simplify_icb_name(icb23nm))",
+    "```",
+    ""
+  )
+  
+  return(code)
+}
+
 get_filename <- function(mitigator) {
   type <- if (mitigator %in% c(
     "redirection_subsititution",
@@ -121,6 +168,7 @@ get_global_variables <- function(mitigator,
       get_cohort_title(mitigator, summary_table),
       "\""
     ),
+    "",
     paste0("treatment_type <- \"", treatment_type, "\""),
     paste0(
       "treatment_type_title <- format_treatment_for_caption(\"",
@@ -140,16 +188,6 @@ get_treatment_type <- function(mitigator, lookup) {
     dplyr::pull(treatment_type)
   
   return(treatment_type)
-}
-
-rename_admissions_as_episodes <- function(activity_type) {
-  renamed_activity_type <- if (activity_type == "admissions") {
-    "episodes"
-  } else {
-    activity_type
-  }
-  
-  return(renamed_activity_type)
 }
 
 ## Strings ---------------------------------------------------------------------
@@ -197,27 +235,11 @@ comparative_section <- c(
   ""
 )
 
-data <- c(
-  "```{r data}",
-  "#| output: false",
-  "mitigator_summary_table <- readxl::read_excel(\"summary_mitigators_table.xlsx\") |>
-  dplyr::mutate(mechanism = snakecase::to_snake_case(mechanism))",
-  "",
-  "mechanisms <- mitigator_summary_table |> 
-  dplyr::pull(mechanism) |> 
-  unique()",
-  "",
-  "england_age_sex_standardised_rates_episodes <- tar_read(england_age_sex_standardised_rates_episodes) |>
-    filter(cohorts == cohort)",
-  "",
-  "england_age_sex_standardised_rates_beddays <- tar_read(england_age_sex_standardised_rates_beddays) |>
-    filter(cohorts == cohort)",
-  "",
-  "total_beddays_admissions <- targets::tar_read(total_beddays_admissions)",
-  "",
-  "icb_23_shp <- sf::st_read(\"https://services1.arcgis.com/ESMARspQHYMw9BZ9/arcgis/rest/services/Integrated_Care_Boards_April_2023_EN_BGC/FeatureServer/0/query?outFields=*&where=1%3D1&f=geojson\") |>
-    janitor::clean_names() |>
-    dplyr::mutate(icb23nm = simplify_icb_name(icb23nm))",
+including_activity_types <- c(
+  "```{r including_activity_types}",
+  "include_admissions <- check_include_admissions(cohort, mitigator_summary_table)",
+  "include_beddays <- check_include_beddays(cohort)",
+  "include_admissions_and_beddays <- include_admissions & include_beddays",
   "```",
   ""
 )
@@ -415,7 +437,8 @@ create_draft_mitigator_qmd <- function(mitigator,
     "",
     packages_and_options,
     get_global_variables(mitigator, summary_table, treatment_lookup),
-    data,
+    get_data_section(mitigator, summary_table),
+    including_activity_types,
     
     "## Descriptive Analysis",
     "",
@@ -472,13 +495,13 @@ mitigators_and_mechanisms <- mitigators_and_mechanisms_treatment_lookup |>
 
 # Creating draft quarto reports ------------------------------------------------
 # Whilst testing have limited to just one mitigator:
-mitigators_and_mechanisms <- c("eol_care_2_days")
+mitigators_and_mechanisms <- c("eol_care_2_days", "emergency_elderly")
 
 invisible(purrr::map(
   mitigators_and_mechanisms,
   ~ create_draft_mitigator_qmd(
     .,
-    my_file = get_filename(mitigators_and_mechanisms),
+    my_file = get_filename(.),
     summary_table = mitigator_summary_table,
     treatment_lookup = mitigators_and_mechanisms_treatment_lookup
   )
