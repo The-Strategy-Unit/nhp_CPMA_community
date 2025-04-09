@@ -12,10 +12,16 @@ get_cohort_overlap_section <- function(mitigator) {
     "efficiencies",
     "efficiencies_relocation"
   )) {
-    data <- glue::glue("cohort_overlap_{mitigator}")
+    data <- glue::glue("cohort_overlap_numbers_{mitigator}")
+    
+    filter <- ""
+    
     inclusion_subsection <- ""
   } else {
     data <- "total_cohort_numbers_2324"
+    
+    filter <- "|>
+    filter(!!rlang::sym(cohort) == 1)"
     
     inclusion_subsection <- c(
       "### Inclusion within other mitigable activity cohorts",
@@ -47,8 +53,8 @@ get_cohort_overlap_section <- function(mitigator) {
     paste0(
       "overlap_numbers <- targets::tar_read(",
       data,
-      ") |>
-    filter(!!rlang::sym(cohort) == 1)"
+      ") ",
+      filter
     ),
     "```",
     "",
@@ -497,7 +503,8 @@ mitigators_and_mechanisms <- mitigators_and_mechanisms_treatment_lookup |>
 # Whilst testing have limited to just one mitigator:
 mitigators_and_mechanisms <- c("eol_care_2_days", 
                                "emergency_elderly",
-                               "zero_los_no_procedure_adult")
+                               "zero_los_no_procedure_adult",
+                               "efficiencies")
 
 invisible(purrr::map(
   mitigators_and_mechanisms,
