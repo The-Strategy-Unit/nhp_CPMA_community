@@ -472,13 +472,13 @@ mitigators_and_mechanisms <- mitigators_and_mechanisms_treatment_lookup |>
 
 # Creating draft quarto reports ------------------------------------------------
 # Whilst testing have limited to just one mitigator:
-mitigators_and_mechanisms <- c("eol_care_2_days")
+mitigators_and_mechanisms <- c("eol_care_2_days", "emergency_elderly")
 
 invisible(purrr::map(
   mitigators_and_mechanisms,
   ~ create_draft_mitigator_qmd(
     .,
-    my_file = get_filename(mitigators_and_mechanisms),
+    my_file = get_filename(.),
     summary_table = mitigator_summary_table,
     treatment_lookup = mitigators_and_mechanisms_treatment_lookup
   )
