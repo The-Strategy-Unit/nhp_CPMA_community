@@ -168,6 +168,7 @@ get_global_variables <- function(mitigator,
       get_cohort_title(mitigator, summary_table),
       "\""
     ),
+    "",
     paste0("treatment_type <- \"", treatment_type, "\""),
     paste0(
       "treatment_type_title <- format_treatment_for_caption(\"",
@@ -230,6 +231,15 @@ comparative_section <- c(
                   quiet = TRUE
                 ) |>
                   cat(sep = '\\n')",
+  "```",
+  ""
+)
+
+including_activity_types <- c(
+  "```{r including_activity_types}",
+  "include_admissions <- check_include_admissions(cohort, mitigator_summary_table)",
+  "include_beddays <- check_include_beddays(cohort)",
+  "include_admissions_and_beddays <- include_admissions & include_beddays",
   "```",
   ""
 )
@@ -428,6 +438,7 @@ create_draft_mitigator_qmd <- function(mitigator,
     packages_and_options,
     get_global_variables(mitigator, summary_table, treatment_lookup),
     get_data_section(mitigator, summary_table),
+    including_activity_types,
     
     "## Descriptive Analysis",
     "",
