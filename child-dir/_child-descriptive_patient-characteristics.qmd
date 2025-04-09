@@ -1,86 +1,111 @@
 ```{r}
-perc_patient_characteristic_admissions <- targets::tar_read_raw(glue::glue("perc_{patient_characteristic}_{cohort}_admissions"))
-rates_patient_characteristic_admissions <- targets::tar_read_raw(glue::glue("rates_{patient_characteristic}_{cohort}_admissions"))
-perc_patient_characteristic_beddays <- targets::tar_read_raw(glue::glue("perc_{patient_characteristic}_{cohort}_beddays"))
-rates_patient_characteristic_beddays <- targets::tar_read_raw(glue::glue("rates_{patient_characteristic}_{cohort}_beddays"))
-```
-
-```{r}
 group_title <- format_group_name_for_caption(patient_characteristic)
 ```
-
 
 ::: panel-tabset
 #### Percentage of `r treatment_type_title` activity
 
-::: panel-tabset
-##### Admissions
-
 ```{r}
-#| label: tbl-perc_patient_characteristic_admissions
-#| tbl-cap: !expr get_caption_by_group("perc", cohort_title, "admissions", group_title, treatment_type)
-perc_patient_characteristic_admissions |>
-  get_table_perc() 
+#| output: asis
+#| eval: !expr include_admissions_and_beddays
+cat("::: panel-tabset")
+cat("##### Admissions")
 ```
 
 ```{r}
-#| label: fig-perc_patient_characteristic_admissions
-#| fig-cap: !expr get_caption_by_group("perc", cohort_title, "admissions", group_title, treatment_type)
-perc_patient_characteristic_admissions |>
-  get_perc_by_group_plot(patient_characteristic_col_name, "admissions")
-```
-
-##### Beddays
-
-```{r}
-#| label: tbl-perc_patient_characteristic_beddays
-#| tbl-cap: !expr get_caption_by_group("perc", cohort_title, "beddays", group_title, treatment_type)
-perc_patient_characteristic_beddays |>
-  get_table_perc() 
+activity_type <- "admissions"
+perc_patient_characteristic <- targets::tar_read_raw(glue::glue("perc_{patient_characteristic}_{cohort}_{activity_type}"))
 ```
 
 ```{r}
-#| label: fig-perc_patient_characteristic_beddays
-#| fig-cap: !expr get_caption_by_group("perc", cohort_title, "beddays", group_title, treatment_type)
-perc_patient_characteristic_beddays |>
-  get_perc_by_group_plot(patient_characteristic_col_name, "beddays")
+#| eval: !expr include_admissions
+#| output: asis
+knitr::knit_child(
+              input = "child-dir/_child-descriptive_patient-characteristics_perc.qmd",
+              envir = environment(),
+              quiet = TRUE
+             ) |>
+            cat(sep = '\n')
 ```
-:::
+
+```{r}
+#| output: asis
+#| eval: !expr include_admissions_and_beddays
+cat("##### Beddays")
+```
+
+```{r}
+activity_type <- "beddays"
+perc_patient_characteristic <- targets::tar_read_raw(glue::glue("perc_{patient_characteristic}_{cohort}_{activity_type}"))
+```
+
+```{r}
+#| output: asis
+#| eval: !expr include_beddays
+knitr::knit_child(
+              input = "child-dir/_child-descriptive_patient-characteristics_perc.qmd",
+              envir = environment(),
+              quiet = TRUE
+             ) |>
+            cat(sep = '\n')
+```
+
+```{r}
+#| output: asis
+#| eval: !expr include_admissions_and_beddays
+cat(":::")
+```
 
 #### Crude rate
 
-::: panel-tabset
-##### Admissions
-
 ```{r}
-#| label: tbl-rate_patient_characteristic_admissions
-#| tbl-cap: !expr get_caption_by_group("rate", cohort_title, "admissions", group_title)
-rates_patient_characteristic_admissions |>
-  get_rates_by_group_table() 
+#| output: asis
+#| eval: !expr include_admissions_and_beddays
+cat("::: panel-tabset")
+cat("##### Admissions")
 ```
 
 ```{r}
-#| label: fig-rate_patient_characteristic_admissions
-#| fig-cap: !expr get_caption_by_group("rate", cohort_title, "admissions", group_title)
-rates_patient_characteristic_admissions |>
-  get_rates_by_group_plot(patient_characteristic_col_name)
-```
-
-##### Beddays
-
-```{r}
-#| label: tbl-rate_patient_characteristic_beddays
-#| tbl-cap: !expr get_caption_by_group("rate", cohort_title, "beddays", group_title)
-rates_patient_characteristic_beddays |>
-  get_rates_by_group_table() 
+activity_type <- "admissions"
+rates_patient_characteristic <-  targets::tar_read_raw(glue::glue("rates_{patient_characteristic}_{cohort}_{activity_type}"))
 ```
 
 ```{r}
-#| label: fig-rate_patient_characteristic_beddays
-#| fig-cap: !expr get_caption_by_group("rate", cohort_title, "beddays", group_title)
-rates_patient_characteristic_beddays |>
-  get_rates_by_group_plot(patient_characteristic_col_name)
+#| eval: !expr include_admissions
+#| output: asis
+knitr::knit_child(
+              input = "child-dir/_child-descriptive_patient-characteristics_rates.qmd",
+              envir = environment(),
+              quiet = TRUE
+             ) |>
+            cat(sep = '\n')
 ```
 
-:::
+```{r}
+#| output: asis
+#| eval: !expr include_admissions_and_beddays
+cat("##### Beddays")
+```
+
+```{r}
+activity_type <- "beddays"
+rates_patient_characteristic <-  targets::tar_read_raw(glue::glue("rates_{patient_characteristic}_{cohort}_{activity_type}"))
+```
+
+```{r}
+#| output: asis
+#| eval: !expr include_beddays
+knitr::knit_child(
+              input = "child-dir/_child-descriptive_patient-characteristics_rates.qmd",
+              envir = environment(),
+              quiet = TRUE
+             ) |>
+            cat(sep = '\n')
+```
+
+```{r}
+#| output: asis
+#| eval: !expr include_admissions_and_beddays
+cat(":::")
+```
 :::

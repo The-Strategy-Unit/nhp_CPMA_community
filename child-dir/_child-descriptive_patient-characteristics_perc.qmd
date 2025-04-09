@@ -1,0 +1,13 @@
+```{r}
+#| label: tbl-perc_patient_characteristic
+#| tbl-cap: !expr get_caption_by_group("perc", cohort_title, activity_type, group_title, treatment_type)
+perc_patient_characteristic |>
+  get_table_perc() 
+```
+
+```{r}
+#| label: fig-perc_patient_characteristic
+#| fig-cap: !expr get_caption_by_group("perc", cohort_title, activity_type, group_title, treatment_type)
+perc_patient_characteristic |>
+  get_perc_by_group_plot(patient_characteristic_col_name, activity_type)
+```
