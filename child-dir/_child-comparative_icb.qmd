@@ -1,30 +1,34 @@
 ```{r}
-summary_icb_admissions <- targets::tar_read_raw(glue::glue("summary_icb_admissions_{cohort}"))
-summary_icb_beddays <- targets::tar_read_raw(glue::glue("summary_icb_beddays_{cohort}"))
-
-standardised_rates_admissions <- england_age_sex_standardised_rates_episodes
-standardised_rates_beddays <- england_age_sex_standardised_rates_beddays
-```
-
-```{r}
 #| output: false
-number_icb_map_admissions <- summary_icb_admissions |>
-  get_summary_by_icb_map(icb_23_shp, "total_count")
+if(include_admissions) {
+  summary_icb_admissions <- targets::tar_read_raw(glue::glue("summary_icb_admissions_{cohort}"))
+  
+  standardised_rates_admissions <- england_age_sex_standardised_rates_episodes
+  
+  number_icb_map_admissions <- summary_icb_admissions |>
+    get_summary_by_icb_map(icb_23_shp, "total_count")
+  
+  perc_icb_map_admissions <- summary_icb_admissions |>
+    get_summary_by_icb_map(icb_23_shp, "perc")
+  
+  rate_icb_map_admissions <- summary_icb_admissions |>
+    get_summary_by_icb_map(icb_23_shp, "value")
+}
 
-perc_icb_map_admissions <- summary_icb_admissions |>
-  get_summary_by_icb_map(icb_23_shp, "perc")
-
-rate_icb_map_admissions <- summary_icb_admissions |>
-  get_summary_by_icb_map(icb_23_shp, "value")
-
-number_icb_map_beddays <- summary_icb_beddays |>
-  get_summary_by_icb_map(icb_23_shp, "total_count")
-
-perc_icb_map_beddays <- summary_icb_beddays |>
-  get_summary_by_icb_map(icb_23_shp, "perc")
-
-rate_icb_map_beddays <- summary_icb_beddays |>
-  get_summary_by_icb_map(icb_23_shp, "value")
+if(include_beddays) {
+  summary_icb_beddays <- targets::tar_read_raw(glue::glue("summary_icb_beddays_{cohort}"))
+  
+  standardised_rates_beddays <- england_age_sex_standardised_rates_beddays
+  
+  number_icb_map_beddays <- summary_icb_beddays |>
+    get_summary_by_icb_map(icb_23_shp, "total_count")
+  
+  perc_icb_map_beddays <- summary_icb_beddays |>
+    get_summary_by_icb_map(icb_23_shp, "perc")
+  
+  rate_icb_map_beddays <- summary_icb_beddays |>
+    get_summary_by_icb_map(icb_23_shp, "value")
+}
 ```
 
 ::: panel-tabset
@@ -33,9 +37,15 @@ rate_icb_map_beddays <- summary_icb_beddays |>
 ::: panel-tabset
 ##### Bars
 
-::: panel-tabset
-###### Admissions
 ```{r}
+#| output: asis
+#| eval: !expr include_admissions_and_beddays
+cat("::: panel-tabset")
+cat("##### Admissions")
+```
+
+```{r}
+#| eval: !expr include_admissions
 #| label: fig-number_icb_bar_admissions
 #| fig-cap: !expr get_caption_by_geography(cohort_title, "number", "admissions")
 england_value <- get_england_value(
@@ -51,8 +61,14 @@ get_summary_by_icb_bar(
 rm(england_value)
 ```
 
-###### Beddays
 ```{r}
+#| output: asis
+#| eval: !expr include_admissions_and_beddays
+cat("##### Beddays")
+```
+
+```{r}
+#| eval: !expr include_beddays
 #| label: fig-number_icb_bar_beddays
 #| fig-cap: !expr get_caption_by_geography(cohort_title, "number", "beddays")
 england_value <- get_england_value(
@@ -67,25 +83,47 @@ get_summary_by_icb_bar(
 
 rm(england_value)
 ```
-:::
+
+```{r}
+#| output: asis
+#| eval: !expr include_admissions_and_beddays
+cat(":::")
+```
 
 ##### Map
 
-:::panel-tabset
-###### Admissions
 ```{r}
+#| output: asis
+#| eval: !expr include_admissions_and_beddays
+cat("::: panel-tabset")
+cat("##### Admissions")
+```
+
+```{r}
+#| eval: !expr include_admissions
 #| label: fig-number_icb_map_admissions
 #| fig-cap: !expr get_caption_by_geography(cohort_title, "number", "admissions")
 number_icb_map_admissions
 ```
 
-###### Beddays
 ```{r}
+#| output: asis
+#| eval: !expr include_admissions_and_beddays
+cat("##### Beddays")
+```
+
+```{r}
+#| eval: !expr include_beddays
 #| label: fig-number_icb_map_beddays
 #| fig-cap: !expr get_caption_by_geography(cohort_title, "number", "beddays")
 number_icb_map_beddays
 ```
-:::
+
+```{r}
+#| output: asis
+#| eval: !expr include_admissions_and_beddays
+cat(":::")
+```
 :::
 
 #### Percentage of `r treatment_type_title` activity
@@ -93,9 +131,15 @@ number_icb_map_beddays
 ::: panel-tabset
 ##### Bars
 
-::: panel-tabset
-###### Admissions
 ```{r}
+#| output: asis
+#| eval: !expr include_admissions_and_beddays
+cat("::: panel-tabset")
+cat("##### Admissions")
+```
+
+```{r}
+#| eval: !expr include_admissions
 #| label: fig-perc_icb_bar_admissions
 #| fig-cap: !expr get_caption_by_geography(cohort_title, "perc", "admissions", treatment_type)
 
@@ -115,8 +159,14 @@ get_summary_by_icb_bar(
 rm(england_value)
 ```
 
-###### Beddays
 ```{r}
+#| output: asis
+#| eval: !expr include_admissions_and_beddays
+cat("##### Beddays")
+```
+
+```{r}
+#| eval: !expr include_beddays
 #| label: fig-perc_icb_bar_beddays
 #| fig-cap: !expr get_caption_by_geography(cohort_title, "perc", "beddays", treatment_type)
 
@@ -135,25 +185,47 @@ get_summary_by_icb_bar(
 
 rm(england_value)
 ```
-:::
+
+```{r}
+#| output: asis
+#| eval: !expr include_admissions_and_beddays
+cat(":::")
+```
 
 ##### Map
 
-:::panel-tabset
-###### Admissions
 ```{r}
+#| output: asis
+#| eval: !expr include_admissions_and_beddays
+cat("::: panel-tabset")
+cat("##### Admissions")
+```
+
+```{r}
+#| eval: !expr include_admissions
 #| label: fig-perc_icb_map_admissions
 #| fig-cap: !expr get_caption_by_geography(cohort_title, "perc", "admissions", treatment_type)
 perc_icb_map_admissions
 ```
 
-###### Beddays
 ```{r}
+#| output: asis
+#| eval: !expr include_admissions_and_beddays
+cat("##### Beddays")
+```
+
+```{r}
+#| eval: !expr include_beddays
 #| label: fig-perc_icb_map_beddays
 #| fig-cap: !expr get_caption_by_geography(cohort_title, "perc", "beddays", treatment_type)
 perc_icb_map_beddays
 ```
-:::
+
+```{r}
+#| output: asis
+#| eval: !expr include_admissions_and_beddays
+cat(":::")
+```
 :::
 
 #### Age and sex standardised rates per 100,000 population
@@ -161,9 +233,15 @@ perc_icb_map_beddays
 ::: panel-tabset
 ##### Bars
 
-::: panel-tabset
-###### Admissions
 ```{r}
+#| output: asis
+#| eval: !expr include_admissions_and_beddays
+cat("::: panel-tabset")
+cat("##### Admissions")
+```
+
+```{r}
+#| eval: !expr include_admissions
 #| label: fig-rate_icb_bar_admissions
 #| fig-cap: !expr get_caption_by_geography(cohort_title, "SR", "admissions")
 england_value <- get_england_value(
@@ -180,8 +258,14 @@ get_summary_by_icb_bar(
 rm(england_value)
 ```
 
-###### Beddays
 ```{r}
+#| output: asis
+#| eval: !expr include_admissions_and_beddays
+cat("##### Beddays")
+```
+
+```{r}
+#| eval: !expr include_beddays
 #| label: fig-rate_icb_bar_beddays
 #| fig-cap: !expr get_caption_by_geography(cohort_title, "SR", "beddays")
 england_value <- get_england_value(
@@ -197,32 +281,60 @@ get_summary_by_icb_bar(
 
 rm(england_value)
 ```
-:::
+
+```{r}
+#| output: asis
+#| eval: !expr include_admissions_and_beddays
+cat(":::")
+```
 
 ##### Map
 
-::: panel-tabset
-###### Admissions
 ```{r}
+#| output: asis
+#| eval: !expr include_admissions_and_beddays
+cat("::: panel-tabset")
+cat("##### Admissions")
+```
+
+```{r}
+#| eval: !expr include_admissions
 #| label: fig-rate_icb_map_admissions
 #| fig-cap: !expr get_caption_by_geography(cohort_title, "SR", "admissions")
 rate_icb_map_admissions
 ```
 
-###### Beddays
 ```{r}
+#| output: asis
+#| eval: !expr include_admissions_and_beddays
+cat("##### Beddays")
+```
+
+```{r}
+#| eval: !expr include_beddays
 #| label: fig-rate_icb_map_beddays
 #| fig-cap: !expr get_caption_by_geography(cohort_title, "SR", "beddays")
 rate_icb_map_beddays
 ```
-:::
+
+```{r}
+#| output: asis
+#| eval: !expr include_admissions_and_beddays
+cat(":::")
+```
 :::
 
 #### Table
 
-:::panel-tabset
-##### Admissions
 ```{r}
+#| output: asis
+#| eval: !expr include_admissions_and_beddays
+cat("::: panel-tabset")
+cat("##### Admissions")
+```
+
+```{r}
+#| eval: !expr include_admissions
 #| label: tbl-rate_icb_admissions
 #| tbl-cap: !expr get_caption_by_geography_table(cohort_title, "admissions", treatment_type, "icb")
 get_summary_by_geography_table(
@@ -231,8 +343,14 @@ get_summary_by_geography_table(
   treatment_type)
 ```
 
-##### Beddays
 ```{r}
+#| output: asis
+#| eval: !expr include_admissions_and_beddays
+cat("##### Beddays")
+```
+
+```{r}
+#| eval: !expr include_beddays
 #| label: tbl-rate_icb_beddays
 #| tbl-cap: !expr get_caption_by_geography_table(cohort_title, "beddays", treatment_type, "icb")
 get_summary_by_geography_table(
@@ -240,5 +358,10 @@ get_summary_by_geography_table(
   "beddays", 
   treatment_type)
 ```
-:::
+
+```{r}
+#| output: asis
+#| eval: !expr include_admissions_and_beddays
+cat(":::")
+```
 :::
