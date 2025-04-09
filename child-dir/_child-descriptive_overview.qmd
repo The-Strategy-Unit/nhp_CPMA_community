@@ -1,28 +1,35 @@
 ```{r}
 overview <- targets::tar_read_raw(glue::glue("overview_{cohort}"))
 
-admissions_perc <- overview |>
+if(include_admissions) {
+  admissions_perc <- overview |>
   dplyr::filter(activity_type == "Admissions") |>
   dplyr::pull(perc)
-
-beddays_perc <- overview |>
-  dplyr::filter(activity_type == "Beddays") |>
-  dplyr::pull(perc)
-
-if (check_if_efficiency_mitigator(cohort, mitigator_summary_table)) {
-  overview <- overview |>
-    dplyr::filter(activity_type == "Beddays")
   
-  statement <- glue::glue("{beddays_perc}% of {treatment_type_title} beddays")
-} else if (check_if_zero_los_mitigator(mitigator)) {
-  overview <- overview |>
-    dplyr::filter(activity_type == "Admissions")
-  statement <- glue::glue("{admissions_perc}% of {treatment_type_title} admissions")
-}  else {
-  statement <- glue::glue(
-    "{admissions_perc}% of {treatment_type_title} admissions and {beddays_perc}% of {treatment_type_title} beddays")
+  admissions_statement <- glue::glue("{admissions_perc}% of {treatment_type_title} admissions")
+} else {
+  admissions_statement <- ""
 }
 
+if(include_beddays) {
+  beddays_perc <- overview |>
+  dplyr::filter(activity_type == "Beddays") |>
+  dplyr::pull(perc)
+  
+  beddays_statement <- glue::glue("{beddays_perc}% of {treatment_type_title} beddays")
+} else {
+  beddays_statement <- ""
+}
+
+statement <- glue::glue("{admissions_statement}{ifelse(include_admissions_and_beddays, ' and ', '')}{beddays_statement}")
+
+if(include_admissions & !include_admissions_and_beddays) {
+  overview_table <- overview |>
+    dplyr::filter(activity_type == "Admissions")
+} else if(include_beddays & !include_admissions_and_beddays) {
+  overview_table <- overview |>
+    dplyr::filter(activity_type == "Beddays")
+}
 ```
 
 In 2023/24, `r statement` fall under mitigable activity for the `r cohort_title` cohort.
@@ -30,6 +37,6 @@ In 2023/24, `r statement` fall under mitigable activity for the `r cohort_title`
 ```{r}
 #| label: tbl-overview
 #| tbl-cap: !expr get_caption_overview(cohort_title, treatment_type)
-overview |>
+overview_table |>
   get_table_perc()
 ```
