@@ -93,6 +93,51 @@ get_cohort_title <- function(mitigator, summary) {
   return(title)
 }
 
+get_data_section <- function(mitigator, summary_table) {
+  standardised_rates_episodes <- if (check_if_efficiency_mitigator(mitigator, summary_table)) {
+    ""
+  } else {
+    c(
+      "england_age_sex_standardised_rates_episodes <- tar_read(england_age_sex_standardised_rates_episodes) |>
+    filter(cohorts == cohort)",
+      ""
+    )
+  }
+  
+  standardised_rates_beddays <- if (check_if_zero_los_mitigator(mitigator)) {
+    ""
+  } else {
+    c(
+      "england_age_sex_standardised_rates_beddays <- tar_read(england_age_sex_standardised_rates_beddays) |>
+    filter(cohorts == cohort)",
+      ""
+    )
+  }
+  
+  code <- c(
+    "```{r data}",
+    "#| output: false",
+    "mitigator_summary_table <- readxl::read_excel(\"summary_mitigators_table.xlsx\") |>
+  dplyr::mutate(mechanism = snakecase::to_snake_case(mechanism))",
+    "",
+    "mechanisms <- mitigator_summary_table |>
+  dplyr::pull(mechanism) |>
+  unique()",
+    "",
+    standardised_rates_episodes,
+    standardised_rates_beddays,
+    "total_beddays_admissions <- targets::tar_read(total_beddays_admissions)",
+    "",
+    "icb_23_shp <- sf::st_read(\"https://services1.arcgis.com/ESMARspQHYMw9BZ9/arcgis/rest/services/Integrated_Care_Boards_April_2023_EN_BGC/FeatureServer/0/query?outFields=*&where=1%3D1&f=geojson\") |>
+    janitor::clean_names() |>
+    dplyr::mutate(icb23nm = simplify_icb_name(icb23nm))",
+    "```",
+    ""
+  )
+  
+  return(code)
+}
+
 get_filename <- function(mitigator) {
   type <- if (mitigator %in% c(
     "redirection_subsititution",
@@ -185,31 +230,6 @@ comparative_section <- c(
                   quiet = TRUE
                 ) |>
                   cat(sep = '\\n')",
-  "```",
-  ""
-)
-
-data <- c(
-  "```{r data}",
-  "#| output: false",
-  "mitigator_summary_table <- readxl::read_excel(\"summary_mitigators_table.xlsx\") |>
-  dplyr::mutate(mechanism = snakecase::to_snake_case(mechanism))",
-  "",
-  "mechanisms <- mitigator_summary_table |> 
-  dplyr::pull(mechanism) |> 
-  unique()",
-  "",
-  "england_age_sex_standardised_rates_episodes <- tar_read(england_age_sex_standardised_rates_episodes) |>
-    filter(cohorts == cohort)",
-  "",
-  "england_age_sex_standardised_rates_beddays <- tar_read(england_age_sex_standardised_rates_beddays) |>
-    filter(cohorts == cohort)",
-  "",
-  "total_beddays_admissions <- targets::tar_read(total_beddays_admissions)",
-  "",
-  "icb_23_shp <- sf::st_read(\"https://services1.arcgis.com/ESMARspQHYMw9BZ9/arcgis/rest/services/Integrated_Care_Boards_April_2023_EN_BGC/FeatureServer/0/query?outFields=*&where=1%3D1&f=geojson\") |>
-    janitor::clean_names() |>
-    dplyr::mutate(icb23nm = simplify_icb_name(icb23nm))",
   "```",
   ""
 )
@@ -407,7 +427,7 @@ create_draft_mitigator_qmd <- function(mitigator,
     "",
     packages_and_options,
     get_global_variables(mitigator, summary_table, treatment_lookup),
-    data,
+    get_data_section(mitigator, summary_table),
     
     "## Descriptive Analysis",
     "",
