@@ -1,7 +1,12 @@
-::: panel-tabset
-#### Admissions
+```{r}
+#| output: asis
+#| eval: !expr include_admissions_and_beddays
+cat("::: panel-tabset")
+cat("##### Admissions")
+```
 
 ```{r, fig.width=10, fig.height=6 }
+#| eval: !expr include_admissions
 #| label: fig-prop_other_cohorts_frail_spells
 #| fig-cap: !expr get_caption_number_of_cohorts(cohort_title, "admissions")
 
@@ -12,9 +17,14 @@ plotting_barchart_summary_of_overlaps(overlap_numbers,
 
 ```
 
-#### Beddays
+```{r}
+#| output: asis
+#| eval: !expr include_admissions_and_beddays
+cat("##### Beddays")
+```
 
 ```{r, fig.width=10, fig.height=7 }
+#| eval: !expr include_beddays
 #| label: fig-prop_other_cohorts_frail_beddays
 #| fig-cap: !expr get_caption_number_of_cohorts(cohort_title, "beddays")
 
@@ -24,4 +34,9 @@ plotting_barchart_summary_of_overlaps(overlap_numbers,
                                       mitigator_summary_table)
 
 ```
-:::
+
+```{r}
+#| output: asis
+#| eval: !expr include_admissions_and_beddays
+cat(":::")
+```
