@@ -262,7 +262,8 @@ list(
   tar_target(
     la_age_sex_standardised_rates_episodes_total_mitigation,
     generating_la_age_sex_standardised_rates_for_trends(
-      numbers_over_time_local_authority_total_mitigation |>
+      rbind(numbers_over_time_local_authority_total_mitigation_sex1, 
+            numbers_over_time_local_authority_total_mitigation_sex2)|>
         mutate(cohorts = "all"),
       NA,
       la_code_lookup,
@@ -274,7 +275,8 @@ list(
   tar_target(
     la_age_sex_standardised_rates_beddays_total_mitigation,
     generating_la_age_sex_standardised_rates_for_trends(
-      numbers_over_time_local_authority_total_mitigation |>
+      rbind(numbers_over_time_local_authority_total_mitigation_sex1, 
+            numbers_over_time_local_authority_total_mitigation_sex2)|>
         mutate(cohorts = "all"),
       NA,
       la_code_lookup,
@@ -475,8 +477,13 @@ list(
   ),
   
   tar_target(
-    numbers_over_time_local_authority_total_mitigation,
-    Formatting_la_data_for_trends_total_mitigation("SL_AF_describing_mitigators_local_authority_by_yr", la_population_data)
+    numbers_over_time_local_authority_total_mitigation_sex1,
+    Formatting_la_data_for_trends_total_mitigation("SL_AF_describing_mitigators_local_authority_by_yr", 1, la_population_data)
+  ),
+  
+  tar_target(
+    numbers_over_time_local_authority_total_mitigation_sex2,
+    Formatting_la_data_for_trends_total_mitigation("SL_AF_describing_mitigators_local_authority_by_yr", 2, la_population_data)
   ),
   
   tar_target(
