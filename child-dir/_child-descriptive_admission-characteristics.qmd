@@ -21,45 +21,52 @@ perc_los |>
 
 #### Specialty
 
-::: panel-tabset
-##### Admissions
-
 ```{r}
-specialty_admissions <- targets::tar_read_raw(glue::glue("specialty_{cohort}_admissions"))
+#| output: asis
+#| eval: !expr include_admissions_and_beddays
+cat("::: panel-tabset")
+cat("##### Admissions")
 ```
 
 ```{r}
-#| label: tbl-perc_specialty_admissions
-#| tbl-cap: !expr get_caption_top_ten_specialties(cohort_title, "admissions")
-specialty_admissions |>
-  get_table_perc() 
+specialty <- targets::tar_read_raw(glue::glue("specialty_{cohort}_{activity_type}"))
 ```
 
 ```{r}
-#| label: fig-perc_specialty_admissions
-#| fig-cap: !expr get_caption_top_ten_specialties(cohort_title, "admissions")
-specialty_admissions |>
-  get_top_ten_specialties_plot("admissions")
-```
-
-##### Beddays
-
-```{r}
-specialty_beddays <- targets::tar_read_raw(glue::glue("specialty_{cohort}_beddays"))
-```
-
-```{r}
-#| label: tbl-perc_specialty_beddays
-#| tbl-cap: !expr get_caption_top_ten_specialties(cohort_title, "beddays")
-specialty_beddays |>
-  get_table_perc() 
+#| eval: !expr include_admissions
+#| output: asis
+knitr::knit_child(
+              input = "child-dir/_child-descriptive_admission-characteristics_specialty.qmd",
+              envir = environment(),
+              quiet = TRUE
+             ) |>
+            cat(sep = '\n')
 ```
 
 ```{r}
-#| label: fig-perc_specialty_beddays
-#| fig-cap: !expr get_caption_top_ten_specialties(cohort_title, "beddays")
-specialty_beddays |>
-  get_top_ten_specialties_plot("beddays")
+#| output: asis
+#| eval: !expr include_admissions_and_beddays
+cat("##### Beddays")
 ```
-:::
+
+```{r}
+specialty <- targets::tar_read_raw(glue::glue("specialty_{cohort}_{activity_type}"))
+```
+
+```{r}
+#| eval: !expr include_beddays
+#| output: asis
+knitr::knit_child(
+              input = "child-dir/_child-descriptive_admission-characteristics_specialty.qmd",
+              envir = environment(),
+              quiet = TRUE
+             ) |>
+            cat(sep = '\n')
+```
+
+```{r}
+#| output: asis
+#| eval: !expr include_admissions_and_beddays
+cat(":::")
+```
 :::
