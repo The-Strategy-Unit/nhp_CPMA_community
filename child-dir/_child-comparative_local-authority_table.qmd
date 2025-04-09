@@ -1,0 +1,7 @@
+```{r}
+#| label: tbl-rate_la
+#| tbl-cap: !expr get_caption_by_geography_table(cohort_title, activity_type, treatment_type, "la")
+summary_la |>
+  get_summary_by_geography_table(activity_type,
+                                 treatment_type)
+```

@@ -1,26 +1,50 @@
 ```{r}
-summary_la_admissions <- targets::tar_read_raw(glue::glue("summary_la_admissions_{cohort}"))
-summary_la_beddays <- targets::tar_read_raw(glue::glue("summary_la_beddays_{cohort}"))
+#| output: asis
+#| eval: !expr include_admissions_and_beddays
+cat("::: panel-tabset")
+cat("##### Admissions")
 ```
-
-::: panel-tabset
-### Admissions
 
 ```{r}
-#| label: tbl-rate_la
-#| tbl-cap: !expr get_caption_by_geography_table(cohort_title, "admissions", treatment_type, "la")
-summary_la_admissions |>
-  get_summary_by_geography_table("admissions",
-                                 treatment_type)
+activity_type <- "admissions"
+summary_la <- targets::tar_read_raw(glue::glue("summary_la_{activity_type}_{cohort}"))
 ```
-
-### Beddays
 
 ```{r}
-#| label: tbl-rate_la
-#| tbl-cap: !expr get_caption_by_geography_table(cohort_title, "beddays", treatment_type, "la")
-summary_la_beddays |>
-  get_summary_by_geography_table("beddays",
-                                 treatment_type)
+#| output: asis
+#| eval: !expr include_admissions
+knitr::knit_child(
+                  input = "child-dir/_child-comparative_local-authority_table.qmd",
+                  envir = environment(),
+                  quiet = TRUE
+                ) |>
+                  cat(sep = '\n')
 ```
-:::
+
+```{r}
+#| output: asis
+#| eval: !expr include_admissions_and_beddays
+cat("##### Beddays")
+```
+
+```{r}
+activity_type <- "beddays"
+summary_la <- targets::tar_read_raw(glue::glue("summary_la_{activity_type}_{cohort}"))
+```
+
+```{r}
+#| output: asis
+#| eval: !expr include_beddays
+knitr::knit_child(
+                  input = "child-dir/_child-comparative_local-authority_table.qmd",
+                  envir = environment(),
+                  quiet = TRUE
+                ) |>
+                  cat(sep = '\n')
+```
+
+```{r}
+#| output: asis
+#| eval: !expr include_admissions_and_beddays
+cat(":::")
+```
