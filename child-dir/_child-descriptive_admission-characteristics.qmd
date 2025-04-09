@@ -1,25 +1,27 @@
-::: panel-tabset
-#### Length Of Stay
-
 ```{r}
-perc_los <- targets::tar_read_raw(glue::glue("perc_los_{cohort}"))
+#| output: asis
+#| eval: !expr include_admissions_and_beddays
+cat("::: panel-tabset")
+cat("\n")
+cat("#### Length of Stay")
 ```
 
 ```{r}
-#| label: tbl-perc_los
-#| tbl-cap: !expr get_caption_by_group("perc", cohort_title, "admissions", "los", treatment_type)
-perc_los |>
-  get_perc_by_los_table()
+#| eval: !expr include_beddays
+#| output: asis
+knitr::knit_child(
+              input = "child-dir/_child-descriptive_admission-characteristics_los.qmd",
+              envir = environment(),
+              quiet = TRUE
+             ) |>
+            cat(sep = '\n')
 ```
 
 ```{r}
-#| label: fig-perc_los
-#| fig-cap: !expr get_caption_by_group("perc", cohort_title, "admissions", "los", treatment_type)
-perc_los |>
-  get_perc_by_los_plot()
+#| output: asis
+#| eval: !expr include_admissions_and_beddays
+cat("#### Specialty")
 ```
-
-#### Specialty
 
 ```{r}
 #| output: asis
@@ -30,6 +32,7 @@ cat("##### Admissions")
 ```
 
 ```{r}
+activity_type <- "admissions"
 specialty <- targets::tar_read_raw(glue::glue("specialty_{cohort}_{activity_type}"))
 ```
 
@@ -51,6 +54,7 @@ cat("##### Beddays")
 ```
 
 ```{r}
+activity_type <- "beddays"
 specialty <- targets::tar_read_raw(glue::glue("specialty_{cohort}_{activity_type}"))
 ```
 
@@ -70,4 +74,9 @@ knitr::knit_child(
 #| eval: !expr include_admissions_and_beddays
 cat(":::")
 ```
-:::
+
+```{r}
+#| output: asis
+#| eval: !expr include_admissions_and_beddays
+cat(":::")
+```
