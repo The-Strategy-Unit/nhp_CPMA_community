@@ -470,6 +470,11 @@ mitigators_and_mechanisms_treatment_lookup <- mitigators |>
 mitigators_and_mechanisms <- mitigators_and_mechanisms_treatment_lookup |>
   dplyr::pull(mitigator_or_mechanism)
 
+efficiency_mitigators <- mitigator_summary_table |>
+  dplyr::filter(mechanism == "efficiencies") |>
+  dplyr::pull(mitigator_code) |>
+  c("efficiencies")
+
 # Creating draft quarto reports ------------------------------------------------
 # Whilst testing have limited to just one mitigator:
 mitigators_and_mechanisms <- c("eol_care_2_days", "emergency_elderly")
