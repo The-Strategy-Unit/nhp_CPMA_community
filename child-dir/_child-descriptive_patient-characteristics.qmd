@@ -9,6 +9,7 @@ group_title <- format_group_name_for_caption(patient_characteristic)
 #| output: asis
 #| eval: !expr include_admissions_and_beddays
 cat("::: panel-tabset")
+cat("\n")
 cat("##### Admissions")
 ```
 
@@ -62,6 +63,7 @@ cat(":::")
 #| output: asis
 #| eval: !expr include_admissions_and_beddays
 cat("::: panel-tabset")
+cat("\n")
 cat("##### Admissions")
 ```
 

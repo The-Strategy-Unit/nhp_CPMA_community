@@ -19,6 +19,7 @@ number_percentage_over_time <-  data_number_percentage_over_time_icb(
 #| output: asis
 #| eval: !expr include_admissions_and_beddays
 cat("::: panel-tabset")
+cat("\n")
 cat("##### Admissions")
 ```
 
@@ -56,6 +57,7 @@ cat(":::")
 #| output: asis
 #| eval: !expr include_admissions_and_beddays
 cat("::: panel-tabset")
+cat("\n")
 cat("##### Admissions")
 ```
 
@@ -99,6 +101,7 @@ cat(":::")
 #| output: asis
 #| eval: !expr include_admissions_and_beddays
 cat("::: panel-tabset")
+cat("\n")
 cat("##### Admissions")
 ```
 

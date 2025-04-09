@@ -2,6 +2,7 @@
 #| output: asis
 #| eval: !expr include_admissions_and_beddays
 cat("::: panel-tabset")
+cat("\n")
 cat("##### Admissions")
 ```
 

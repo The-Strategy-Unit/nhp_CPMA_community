@@ -41,6 +41,7 @@ if(include_beddays) {
 #| output: asis
 #| eval: !expr include_admissions_and_beddays
 cat("::: panel-tabset")
+cat("\n")
 cat("##### Admissions")
 ```
 
@@ -96,6 +97,7 @@ cat(":::")
 #| output: asis
 #| eval: !expr include_admissions_and_beddays
 cat("::: panel-tabset")
+cat("\n")
 cat("##### Admissions")
 ```
 
@@ -135,6 +137,7 @@ cat(":::")
 #| output: asis
 #| eval: !expr include_admissions_and_beddays
 cat("::: panel-tabset")
+cat("\n")
 cat("##### Admissions")
 ```
 
@@ -198,6 +201,7 @@ cat(":::")
 #| output: asis
 #| eval: !expr include_admissions_and_beddays
 cat("::: panel-tabset")
+cat("\n")
 cat("##### Admissions")
 ```
 
@@ -237,6 +241,7 @@ cat(":::")
 #| output: asis
 #| eval: !expr include_admissions_and_beddays
 cat("::: panel-tabset")
+cat("\n")
 cat("##### Admissions")
 ```
 
@@ -294,6 +299,7 @@ cat(":::")
 #| output: asis
 #| eval: !expr include_admissions_and_beddays
 cat("::: panel-tabset")
+cat("\n")
 cat("##### Admissions")
 ```
 
@@ -330,6 +336,7 @@ cat(":::")
 #| output: asis
 #| eval: !expr include_admissions_and_beddays
 cat("::: panel-tabset")
+cat("\n")
 cat("##### Admissions")
 ```
 

@@ -11,6 +11,7 @@ icb_age_sex_standardised_rates_beddays <- tar_read(icb_age_sex_standardised_rate
 #| output: asis
 #| eval: !expr include_admissions_and_beddays
 cat("::: panel-tabset")
+cat("\n")
 cat("##### Admissions")
 ```
 
@@ -90,6 +91,7 @@ cat(":::")
 #| output: asis
 #| eval: !expr include_admissions_and_beddays
 cat("::: panel-tabset")
+cat("\n")
 cat("##### Admissions")
 ```
 
@@ -181,6 +183,7 @@ cat(":::")
 #| output: asis
 #| eval: !expr include_admissions_and_beddays
 cat("::: panel-tabset")
+cat("\n")
 cat("##### Admissions")
 ```
 
@@ -272,6 +275,7 @@ Those ICBs in the lower left quadrant (shaded in green) could be considered as p
 #| output: asis
 #| eval: !expr include_admissions_and_beddays
 cat("::: panel-tabset")
+cat("\n")
 cat("##### Admissions")
 ```
 

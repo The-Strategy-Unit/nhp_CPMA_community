@@ -23,7 +23,9 @@ if(include_beddays) {
 
 statement <- glue::glue("{admissions_statement}{ifelse(include_admissions_and_beddays, ' and ', '')}{beddays_statement}")
 
-if(include_admissions & !include_admissions_and_beddays) {
+if (include_admissions_and_beddays) {
+  overview_table <- overview
+} else if(include_admissions & !include_admissions_and_beddays) {
   overview_table <- overview |>
     dplyr::filter(activity_type == "Admissions")
 } else if(include_beddays & !include_admissions_and_beddays) {
