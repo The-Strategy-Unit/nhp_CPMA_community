@@ -114,12 +114,13 @@ Formatting_la_data_for_trends <- function(table, sex_group) {
   return(la_numbers_over_time)
 }
 
-Formatting_la_data_for_trends_total_mitigation<-function(table, la_pop){
+Formatting_la_data_for_trends_total_mitigation<-function(table, sex_group, la_pop){
   
   la_numbers_over_time <- dplyr::tbl(
     sc,
     dbplyr::in_catalog("strategyunit","default", table)
-  )|> collect()|>
+  )|>     filter(sex==sex_group)|>
+    collect()|>
     as.data.frame()
   
   
