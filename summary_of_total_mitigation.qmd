@@ -76,56 +76,44 @@ Virtual Ward mitigators are considered both a Relocation mitigator and an Effici
 #### Number of admissions and beddays for each mechanism of mitigation
 
 ```{r}
-total_cohort_numbers_2324|>
-  generate_data_for_mechanism_cohort_overlaps()|>
-  gather(key=mechanism, value=value, -episodes, -beddays)|>
-  filter(value!=0)|>
-  summarise(episodes=sum(episodes),
-            beddays=sum(beddays),
-                        .by=mechanism) |>
-  mutate(episodes=ifelse(mechanism=="Efficiencies", NA, episodes))|>
+total_mitigator_activity <- numbers_over_time_total_mitigation |>
+  filter(year == "2023/24") |>
+  summarise(episodes = sum(episodes), beddays = sum(beddays)) |>
+  dplyr::mutate(mechanism = "Total potential mitigable activity", 
+                .before = "episodes")
+
+total_cohort_numbers_2324 |>
+  generate_data_for_mechanism_cohort_overlaps() |>
+  gather(key = mechanism, value = value, -episodes, -beddays) |>
+  filter(value != 0) |>
+  summarise(
+    episodes = sum(episodes),
+    beddays = sum(beddays),
+    .by = mechanism
+  ) |>
+  mutate(episodes = ifelse(mechanism == "Efficiencies", NA, episodes)) |>
+  rbind(total_mitigator_activity) |>
   flextable() |>
-    set_header_labels(episodes="Admissions",
-                      beddays="Beddays",
-                      mechanism="Mechanism of mitgation")|>
-    align(part = "header", align = "left") |>
-    bg(bg = "#f9bf07", part = "header") |>
-    bold(bold = TRUE, part = "header") |>
-    fontsize(size = 10, part = "body") |>
-    fontsize(size = 11, part = "header") |>
-    padding(padding = 2,
-            part = "all",
-            padding.top = NULL) |>
-    autofit()
-  
-
+  set_header_labels(episodes = "Admissions",
+                    beddays = "Beddays",
+                    mechanism = "Mechanism of mitgation") |>
+  align(part = "header", align = "left") |>
+  bg(bg = "#f9bf07", part = "header") |>
+  bold(bold = TRUE, part = "header") |>
+  fontsize(size = 10, part = "body") |>
+  fontsize(size = 11, part = "header") |>
+  padding(padding = 2,
+          part = "all",
+          padding.top = NULL) |>
+  autofit() |>
+  flextable::hline(i = 4, border = flextable::fp_border_default())
 ```
 
-NOTE: As with the previous table the sum of all the admissions and beddays does not add up to the total potential mitigable activity, as much of the activity is included within more than one mechanism of mitigation group and and thus adding the numbers for each group will lead to double counting.
-
-## Total potential mitigable activity for England 
-
-```{r}
-total_mitigator_activity<-numbers_over_time_total_mitigation|>
-  filter(year=="2023/24")|>
-  summarise(episodes=sum(episodes),
-            beddays=sum(beddays))
-
-
-england_average_percentage_beddays<-calculating_england_average_percentage(number_percentage_over_time|>filter(!is.nan(percentage_episodes)), beddays, total_beddays)|>
-  rename(percentage=`2023/24`)
-
-england_average_percentage_episodes<-calculating_england_average_percentage(number_percentage_over_time|>filter(!is.nan(percentage_episodes)), episodes, total_episodes)|>
-  rename(percentage=`2023/24`)
-
-```
-
-In 2023/24 in England there were **`r format(total_mitigator_activity$episodes, big.mark=",")` admissions (`r england_average_percentage_episodes$percentage`%)** and **`r format(total_mitigator_activity$beddays, big.mark=",")` beddays (`r england_average_percentage_beddays$percentage`%)** for potentially mitigable activity. This total excludes any double counting as a result of activity being including in multiple mitigator cohorts.
+NOTE: The sum of all the admissions and beddays for each mechanism does not add up to the total potential mitigable activity, as much of the activity is included within more than one mechanism of mitigation group and and thus adding the numbers for each group will lead to double counting. The numbers provided for the total potential mitigable activity excludes any double counting as a result of activity being including in multiple mitigator cohorts.
 
 ## Overlap between the mechanism of mitigation groups
 
 Many admissions meet the criteria to be included in more than one mechanism of mitigation group. Since these potential mechanism of mitigation groups are not mutually exclusive there is a need to understand which groups overlap and the degree of overlap between the cohorts.
-
 
 :::panel-tabset
 
