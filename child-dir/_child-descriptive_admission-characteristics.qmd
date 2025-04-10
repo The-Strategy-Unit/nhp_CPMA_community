@@ -1,13 +1,17 @@
 ```{r}
+include_non_zero_admissions <- include_admissions & !check_if_zero_los_mitigator(cohort)
+```
+
+```{r}
 #| output: asis
-#| eval: !expr include_beddays
+#| eval: !expr include_non_zero_admissions
 cat("::: panel-tabset")
 cat("\n")
 cat("#### Length of Stay")
 ```
 
 ```{r}
-#| eval: !expr include_beddays
+#| eval: !expr include_non_zero_admissions
 #| output: asis
 knitr::knit_child(
               input = "child-dir/_child-descriptive_admission-characteristics_los.qmd",
@@ -19,7 +23,7 @@ knitr::knit_child(
 
 ```{r}
 #| output: asis
-#| eval: !expr include_beddays
+#| eval: !expr include_non_zero_admissions
 cat("#### Specialty")
 ```
 
@@ -77,6 +81,6 @@ cat(":::")
 
 ```{r}
 #| output: asis
-#| eval: !expr include_beddays
+#| eval: !expr include_non_zero_admissions
 cat(":::")
 ```
