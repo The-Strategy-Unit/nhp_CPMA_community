@@ -96,7 +96,7 @@ total_cohort_numbers_2324 |>
   flextable() |>
   set_header_labels(episodes = "Admissions",
                     beddays = "Beddays",
-                    mechanism = "Mechanism of mitgation") |>
+                    mechanism = "Mechanism of mitigation") |>
   align(part = "header", align = "left") |>
   bg(bg = "#f9bf07", part = "header") |>
   bold(bold = TRUE, part = "header") |>
