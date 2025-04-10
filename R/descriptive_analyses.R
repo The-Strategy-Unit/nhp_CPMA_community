@@ -43,7 +43,7 @@ get_overview_of_mitigator <- function(mitigator,
   ) |>
     filter_to_mitigator_or_mechanism(mitigator) |>
     dplyr::summarise(admissions = sum(episodes),
-                     beddays = sum(beddays)) |>
+                     beddays =sum(beddays)) |>
     sparklyr::collect() 
   
   summary <- mitigator_totals |>
@@ -132,7 +132,8 @@ get_perc_by_group <- function(mitigator,
     ) |>
     order_levels_of_factors() |>
     dplyr::arrange(dplyr::across(1)) |>
-    dplyr::rename(!!rlang::sym(activity_type) := number)
+    dplyr::rename(!!rlang::sym(activity_type) := number) 
+                                                               
   
   return(summary)
 }

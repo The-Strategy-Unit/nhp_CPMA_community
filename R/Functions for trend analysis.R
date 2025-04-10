@@ -173,8 +173,8 @@ data_number_percentage_over_time_icb<-function(data1, data2, mitigator, treatmen
               beddays=sum(beddays),
               .by=c(icb_2024_name, year, fyear))|>
     left_join(denominator_data, by=c("fyear", "icb_2024_name"))|>
-    mutate(percentage_episodes=round((episodes/total_episodes)*100,1),
-           percentage_beddays=round((beddays/total_beddays)*100,1))|>
+    mutate(percentage_episodes=janitor::round_half_up((episodes/total_episodes)*100,1),
+           percentage_beddays=janitor::round_half_up((beddays/total_beddays)*100,1))|>
   mutate(percentage_episodes=ifelse(is.nan(percentage_episodes), NA, percentage_episodes))|>
     mutate(percentage_beddays=ifelse(is.nan(percentage_beddays), NA, percentage_beddays))|>
     as.data.frame() |>
@@ -215,7 +215,7 @@ data1<-data|>
   group_by(year)|>
   summarise(number=sum({{activity_type}}),
             total_number=sum({{denominator}}))|>
-  mutate(percentage=round((number/total_number)*100,1))
+  mutate(percentage=janitor::round_half_up((number/total_number)*100,1))
 
 data1|>
     ggplot()+
@@ -265,8 +265,8 @@ plotting_icb_over_time<-function(data, axis_title){
   
   ifelse("lowercl" %in% names(data), 
          data2<-data|>
-           mutate(lower_ci=round(lowercl,2))|>
-           mutate(upper_ci=round(uppercl,2)), 
+           mutate(lower_ci=janitor::round_half_up(lowercl,2))|>
+           mutate(upper_ci=janitor::round_half_up(uppercl,2)), 
          data2<-data|>
            mutate(lower_ci=NA)|>
            mutate(upper_ci=NA))
@@ -276,7 +276,7 @@ plotting_icb_over_time<-function(data, axis_title){
          footnote<-"")
   
  fig<- data2|>
-    mutate(activity=round(activity,2))|>
+    mutate(activity=janitor::round_half_up(activity,1))|>
     group_by(icb_2024_name)|>
     highlight_key(~icb_2024_name) |>
     plot_ly( x = ~year, y = ~activity, type = 'scatter',  mode = 'lines', text=~icb_2024_name,  line = list(color = "#686f73"), width=660, height=300)|>
@@ -324,7 +324,7 @@ calculating_change_over_time<-function(data, values, geography ){
     summarise(`2018/19`=max(`2018/19`, na.rm=TRUE),
               `2023/24`=max(`2023/24`, na.rm=TRUE),
               .by=c({{geography}}))|>
-    mutate(change=round(((`2023/24`-`2018/19`)/`2018/19`)*100,1))|>
+    mutate(change=janitor::round_half_up(((`2023/24`-`2018/19`)/`2018/19`)*100,1))|>
     filter(!is.nan(change))|>
     filter(change!="-Inf")|>
     arrange(change)|>
@@ -370,7 +370,7 @@ calculating_england_average_numbers<-function(data, activity_type){
     pivot_wider(names_from = c(year), values_from = number)|>
     summarise(`2018/19`=max(`2018/19`, na.rm=TRUE),
               `2023/24`=max(`2023/24`, na.rm=TRUE))|>
-    mutate(change=round(((`2023/24`-`2018/19`)/`2018/19`)*100,1))
+    mutate(change=janitor::round_half_up(((`2023/24`-`2018/19`)/`2018/19`)*100,1))
   
 }
 
@@ -385,11 +385,11 @@ data|>
     group_by(year)|>
         summarise(number=sum({{activity_type}}),
               total_number=sum({{denominator}}))|>
-    mutate(percentage=round((number/total_number)*100,1))|>
+    mutate(percentage=janitor::round_half_up((number/total_number)*100,1))|>
     pivot_wider(names_from = c(year), values_from = percentage)|>
     summarise(`2018/19`=max(`2018/19`, na.rm=TRUE),
               `2023/24`=max(`2023/24`, na.rm=TRUE))|>
-    mutate(change=round(((`2023/24`-`2018/19`)/`2018/19`)*100,1))
+    mutate(change=janitor::round_half_up(((`2023/24`-`2018/19`)/`2018/19`)*100,1))
 
 }
 
@@ -403,7 +403,7 @@ calculating_england_average_standardised<-function(data){
     pivot_wider(names_from = c(year), values_from = value)|>
     summarise(`2018/19`=max(`2018/19`, na.rm=TRUE),
               `2023/24`=max(`2023/24`, na.rm=TRUE))|>
-    mutate(change=round(((`2023/24`-`2018/19`)/`2018/19`)*100,1))
+    mutate(change=janitor::round_half_up(((`2023/24`-`2018/19`)/`2018/19`)*100,1))
   
 }
 
@@ -417,7 +417,7 @@ plotting_total_activity_vs_percentage_change<-function(data, geography){
     summarise(`2018/19`=max(`2018/19`, na.rm=TRUE),
               `2023/24`=max(`2023/24`, na.rm=TRUE),
               .by=c({{geography}}))|>
-    mutate(change=round(((`2023/24`-`2018/19`)/`2018/19`)*100,1))|>
+    mutate(change=janitor::round_half_up(((`2023/24`-`2018/19`)/`2018/19`)*100,1))|>
     filter(!is.nan(change))|>
     filter(change!="-Inf")|>
     arrange(change)|>
@@ -451,7 +451,7 @@ generating_la_table<-function(data, cohort){
     select(laname23, year, value)|>
     spread(key=year, value=value) |>
     rename(`Local Authority`=laname23)|>
-    mutate(`Percentage Change`=round(((`2023/24`-`2018/19`)/`2018/19`)*100,1))|>
+    mutate(`Percentage Change`=janitor::round_half_up(((`2023/24`-`2018/19`)/`2018/19`)*100,1))|>
     as.data.frame()
   
   return(table_data)
