@@ -73,63 +73,6 @@ Efficiency mitigators are focused on reducing length of stay and will therefore 
 
 Virtual Ward mitigators are considered both a Relocation mitigator and an Efficiency mitigator.
 
-```{r, fig.height=8, fig.width=10}
-
-mitigator_summary_table<-read_excel("summary_mitigators_table.xlsx")|>
-  left_join(numbers_over_time|>
-              filter(year=="2023/24")|>
-              summarise(episodes=sum(episodes),
-                        beddays=sum(beddays),
-                        .by=cohorts), by=c("mitigator_code"="cohorts"))|>
-  select(-activity_group, -mitigator_code)|>
-    mutate(episodes=ifelse(mechanism=="Efficiencies", NA, episodes))|>
-  rename(`Mechanism of mitigation`=mechanism)|>
-  mutate(episodes=janitor::round_half_up(episodes,0),
-         beddays=janitor::round_half_up(beddays,0))
-
-
-mitigator_summary_table|>
-  as_grouped_data(groups = "Mechanism of mitigation")|>
-  as_flextable() |>
-    set_header_labels(mitigator_name="Mitigator name",
-                      type_of_admission="Type of admission",
-                      episodes="Admissions",
-                      beddays="Beddays")|>
-    align(part = "header", align = "left") |>
-    bg(bg = "#f9bf07", part = "header") |>
-    bold( part = "body",
-         i = ~ `Mechanism of mitigation` == "Redirection/Substitution") |>
-        bg( part = "body",
-         i = ~ `Mechanism of mitigation` == "Redirection/Substitution",
-        bg="#D8DBDC" ) |>
-      bg( part = "body",
-         i = ~ `Mechanism of mitigation` == "Prevention",
-        bg="#D8DBDC" ) |>
-    bold( part = "body",
-         i = ~ `Mechanism of mitigation` == "Prevention") |>
-      bg( part = "body",
-         i = ~ `Mechanism of mitigation` == "Efficiencies",
-        bg="#D8DBDC") |>
-    bold( part = "body",
-         i = ~ `Mechanism of mitigation` == "Efficiencies") |>
-       bg( part = "body",
-         i = ~ `Mechanism of mitigation` == "Efficiencies & Relocation",
-        bg="#D8DBDC") |>
-    bold( part = "body",
-         i = ~ `Mechanism of mitigation` == "Efficiencies & Relocation") |>
-    bold(bold = TRUE, part = "header") |>
-    fontsize(size = 10, part = "body") |>
-    fontsize(size = 11, part = "header") |>
-    padding(padding = 2,
-            part = "all",
-            padding.top = NULL) |>
-    autofit()
-  
-
-```
-
-NOTE: The sum of all the individual mitigator activity in this table does not add up to the total potential mitigable activity. This is because much of the activity is included within multiple different mitigator cohorts and thus adding the total for each mitigator will lead to double counting of admissions and beddays.
-
 #### Number of admissions and beddays for each mechanism of mitigation
 
 ```{r}
