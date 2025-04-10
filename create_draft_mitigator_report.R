@@ -92,9 +92,19 @@ get_cohort_overlap_section <- function(mitigator) {
 }
 
 get_cohort_title <- function(mitigator, summary) {
-  title <- summary |>
-    dplyr::filter(mitigator_code == mitigator) |>
-    dplyr::pull(mitigator_name)
+  
+  mechanisms <- mechanisms |>
+    dplyr::pull(mitigator_or_mechanism)
+  
+  if(mitigator %in% mechanisms) {
+    title <- mitigator |>
+      stringr::str_replace("_", " & ") |>
+      stringr::str_to_title()
+  } else {
+    title <- summary |>
+      dplyr::filter(mitigator_code == mitigator) |>
+      dplyr::pull(mitigator_name)
+  }
   
   return(title)
 }
