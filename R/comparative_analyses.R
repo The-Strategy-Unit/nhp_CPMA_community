@@ -159,7 +159,8 @@ get_summary_by_geography <- function(data,
                                                   !!rlang::sym(denominator), 
                                                 2),
                   dplyr::across(dplyr::any_of(c("icb_2024_name")),
-                                ~simplify_icb_name(.)))
+                                ~simplify_icb_name(.)))|>
+    dplyr::mutate(total_count=round(total_count,0))
   
   return(wrangled)
 }

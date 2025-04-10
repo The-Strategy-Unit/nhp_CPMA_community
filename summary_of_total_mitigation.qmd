@@ -45,14 +45,14 @@ treatment_type_title <- format_treatment_for_caption(treatment_type)
 ```{r}
 number_percentage_over_time<-numbers_over_time_total_mitigation|>
   left_join(denominator_over_time, by=c("age_range", "sex", "year", "icb", "icb_2024_name"))|>
-  summarise(episodes=sum(episodes, na.rm=TRUE),
-            beddays=sum(beddays, na.rm=TRUE),
+  summarise(episodes=janitor::round_half_up(sum(episodes, na.rm=TRUE),0),
+            beddays=janitor::round_half_up(sum(beddays, na.rm=TRUE),0),
             total_episodes=sum(total_episodes_all, na.rm=TRUE),
             total_beddays=sum(total_beddays_all, na.rm=TRUE),
             .by=c(icb, icb_2024_name, year))|>
   filter(year!="2014/15")|>
-  mutate(percentage_episodes=round((episodes/total_episodes)*100,1),
-         percentage_beddays=round((beddays/total_beddays)*100,1))|>
+  mutate(percentage_episodes=janitor::round_half_up((episodes/total_episodes)*100,1),
+         percentage_beddays=janitor::round_half_up((beddays/total_beddays)*100,1))|>
   as.data.frame()
 ```
 
@@ -83,7 +83,9 @@ mitigator_summary_table<-read_excel("summary_mitigators_table.xlsx")|>
                         .by=cohorts), by=c("mitigator_code"="cohorts"))|>
   select(-activity_group, -mitigator_code)|>
     mutate(episodes=ifelse(mechanism=="Efficiencies", NA, episodes))|>
-  rename(`Mechanism of mitigation`=mechanism)
+  rename(`Mechanism of mitigation`=mechanism)|>
+  mutate(episodes=janitor::round_half_up(episodes,0),
+         beddays=janitor::round_half_up(beddays,0))
 
 
 mitigator_summary_table|>
@@ -212,9 +214,9 @@ plotting_barchart_number_of_mechanism_groups(total_cohort_numbers_2324, episodes
 NB: Efficiency mitigators do not impact the number of admissions, only the length of stay, hence they do not overlap in terms of admissions with the other cohorts.
 :::
 
-The majority of mitigable admissions (59%) are purely for activity that could be prevented. 
+The majority of mitigable admissions (57%) are purely for activity where there could be redirection to perhaps community services. 
 
-Overall three quarters of mitigable admissions fall into just one mechanism of mitigation group.
+Over three quarters of mitigable admissions fall into just one mechanism of mitigation group.
 
 #### Beddays
 
@@ -240,7 +242,7 @@ plotting_barchart_number_of_mechanism_groups(total_cohort_numbers_2324, beddays)
 :::
 :::
 
-The majority of mitigable beddays are included in multiple mechanism of mitigation groups, just over a quarter of mitgable beddays are within a single mechanism group. 
+The majority of mitigable beddays are included in multiple mechanism of mitigation groups, only 10% of mitgable beddays falling within a single mechanism group. 
 
 One third of mitigable beddays are included with 3 mechanism of mitigation groups (Redirection/Substitution, Prevention and Efficiencies)
 
@@ -299,6 +301,7 @@ get_summary_by_icb_bar(
   england_value)
 
 rm(england_value)
+
 ```
 
 ###### Beddays

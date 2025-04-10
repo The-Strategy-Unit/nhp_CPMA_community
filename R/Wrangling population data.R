@@ -169,7 +169,7 @@ generating_icb_age_sex_standardised_rates<-function(data, icb_pop, standard_pop,
     PHEindicatormethods::calculate_dsr(x = activity,    # observed number of events
                                        n = icb_population,  # non-standard pops for each stratum
                                        stdpop = pop) |>   # standard populations for England for each stratum
-    mutate(value=round(value,0))
+    mutate(value=janitor::round_half_up(value,0))
   
 
   
@@ -195,7 +195,7 @@ generating_england_age_sex_standardised_rates<-function(data, icb_pop, standard_
     PHEindicatormethods::calculate_dsr(x = activity,    # observed number of events
                                        n = icb_population,  # non-standard pops for each stratum
                                        stdpop = pop) |>   # standard populations for England for each stratum
-    mutate(value=round(value,0))
+    mutate(value=janitor::round_half_up(value,0))
   
   
 }
@@ -238,7 +238,7 @@ generating_england_age_sex_standardised_rates<-function(data, icb_pop, standard_
       PHEindicatormethods::calculate_dsr(x = activity, # observed number of events
                                          n = la_population, # non-standard pops for each stratum
                                          stdpop = pop) |>   # standard populations for England for each stratum
-      mutate(value=round(value,0))   # standard populations for England for each stratum
+      mutate(value=janitor::round_half_up(value,0))   # standard populations for England for each stratum
     
     
   }

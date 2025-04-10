@@ -127,7 +127,7 @@ plot_upset_plot<-function(dataset, mitigator_table, activity_type){
   
   plot_data<-data|>
     mutate(total_activity=sum(activity))|>
-    mutate(percentage=round((activity/total_activity)*100,0))|>
+    mutate(percentage=janitor::round_half_up((activity/total_activity)*100,0))|>
     slice_max(activity,n=15)|>
     arrange(desc(activity))|>
     mutate(id=row_number())
@@ -199,7 +199,7 @@ plot_upset_plot_mechanism_group<-function(dataset, mitigator_table, activity_typ
   
   plot_data<-data|>
     mutate(total_activity=sum(activity))|>
-    mutate(percentage=round((activity/total_activity)*100,0))|>
+    mutate(percentage=janitor::round_half_up((activity/total_activity)*100,0))|>
     slice_max(activity,n=15)|>
     arrange(desc(activity))|>
     mutate(id=row_number())
@@ -281,7 +281,7 @@ plotting_barchart_summary_of_overlaps<-function(data, cohort_name, activity_type
     gather(key="cohort", value="number")|>
     group_by(cohort)|>
     summarise(number=sum(number))|>
-    mutate(percentage=round(((number/max(number))*100),0))|>
+    mutate(percentage=janitor::round_half_up(((number/max(number))*100),0))|>
     left_join(mitigator_table[,c("mitigator_name", "mitigator_code", "mechanism")], by=c("cohort"="mitigator_code"))|>
     arrange(desc(number))|>
     mutate(mitigator_name=factor(mitigator_name, unique(mitigator_name)))|>
@@ -397,7 +397,7 @@ plotting_barchart_number_of_cohorts<-function(data, activity_type){
   }
   
   data2<- data2 |>
-    mutate(percentage=round(activity/(sum(activity))*100,1))
+    mutate(percentage=janitor::round_half_up(activity/(sum(activity))*100,1))
   
   data2|>
     ggplot(aes(x=number_of_cohorts, y=activity))+
@@ -420,7 +420,7 @@ plotting_barchart_number_of_cohorts_for_mechanism_group<-function(data, activity
  data2<- data|>
     mutate(number_of_cohorts=ifelse(number_of_cohorts>4, "5+", number_of_cohorts))|>
     summarise(activity=sum({{activity_type}}), .by=c(number_of_cohorts))|>
-    mutate(percentage=round(activity/(sum(activity))*100,1))
+    mutate(percentage=janitor::round_half_up(activity/(sum(activity))*100,1))
   
   
   data2|>
@@ -493,6 +493,8 @@ generate_data_for_mechanism_cohort_overlaps<-function(data){
 generate_venn_diagram<-function(data, activity_type){
   
   data1<-generate_data_for_mechanism_cohort_overlaps(data)|>
+    mutate(episodes=janitor::round_half_up(episodes,0),
+           beddays=janitor::round_half_up(episodes,0))|>
     uncount({{activity_type}})
   
   name<-deparse(substitute(activity_type))
@@ -548,7 +550,7 @@ plotting_barchart_number_of_mechanism_groups<-function(data, activity_type){
   }
   
   data2<- data2 |>
-    mutate(percentage=round(activity/(sum(activity))*100,1))
+    mutate(percentage=janitor::round_half_up(activity/(sum(activity))*100,1))
   
   data2|>
     ggplot(aes(x=number_of_cohorts, y=activity))+
