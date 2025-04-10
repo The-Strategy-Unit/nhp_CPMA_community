@@ -8,7 +8,6 @@ book:
   date-format: "YYYY-MM-DD"
   chapters:
     - index.qmd
-    - introduction_page.qmd
     - summary_of_total_mitigation.qmd
     - part: mechanism_redirection_substitution.qmd
       chapters: 
