@@ -9,11 +9,11 @@ book:
   chapters:
     - index.qmd
     - introduction_page.qmd
-    - methods.qmd
     - summary_of_total_mitigation.qmd
     - part: mechanism_redirection_substitution.qmd
       chapters: 
         - mitigator_frail_elderly_high.qmd
+    - methods.qmd
 
 title-block-banner: "#f9bf07"
 title-block-banner-color: "#333739"
