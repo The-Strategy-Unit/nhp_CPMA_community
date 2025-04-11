@@ -99,17 +99,20 @@ filter_to_mitigator_or_mechanism <- function(data, mitigator) {
 #'
 #' @return A table.
 get_mitigators_in_a_mechanism_table <- function(data, cohort) {
+  data <- data |>
+    dplyr::filter(mechanism == cohort) |>
+    dplyr::select(Mitigator = mitigator_name,
+                  `Type of admission` = type_of_admission,
+                  Admissions = episodes,
+                  Beddays = beddays)
+  
+  if (cohort == "efficiencies") {
+    data <- data |>
+      dplyr::select(-Admissions)
+  }
   
   table <- data |>
-    dplyr::filter(mechanism == cohort) |>
-    dplyr::select(-mechanism) |>
     get_table() |>
-    flextable::set_header_labels(
-      mitigator_name = "Mitigator",
-      type_of_admission = "Type of admission",
-      episodes = "Admissions",
-      beddays = "Beddays"
-    ) |>
     flextable::delete_part(part = "footer")
   
   return(table)
