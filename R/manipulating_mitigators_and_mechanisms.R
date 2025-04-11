@@ -19,6 +19,23 @@ check_if_efficiency_mitigator <- function(mitigator, summary_table){
   return(check)
 }
 
+#' Check if a mitigator is a mechanism.
+#'
+#' @param mitigator The mitigator or mechanism.
+#' @param summary_table The `mitigator_summary_table`.
+#'
+#' @return Boolean.
+check_if_mechanism <- function(mitigator, summary_table) {
+  mechanisms <- summary_table |>
+    dplyr::pull(mechanism) |>
+    unique()
+  
+  check <- mitigator %in% mechanisms
+  
+  return(check)
+    
+}
+
 #' Checks if the mitigator or mechanism is a zero length of stay mitigator.
 #'
 #' @param mitigator The mitigator or mechanism.

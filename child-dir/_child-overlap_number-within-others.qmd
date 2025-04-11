@@ -2,7 +2,7 @@
 caption_admissions <- get_caption_number_of_cohorts(cohort_title, "admissions")
 caption_beddays <- get_caption_number_of_cohorts(cohort_title, "beddays")
 
-if(cohort %in% mechanisms) {
+if(check_if_mechanism(cohort, mitigator_summary)) {
   caption_admissions <- glue::glue("{caption_admissions} It includes only admissions for mitigator cohorts within this {cohort_title} group.")
   caption_beddays <- glue::glue("{caption_beddays} It includes only beddays for mitigator cohorts within this {cohort_title} group.")
 }
@@ -21,7 +21,7 @@ cat("##### Admissions")
 #| label: fig-number_of_cohorts_spells
 #| fig-cap: !expr caption_admissions
 
-if(cohort %in% mechanisms) {
+if(check_if_mechanism(cohort, mitigator_summary)) {
   plotting_barchart_number_of_cohorts_for_mechanism_group(overlap_numbers, 
                                                           episodes)
 } else {
@@ -40,7 +40,7 @@ cat("##### Beddays")
 #| label: fig-number_of_cohorts_beddays
 #| fig-cap: !expr caption_beddays
 
-if(cohort %in% mechanisms) {
+if(check_if_mechanism(cohort, mitigator_summary)) {
   plotting_barchart_number_of_cohorts_for_mechanism_group(overlap_numbers, 
                                                           beddays)
 } else {

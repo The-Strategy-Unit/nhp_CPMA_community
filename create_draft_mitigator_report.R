@@ -91,12 +91,9 @@ get_cohort_overlap_section <- function(mitigator) {
   return(code)
 }
 
-get_cohort_title <- function(mitigator, summary, mechanisms) {
+get_cohort_title <- function(mitigator, summary) {
   
-  mechanisms <- mechanisms |>
-    dplyr::pull(mitigator_or_mechanism)
-  
-  if(mitigator %in% mechanisms) {
+  if(check_if_mechanism(mitigator, summary)) {
     title <- mitigator |>
       stringr::str_replace("_", " & ") |>
       stringr::str_to_title()
@@ -135,10 +132,6 @@ get_data_section <- function(mitigator, summary_table) {
     "#| output: false",
     "mitigator_summary_table <- readxl::read_excel(\"summary_mitigators_table.xlsx\") |>
   dplyr::mutate(mechanism = snakecase::to_snake_case(mechanism))",
-    "",
-    "mechanisms <- mitigator_summary_table |>
-  dplyr::pull(mechanism) |>
-  unique()",
     "",
     standardised_rates_episodes,
     standardised_rates_beddays,
@@ -181,7 +174,7 @@ get_global_variables <- function(mitigator,
     paste0("cohort <- \"", mitigator, "\""),
     paste0(
       "cohort_title <- \"",
-      get_cohort_title(mitigator, summary_table, mechanisms),
+      get_cohort_title(mitigator, summary_table),
       "\""
     ),
     "",
@@ -194,22 +187,6 @@ get_global_variables <- function(mitigator,
     "```",
     ""
   )
-  
-  return(code)
-}
-
-get_mitigators_in_a_mechanism_section <- function(mitigator, mechanisms) {
-  code <- if (mitigator %in% mechanisms) {
-    c(
-      "```{r}",
-      "targets::tar_read(mitigator_totals) |>
-      get_mitigators_in_a_mechanism_table()",
-      "```",
-      ""
-    )
-  } else {
-    ""
-  }
   
   return(code)
 }
@@ -280,7 +257,7 @@ overview_section <-  c(
   "```{r}",
   "#| output: asis",
   "knitr::knit_child(
-      input = \"child-dir/_child-descriptive_overview.qmd\",
+      input = \"child-dir/_child-overview.qmd\",
       envir = environment(),
       quiet = TRUE
     ) |>
@@ -462,7 +439,7 @@ create_draft_mitigator_qmd <- function(mitigator,
   code <- cat(
     paste0(
       "## ",
-      get_cohort_title(mitigator, summary_table, mechanisms),
+      get_cohort_title(mitigator, summary_table),
       " {#sec-",
       mitigator,
       " .unnumbered}"
@@ -472,11 +449,10 @@ create_draft_mitigator_qmd <- function(mitigator,
     get_global_variables(mitigator, summary_table, treatment_lookup),
     get_data_section(mitigator, summary_table),
     including_activity_types,
-    get_mitigators_in_a_mechanism_section(mitigator, mechanisms),
+    overview_section,
     
     "## Descriptive Analysis",
     "",
-    overview_section,
     patient_characteristics_section,
     admission_characteristics_section,
     

@@ -10,7 +10,7 @@ cat("##### Admissions")
 #| eval: !expr include_admissions
 #| label: upset_plot_frail_elderly_high_episodes
 #| fig-cap: !expr get_caption_upset_plots(cohort_title, "admissions")
-if(cohort %in% mechanisms) {
+if(check_if_mechanism(cohort, mitigator_summary)) {
   plot_upset_plot_mechanism_group(overlap_numbers, 
                                   mitigator_summary_table, 
                                   episodes)
@@ -31,7 +31,7 @@ cat("##### Beddays")
 #| eval: !expr include_beddays
 #| label: upset_plot_frail_elderly_high_bedday
 #| fig-cap: !expr get_caption_upset_plots(cohort_title, "beddays")
-if(cohort %in% mechanisms) {
+if(check_if_mechanism(cohort, mitigator_summary)) {
   plot_upset_plot_mechanism_group(overlap_numbers, 
                                   mitigator_summary_table, 
                                   beddays)
