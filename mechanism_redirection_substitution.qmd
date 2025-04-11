@@ -79,21 +79,16 @@ The 16 mitigators included in this analysis are:
 -   Admission With No Overnight Stay and No Procedure: Adults / Children
 
 ```{r}
-targets::tar_read(mitigator_totals) |>
-  get_mitigators_in_a_mechanism_table(cohort)
-```
-
-## Descriptive Analysis of Mitigable Activity
-
-```{r}
 #| output: asis
 knitr::knit_child(
-  input = "child-dir/_child-descriptive_overview.qmd",
+  input = "child-dir/_child-overview.qmd",
   envir = environment(),
   quiet = TRUE
   ) |>
   cat(sep = '\n')
 ```
+
+## Descriptive Analysis of Mitigable Activity
 
 ### Patient Characteristics
 

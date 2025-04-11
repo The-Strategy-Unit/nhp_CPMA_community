@@ -63,17 +63,17 @@ include_admissions_and_beddays <- include_admissions & include_beddays
 
 This cohort includes older patients with a high level of frailty, specifically, those 75 years of age or over with an emergency admission and a frailty score over 15. The frailty score is calculated from ICD-10 diagnoses recorded for admissions during the previous 2 years and using the risk scores in Gilbert et al (2018), Development and validation of a Hospital Frailty Risk Score focusing on older people in acute care settings using electronic hospital records: an observational study. The Lancet, 391(10132), pp.1775-1782.
 
-## Descriptive Analysis of Mitigable Activity
-
 ```{r}
 #| output: asis
 knitr::knit_child(
-  input = "child-dir/_child-descriptive_overview.qmd",
+  input = "child-dir/_child-overview.qmd",
   envir = environment(),
   quiet = TRUE
   ) |>
   cat(sep = '\n')
 ```
+
+## Descriptive Analysis of Mitigable Activity
 
 ### Patient Characteristics
 

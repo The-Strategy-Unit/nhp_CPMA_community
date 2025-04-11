@@ -40,3 +40,8 @@ statement <- glue::glue("{admissions_statement}{ifelse(include_admissions_and_be
 
 In 2023/24, there were `r statement` for the `r cohort_title` cohort.
 
+```{r}
+#| eval: !expr check_if_mechanism(cohort, mitigator_summary_table)
+targets::tar_read(mitigator_totals) |>
+  get_mitigators_in_a_mechanism_table(cohort)
+```
