@@ -23,7 +23,6 @@ tar_option_set(
 )
 
 # Databricks connection --------------------------------------------------------
-# Connection to Databricks
 sc <- sparklyr::spark_connect(
   master     = Sys.getenv("DATABRICKS_HOST"),
   cluster_id = Sys.getenv("DATABRICKS_CLUSTER_ID"),
@@ -33,7 +32,6 @@ sc <- sparklyr::spark_connect(
 )
 
 # Mitigator details ------------------------------------------------------------
-
 mitigator_summary_table <-
   readxl::read_excel("summary_mitigators_table.xlsx") |>
   dplyr::mutate(mechanism = snakecase::to_snake_case(mechanism))
@@ -59,11 +57,13 @@ mitigators_and_mechanisms_treatment_lookup <- mitigators |>
 mitigators_and_mechanisms <- mitigators_and_mechanisms_treatment_lookup |>
   dplyr::pull(mitigator_or_mechanism)
 
-# Run the R scripts in the R/ folder with your custom functions:
+# Run the R scripts in the R/ folder with our custom functions:
 tar_source()
 
-# Replace the target list below with your own:
+# Tthe target list:
 list(
+  tar_target(mitigator_totals,
+             get_mitigators_totals(mitigator_summary_table, numbers_over_time)),
   # Population data ------------------------------------------------------------
   tar_target(
     la_population_data,

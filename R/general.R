@@ -1,65 +1,5 @@
 # Functions used for general tasks, like creating tables.
 
-#' Checks if the mitigator or mechanism is the efficiency mechanism or one of 
-#' its mitigators.
-#'
-#' @param mitigator The mitigator or mechanism.
-#' @param summary_table The `mitigator_summary_table`.
-#'
-#' @return Boolean.
-check_if_efficiency_mitigator <- function(mitigator, summary_table){
-  
-  efficiency_mitigators <- summary_table |>
-    dplyr::filter(mechanism == "efficiencies") |>
-    dplyr::pull(mitigator_code) |>
-    c("efficiencies")
-  
-  check <- mitigator %in% efficiency_mitigators
-  
-  return(check)
-}
-
-#' Checks if the mitigator or mechanism is a zero length of stay mitigator.
-#'
-#' @param mitigator The mitigator or mechanism.
-#'
-#' @return Boolean.
-check_if_zero_los_mitigator <- function(mitigator){
-  
-  check <- startsWith(mitigator, "zero_los_no_procedure")
-  
-  return(check)
-}
-
-#' Check if admissions are applicable for the mitigator.
-#' 
-#' This uses `check_if_efficiency_mitigator()` but also allows for other 
-#' criteria to be added.
-#'
-#' @param mitigator The mitigator or mechanism.
-#' @param summary_table The `mitigator_summary_table`.
-#'
-#' @return Boolean.
-check_include_admissions <- function(mitigator, summary_table) {
-  check <- !check_if_efficiency_mitigator(mitigator, summary_table)
-  
-  return(check)
-}
-
-#' Check if beddays are applicable for the mitigator.
-#'
-#' This uses `check_if_zero_los_mitigator()` but also allows for other criteria 
-#' to be added.
-#' 
-#' @param mitigator The mitigator or mechanism.
-#'
-#' @return Boolean.
-check_include_beddays <- function(mitigator) {
-  check <- !check_if_zero_los_mitigator(mitigator)
-  
-  return(check)
-}
-
 #' Convert a dataframe into a datatable.
 #'
 #' @param A dataframe.
@@ -82,20 +22,6 @@ create_dt <- function(x) {
       lengthMenu = list(c(10, 25, 50, -1), c(10, 25, 50, "All"))
     )
   )
-}
-
-#' Filter a dataframe to data for a mitigator or mechanism.
-#'
-#' @param data A dataframe.
-#' @param mitigator The mitigator or mechanism.
-#'
-#' @return A dataframe.
-filter_to_mitigator_or_mechanism <- function(data, mitigator) {
-  filtered <- data |>
-    mutate_mechanism_columns() |>
-    dplyr::filter(!!rlang::sym(mitigator) == 1)
-  
-  return(filtered)
 }
 
 #' Formats a string into a title for tables and plots.
@@ -181,64 +107,6 @@ get_table <- function(data) {
     flextable::autofit()
   
   return(table)
-}
-
-#' Add columns flagging if a row is part of each mechanism.
-#'
-#' @param data A dataframe with columns for each mitigator. 
-#'
-#' @return A dataframe.
-mutate_mechanism_columns <- function(data) {
-  wrangled <- data |>
-    dplyr::mutate(
-      prevention = ifelse(
-        alcohol_partially_attributable_acute == 1 |
-          alcohol_partially_attributable_chronic == 1 |
-          alcohol_wholly_attributable == 1 |
-          obesity_related_admissions == 1 |
-          smoking == 1 |
-          raid_ae == 1 |
-          intentional_self_harm == 1 |
-          medically_unexplained_related_admissions == 1,
-        1,
-        0
-      ),
-      redirection_substitution = ifelse(
-        ambulatory_care_conditions_acute == 1 |
-          ambulatory_care_conditions_chronic == 1 |
-          ambulatory_care_conditions_vaccine_preventable == 1 |
-          eol_care_2_days == 1 |
-          eol_care_3_to_14_days == 1 |
-          falls_related_admissions == 1 |
-          frail_elderly_high == 1 |
-          frail_elderly_intermediate == 1 |
-          medicines_related_admissions_explicit == 1 |
-          medicines_related_admissions_implicit_anti_diabetics == 1 |
-          medicines_related_admissions_implicit_benzodiasepines == 1 |
-          medicines_related_admissions_implicit_diurectics == 1 |
-          medicines_related_admissions_implicit_nsaids == 1 |
-          readmission_within_28_days == 1 |
-          zero_los_no_procedure_adult == 1 |
-          zero_los_no_procedure_child == 1,
-        1,
-        0
-      ),
-      efficiencies_relocation = ifelse(
-        virtual_wards_activity_avoidance_ari == 1 |
-          virtual_wards_activity_avoidance_heart_failure == 1,
-        1,
-        0
-      ),
-      efficiencies = ifelse(
-        emergency_elderly == 1 |
-          stroke_early_supported_discharge == 1 |
-          raid_ip == 1,
-        1,
-        0
-      )
-    )
-  
-  return(wrangled)
 }
 
 #' Order the levels of factor variables.

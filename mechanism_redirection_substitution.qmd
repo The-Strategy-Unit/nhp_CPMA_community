@@ -19,6 +19,7 @@ source("R/descriptive_analyses.R")
 source("R/comparative_analyses.R")
 source("R/Functions for cohort overlap.R")
 source("R/Functions for trend analysis.R")
+source("R/manipulating_mitigators_and_mechanisms.R")
 
 options(scipen = 999)
 options(knitr.duplicate.label = "allow")
@@ -61,33 +62,17 @@ include_admissions_and_beddays <- include_admissions & include_beddays
 
 This analysis includes mitigators where the mechanism of action is through Redirection/Substitution of activity. This means that some of the admissions in this group could be avoided by greater use of other services/provisions in the community (either existing or new).
 
-The 16 mitigators included in this analysis are:
-
--   Ambulatory Care Sensitive Admissions: Acute Conditions / Chronic Conditions / Vaccine Preventable
-
--   End of Life Care Admissions: died within 2 days / died within 3-14 days
-
--   Falls Related Admissions
-
--   Frail Elderly Admissions: High Frailty Risk / Intermediate Frailty Risk
-
--   Medicines Related Admissions: Explicit / Implicit - Anti-Diabetics / Implicit - Benzodiazepines / Implicit - Diuretics / Implicit - NSAIDs
-
--   Emergency Readmissions Within 28 Days
-
--   Admission With No Overnight Stay and No Procedure: Adults / Children
-
-## Descriptive Analysis of Mitigable Activity
-
 ```{r}
 #| output: asis
 knitr::knit_child(
-  input = "child-dir/_child-descriptive_overview.qmd",
-  envir = environment(),
-  quiet = TRUE
-  ) |>
-  cat(sep = '\n')
+      input = "child-dir/_child-overview.qmd",
+      envir = environment(),
+      quiet = TRUE
+    ) |>
+      cat(sep = '\n')
 ```
+
+## Descriptive Analysis of Mitigable Activity
 
 ### Patient Characteristics
 

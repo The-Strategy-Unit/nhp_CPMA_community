@@ -93,10 +93,7 @@ get_cohort_overlap_section <- function(mitigator) {
 
 get_cohort_title <- function(mitigator, summary) {
   
-  mechanisms <- mechanisms |>
-    dplyr::pull(mitigator_or_mechanism)
-  
-  if(mitigator %in% mechanisms) {
+  if(check_if_mechanism(mitigator, summary)) {
     title <- mitigator |>
       stringr::str_replace("_", " & ") |>
       stringr::str_to_title()
@@ -135,10 +132,6 @@ get_data_section <- function(mitigator, summary_table) {
     "#| output: false",
     "mitigator_summary_table <- readxl::read_excel(\"summary_mitigators_table.xlsx\") |>
   dplyr::mutate(mechanism = snakecase::to_snake_case(mechanism))",
-    "",
-    "mechanisms <- mitigator_summary_table |>
-  dplyr::pull(mechanism) |>
-  unique()",
     "",
     standardised_rates_episodes,
     standardised_rates_beddays,
@@ -264,7 +257,7 @@ overview_section <-  c(
   "```{r}",
   "#| output: asis",
   "knitr::knit_child(
-      input = \"child-dir/_child-descriptive_overview.qmd\",
+      input = \"child-dir/_child-overview.qmd\",
       envir = environment(),
       quiet = TRUE
     ) |>
@@ -294,6 +287,7 @@ packages_and_options <- c(
   "source(\"R/comparative_analyses.R\")",
   "source(\"R/Functions for cohort overlap.R\")",
   "source(\"R/Functions for trend analysis.R\")",
+  "source(\"R/manipulating_mitigators_and_mechanisms.R\")",
   "",
   "options(scipen = 999)",
   "options(knitr.duplicate.label = \"allow\")",
@@ -455,10 +449,10 @@ create_draft_mitigator_qmd <- function(mitigator,
     get_global_variables(mitigator, summary_table, treatment_lookup),
     get_data_section(mitigator, summary_table),
     including_activity_types,
+    overview_section,
     
     "## Descriptive Analysis",
     "",
-    overview_section,
     patient_characteristics_section,
     admission_characteristics_section,
     
