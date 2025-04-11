@@ -20,6 +20,7 @@ source("R/descriptive_analyses.R")
 source("R/comparative_analyses.R")
 source("R/Functions for cohort overlap.R")
 source("R/Functions for trend analysis.R")
+source("R/manipulating_mitigators_and_mechanisms.R")
 
 options(scipen = 999)
 options(knitr.duplicate.label = "allow")
