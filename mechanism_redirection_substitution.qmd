@@ -62,30 +62,14 @@ include_admissions_and_beddays <- include_admissions & include_beddays
 
 This analysis includes mitigators where the mechanism of action is through Redirection/Substitution of activity. This means that some of the admissions in this group could be avoided by greater use of other services/provisions in the community (either existing or new).
 
-The 16 mitigators included in this analysis are:
-
--   Ambulatory Care Sensitive Admissions: Acute Conditions / Chronic Conditions / Vaccine Preventable
-
--   End of Life Care Admissions: died within 2 days / died within 3-14 days
-
--   Falls Related Admissions
-
--   Frail Elderly Admissions: High Frailty Risk / Intermediate Frailty Risk
-
--   Medicines Related Admissions: Explicit / Implicit - Anti-Diabetics / Implicit - Benzodiazepines / Implicit - Diuretics / Implicit - NSAIDs
-
--   Emergency Readmissions Within 28 Days
-
--   Admission With No Overnight Stay and No Procedure: Adults / Children
-
 ```{r}
 #| output: asis
 knitr::knit_child(
-  input = "child-dir/_child-overview.qmd",
-  envir = environment(),
-  quiet = TRUE
-  ) |>
-  cat(sep = '\n')
+      input = "child-dir/_child-overview.qmd",
+      envir = environment(),
+      quiet = TRUE
+    ) |>
+      cat(sep = '\n')
 ```
 
 ## Descriptive Analysis of Mitigable Activity

@@ -36,12 +36,21 @@ if (include_beddays) {
 }
 
 statement <- glue::glue("{admissions_statement}{ifelse(include_admissions_and_beddays, ' and ', '')}{beddays_statement}")
+
+mechanism_statement <- ifelse(check_if_mechanism(cohort, mitigator_summary_table),
+                              "Numbers for each mitigator within this mechanism are presented below.",
+                              "")
 ```
 
-In 2023/24, there were `r statement` for the `r cohort_title` cohort.
+In 2023/24, there were `r statement` for the `r cohort_title` cohort. `r mechanism_statement`
 
 ```{r}
+#| output: asis
 #| eval: !expr check_if_mechanism(cohort, mitigator_summary_table)
-targets::tar_read(mitigator_totals) |>
-  get_mitigators_in_a_mechanism_table(cohort)
+knitr::knit_child(
+  input = "child-dir/_child-overview_mitigator-totals.qmd",
+  envir = environment(),
+  quiet = TRUE
+  ) |>
+  cat(sep = '\n')
 ```
