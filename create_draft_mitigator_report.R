@@ -91,7 +91,7 @@ get_cohort_overlap_section <- function(mitigator) {
   return(code)
 }
 
-get_cohort_title <- function(mitigator, summary) {
+get_cohort_title <- function(mitigator, summary, mechanisms) {
   
   mechanisms <- mechanisms |>
     dplyr::pull(mitigator_or_mechanism)
@@ -181,7 +181,7 @@ get_global_variables <- function(mitigator,
     paste0("cohort <- \"", mitigator, "\""),
     paste0(
       "cohort_title <- \"",
-      get_cohort_title(mitigator, summary_table),
+      get_cohort_title(mitigator, summary_table, mechanisms),
       "\""
     ),
     "",
@@ -194,6 +194,22 @@ get_global_variables <- function(mitigator,
     "```",
     ""
   )
+  
+  return(code)
+}
+
+get_mitigators_in_a_mechanism_section <- function(mitigator, mechanisms) {
+  code <- if (mitigator %in% mechanisms) {
+    c(
+      "```{r}",
+      "targets::tar_read(mitigator_totals) |>
+      get_mitigators_in_a_mechanism_table()",
+      "```",
+      ""
+    )
+  } else {
+    ""
+  }
   
   return(code)
 }
@@ -294,6 +310,7 @@ packages_and_options <- c(
   "source(\"R/comparative_analyses.R\")",
   "source(\"R/Functions for cohort overlap.R\")",
   "source(\"R/Functions for trend analysis.R\")",
+  "source(\"R/manipulating_mitigators_and_mechanisms.R\")",
   "",
   "options(scipen = 999)",
   "options(knitr.duplicate.label = \"allow\")",
@@ -445,7 +462,7 @@ create_draft_mitigator_qmd <- function(mitigator,
   code <- cat(
     paste0(
       "## ",
-      get_cohort_title(mitigator, summary_table),
+      get_cohort_title(mitigator, summary_table, mechanisms),
       " {#sec-",
       mitigator,
       " .unnumbered}"
@@ -455,6 +472,7 @@ create_draft_mitigator_qmd <- function(mitigator,
     get_global_variables(mitigator, summary_table, treatment_lookup),
     get_data_section(mitigator, summary_table),
     including_activity_types,
+    get_mitigators_in_a_mechanism_section(mitigator, mechanisms),
     
     "## Descriptive Analysis",
     "",
