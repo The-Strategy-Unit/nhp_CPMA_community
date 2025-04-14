@@ -150,8 +150,6 @@ knitr::knit_child(
 
 ### Admission Characteristics
 
-In this section, mitigable activity for the `r cohort_title` cohort are shown by admission characteristics.
-
 ```{r}
 #| output: asis
 knitr::knit_child(
@@ -163,12 +161,6 @@ knitr::knit_child(
 ```
 
 ## Cohort overlap
-
-Many admissions meet the criteria to be included in more than one mitigator cohort. Since these potential mitigator cohorts are not mutually exclusive there is a need to understand which cohorts overlap and the degree of overlap between the cohorts.
-
-### Number and proportion within multiple other cohorts
-
-For the `r cohort_title`  activity we show how much of the activity is included in multiple other mitigable cohorts. There are some differences between cohort overlap for admissions and beddays, this is because efficiency mitigators are not included in admissions data as they do not impact the number of admissions, but are included in the beddays data as they influence length of stay. 
 
 ```{r}
 overlap_numbers <- targets::tar_read(total_cohort_numbers_2324)|>
@@ -187,8 +179,6 @@ knitr::knit_child(
 
 ### Inclusion within other mitigable activity cohorts
 
-This shows whether the activity within the `r cohort_title`  activity is also included in other mitigator cohorts (overlapping mitigator cohorts shown in red). Where there is overlap the number and percentage of `r cohort_title`  activity that is also included within each of the other mitigator cohorts is shown.
-
 ```{r}
 #| output: asis
 knitr::knit_child(
@@ -200,10 +190,6 @@ knitr::knit_child(
 ```
 
 ### Most common cohort overlaps
-
-Often overlap between a small number of groups can be visualised using Venn diagram. However, due to the large number of mitigator cohorts and therefore high numbers of potential combinations of overlaps we have used upset plots to show the largest overlaps between cohorts.
-
-The 15 most common cohort combinations for the `r cohort_title`  cohort are shown. For this cohort there are a very large number of different cohort combinations, so there are many smaller size cohort combinations that are not shown (all combinations together would add to 100%).
 
 ```{r}
 #| output: asis
@@ -243,18 +229,6 @@ knitr::knit_child(
 
 ## Trend Analysis
 
-We aim to understand whether there have been decreases, or increases, in potentially mitigable `r cohort_title`  activity over time. We have considered `r cohort_title`  admissions and beddays over the past 9 years in England as a whole and for each ICB, including:
-
-a\) the absolute number of `r cohort_title` admissions/beddays,
-
-b\) these admissions/beddays as a proportion of `r treatment_type_title` admissions,
-
-c\) the age and sex standardised rates of these admissions/beddays using the England 2021 census population.
-
-To help understand the variability between ICBs we have calculated for each ICB the percentage change in proportion of emergency admissions and in standardised rates between 2018/19 and 2023/24.
-
-### England
-
 ```{r}
 #| output: asis
 knitr::knit_child(
@@ -266,9 +240,6 @@ knitr::knit_child(
 
 ```
 
-### Integrated Care Board
-
-Note: Low numbers of admissions/beddays for Frimley ICB in 2022/23 reflect an issue with data submissions for this period. 
 
 ```{r}
 #| output: asis
@@ -281,8 +252,6 @@ knitr::knit_child(
 ```
 
 ### Local Authority
-
-Age and sex standardised rates of activity per 100,000 population for local authority areas. 
 
 ```{r}
 #| output: asis
