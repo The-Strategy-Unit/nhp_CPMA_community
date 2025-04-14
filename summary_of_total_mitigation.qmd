@@ -57,22 +57,20 @@ number_percentage_over_time<-numbers_over_time_total_mitigation|>
   as.data.frame()
 ```
 
+Methods of classifying acute activity  as ‘potentially mitigable’ were developed as part of the Strategy Unit’s work on the New Hospital Programme (NHP). All activity that meets the criteria for potentially mitigable is included within the mitigator cohorts, but in practice, only a proportion of this activity would be truly mitigable. 
+
+In this suite of reports, we apply our methods of identifying potentially mitigable hospital activity to all NHS trusts in England. These reports then allow users to explore potentially mitigable activity in greater depth; to understand patient and admission characteristics; to understand where activity falls into more than one type of mitigator; how rates compare by ICB; and how they have changed over time. 
+
+By necessity, the size of ‘potentially mitigable’ activity is large. Often this is because definitions themselves are extremely broad. For example, the mitigator for Frail and Older People Admissions is defined as any emergency admission for a patient aged 75 or over where that person also has a certain level of frailty – a large proportion of NHS activity which is by no means entirely or even largely mitigable. It is hoped that further research and analysis in this area will lead to improvements in the criteria used to define potentially mitigable activity. Thus providing greater clarity on defining the acute care which is more likely to be legitimately mitigable.
+
+
+Here, we provide information for 29 mitigators - the NHP Demand and Capacity Tool includes 92 in total - chosen as those which impact emergency admissions and bed days and are amenable to interventions from other healthcare services such as community services and primary care. Each of the mitigators falls under one of four ‘mechanisms’ for mitigation. These mechanisms are i) Redirection/Substitution, ii) Prevention, iii) Relocation & Efficiencies and iv) Efficiencies (seeking only reduction in bed days and not initial admissions). Our suite of reports provides summaries for each mechanism with further pages for each individual mitigator.
+
+
+
 ## Mitigable activity
 
-The numbers of admissions and beddays give the potentially mitigable activity for England in 2023/24.
-
-The mitigators are divided into 4 groups according to the mechanism by which mitigation could occur:
-
--   Redirection/Substitution
--   Prevention
--   Relocation & Efficiencies
--   Efficiencies
-
-Redirection/Substitution, Prevention and Relocation mitigators will affect the number of admissions and will also therefore impact the number of beddays.
-
-Efficiency mitigators are focused on reducing length of stay and will therefore only impact the number of beddays.
-
-Virtual Ward mitigators are considered both a Relocation mitigator and an Efficiency mitigator.
+The numbers of admissions and beddays give the potentially mitigable activity for England in 2023/24, for each mechanism of mitigation group and in total.
 
 #### Number of admissions and beddays for each mechanism of mitigation
 
