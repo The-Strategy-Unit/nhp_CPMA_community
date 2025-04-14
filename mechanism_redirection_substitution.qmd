@@ -30,6 +30,7 @@ cohort <- "redirection_substitution"
 cohort_title <- "Redirection and Substitution"
 treatment_type <- "both"
 treatment_type_title <- format_treatment_for_caption(treatment_type)
+activity_type_label<-"admissions/beddays"
 ```
 
 ```{r}
@@ -160,12 +161,6 @@ knitr::knit_child(
 
 ## Cohort overlap
 
-Many admissions meet the criteria to be included in more than one mitigator cohort. Since these potential mitigator cohorts are not mutually exclusive there is a need to understand which cohorts overlap and the degree of overlap between the cohorts.
-
-### Number and proportion within multiple other cohorts
-
-For the Redirection/Substitution mechanism group we show how much of the activity is included in other Redirection/Substitution mitgators cohorts.
-
 ```{r}
 overlap_numbers <- targets::tar_read(cohort_overlap_numbers_redirection)
 ```
@@ -181,10 +176,6 @@ knitr::knit_child(
 ```
 
 ### Most common cohort overlaps
-
-Often overlap between a small number of groups can be visualised using Venn diagram. However, due to the large number of mitigator cohorts and therefore high numbers of potential combinations of overlaps we have used upset plots to show the largest overlaps between cohorts.
-
-The 15 most common mitigator cohort combinations within the Redirection/Substitution mechanism group are shown.
 
 ```{r}
 #| output: asis
@@ -224,18 +215,6 @@ knitr::knit_child(
 
 ## Trend Analysis
 
-We aim to understand whether there have been decreases, or increases, in potentially mitigable Redirection and Substitution activity over time. We have considered Redirection and Substitution admissions and beddays over the past 9 years in England as a whole and for each ICB, including:
-
-a\) the absolute number of Redirection and Substitution admissions/beddays,
-
-b\) these admissions/beddays as a proportion of total admissions,
-
-c\) the age and sex standardised rates of these admissions/beddays using the England 2021 census population.
-
-To help understand the variability between ICBs we have calculated for each ICB the percentage change in proportion of emergency admissions and in standardised rates between 2018/19 and 2023/24.
-
-### England
-
 ```{r}
 #| output: asis
 knitr::knit_child(
@@ -246,9 +225,6 @@ knitr::knit_child(
   cat(sep = '\n')
 ```
 
-### Integrated Care Board
-
-Note: Low numbers of admissions/beddays for Frimley ICB in 2022/23 reflect an issue with data submissions for this period.
 
 ```{r}
 #| output: asis
@@ -261,8 +237,6 @@ knitr::knit_child(
 ```
 
 ### Local Authority
-
-Age and sex standardised rates of activity per 100,000 population for local authority areas.
 
 ```{r}
 #| output: asis

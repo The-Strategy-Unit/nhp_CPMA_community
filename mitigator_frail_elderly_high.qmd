@@ -32,6 +32,7 @@ cohort <- "frail_elderly_high"
 cohort_title <- "Frail Older People (high frailty)"
 treatment_type <- "emergency"
 treatment_type_title <- format_treatment_for_caption(treatment_type)
+activity_type_label<-"admissions/beddays"
 ```
 
 ```{r}

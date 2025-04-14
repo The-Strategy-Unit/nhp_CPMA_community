@@ -1,9 +1,20 @@
 
-Many admissions meet the criteria to be included in more than one mitigator cohort. Since these potential mitigator cohorts are not mutually exclusive there is a need to understand which cohorts overlap and the degree of overlap between the cohorts.
+Many of the `r activity_type_label` meet the criteria to be included in more than one mitigator cohort. Since these potential mitigator cohorts are not mutually exclusive there is a need to understand which cohorts overlap and the degree of overlap between the cohorts.
 
 ### Number and proportion within multiple other cohorts
 
-For the `r cohort_title`  activity we show how much of the activity is included in multiple other mitigable cohorts. There are some differences between cohort overlap for admissions and beddays, this is because efficiency mitigators are not included in admissions data as they do not impact the number of admissions, but are included in the beddays data as they influence length of stay. 
+For the `r cohort_title` activity the percentage and number of `r activity_type_label` included in multiple other mitigable cohorts is shown. 
+
+```{r}
+if(cohort_title %in% c("Efficiencies","Stroke Early Supported Discharge", "Admissions with Mental Health Comorbidities", "Emergency Admissions of Older People")) {
+admission_bedday_difference<-""
+ } else{
+admission_bedday_difference<-"There are some differences between cohort overlap for admissions and beddays, this is because efficiency mitigators are not included in admissions data as they do not impact the number of admissions, but are included in the beddays data as they influence length of stay."
+  }
+
+```
+
+`r admission_bedday_difference`
 
 
 ```{r}
