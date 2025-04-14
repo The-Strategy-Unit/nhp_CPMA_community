@@ -150,9 +150,9 @@ plotting_barchart_number_of_mechanism_groups(total_cohort_numbers_2324, episodes
 NB: Efficiency mitigators do not impact the number of admissions, only the length of stay, hence they do not overlap in terms of admissions with the other cohorts.
 :::
 
-The majority of mitigable admissions (57%) are purely for activity where there could be redirection to perhaps community services. 
+The majority of potentially mitigable admissions (57%) are purely for activity where there could be redirection to perhaps community services. Just over a fifth of potentially mitigable activity (22%) is activity that could be prevented perhaps through public health initiatives.
 
-Over three quarters of mitigable admissions fall into just one mechanism of mitigation group.
+Almost 80% of potentially mitigable admissions fall into just one mechanism of mitigation group.
 
 #### Beddays
 
@@ -178,9 +178,9 @@ plotting_barchart_number_of_mechanism_groups(total_cohort_numbers_2324, beddays)
 :::
 :::
 
-The majority of mitigable beddays are included in multiple mechanism of mitigation groups, only 10% of mitgable beddays falling within a single mechanism group. 
+The majority of potentially mitigable beddays are included in multiple mechanism of mitigation groups; with only 28% of potentially mitgable beddays falling within a single mechanism group. 
 
-One third of mitigable beddays are included with 3 mechanism of mitigation groups (Redirection/Substitution, Prevention and Efficiencies)
+There is a significant proportion of beddays that fall into both the Redirection and Efficiencies mechanism groups (44%).
 
 :::
 ## Comparative Analysis
@@ -490,7 +490,7 @@ england_average_standardised_beddays_total_mitigation<-calculating_england_avera
 
 ```
 
-Over the last 5 years (2018/19 to 2023/24), there has been a `r england_average_numbers_episodes$change` % in the percentage of admissions that are for potentially mitigable activity and a `r england_average_numbers_beddays$change` % increase in the percentage of beddays that are for potentially mitigable activity.
+Over the last 5 years (2018/19 to 2023/24), there has been a `r england_average_numbers_episodes$change` % increase the percentage of admissions that are for potentially mitigable activity and a `r england_average_numbers_beddays$change` % increase in the percentage of beddays that are for potentially mitigable activity.
 
 ::: panel-tabset
 #### Admissions
@@ -544,7 +544,9 @@ plot_of_percentage_over_time(number_percentage_over_time|>
 
 #### Age and sex standardised rates per 100,000 population
 
-Over the last 5 years (2018/19 to 2023/24), when accounting for changes in the population age and sex, there has been a `r england_average_standardised_episodes_total_mitigation$change` % increase in potentially mitigable admissions. However, there has been a `r england_average_standardised_beddays_total_mitigation$change` % decrease in potentially mitigable beddays, suggesting reduced length of stays for mitigable activity.
+Over the last 5 years (2018/19 to 2023/24), when accounting for changes in the population age and sex, there has been a `r england_average_standardised_episodes_total_mitigation$change` % decrease in potentially mitigable admissions and a `r england_average_standardised_beddays_total_mitigation$change` % decrease in potentially mitigable beddays. 
+
+This indicates there are trends towards both a reduction in admissions and reduced length of stays for potentially mitigable activity. However, total numbers of admissions and beddays for potentially mitigable activity are increasing due to an aging population.
 
 
 ::: panel-tabset
