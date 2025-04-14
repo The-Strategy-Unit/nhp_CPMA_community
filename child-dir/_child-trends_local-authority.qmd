@@ -1,3 +1,6 @@
+
+Age and sex standardised rates of activity per 100,000 population for local authority areas. 
+
 ```{r}
 #| output: asis
 #| eval: !expr include_admissions_and_beddays

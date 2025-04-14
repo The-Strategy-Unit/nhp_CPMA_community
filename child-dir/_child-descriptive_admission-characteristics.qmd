@@ -1,3 +1,6 @@
+
+In this section, mitigable activity for the `r cohort_title` cohort are shown by admission characteristics.
+
 ```{r}
 include_non_zero_admissions <- include_admissions & !check_if_zero_los_mitigator(cohort)
 ```
