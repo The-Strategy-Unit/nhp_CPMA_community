@@ -66,7 +66,13 @@ By necessity, the size of ‘potentially mitigable’ activity is large. Often t
 
 Here, we provide information for 29 mitigators - the NHP Demand and Capacity Tool includes 92 in total - chosen as those which impact emergency admissions and bed days and are amenable to interventions from other healthcare services such as community services and primary care. Each of the mitigators falls under one of four ‘mechanisms’ for mitigation. These mechanisms are i) Redirection/Substitution, ii) Prevention, iii) Relocation & Efficiencies and iv) Efficiencies (seeking only reduction in bed days and not initial admissions). Our suite of reports provides summaries for each mechanism with further pages for each individual mitigator.
 
+The 29 mitigators and the mechanisms they belong to are shown in the chart below.
 
+![](summary_flow_chart.png)
+
+Activity avoidance mitigators in yellow impact the number of admissions and therefore also beddays. 
+
+Efficiency mitigators in grey will impact length of stay, and so only affect beddays.
 
 ## Mitigable activity
 
