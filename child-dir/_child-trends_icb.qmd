@@ -19,7 +19,8 @@ cat("##### Admissions")
 #| eval: !expr include_admissions
 #| label: fig-number_trends_spells_icb
 #| fig-cap: !expr get_caption_trends(cohort_title, "number", "admissions", "icb") 
-plotting_icb_over_time(number_percentage_over_time |>
+plotting_icb_over_time(number_percentage_over_time |> 
+                         filter(!is.na(icb_2024_name)) |>
                          mutate(activity = episodes),
                        'Number')
 ```
@@ -53,7 +54,8 @@ cat("##### Beddays")
 #| eval: !expr include_beddays
 #| label: fig-number_trends_beddays_icb
 #| fig-cap: !expr get_caption_trends(cohort_title, "number", "beddays", "icb")
-plotting_icb_over_time(number_percentage_over_time |>
+plotting_icb_over_time(number_percentage_over_time |> 
+                         filter(!is.na(icb_2024_name)) |>
                          mutate(activity = beddays),
                        'Number')
 ```
@@ -100,7 +102,8 @@ cat("##### Admissions")
 #| label: fig-percent_trends_spells_icb
 #| fig-cap: !expr get_caption_trends(cohort_title, "percentage", "admissions", "icb")
 plotting_icb_over_time(
-  number_percentage_over_time |>
+ number_percentage_over_time |> 
+ filter(!is.na(icb_2024_name)) |>
     mutate(activity = percentage_episodes) |>
     filter(!is.na(activity)),
   'Percentage'
@@ -141,7 +144,8 @@ cat("##### Beddays")
 #| label: fig-percent_trends_beddays_icb
 #| fig-cap: !expr get_caption_trends(cohort_title, "percentage", "beddays", "icb")
 plotting_icb_over_time(
-  number_percentage_over_time |>
+  number_percentage_over_time |> 
+    filter(!is.na(icb_2024_name)) |>
     mutate(activity = percentage_beddays) |>
     filter(!is.na(activity)),
   'Percentage'
