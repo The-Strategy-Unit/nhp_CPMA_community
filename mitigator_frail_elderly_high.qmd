@@ -77,7 +77,7 @@ knitr::knit_child(
 
 ### Patient Characteristics
 
-In this section, the number and percentage of mitigable activity for the Frail Older People (high frailty) cohort are shown by patient characteristics: age, ethnic category, IMD decile and sex. Crude rates per 100,000 population are also provided for context.
+In this section, the number and percentage of mitigable activity for the `r cohort_title` cohort are shown by patient characteristics: age, ethnic category, IMD decile and sex. Crude rates per 100,000 population are also provided for context.
 
 Outputs are presented for both admissions and beddays, but patterns are broadly similar across the two.
 
@@ -149,7 +149,7 @@ knitr::knit_child(
 
 ### Admission Characteristics
 
-In this section, mitigable activity for the Frail Older People (high frailty) cohort are shown by admission characteristics.
+In this section, mitigable activity for the `r cohort_title` cohort are shown by admission characteristics.
 
 ```{r}
 #| output: asis
@@ -167,7 +167,7 @@ Many admissions meet the criteria to be included in more than one mitigator coho
 
 ### Number and proportion within multiple other cohorts
 
-For the Frail Older People (high frailty) activity we show how much of the activity is included in multiple other mitigable cohorts. There are some differences between cohort overlap for admissions and beddays, this is because efficiency mitigators are not included in admissions data as they do not impact the number of admissions, but are included in the beddays data as they influence length of stay. 
+For the `r cohort_title`  activity we show how much of the activity is included in multiple other mitigable cohorts. There are some differences between cohort overlap for admissions and beddays, this is because efficiency mitigators are not included in admissions data as they do not impact the number of admissions, but are included in the beddays data as they influence length of stay. 
 
 ```{r}
 overlap_numbers <- targets::tar_read(total_cohort_numbers_2324)|>
@@ -186,9 +186,7 @@ knitr::knit_child(
 
 ### Inclusion within other mitigable activity cohorts
 
-This shows whether the activity within the Elderly Frail High activity is also included in other mitigator cohorts, including where this occurs the number and percentage of Elderly Frail High activity that is also included within other mitigator cohorts.
-
-For example, Elderly Frail High cohort overlaps with all but 2 of the other mitigator cohorts. All the Elderly Frail High cohort activity is also included in the Emergency Elderly cohort, and 63% of this cohort are in the Alcohol Partially Attributable Chronic cohort.
+This shows whether the activity within the `r cohort_title`  activity is also included in other mitigator cohorts (overlapping mitigator cohorts shown in red). Where there is overlap the number and percentage of `r cohort_title`  activity that is also included within each of the other mitigator cohorts is shown.
 
 ```{r}
 #| output: asis
@@ -204,7 +202,7 @@ knitr::knit_child(
 
 Often overlap between a small number of groups can be visualised using Venn diagram. However, due to the large number of mitigator cohorts and therefore high numbers of potential combinations of overlaps we have used upset plots to show the largest overlaps between cohorts.
 
-The 15 most common cohort combinations for the Elderly Frail High cohort are shown. For this cohort there are a very large number of different cohort combinations, so there are many smaller size cohort combinations that are not shown (all combinations together would add to 100%).
+The 15 most common cohort combinations for the `r cohort_title`  cohort are shown. For this cohort there are a very large number of different cohort combinations, so there are many smaller size cohort combinations that are not shown (all combinations together would add to 100%).
 
 ```{r}
 #| output: asis
@@ -244,9 +242,9 @@ knitr::knit_child(
 
 ## Trend Analysis
 
-We aim to understand whether there have been decreases, or increases, in potentially mitigable Frail Older People (high frailty) activity over time. We have considered Frail Older People (high frailty) admissions and beddays over the past 9 years in England as a whole and for each ICB, including:
+We aim to understand whether there have been decreases, or increases, in potentially mitigable `r cohort_title`  activity over time. We have considered `r cohort_title`  admissions and beddays over the past 9 years in England as a whole and for each ICB, including:
 
-a\) the absolute number of Frail Older People (high frailty) admissions/beddays,
+a\) the absolute number of `r cohort_title` admissions/beddays,
 
 b\) these admissions/beddays as a proportion of `r treatment_type_title` admissions,
 
