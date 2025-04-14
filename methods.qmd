@@ -16,6 +16,8 @@ Admissions are calculated, as per the NHP model, by using the last episode in a 
 
 The beddays for an admission are calculated based from the number of days between admission date and discharge date, so if a person was admitted and discharged on the same day the beddays for the admission would be counted as zero.
 
+For 4 mitigators (Alcohol related admissions (Acute conditions- partially attributable), Alcohol related admissions (Chronic conditions- partially attributable), Obesity related admissions and Smoking related admissions) it is considered that only a proportion of the activity included in these groups can be attributed to alcohol/obesity/smoking. For example, certain cancers/cardiovascular disease are included within this group, but only a proportion of those will be due to alcohol/obesity/smoking. Therefore, activity for these mitigators has been adjusted using the attributable fractions found here-  <https://github.com/The-Strategy-Unit/nhp_data/tree/main/raw_data/mitigators/reference_data>
+
 ## Population data 
 
 ICB populations for each year are from the Office of National Statistics mid year population estimates -  <https://www.ons.gov.uk/peoplepopulationandcommunity/populationandmigration/populationestimates/datasets/clinicalcommissioninggroupmidyearpopulationestimates>. As 2023/24 ICB population data was not available the 2022/23 data was also used for 2023/24.
