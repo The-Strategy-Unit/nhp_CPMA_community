@@ -493,8 +493,10 @@ generate_data_for_mechanism_cohort_overlaps<-function(data){
 generate_venn_diagram<-function(data, activity_type){
   
   data1<-generate_data_for_mechanism_cohort_overlaps(data)|>
+    summarise(beddays=sum(beddays),
+              episodes=sum(episodes), .by=c(Redirection, Prevention, `Relocation&Efficiencies`, Efficiencies))|>
     mutate(episodes=janitor::round_half_up(episodes,0),
-           beddays=janitor::round_half_up(episodes,0))|>
+           beddays=janitor::round_half_up(beddays,0))|>
     uncount({{activity_type}})
   
   name<-deparse(substitute(activity_type))
