@@ -1,3 +1,15 @@
+We aim to understand whether there have been decreases, or increases, in potentially mitigable `r cohort_title`  activity over time. We have considered `r cohort_title`  admissions and beddays over the past 9 years in England as a whole and for each ICB, including:
+
+a\) the absolute number of `r cohort_title` admissions/beddays,
+
+b\) these admissions/beddays as a proportion of `r treatment_type_title` admissions,
+
+c\) the age and sex standardised rates of these admissions/beddays using the England 2021 census population.
+
+To help understand the variability between ICBs we have calculated for each ICB the percentage change in proportion of emergency admissions and in standardised rates between 2018/19 and 2023/24.
+
+### England
+
 ```{r}
 numbers_over_time <- tar_read(numbers_over_time) |>
   filter(year != "2014/15")

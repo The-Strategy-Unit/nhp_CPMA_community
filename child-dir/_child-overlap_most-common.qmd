@@ -1,3 +1,8 @@
+
+Often overlap between a small number of groups can be visualised using Venn diagram. However, due to the large number of mitigator cohorts and therefore high numbers of potential combinations of overlaps we have used upset plots to show the largest overlaps between cohorts.
+
+The 15 most common cohort combinations for the `r cohort_title`  cohort are shown. For this cohort there are a very large number of different cohort combinations, so there are many smaller size cohort combinations that are not shown (all combinations together would add to 100%).
+
 ```{r}
 #| output: asis
 #| eval: !expr include_admissions_and_beddays
