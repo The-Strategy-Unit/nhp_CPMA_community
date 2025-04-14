@@ -34,7 +34,8 @@ sc <- sparklyr::spark_connect(
 # Mitigator details ------------------------------------------------------------
 mitigator_summary_table <-
   readxl::read_excel("summary_mitigators_table.xlsx") |>
-  dplyr::mutate(mechanism = snakecase::to_snake_case(mechanism))
+  dplyr::mutate(mechanism = snakecase::to_snake_case(mechanism))|>
+  dplyr::arrange(mitigator_name)
 
 mitigators <- mitigator_summary_table |>
   dplyr::select(mitigator_or_mechanism = mitigator_code,
