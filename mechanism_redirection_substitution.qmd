@@ -102,8 +102,7 @@ knitr::knit_child(
 ### Number and proportion within multiple other cohorts
 
 ```{r}
-overlap_numbers <- targets::tar_read(total_cohort_numbers_2324) |>
-    filter(!!rlang::sym(cohort) == 1)
+overlap_numbers <- targets::tar_read(cohort_overlap_numbers_redirection) 
 ```
 
 ```{r}
@@ -116,17 +115,6 @@ knitr::knit_child(
     cat(sep = '\n')
 ```
 
-### Inclusion within other mitigable activity cohorts
-
-```{r}
-#| output: asis
-knitr::knit_child(
-        input = "child-dir/_child-overlap_inclusion-within-others.qmd",
-        envir = environment(),
-        quiet = TRUE
-        ) |>
-      cat(sep = '\n')
-```
 
 ### Most common cohort overlaps
 

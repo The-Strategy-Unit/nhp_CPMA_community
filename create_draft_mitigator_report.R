@@ -7,12 +7,21 @@ source("R/general.R")
 ## Functions -------------------------------------------------------------------
 get_cohort_overlap_section <- function(mitigator) {
   if (mitigator %in% c(
-    "redirection_subsititution",
+    "redirection_substitution",
     "prevention",
     "efficiencies",
     "efficiencies_relocation"
   )) {
-    data <- glue::glue("cohort_overlap_numbers_{mitigator}")
+    
+    mechanism <- if (mitigator == "redirection_substitution") {
+      "redirection"
+    } else if (mitigator == "efficiencies_relocation") {
+      "relocation"
+    } else {
+      mitigator
+    }
+    
+    data <- glue::glue("cohort_overlap_numbers_{mechanism}")
     
     filter <- ""
     
