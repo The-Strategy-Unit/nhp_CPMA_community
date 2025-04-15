@@ -1,10 +1,14 @@
 ```{r}
 group_title <- format_group_name_for_caption(patient_characteristic)
 
+section_title <- ifelse(patient_characteristic == "IMD", 
+                        group_title, 
+                        stringr::str_to_title(group_title))
+
 patient_characteristic_col_name <- get_col_name_from_group(patient_characteristic)
 ```
 
-#### `r group_title`
+#### `r section_title`
 
 ::: panel-tabset
 #### Percentage of `r treatment_type_title` activity
