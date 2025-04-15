@@ -91,7 +91,8 @@ get_number_by_group <- function(mitigator,
                           paste0("sl_af_describing_mitigators_final_2324_", group)
                         )) |>
     filter_to_mitigator_or_mechanism(mitigator) |>
-    dplyr::filter(!is.na(!!rlang::sym(col_name))) |> # exclude NULLs
+    dplyr::filter(!is.na(!!rlang::sym(col_name)),
+                  !!rlang::sym(col_name) != "NA") |> # exclude NULLs
     dplyr::rename(admissions = episodes) |>
       # Although the column is called episodes, each row is the last episode in 
       # a spell. So renaming as admissions here to avoid confusion later.
