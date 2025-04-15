@@ -1,0 +1,117 @@
+```{r}
+group_title <- format_group_name_for_caption(patient_characteristic)
+
+patient_characteristic_col_name <- get_col_name_from_group(patient_characteristic)
+```
+
+#### `r group_title`
+
+::: panel-tabset
+#### Percentage of `r treatment_type_title` activity
+
+```{r}
+#| output: asis
+#| eval: !expr include_admissions_and_beddays
+cat("::: panel-tabset")
+cat("\n")
+cat("##### Admissions")
+```
+
+```{r}
+activity_type <- "admissions"
+perc_patient_characteristic <- targets::tar_read_raw(glue::glue("perc_{patient_characteristic}_{cohort}_{activity_type}"))
+```
+
+```{r}
+#| eval: !expr include_admissions
+#| output: asis
+knitr::knit_child(
+              input = "child-dir/_child-descriptive_patient-characteristics_perc.qmd",
+              envir = environment(),
+              quiet = TRUE
+             ) |>
+            cat(sep = '\n')
+```
+
+```{r}
+#| output: asis
+#| eval: !expr include_admissions_and_beddays
+cat("##### Beddays")
+```
+
+```{r}
+activity_type <- "beddays"
+perc_patient_characteristic <- targets::tar_read_raw(glue::glue("perc_{patient_characteristic}_{cohort}_{activity_type}"))
+```
+
+```{r}
+#| output: asis
+#| eval: !expr include_beddays
+knitr::knit_child(
+              input = "child-dir/_child-descriptive_patient-characteristics_perc.qmd",
+              envir = environment(),
+              quiet = TRUE
+             ) |>
+            cat(sep = '\n')
+```
+
+```{r}
+#| output: asis
+#| eval: !expr include_admissions_and_beddays
+cat(":::")
+```
+
+#### Crude rate
+
+```{r}
+#| output: asis
+#| eval: !expr include_admissions_and_beddays
+cat("::: panel-tabset")
+cat("\n")
+cat("##### Admissions")
+```
+
+```{r}
+activity_type <- "admissions"
+rates_patient_characteristic <-  targets::tar_read_raw(glue::glue("rates_{patient_characteristic}_{cohort}_{activity_type}"))
+```
+
+```{r}
+#| eval: !expr include_admissions
+#| output: asis
+knitr::knit_child(
+              input = "child-dir/_child-descriptive_patient-characteristics_rates.qmd",
+              envir = environment(),
+              quiet = TRUE
+             ) |>
+            cat(sep = '\n')
+```
+
+```{r}
+#| output: asis
+#| eval: !expr include_admissions_and_beddays
+cat("##### Beddays")
+```
+
+```{r}
+activity_type <- "beddays"
+rates_patient_characteristic <-  targets::tar_read_raw(glue::glue("rates_{patient_characteristic}_{cohort}_{activity_type}"))
+```
+
+```{r}
+#| output: asis
+#| eval: !expr include_beddays
+knitr::knit_child(
+              input = "child-dir/_child-descriptive_patient-characteristics_rates.qmd",
+              envir = environment(),
+              quiet = TRUE
+             ) |>
+            cat(sep = '\n')
+```
+
+```{r}
+#| output: asis
+#| eval: !expr include_admissions_and_beddays
+cat(":::")
+```
+:::
