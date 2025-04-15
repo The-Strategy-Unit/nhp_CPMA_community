@@ -91,6 +91,20 @@ filter_to_mitigator_or_mechanism <- function(data, mitigator) {
   return(filtered)
 }
 
+#' Get the activity type label of a mitigator.
+#'
+#' @param admissions Output of `check_include_admissions()`.
+#' @param beddays Output of `check_include_beddays()`.
+get_activity_type_label <- function(admissions, 
+                                    beddays) {
+  
+  adm <- ifelse(include_admissions, "admissions", "")
+  bed <- ifelse(include_beddays, "beddays", "")
+  slash <- ifelse(include_admissions & include_beddays, "/", "")
+  label <- glue::glue("{adm}{slash}{bed}")
+  
+  return(label)
+}
 
 #' Get a table of the mitigators in a mechanism.
 #'

@@ -32,7 +32,7 @@ cohort <- "frail_elderly_high"
 cohort_title <- "Frail Older People (high frailty)"
 treatment_type <- "emergency"
 treatment_type_title <- format_treatment_for_caption(treatment_type)
-activity_type_label<-"admissions/beddays"
+activity_type_label <- "admissions/beddays"
 ```
 
 ```{r}
@@ -61,6 +61,7 @@ icb_23_shp <- sf::st_read("https://services1.arcgis.com/ESMARspQHYMw9BZ9/arcgis/
 include_admissions <- check_include_admissions(cohort, mitigator_summary_table)
 include_beddays <- check_include_beddays(cohort)
 include_admissions_and_beddays <- include_admissions & include_beddays
+activity_label <- get_activity_type_label(include_admissions, include_beddays)
 ```
 
 This cohort includes older patients with a high level of frailty, specifically, those 75 years of age or over with an emergency admission and a frailty score over 15. The frailty score is calculated from ICD-10 diagnoses recorded for admissions during the previous 2 years and using the risk scores in Gilbert et al (2018), Development and validation of a Hospital Frailty Risk Score focusing on older people in acute care settings using electronic hospital records: an observational study. The Lancet, 391(10132), pp.1775-1782.
