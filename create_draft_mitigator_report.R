@@ -159,7 +159,7 @@ get_filename <- function(mitigator) {
     "mitigator"
   }
   
-  filename <- glue::glue("DRAFT_{type}_{mitigator}.qmd")
+  filename <- glue::glue("{type}_{mitigator}.qmd")
   
   return(filename)
 }
@@ -298,18 +298,6 @@ packages_and_options <- c(
 patient_characteristics_section <- c(
   "### Patient Characteristics",
   "",
-  "In this section, the number and percentage of mitigable activity for the `r cohort_title` cohort are shown by patient characteristics: age, ethnic category, IMD decile and sex. Crude rates per 100,000 population are also provided for context.",
-  "",
-  "Outputs are presented for both admissions and beddays, but patterns are broadly similar across the two.",
-  "",
-  "::: panel-tabset",
-  
-  "#### Age",
-  "```{r}",
-  "patient_characteristic <- \"age\"",
-  "patient_characteristic_col_name <- \"age_range\"",
-  "```",
-  "",
   "```{r}",
   "#| output: asis",
   "knitr::knit_child(
@@ -319,59 +307,6 @@ patient_characteristics_section <- c(
              ) |>
             cat(sep = '\\n')",
   "```",
-  "",
-  
-  "#### Ethnicity",
-  "```{r}",
-  "patient_characteristic <- \"ethnicity\"",
-  "patient_characteristic_col_name <- \"Ethnic_Category\"",
-  "```",
-  "",
-  "```{r}",
-  "#| output: asis",
-  "knitr::knit_child(
-              input = \"child-dir/_child-descriptive_patient-characteristics.qmd\",
-              envir = environment(),
-              quiet = TRUE
-             ) |>
-            cat(sep = '\\n')",
-  "```",
-  "",
-  
-  "#### IMD Decile",
-  "```{r}",
-  "patient_characteristic <- \"imd\"",
-  "patient_characteristic_col_name <- \"imd19_decile\"",
-  "```",
-  "",
-  "```{r}",
-  "#| output: asis",
-  "knitr::knit_child(
-              input = \"child-dir/_child-descriptive_patient-characteristics.qmd\",
-              envir = environment(),
-              quiet = TRUE
-             ) |>
-            cat(sep = '\\n')",
-  "```",
-  "",
-  
-  "#### Sex",
-  "```{r}",
-  "patient_characteristic <- \"sex\"",
-  "patient_characteristic_col_name <- \"sex\"",
-  "```",
-  "",
-  "```{r}",
-  "#| output: asis",
-  "knitr::knit_child(
-              input = \"child-dir/_child-descriptive_patient-characteristics.qmd\",
-              envir = environment(),
-              quiet = TRUE
-             ) |>
-            cat(sep = '\\n')",
-  "```",
-  "",
-  ":::",
   ""
 )
 
@@ -478,6 +413,8 @@ create_draft_mitigator_qmd <- function(mitigator,
 
 # Mitigator details ------------------------------------------------------------
 # This is a copy of what's at the top of the targets pipeline
+source("R/manipulating_mitigators_and_mechanisms.R")
+
 mitigator_summary_table <-
   readxl::read_excel("summary_mitigators_table.xlsx") |>
   dplyr::mutate(mechanism = snakecase::to_snake_case(mechanism))
