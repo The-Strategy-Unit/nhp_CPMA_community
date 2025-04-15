@@ -106,6 +106,15 @@ get_activity_type_label <- function(admissions,
   return(label)
 }
 
+get_mitigator_description <- function(mitigator,
+                                      descriptions = "mitigator_descriptions.csv") {
+  description <- read.csv(descriptions) |>
+    dplyr::filter(mitigator_code == mitigator) |>
+    dplyr::pull(mitigator_description)
+  
+  return(description)
+}
+
 #' Get a table of the mitigators in a mechanism.
 #'
 #' @param cohort The mechanism.
