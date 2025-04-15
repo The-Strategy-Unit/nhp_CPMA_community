@@ -26,28 +26,21 @@ get_cohort_overlap_section <- function(mitigator) {
     inclusion_subsection <- c(
       "### Inclusion within other mitigable activity cohorts",
       "",
-      "This shows whether the activity within the `r cohort_title` activity is also included in other mitigator cohorts, including where this occurs the number and percentage of `r cohort_title` activity that is also included within other mitigator cohorts.",
-      "",
       "```{r}",
       "#| output: asis",
       "knitr::knit_child(
-                  input = \"child-dir/_child-overlap_inclusion-within-others.qmd\",
-                  envir = environment(),
-                  quiet = TRUE
-                ) |>
-                  cat(sep = '\\n')",
+        input = \"child-dir/_child-overlap_inclusion-within-others.qmd\",
+        envir = environment(),
+        quiet = TRUE
+        ) |>
+      cat(sep = '\\n')",
       "```",
       ""
     )
   }
   
   code <- c(
-    "Many admissions meet the criteria to be included in more than one mitigator cohort. Since these potential mitigator cohorts are not mutually exclusive there is a need to understand which cohorts overlap and the degree of overlap between the cohorts.",
-    "",
-    
     "### Number and proportion within multiple other cohorts",
-    "",
-    "For the `r cohort_title` activity we show how much of the activity is included in multiple other mitigable cohorts. There are some differences between cohort overlap for admissions and beddays, this is because efficiency mitigators are not included in admissions data as they do not impact the number of admissions, but are included in the beddays data as they influence length of stay. ",
     "",
     "```{r}",
     paste0(
@@ -61,29 +54,26 @@ get_cohort_overlap_section <- function(mitigator) {
     "```{r}",
     "#| output: asis",
     "knitr::knit_child(
-                  input = \"child-dir/_child-overlap_number-within-others.qmd\",
-                  envir = environment(),
-                  quiet = TRUE
-                ) |>
-                  cat(sep = '\\n')",
+      input = \"child-dir/_child-overlap_number-within-others.qmd\",
+      envir = environment(),
+      quiet = TRUE
+      ) |>
+    cat(sep = '\\n')",
     "```",
     "",
     
     inclusion_subsection,
     
     "### Most common cohort overlaps",
-    "Often overlap between a small number of groups can be visualised using Venn diagram. However, due to the large number of mitigator cohorts and therefore high numbers of potential combinations of overlaps we have used upset plots to show the largest overlaps between cohorts.",
-    "",
-    "The 15 most common cohort combinations for the `r cohort_title` cohort are shown.",
     "",
     "```{r}",
     "#| output: asis",
     "knitr::knit_child(
-                  input = \"child-dir/_child-overlap_most-common.qmd\",
-                  envir = environment(),
-                  quiet = TRUE
-                ) |>
-                  cat(sep = '\\n')",
+      input = \"child-dir/_child-overlap_most-common.qmd\",
+      envir = environment(),
+      quiet = TRUE
+      ) |>
+    cat(sep = '\\n')",
     "```",
     ""
   )
@@ -159,7 +149,7 @@ get_filename <- function(mitigator) {
     "mitigator"
   }
   
-  filename <- glue::glue("DRAFT_{type}_{mitigator}.qmd")
+  filename <- glue::glue("{type}_{mitigator}.qmd")
   
   return(filename)
 }
@@ -202,8 +192,6 @@ get_treatment_type <- function(mitigator, lookup) {
 ## Strings ---------------------------------------------------------------------
 admission_characteristics_section <- c(
   "### Admission Characteristics",
-  "",
-  "In this section, mitigable activity for the `r cohort_title` cohort are shown by admission characteristics.",
   "",
   "```{r}",
   "#| output: asis",
@@ -249,6 +237,7 @@ including_activity_types <- c(
   "include_admissions <- check_include_admissions(cohort, mitigator_summary_table)",
   "include_beddays <- check_include_beddays(cohort)",
   "include_admissions_and_beddays <- include_admissions & include_beddays",
+  "activity_type_label <- get_activity_type_label(include_admissions, include_beddays)",
   "```",
   ""
 )
@@ -298,18 +287,6 @@ packages_and_options <- c(
 patient_characteristics_section <- c(
   "### Patient Characteristics",
   "",
-  "In this section, the number and percentage of mitigable activity for the `r cohort_title` cohort are shown by patient characteristics: age, ethnic category, IMD decile and sex. Crude rates per 100,000 population are also provided for context.",
-  "",
-  "Outputs are presented for both admissions and beddays, but patterns are broadly similar across the two.",
-  "",
-  "::: panel-tabset",
-  
-  "#### Age",
-  "```{r}",
-  "patient_characteristic <- \"age\"",
-  "patient_characteristic_col_name <- \"age_range\"",
-  "```",
-  "",
   "```{r}",
   "#| output: asis",
   "knitr::knit_child(
@@ -319,114 +296,47 @@ patient_characteristics_section <- c(
              ) |>
             cat(sep = '\\n')",
   "```",
-  "",
-  
-  "#### Ethnicity",
-  "```{r}",
-  "patient_characteristic <- \"ethnicity\"",
-  "patient_characteristic_col_name <- \"Ethnic_Category\"",
-  "```",
-  "",
-  "```{r}",
-  "#| output: asis",
-  "knitr::knit_child(
-              input = \"child-dir/_child-descriptive_patient-characteristics.qmd\",
-              envir = environment(),
-              quiet = TRUE
-             ) |>
-            cat(sep = '\\n')",
-  "```",
-  "",
-  
-  "#### IMD Decile",
-  "```{r}",
-  "patient_characteristic <- \"imd\"",
-  "patient_characteristic_col_name <- \"imd19_decile\"",
-  "```",
-  "",
-  "```{r}",
-  "#| output: asis",
-  "knitr::knit_child(
-              input = \"child-dir/_child-descriptive_patient-characteristics.qmd\",
-              envir = environment(),
-              quiet = TRUE
-             ) |>
-            cat(sep = '\\n')",
-  "```",
-  "",
-  
-  "#### Sex",
-  "```{r}",
-  "patient_characteristic <- \"sex\"",
-  "patient_characteristic_col_name <- \"sex\"",
-  "```",
-  "",
-  "```{r}",
-  "#| output: asis",
-  "knitr::knit_child(
-              input = \"child-dir/_child-descriptive_patient-characteristics.qmd\",
-              envir = environment(),
-              quiet = TRUE
-             ) |>
-            cat(sep = '\\n')",
-  "```",
-  "",
-  ":::",
   ""
 )
 
 trend_section <- c(
-  "We aim to understand whether there have been decreases, or increases, in potentially mitigable `r cohort_title` activity over time. We have considered `r cohort_title` admissions and beddays over the past 9 years in England as a whole and for each ICB, including:",
-  "",
-  "a\\) the absolute number of `r cohort_title` admissions/beddays,",
-  "",
-  "b\\) these admissions/beddays as a proportion of `r treatment_type_title` admissions",
-  "",
-  "c\\) the age and sex standardised rates of these admissions/beddays using the England 2021 census population.",
-  "",
-  "To help understand the variability between ICBs we have calculated for each ICB the percentage change in proportion of emergency admissions and in standardised rates between 2018/19 and 2023/24.",
-  "",
   
   "### England",
   "",
   "```{r}",
   "#| output: asis",
   "knitr::knit_child(
-              input = \"child-dir/_child-trends_england.qmd\",
-              envir = environment(),
-              quiet = TRUE
-             ) |>
-            cat(sep = '\\n')",
+    input = \"child-dir/_child-trends_england.qmd\",
+    envir = environment(),
+    quiet = TRUE
+    ) |>
+  cat(sep = '\\n')",
   "```",
   "",
   
   "### ICB",
   "",
-  "Note: Low numbers of admissions/beddays for Frimley ICB in 2022/23 reflect an issue with data submissions for this period.",
-  "",
   "```{r}",
   "#| output: asis",
   "knitr::knit_child(
-              input = \"child-dir/_child-trends_icb.qmd\",
-              envir = environment(),
-              quiet = TRUE
-             ) |>
-            cat(sep = '\\n')",
+    input = \"child-dir/_child-trends_icb.qmd\",
+    envir = environment(),
+    quiet = TRUE
+    ) |>
+  cat(sep = '\\n')",
   "```",
   "",
   
   "### Local Authority",
   "",
-  "Age and sex standardised rates of activity per 100,000 population for local authority areas.",
-  "",
   "```{r}",
   "#| output: asis",
   "knitr::knit_child(
-              input = \"child-dir/_child-trends_local-authority.qmd\",
-              envir = environment(),
-              quiet = TRUE
-             ) |>
-            cat(sep = '\\n')",
+    input = \"child-dir/_child-trends_local-authority.qmd\",
+    envir = environment(),
+    quiet = TRUE
+    ) |>
+  cat(sep = '\\n')",
   "```",
   ""
 )
@@ -478,6 +388,8 @@ create_draft_mitigator_qmd <- function(mitigator,
 
 # Mitigator details ------------------------------------------------------------
 # This is a copy of what's at the top of the targets pipeline
+source("R/manipulating_mitigators_and_mechanisms.R")
+
 mitigator_summary_table <-
   readxl::read_excel("summary_mitigators_table.xlsx") |>
   dplyr::mutate(mechanism = snakecase::to_snake_case(mechanism))
@@ -505,8 +417,7 @@ mitigators_and_mechanisms <- mitigators_and_mechanisms_treatment_lookup |>
 
 # Creating draft quarto reports ------------------------------------------------
 # Whilst testing have limited to just one mitigator:
-mitigators_and_mechanisms <- c("eol_care_2_days", 
-                               "emergency_elderly",
+mitigators_and_mechanisms <- c("emergency_elderly",
                                "zero_los_no_procedure_adult",
                                "efficiencies")
 
