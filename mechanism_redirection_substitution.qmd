@@ -1,6 +1,6 @@
-# Redirection and Substitution
+## Redirection & Substitution {#sec-redirection_substitution .unnumbered}
 
-```{r}
+```{r packages_and_options}
 library("flextable")
 library("tidyr")
 library("dplyr")
@@ -12,6 +12,7 @@ library("scales")
 library("targets")
 library("plotly")
 library("patchwork")
+library("DT")
 
 source("R/captions.R")
 source("R/general.R")
@@ -25,43 +26,40 @@ options(scipen = 999)
 options(knitr.duplicate.label = "allow")
 ```
 
-```{r global variables}
+```{r global_variables}
 cohort <- "redirection_substitution"
-cohort_title <- "Redirection and Substitution"
+cohort_title <- "Redirection & Substitution"
+
 treatment_type <- "both"
-treatment_type_title <- format_treatment_for_caption(treatment_type)
-activity_type_label<-"admissions/beddays"
+treatment_type_title <- format_treatment_for_caption("both")
 ```
 
-```{r}
+```{r data}
 #| output: false
 mitigator_summary_table <- readxl::read_excel("summary_mitigators_table.xlsx") |>
   dplyr::mutate(mechanism = snakecase::to_snake_case(mechanism))
 
-mechanisms <- mitigator_summary_table |> 
-  dplyr::pull(mechanism) |> 
-  unique()
-
 england_age_sex_standardised_rates_episodes <- tar_read(england_age_sex_standardised_rates_episodes) |>
-  filter(cohorts == cohort)
+    filter(cohorts == cohort)
 
 england_age_sex_standardised_rates_beddays <- tar_read(england_age_sex_standardised_rates_beddays) |>
-  filter(cohorts == cohort)
+    filter(cohorts == cohort)
 
 total_beddays_admissions <- targets::tar_read(total_beddays_admissions)
 
 icb_23_shp <- sf::st_read("https://services1.arcgis.com/ESMARspQHYMw9BZ9/arcgis/rest/services/Integrated_Care_Boards_April_2023_EN_BGC/FeatureServer/0/query?outFields=*&where=1%3D1&f=geojson") |>
-  janitor::clean_names() |>
-  dplyr::mutate(icb23nm = simplify_icb_name(icb23nm))
+    janitor::clean_names() |>
+    dplyr::mutate(icb23nm = simplify_icb_name(icb23nm))
 ```
 
 ```{r including_activity_types}
 include_admissions <- check_include_admissions(cohort, mitigator_summary_table)
 include_beddays <- check_include_beddays(cohort)
 include_admissions_and_beddays <- include_admissions & include_beddays
+activity_type_label <- get_activity_type_label(include_admissions, include_beddays)
 ```
 
-This analysis includes mitigators where the mechanism of action is through Redirection/Substitution of activity. This means that some of the admissions in this group could be avoided by greater use of other services/provisions in the community (either existing or new).
+`r get_mitigator_description(cohort)`
 
 ```{r}
 #| output: asis
@@ -73,106 +71,61 @@ knitr::knit_child(
       cat(sep = '\n')
 ```
 
-## Descriptive Analysis of Mitigable Activity
+## Descriptive Analysis
 
 ### Patient Characteristics
 
-::: panel-tabset
-#### Age
-
-```{r}
-patient_characteristic <- "age"
-patient_characteristic_col_name <- "age_range"
-```
-
 ```{r}
 #| output: asis
 knitr::knit_child(
-  input = "child-dir/_child-descriptive_patient-characteristics.qmd",
-  envir = environment(),
-  quiet = TRUE
-  ) |>
-  cat(sep = '\n')
+              input = "child-dir/_child-descriptive_patient-characteristics.qmd",
+              envir = environment(),
+              quiet = TRUE
+             ) |>
+            cat(sep = '\n')
 ```
-
-#### Ethnicity
-
-```{r}
-patient_characteristic <- "ethnicity"
-patient_characteristic_col_name <- "Ethnic_Category"
-```
-
-```{r}
-#| output: asis
-knitr::knit_child(
-  input = "child-dir/_child-descriptive_patient-characteristics.qmd",
-  envir = environment(),
-  quiet = TRUE
-  ) |>
-  cat(sep = '\n')
-```
-
-#### IMD Decile
-
-```{r}
-patient_characteristic <- "imd"
-patient_characteristic_col_name <- "imd19_decile"
-```
-
-```{r}
-#| output: asis
-knitr::knit_child(
-  input = "child-dir/_child-descriptive_patient-characteristics.qmd",
-  envir = environment(),
-  quiet = TRUE
-  ) |>
-  cat(sep = '\n')
-```
-
-#### Sex
-
-```{r}
-patient_characteristic <- "sex"
-patient_characteristic_col_name <- "sex"
-```
-
-```{r}
-#| output: asis
-knitr::knit_child(
-  input = "child-dir/_child-descriptive_patient-characteristics.qmd",
-  envir = environment(),
-  quiet = TRUE
-  ) |>
-  cat(sep = '\n')
-```
-:::
 
 ### Admission Characteristics
 
 ```{r}
 #| output: asis
 knitr::knit_child(
-  input = "child-dir/_child-descriptive_admission-characteristics.qmd",
-  envir = environment(),
-  quiet = TRUE
+    input = "child-dir/_child-descriptive_admission-characteristics.qmd",
+    envir = environment(),
+    quiet = TRUE
   ) |>
   cat(sep = '\n')
 ```
 
 ## Cohort overlap
 
+### Number and proportion within multiple other cohorts
+
 ```{r}
-overlap_numbers <- targets::tar_read(cohort_overlap_numbers_redirection)
+overlap_numbers <- targets::tar_read(total_cohort_numbers_2324) |>
+    filter(!!rlang::sym(cohort) == 1)
 ```
 
 ```{r}
 #| output: asis
 knitr::knit_child(
-  input = "child-dir/_child-overlap_number-within-others.qmd",
-  envir = environment(),
-  quiet = TRUE
-  ) |>
-  cat(sep = '\n')
+      input = "child-dir/_child-overlap_number-within-others.qmd",
+      envir = environment(),
+      quiet = TRUE
+      ) |>
+    cat(sep = '\n')
+```
+
+### Inclusion within other mitigable activity cohorts
+
+```{r}
+#| output: asis
+knitr::knit_child(
+        input = "child-dir/_child-overlap_inclusion-within-others.qmd",
+        envir = environment(),
+        quiet = TRUE
+        ) |>
+      cat(sep = '\n')
 ```
 
 ### Most common cohort overlaps
@@ -180,11 +133,11 @@ knitr::knit_child(
 ```{r}
 #| output: asis
 knitr::knit_child(
-  input = "child-dir/_child-overlap_most-common.qmd",
-  envir = environment(),
-  quiet = TRUE
-  ) |>
-  cat(sep = '\n')
+      input = "child-dir/_child-overlap_most-common.qmd",
+      envir = environment(),
+      quiet = TRUE
+      ) |>
+    cat(sep = '\n')
 ```
 
 ## Comparative Analysis
@@ -215,24 +168,27 @@ knitr::knit_child(
 
 ## Trend Analysis
 
+### England
+
 ```{r}
 #| output: asis
 knitr::knit_child(
-  input = "child-dir/_child-trends_england.qmd",
-  envir = environment(),
-  quiet = TRUE
-  ) |>
+    input = "child-dir/_child-trends_england.qmd",
+    envir = environment(),
+    quiet = TRUE
+    ) |>
   cat(sep = '\n')
 ```
 
+### ICB
 
 ```{r}
 #| output: asis
 knitr::knit_child(
-  input = "child-dir/_child-trends_icb.qmd",
-  envir = environment(),
-  quiet = TRUE
-  ) |>
+    input = "child-dir/_child-trends_icb.qmd",
+    envir = environment(),
+    quiet = TRUE
+    ) |>
   cat(sep = '\n')
 ```
 
@@ -241,9 +197,10 @@ knitr::knit_child(
 ```{r}
 #| output: asis
 knitr::knit_child(
-  input = "child-dir/_child-trends_local-authority.qmd",
-  envir = environment(),
-  quiet = TRUE
-  ) |>
+    input = "child-dir/_child-trends_local-authority.qmd",
+    envir = environment(),
+    quiet = TRUE
+    ) |>
   cat(sep = '\n')
 ```
+

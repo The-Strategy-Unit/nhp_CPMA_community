@@ -139,7 +139,7 @@ get_data_section <- function(mitigator, summary_table) {
 
 get_filename <- function(mitigator) {
   type <- if (mitigator %in% c(
-    "redirection_subsititution",
+    "redirection_substitution",
     "prevention",
     "efficiencies",
     "efficiencies_relocation"
@@ -359,6 +359,8 @@ create_draft_mitigator_qmd <- function(mitigator,
     get_global_variables(mitigator, summary_table, treatment_lookup),
     get_data_section(mitigator, summary_table),
     including_activity_types,
+    "`r get_mitigator_description(cohort)`",
+    "",
     overview_section,
     
     "## Descriptive Analysis",
@@ -417,7 +419,9 @@ mitigators_and_mechanisms <- mitigators_and_mechanisms_treatment_lookup |>
 
 # Creating draft quarto reports ------------------------------------------------
 # Whilst testing have limited to just one mitigator:
-mitigators_and_mechanisms <- c("emergency_elderly",
+mitigators_and_mechanisms <- c("frail_elderly_high",
+                               "redirection_substitution",
+                               "emergency_elderly",
                                "zero_los_no_procedure_adult",
                                "efficiencies")
 
