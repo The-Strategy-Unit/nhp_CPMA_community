@@ -7,7 +7,7 @@ Outputs are presented for both admissions and beddays, but patterns are broadly 
 #| output: asis
 c("age", "ethnicity", "imd","sex") |>
   purrr::map(\(patient_characteristic) {
-    knitr::knit_child(input = "child-dir/panel-tabsets.qmd",    # RENAME THIS
+    knitr::knit_child(input = "child-dir/_child-descriptive_patient-characteristics_panel-tabsets.qmd",    # RENAME THIS
                       envir = environment(),
                       quiet = TRUE) |>
       cat(sep = '\n')
