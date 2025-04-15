@@ -139,7 +139,7 @@ get_data_section <- function(mitigator, summary_table) {
 
 get_filename <- function(mitigator) {
   type <- if (mitigator %in% c(
-    "redirection_subsititution",
+    "redirection_substitution",
     "prevention",
     "efficiencies",
     "efficiencies_relocation"
@@ -420,7 +420,7 @@ mitigators_and_mechanisms <- mitigators_and_mechanisms_treatment_lookup |>
 # Creating draft quarto reports ------------------------------------------------
 # Whilst testing have limited to just one mitigator:
 mitigators_and_mechanisms <- c("frail_elderly_high",
-                               "redistribution_substitution",
+                               "redirection_substitution",
                                "emergency_elderly",
                                "zero_los_no_procedure_adult",
                                "efficiencies")
