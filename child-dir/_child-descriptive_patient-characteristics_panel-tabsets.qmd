@@ -1,4 +1,5 @@
 ```{r}
+#| output: asis
 group_title <- format_group_name_for_caption(patient_characteristic)
 
 section_title <- ifelse(patient_characteristic == "imd", 
@@ -22,6 +23,7 @@ cat("##### Admissions")
 ```
 
 ```{r}
+#| output: asis
 activity_type <- "admissions"
 perc_patient_characteristic <- targets::tar_read_raw(glue::glue("perc_{patient_characteristic}_{cohort}_{activity_type}"))
 ```
@@ -44,6 +46,7 @@ cat("##### Beddays")
 ```
 
 ```{r}
+#| output: asis
 activity_type <- "beddays"
 perc_patient_characteristic <- targets::tar_read_raw(glue::glue("perc_{patient_characteristic}_{cohort}_{activity_type}"))
 ```
@@ -76,6 +79,7 @@ cat("##### Admissions")
 ```
 
 ```{r}
+#| output: asis
 activity_type <- "admissions"
 rates_patient_characteristic <-  targets::tar_read_raw(glue::glue("rates_{patient_characteristic}_{cohort}_{activity_type}"))
 ```
@@ -98,6 +102,7 @@ cat("##### Beddays")
 ```
 
 ```{r}
+#| output: asis
 activity_type <- "beddays"
 rates_patient_characteristic <-  targets::tar_read_raw(glue::glue("rates_{patient_characteristic}_{cohort}_{activity_type}"))
 ```

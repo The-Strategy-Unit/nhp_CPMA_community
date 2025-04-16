@@ -1,4 +1,5 @@
 ```{r}
+#| output: asis
 #| label: tbl-perc_patient_characteristic
 #| tbl-cap: !expr get_caption_by_group("perc", cohort_title, activity_type, group_title, treatment_type)
 perc_patient_characteristic |>
@@ -6,6 +7,7 @@ perc_patient_characteristic |>
 ```
 
 ```{r}
+#| output: asis
 #| label: fig-perc_patient_characteristic
 #| fig-cap: !expr get_caption_by_group("perc", cohort_title, activity_type, group_title, treatment_type)
 perc_patient_characteristic |>
