@@ -2,7 +2,7 @@
 
 ## Hospital activity data
 
-All data on hospital activity are taken from the New Hospitals Programme (NHP) demand and capacity model data, which is derived from the Hospital Episode Statistics dataset. 
+All data on hospital activity are taken from the New Hospitals Programme (NHP) demand and capacity model data, which is derived from the [Hospital Episode Statistics dataset](https://digital.nhs.uk/services/hospital-episode-statistics). 
 
 The potentially mitigable activity for the 29 mitigator cohorts of interest is taken from the dataset used for the NHP Demand and Capacity Model. All activity that meets the criteria for potentially mitigable is included, but it should be noted that in practice only a proportion of this activity would be truly mitigable. The code used to define the potentially mitigable activity can be found here- <https://github.com/The-Strategy-Unit/nhp_data/tree/main/raw_data/mitigators/ip>
 
@@ -16,8 +16,8 @@ Admissions are calculated, as per the NHP model, by using the last episode in a 
 
 The beddays for an admission are calculated based from the number of days between admission date and discharge date, so if a person was admitted and discharged on the same day the beddays for the admission would be counted as zero.
 
-For 4 mitigators (Alcohol related admissions (Acute conditions- partially attributable), Alcohol related admissions (Chronic conditions- partially attributable), Obesity related admissions and Smoking related admissions) it is considered that only a proportion of the activity included in these groups can be attributed to alcohol/obesity/smoking. For example, certain cancers/cardiovascular disease are included within this group, but only a proportion of those will be due to alcohol/obesity/smoking. Therefore, activity for these mitigators has been adjusted using the attributable fractions found here-  <https://github.com/The-Strategy-Unit/nhp_data/tree/main/raw_data/mitigators/reference_data>
-Due using the attributable fractions to the adjustment the activity within the mitigator groups there are possibly very slight discrepancies in the numbers within the report as a result of rounding the admissions and beddays to be whole numbers. 
+For 4 mitigators (Alcohol related admissions (Acute conditions- partially attributable), Alcohol related admissions (Chronic conditions- partially attributable), Obesity related admissions and Smoking related admissions) it is considered that only a proportion of the activity included in these groups can be attributed to alcohol/obesity/smoking. For example, certain cancers/cardiovascular disease are included within this group, but only a proportion of those will be due to alcohol/obesity/smoking. Therefore, activity for these mitigators has been adjusted using the attributable fractions found here-  <https://github.com/The-Strategy-Unit/nhp_data/tree/main/raw_data/mitigators/reference_data>.
+Due to using the attributable fractions to the adjustment the activity within the mitigator groups there are possibly very slight discrepancies in the numbers within the report as a result of rounding the admissions and beddays to be whole numbers. 
 
 ## Population data 
 
@@ -27,24 +27,17 @@ Local authority populations for each year are from the Office of National Statis
 
 The age and sex standardised rates are calculated using population data for England from the 2021 census as the standard population - <https://www.ons.gov.uk/peoplepopulationandcommunity/populationandmigration/populationestimates/bulletins/populationandhouseholdestimatesenglandandwales/census2021>. In a small number of cases where age or sex is not recorded the data has been excluded from the standardised rates.
 
+For crude rates by IMD decile the Office of National Statistics Monthly populations by Index of Multiple Deprivation (IMD) decile, England 2022 were used - <https://www.ons.gov.uk/peoplepopulationandcommunity/populationandmigration/populationprojections/adhocs/15363monthlypopulationsbyindexofmultipledeprivationimddecileenglandjanuary2019toaugust2022>.  
+
+For crude rates by ethnicity the Office of National Statistics Ethnic group, England and Wales: Census 2021 dataset was used - <https://www.ons.gov.uk/peoplepopulationandcommunity/culturalidentity/ethnicity/bulletins/ethnicgroupenglandandwales/census2021>. Data was recoded into [NHS ethnic categories](https://digital.nhs.uk/data-and-information/data-collections-and-data-sets/data-sets/mental-health-services-data-set/submit-data/data-quality-of-protected-characteristics-and-other-vulnerable-groups/ethnicity#how-to-collect-and-record-ethnicity-data). NULL and unknown values were excluded.
 
 ## Analysis
 
 The analysis uses the most recent year of data available, 2023/24, except for trends analysis where analysis includes data from the last 9 years.
 
-The majority of the mitigators are for activity avoidance, therefore these mitigators will impact the number of admissions, and through changes in admissions will also influence the number of beddays. However, 3 mitigators (Emergency Admission of Older People, Stroke Early Supported Discharge and Admissions with Mental Health Comorbidities) are efficiency mitigators, meaning that the admissions can't be avoided but the the length of stay could be reduced impacting the number of beddays. For these 3 mitigators we therefore only consider the number of beddays and not the number of admissions.
-
+The majority of the mitigators are for activity avoidance, therefore these mitigators will impact the number of admissions, and through changes in admissions will also influence the number of beddays. However, 3 mitigators (Emergency Admission of Older People, Stroke Early Supported Discharge and Admissions with Mental Health Comorbidities) are efficiency mitigators, meaning that the admissions can't be avoided but the length of stay could be reduced by impacting the number of beddays. For these 3 mitigators we therefore only consider the number of beddays and not the number of admissions.
 
 Where the activity for the cohort is given as a percentage of total activity, the percentage of admissions for each cohort are calculated relative to the total number of emergency admissions or total number of elective and emergency admissions depending on whether the mitigator cohort is defined as being only emergency admissions or can be either elective or emergency admissions.
-
-### Descriptive analysis
-
-To calculate crude rates of mitigable activity per 100,000 population by age and gender the Office of National Statistics Mid year population estimates were used - <https://www.ons.gov.uk/peoplepopulationandcommunity/populationandmigration/populationestimates/datasets/clinicalcommissioninggroupmidyearpopulationestimates>. 
-
-For crude rates by IMD decile the Office of National Statistics Monthly populations by Index of Multiple Deprivation (IMD) decile, England 2022 were used - <https://www.ons.gov.uk/peoplepopulationandcommunity/populationandmigration/populationprojections/adhocs/15363monthlypopulationsbyindexofmultipledeprivationimddecileenglandjanuary2019toaugust2022>.  
-For ethnicity the Office of National Statistics Ethnic group, England and Wales: Census 2021 dataset was used - <https://www.ons.gov.uk/peoplepopulationandcommunity/culturalidentity/ethnicity/bulletins/ethnicgroupenglandandwales/census2021>. Data was recoded into [NHS ethnic categories](https://digital.nhs.uk/data-and-information/data-collections-and-data-sets/data-sets/mental-health-services-data-set/submit-data/data-quality-of-protected-characteristics-and-other-vulnerable-groups/ethnicity#how-to-collect-and-record-ethnicity-data).
-
-In all descriptive analyses NULL and unknown values were excluded.
 
 ### Comparative analysis
 

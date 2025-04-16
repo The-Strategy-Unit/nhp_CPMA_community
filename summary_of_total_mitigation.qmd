@@ -61,7 +61,7 @@ Methods of classifying acute activity  as ‘potentially mitigable’ were devel
 
 In this suite of reports, we apply our methods of identifying potentially mitigable hospital activity to all NHS trusts in England. These reports then allow users to explore potentially mitigable activity in greater depth; to understand patient and admission characteristics; to understand where activity falls into more than one type of mitigator; how rates compare by ICB; and how they have changed over time. 
 
-By necessity, the size of ‘potentially mitigable’ activity is large. Often this is because definitions themselves are extremely broad. For example, the mitigator for Frail and Older People Admissions is defined as any emergency admission for a patient aged 75 or over where that person also has a certain level of frailty – a large proportion of NHS activity which is by no means entirely or even largely mitigable. It is hoped that further research and analysis in this area will lead to improvements in the criteria used to define potentially mitigable activity. Thus providing greater clarity on defining the acute care which is more likely to be legitimately mitigable.
+By necessity, the size of ‘potentially mitigable’ activity is large. Often this is because definitions themselves are extremely broad. For example, the mitigator for Admissions of Frail Older People (High Frailty Risk) is defined as any emergency admission for a patient aged 75 or over where that person also has a certain level of frailty – a large proportion of NHS activity which is by no means entirely or even largely mitigable. It is hoped that further research and analysis in this area will lead to improvements in the criteria used to define potentially mitigable activity. Thus providing greater clarity on defining the acute care which is more likely to be legitimately mitigable.
 
 
 Here, we provide information for 29 mitigators - the NHP Demand and Capacity Tool includes 92 in total - chosen as those which impact emergency admissions and bed days and are amenable to interventions from other healthcare services such as community services and primary care. Each of the mitigators falls under one of four ‘mechanisms’ for mitigation. These mechanisms are i) Redirection/Substitution, ii) Prevention, iii) Relocation & Efficiencies and iv) Efficiencies (seeking only reduction in bed days and not initial admissions). Our suite of reports provides summaries for each mechanism with further pages for each individual mitigator.
@@ -492,7 +492,7 @@ england_average_standardised_beddays_total_mitigation<-calculating_england_avera
 
 ```
 
-Over the last 5 years (2018/19 to 2023/24), there has been a `r england_average_numbers_episodes$change` % increase the percentage of admissions that are for potentially mitigable activity and a `r england_average_numbers_beddays$change` % increase in the percentage of beddays that are for potentially mitigable activity.
+Over the last 5 years (2018/19 to 2023/24), there has been a `r england_average_numbers_episodes$change` % increase in the percentage of admissions that are for potentially mitigable activity and a `r england_average_numbers_beddays$change` % increase in the percentage of beddays that are for potentially mitigable activity.
 
 ::: panel-tabset
 #### Admissions
@@ -745,7 +745,7 @@ plotting_percentage_change_over_time_by_icb(icb_age_sex_standardised_rates_bedda
 :::
 :::
 
-#### Change in standardised rate relative over the last 5 years, relative to the starting rate in 2018/19, by ICB.
+#### Change in standardised rate over the last 5 years, relative to the starting rate in 2018/19, by ICB.
 
 This chart shows the percentage change in the age and sex standardised rate per 100,000 population for each ICB (between 2018/19 and 2023/24) relative to it's starting rate in 2018/19, to help demonstrate performance across ICBs. 
 

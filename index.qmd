@@ -1,8 +1,8 @@
 # Preface {.unnumbered}
 
-The aim of this work is to understanding the scale, trends, and regional variations of potentially mitigable hospital activity at national and sub-national levels.
+The aim of this work is to understand the scale, trends, and regional variations of potentially mitigable hospital activity at national and sub-national levels.
 
-The report was produced by NHS The Strategy Unit, and was funded by NHS England.
+The report was produced by [The Strategy Unit](https://www.strategyunitwm.nhs.uk/), and was funded by NHS England.
 
-If you have any questions or queries regarding this report please email us at strategy.unit@nhs.net
+If you have any questions or queries regarding this report please email us at strategy.unit@nhs.net.
 
