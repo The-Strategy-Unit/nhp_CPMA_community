@@ -3,9 +3,9 @@ In this section, the number and percentage of mitigable activity for the `r coho
 ::: panel-tabset
 ```{r}
 #| output: asis
-c("age", "ethnicity", "imd","sex") |>
+c("age", "ethnicity", "imd", "sex") |>
   purrr::map(\(patient_characteristic) {
-    knitr::knit_child(input = "child-dir/_child-descriptive_patient-characteristics_panel-tabsets.qmd",    # RENAME THIS
+    knitr::knit_child(input = "child-dir/_child-descriptive_patient-characteristics_panel-tabsets.qmd",
                       envir = environment(),
                       quiet = TRUE) |>
       cat(sep = '\n')
