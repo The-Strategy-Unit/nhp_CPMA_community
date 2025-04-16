@@ -1,3 +1,5 @@
+Potentially mitigable activity varies by Integrated Care Board (ICB). Below the number, percentage and age and sex standardised rates per 100,000 population of mitigable activity are presented by ICB. Bar charts and maps allow for comparisons between ICBs and to spot potential regional differences and a table of these values is also available. In this table columns can be ordered and specific ICBs can be searched for.
+
 ```{r}
 #| output: false
 if(include_admissions) {
