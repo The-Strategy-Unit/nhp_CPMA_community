@@ -44,7 +44,7 @@ plot_of_number_over_time(number_percentage_over_time, episodes)
 
 ```{r}
 #| output: asis
-#| eval: !expr include_beddays
+#| eval: !expr include_admissions_and_beddays
 cat("##### Beddays")
 ```
 
@@ -86,7 +86,7 @@ plot_of_percentage_over_time(
 
 ```{r}
 #| output: asis
-#| eval: !expr include_beddays
+#| eval: !expr include_admissions_and_beddays
 cat("##### Beddays")
 ```
 
@@ -126,7 +126,7 @@ plot_of_standardised_rates_over_time(england_age_sex_standardised_rates_episodes
 
 ```{r}
 #| output: asis
-#| eval: !expr include_beddays
+#| eval: !expr include_admissions_and_beddays
 cat("##### Beddays")
 ```
 
