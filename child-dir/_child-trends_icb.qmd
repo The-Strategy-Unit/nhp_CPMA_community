@@ -273,7 +273,7 @@ cat(":::")
 ```
 :::
 
-#### Change in standardised rate relative over the last 5 years, relative to the starting rate in 2018/19, by ICB.
+#### Change in standardised rate over the last 5 years, relative to the starting rate in 2018/19, by ICB.
 
 The percentage change in the age and sex standardised rate of `r activity_type_label` per 100,000 population for each ICB (between 2018/19 and 2023/24) is plotted relative to it's starting rate in 2018/19, to help demonstrate differences across ICBs. 
 
