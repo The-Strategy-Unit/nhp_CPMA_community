@@ -275,9 +275,9 @@ cat(":::")
 
 #### Change in standardised rate relative over the last 5 years, relative to the starting rate in 2018/19, by ICB.
 
-This chart shows the percentage change in the age and sex standardised rate per 100,000 population for each ICB (between 2018/19 and 2023/24) relative to it's starting rate in 2018/19, to help demonstrate performance across ICBs. 
+The percentage change in the age and sex standardised rate of `r activity_type_label` per 100,000 population for each ICB (between 2018/19 and 2023/24) is plotted relative to it's starting rate in 2018/19, to help demonstrate differences across ICBs. 
 
-Those ICBs in the lower left quadrant (shaded in green) could be considered as performing well; they already had relatively low standardised rates in 2018/19 and have continued to make further decreases over the last five years.
+Those ICBs in the lower left quadrant (shaded in green) could be considered as performing well; they already had relatively low standardised rates of `r activity_type_label` in 2018/19 and have continued to make further decreases over the last five years.
 
 ```{r}
 #| output: asis
