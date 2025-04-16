@@ -68,11 +68,7 @@ Here, we provide information for 29 mitigators - the NHP Demand and Capacity Too
 
 The 29 mitigators and the mechanisms they belong to are shown in the chart below.
 
-![](summary_flow_chart.png)
-
-Activity avoidance mitigators in yellow impact the number of admissions and therefore also beddays. 
-
-Efficiency mitigators in grey will impact length of stay, and so only affect beddays.
+![Groupings of the mitgators by mechanism of mitigation groups. Activity avoidance mitigators in yellow impact the number of admissions and therefore also beddays. Efficiency mitigators in grey will impact length of stay, and so only affect beddays.](summary_flow_chart.png){#fig-summary_flow-chart}
 
 ## Mitigable activity
 
@@ -774,14 +770,12 @@ plotting_total_activity_vs_percentage_change(icb_age_sex_standardised_rates_bedd
 
 ### Local Authority
 
-Age and sex standardised rates of activity per 100,000 population for local authority areas. 
-
 ::: panel-tabset
 
 #### Admissions
 ```{r}
 #| label: table-local_authority_over_time_episodes
-#| fig-cap: Table of the standardised rate of all potentially mitigable admissions by Local Authority over the last 5 years, including the percentage change between 2018/19 and 2023/24.  
+#| tbl-cap: Table of the standardised rate of all potentially mitigable admissions by Local Authority over the last 5 years, including the percentage change between 2018/19 and 2023/24.  
 
 la_age_sex_standardised_rates_episodes_total_mitigation<-tar_read(la_age_sex_standardised_rates_episodes_total_mitigation)
 
@@ -796,7 +790,7 @@ DT::datatable(la_episode_table)
 #### Beddays
 ```{r}
 #| label: table_local_authority_over_time_beddays
-#| fig-cap: Table of the standardised rate of all potentially mitigable beddays by Local Authority over the last 5 years, including the percentage change between 2018/19 and 2023/24.  
+#| tbl-cap: Table of the standardised rate of all potentially mitigable beddays by Local Authority over the last 5 years, including the percentage change between 2018/19 and 2023/24.  
 
 la_age_sex_standardised_rates_beddays_total_mitigation<-tar_read(la_age_sex_standardised_rates_beddays_total_mitigation)
 
