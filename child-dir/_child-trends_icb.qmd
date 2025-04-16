@@ -1,6 +1,6 @@
 
 
-Note: Low numbers of admissions/beddays for Frimley ICB in 2022/23 reflect an issue with data submissions for this period. 
+Note: Low numbers of `r activity_type_label` for Frimley ICB in 2022/23 reflect an issue with data submissions for this period. 
 
 ```{r}
 icb_age_sex_standardised_rates_episodes <- tar_read(icb_age_sex_standardised_rates_episodes)

@@ -310,7 +310,6 @@ patient_characteristics_section <- c(
 
 trend_section <- c(
   
-  "### England",
   "",
   "```{r}",
   "#| output: asis",
@@ -323,7 +322,7 @@ trend_section <- c(
   "```",
   "",
   
-  "### ICB",
+  "### Integrated Care Board",
   "",
   "```{r}",
   "#| output: asis",
