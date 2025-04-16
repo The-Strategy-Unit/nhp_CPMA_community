@@ -6,7 +6,7 @@ Many of the `r activity_type_label` meet the criteria to be included in more tha
 For the `r cohort_title` activity the percentage and number of `r activity_type_label` included in multiple other mitigable cohorts is shown. 
 
 ```{r}
-if(cohort_title %in% c("Efficiencies","Stroke Early Supported Discharge", "Admissions with Mental Health Comorbidities", "Emergency Admissions of Older People")) {
+if(cohort_title %in% c("Efficiencies","Stroke Early Supported Discharge", "Admissions with Mental Health Comorbidities", "Emergency Admission of Older People", "Admission With No Overnight Stay and No Procedure (Children)", "Admission With No Overnight Stay and No Procedure (Adults)")) {
 admission_bedday_difference<-""
  } else{
 admission_bedday_difference<-"There are some differences between cohort overlap for admissions and beddays, this is because efficiency mitigators are not included in admissions data as they do not impact the number of admissions, but are included in the beddays data as they influence length of stay."
