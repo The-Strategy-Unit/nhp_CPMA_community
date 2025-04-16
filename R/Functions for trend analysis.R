@@ -262,24 +262,31 @@ plot_of_standardised_rates_over_time<-function(data){
 
 plotting_icb_over_time<-function(data, axis_title){
 
+  data1<-data|>
+    mutate(icb_2024_name=stringr::str_remove(icb_2024_name, " Integrated Care Board"))|>
+    mutate(icb_2024_name=stringr::str_remove(icb_2024_name, "NHS "))
   
-  ifelse("lowercl" %in% names(data), 
-         data2<-data|>
+  
+  ifelse("lowercl" %in% names(data1), 
+         data2<-data1|>
            mutate(lower_ci=janitor::round_half_up(lowercl,2))|>
            mutate(upper_ci=janitor::round_half_up(uppercl,2)), 
-         data2<-data|>
+         data2<-data1|>
            mutate(lower_ci=NA)|>
            mutate(upper_ci=NA))
   
-  ifelse("lowercl" %in% names(data), 
+  ifelse("lowercl" %in% names(data1), 
          footnote<-"Blue ribbon indicates the 95% confidence intervals", 
          footnote<-"")
   
  fig<- data2|>
-    mutate(activity=janitor::round_half_up(activity,1))|>
+    mutate(activity=janitor::round_half_up(activity,0))|>
     group_by(icb_2024_name)|>
     highlight_key(~icb_2024_name) |>
-    plot_ly( x = ~year, y = ~activity, type = 'scatter',  mode = 'lines', text=~icb_2024_name,  line = list(color = "#686f73"), width=660, height=300)|>
+    plot_ly( x = ~year, y = ~activity, type = 'scatter',  mode = 'lines', text=~icb_2024_name,  line = list(color = "#686f73"), width=660, height=300,
+             hovertemplate = paste( "ICB: %{text}<br>",
+                                    "Year: %{x}<br>",
+                                    "Rate: %{y}"))|>
     highlight(~icb_2024_name, on = "plotly_click", off="plotly_doubleclick", dynamic=FALSE)|>
     layout(
       shapes = list(
@@ -337,8 +344,17 @@ calculating_change_over_time<-function(data, values, geography ){
 
 plotting_percentage_change_over_time_by_icb<-function(data, values, geography, eng_average, min_adjustment, max_adjustment ){
  
-
-  change_over_time<-calculating_change_over_time(data, {{values}}, {{geography}})
+geo_name<-deparse(substitute(geography))
+  
+ if(geo_name=="icb_2024_name") {
+  data1<-data  |>
+  mutate(icb_2024_name=stringr::str_remove(icb_2024_name, " Integrated Care Board"))|>
+  mutate(icb_2024_name=stringr::str_remove(icb_2024_name, "NHS "))
+ } else{
+data1<-data
+ }
+  
+  change_over_time<-calculating_change_over_time(data1, {{values}}, {{geography}})
   
   change_over_time|>
     ggplot(aes(x=change, y=fct_reorder(geography_level, change)))+
@@ -411,7 +427,17 @@ calculating_england_average_standardised<-function(data){
 
 plotting_total_activity_vs_percentage_change<-function(data, geography){
   
-  plot_data<-  data|>
+  geo_name<-deparse(substitute(geography))
+  
+  if(geo_name=="icb_2024_name") {
+    data1<-data  |>
+      mutate(icb_2024_name=stringr::str_remove(icb_2024_name, " Integrated Care Board"))|>
+      mutate(icb_2024_name=stringr::str_remove(icb_2024_name, "NHS "))
+  } else{
+    data1<-data
+  }
+  
+  plot_data<-  data1|>
     filter(year=="2018/19"| year=="2023/24")|>
     pivot_wider(names_from = c(year), values_from = value)|>
     summarise(`2018/19`=max(`2018/19`, na.rm=TRUE),
@@ -424,9 +450,11 @@ plotting_total_activity_vs_percentage_change<-function(data, geography){
     mutate(geo_name=factor({{geography}}))
   
   p<- plot_data|>
-    ggplot()+
+    ggplot(aes(x=`2018/19`, y=change, label=geo_name,  text = paste("ICB:", icb_2024_name, "<br>",
+                       "2018/19 Rate:", `2018/19`, "<br>",
+                       "Percentage change:", change)))+
+    geom_point(colour="#686f73")+
     annotate("rect", xmin =(min(plot_data$`2018/19`)-(min(plot_data$`2018/19`)*0.1)) , xmax = mean(plot_data$`2018/19`), ymin =min(plot_data$change)*1.2 , ymax = 0 , fill= "#c9e7d9")+ 
-    geom_point(aes(x=`2018/19`, y=change, label=geo_name), colour="#686f73")+
     labs(x="Standardised rate for 2018/2019",
          y= "% change between 2018/19 and 2023/24")+
     su_theme()+
@@ -436,11 +464,7 @@ plotting_total_activity_vs_percentage_change<-function(data, geography){
     geom_vline(xintercept = mean(plot_data$`2018/19`), linetype="dashed", color = "#ec6555")+
    coord_cartesian(xlim =c(min(plot_data$`2018/19`)-1, max(plot_data$`2018/19`)), ylim = c((min(plot_data$change))*1.05 , (max(plot_data$change))*1.05))
 
-
-  
-  ggplotly(p, width=660, height=450)
-  
-  
+  ggplotly(p, tooltip="text", width=660, height=450 )
   
 }
 
