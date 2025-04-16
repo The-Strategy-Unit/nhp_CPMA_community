@@ -214,24 +214,10 @@ admission_characteristics_section <- c(
 )
 
 comparative_section <- c(
-  "### Integrated Care Board",
-  "",
   "```{r}",
   "#| output: asis",
   "knitr::knit_child(
-                  input = \"child-dir/_child-comparative_icb.qmd\",
-                  envir = environment(),
-                  quiet = TRUE
-                ) |>
-                  cat(sep = '\\n')",
-  "```",
-  "",
-  "### Local Authority",
-  "",
-  "```{r}",
-  "#| output: asis",
-  "knitr::knit_child(
-                  input = \"child-dir/_child-comparative_local-authority.qmd\",
+                  input = \"child-dir/_child-comparative.qmd\",
                   envir = environment(),
                   quiet = TRUE
                 ) |>
