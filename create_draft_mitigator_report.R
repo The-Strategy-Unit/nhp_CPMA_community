@@ -49,7 +49,6 @@ get_cohort_overlap_section <- function(mitigator) {
   }
   
   code <- c(
-    "### Number and proportion within multiple other cohorts",
     "",
     "```{r}",
     paste0(

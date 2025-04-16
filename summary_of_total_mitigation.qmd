@@ -78,8 +78,6 @@ Efficiency mitigators in grey will impact length of stay, and so only affect bed
 
 The numbers of admissions and beddays give the potentially mitigable activity for England in 2023/24, for each mechanism of mitigation group and in total.
 
-#### Number of admissions and beddays for each mechanism of mitigation
-
 ```{r}
 total_mitigator_activity <- numbers_over_time_total_mitigation |>
   filter(year == "2023/24") |>
