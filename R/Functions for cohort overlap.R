@@ -350,17 +350,17 @@ plotting_barchart_summary_of_overlaps<-function(data, cohort_name, activity_type
   
   if(name=="episodes"){
     plot_redirection + plot_prevention + plot_relocation + plot_layout(design=layout) +
-      plot_annotation(caption="Cohorts highlighted in red are those who overlap with this cohort of interest",
+      plot_annotation(caption="Cohorts highlighted in red are those that overlap with this cohort of interest",
                       theme = theme(
-                        plot.caption = ggtext::element_textbox_simple(hjust = -33, vjust=10, size=13, colour =  "#ec6555")
+                        plot.caption = ggtext::element_textbox_simple(hjust = -33, vjust=10, size=11, colour =  "#ec6555")
                       ))
   }
   
   else{
     plot_redirection + plot_prevention + plot_relocation + plot_efficiencies + plot_layout(design=layout) +
-      plot_annotation(caption="Cohorts highlighted in red are those who overlap with this cohort of interest",
+      plot_annotation(caption="Cohorts highlighted in red are those that overlap with this cohort of interest",
                       theme = theme(
-                        plot.caption = ggtext::element_textbox_simple(hjust = -33, vjust=10, size=13, colour =  "#ec6555")
+                        plot.caption = ggtext::element_textbox_simple(hjust = -33, vjust=10, size=11, colour =  "#ec6555")
                       ))
   } 
   
