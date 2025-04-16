@@ -1,16 +1,43 @@
-In this section, the number and percentage of mitigable activity for the `r cohort_title` cohort are shown by patient characteristics: age, ethnic category, IMD decile and sex. Crude rates per 100,000 population are also provided for context.
+In this section, the number and percentage of mitigable activity for the `r cohort_title` cohort are shown by patient characteristics: age, ethnic category, Index of Multiple Deprivation (IMD) decile and sex. Crude rates per 100,000 population are also provided for context.
 
-Outputs are presented for both admissions and beddays, but patterns are broadly similar across the two.
-
-::: panel-tabset
+:::panel-tabset
 ```{r}
 #| output: asis
-c("age", "ethnicity", "imd","sex") |>
-  purrr::map(\(patient_characteristic) {
-    knitr::knit_child(input = "child-dir/_child-descriptive_patient-characteristics_panel-tabsets.qmd",    # RENAME THIS
+patient_characteristic <- "age"
+
+knitr::knit_child(input = "child-dir/_child-descriptive_patient-characteristics_panel-tabsets.qmd",
                       envir = environment(),
                       quiet = TRUE) |>
       cat(sep = '\n')
-  })
+```
+
+```{r}
+#| output: asis
+patient_characteristic <- "ethnicity"
+
+knitr::knit_child(input = "child-dir/_child-descriptive_patient-characteristics_panel-tabsets.qmd",
+                      envir = environment(),
+                      quiet = TRUE) |>
+      cat(sep = '\n')
+```
+
+```{r}
+#| output: asis
+patient_characteristic <- "imd"
+
+knitr::knit_child(input = "child-dir/_child-descriptive_patient-characteristics_panel-tabsets.qmd",
+                      envir = environment(),
+                      quiet = TRUE) |>
+      cat(sep = '\n')
+```
+
+```{r}
+#| output: asis
+patient_characteristic <- "sex"
+
+knitr::knit_child(input = "child-dir/_child-descriptive_patient-characteristics_panel-tabsets.qmd",
+                      envir = environment(),
+                      quiet = TRUE) |>
+      cat(sep = '\n')
 ```
 :::
