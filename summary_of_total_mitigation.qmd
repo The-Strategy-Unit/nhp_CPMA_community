@@ -68,11 +68,7 @@ Here, we provide information for 29 mitigators - the NHP Demand and Capacity Too
 
 The 29 mitigators and the mechanisms they belong to are shown in the chart below.
 
-![](summary_flow_chart.png)
-
-Activity avoidance mitigators in yellow impact the number of admissions and therefore also beddays. 
-
-Efficiency mitigators in grey will impact length of stay, and so only affect beddays.
+![Groupings of the mitgators by mechanism of mitigation groups. Activity avoidance mitigators in yellow impact the number of admissions and therefore also beddays. Efficiency mitigators in grey will impact length of stay, and so only affect beddays.](summary_flow_chart.png){#fig-summary_flow-chart}
 
 ## Mitigable activity
 
@@ -112,7 +108,7 @@ total_cohort_numbers_2324 |>
   flextable::hline(i = 4, border = flextable::fp_border_default())
 ```
 
-NOTE: The sum of all the admissions and beddays for each mechanism does not add up to the total potential mitigable activity, as much of the activity is included within more than one mechanism of mitigation group and and thus adding the numbers for each group will lead to double counting. The numbers provided for the total potential mitigable activity excludes any double counting as a result of activity being including in multiple mitigator cohorts.
+Note: The sum of all the admissions and beddays for each mechanism does not add up to the total potential mitigable activity, as much of the activity is included within more than one mechanism of mitigation group and and thus adding the numbers for each group will lead to double counting. The numbers provided for the total potential mitigable activity excludes any double counting as a result of activity being including in multiple mitigator cohorts.
 
 ## Overlap between the mechanism of mitigation groups
 
@@ -145,7 +141,7 @@ plotting_barchart_number_of_mechanism_groups(total_cohort_numbers_2324, episodes
 ```
 :::
 
-NB: Efficiency mitigators do not impact the number of admissions, only the length of stay, hence they do not overlap in terms of admissions with the other cohorts.
+Note: Efficiency mitigators do not impact the number of admissions, only the length of stay, hence they do not overlap in terms of admissions with the other cohorts.
 :::
 
 The majority of potentially mitigable admissions (57%) are purely for activity where there could be redirection to perhaps community services. Just over a fifth of potentially mitigable activity (22%) is activity that could be prevented perhaps through public health initiatives.
@@ -774,14 +770,12 @@ plotting_total_activity_vs_percentage_change(icb_age_sex_standardised_rates_bedd
 
 ### Local Authority
 
-Age and sex standardised rates of activity per 100,000 population for local authority areas. 
-
 ::: panel-tabset
 
 #### Admissions
 ```{r}
 #| label: table-local_authority_over_time_episodes
-#| fig-cap: Table of the standardised rate of all potentially mitigable admissions by Local Authority over the last 5 years, including the percentage change between 2018/19 and 2023/24.  
+#| tbl-cap: Table of the standardised rate of all potentially mitigable admissions by Local Authority over the last 5 years, including the percentage change between 2018/19 and 2023/24.  
 
 la_age_sex_standardised_rates_episodes_total_mitigation<-tar_read(la_age_sex_standardised_rates_episodes_total_mitigation)
 
@@ -796,7 +790,7 @@ DT::datatable(la_episode_table)
 #### Beddays
 ```{r}
 #| label: table_local_authority_over_time_beddays
-#| fig-cap: Table of the standardised rate of all potentially mitigable beddays by Local Authority over the last 5 years, including the percentage change between 2018/19 and 2023/24.  
+#| tbl-cap: Table of the standardised rate of all potentially mitigable beddays by Local Authority over the last 5 years, including the percentage change between 2018/19 and 2023/24.  
 
 la_age_sex_standardised_rates_beddays_total_mitigation<-tar_read(la_age_sex_standardised_rates_beddays_total_mitigation)
 
