@@ -108,7 +108,7 @@ total_cohort_numbers_2324 |>
   flextable::hline(i = 4, border = flextable::fp_border_default())
 ```
 
-NOTE: The sum of all the admissions and beddays for each mechanism does not add up to the total potential mitigable activity, as much of the activity is included within more than one mechanism of mitigation group and and thus adding the numbers for each group will lead to double counting. The numbers provided for the total potential mitigable activity excludes any double counting as a result of activity being including in multiple mitigator cohorts.
+Note: The sum of all the admissions and beddays for each mechanism does not add up to the total potential mitigable activity, as much of the activity is included within more than one mechanism of mitigation group and and thus adding the numbers for each group will lead to double counting. The numbers provided for the total potential mitigable activity excludes any double counting as a result of activity being including in multiple mitigator cohorts.
 
 ## Overlap between the mechanism of mitigation groups
 
@@ -141,7 +141,7 @@ plotting_barchart_number_of_mechanism_groups(total_cohort_numbers_2324, episodes
 ```
 :::
 
-NB: Efficiency mitigators do not impact the number of admissions, only the length of stay, hence they do not overlap in terms of admissions with the other cohorts.
+Note: Efficiency mitigators do not impact the number of admissions, only the length of stay, hence they do not overlap in terms of admissions with the other cohorts.
 :::
 
 The majority of potentially mitigable admissions (57%) are purely for activity where there could be redirection to perhaps community services. Just over a fifth of potentially mitigable activity (22%) is activity that could be prevented perhaps through public health initiatives.
