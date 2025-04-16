@@ -177,8 +177,10 @@ The majority of potentially mitigable beddays are included in multiple mechanism
 There is a significant proportion of beddays that fall into both the Redirection and Efficiencies mechanism groups (44%).
 
 :::
+
 ## Comparative Analysis
 
+This analysis is to explore how total potentially mitigable activity varies by Integrated Care Board and Local Authority.
 
 ```{r}
 #| output: false
@@ -209,6 +211,9 @@ rate_icb_beddays_all_map <- summary_icb_beddays_all |>
 ```
 
 ### Integrated Care Board
+
+Potentially mitigable activity varies by Integrated Care Board (ICB). Below the number, percentage and age and sex standardised rates per 100,000 population of mitigable activity are presented by ICB. Bar charts and maps allow for comparisons between ICBs and to spot potential regional differences and a table of these values is also available. In this table columns can be ordered and specific ICBs can be searched for.
+
 ::: panel-tabset
 #### Number
 
@@ -426,6 +431,9 @@ get_summary_by_geography_table(
 :::
 
 ### Local Authority
+
+To explore how potentially mitigable activity may vary between Local Authority (LA) the table below contains the number, percentage and age and sex standardised rates per 100,000 population of mitigable activity by LA. Columns in the table can be ordered and specific LAs can be searched for.
+
 ::: panel-tabset
 
 #### Admissions
