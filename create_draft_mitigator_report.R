@@ -106,6 +106,17 @@ get_cohort_title <- function(mitigator, summary) {
   return(title)
 }
 
+get_cohort_group <- function(mitigator, summary) {
+  
+  if(check_if_mechanism(mitigator, summary)) {
+    cohort_group <- "mechanism group"
+  } else {
+    cohort_group <- "cohort"
+  }
+  
+  return(cohort_group)
+}
+
 get_data_section <- function(mitigator, summary_table) {
   standardised_rates_episodes <- if (check_if_efficiency_mitigator(mitigator, summary_table)) {
     ""
@@ -179,6 +190,7 @@ get_global_variables <- function(mitigator,
     ),
     "",
     paste0("treatment_type <- \"", treatment_type, "\""),
+    paste0("cohort_group <- \"", get_cohort_group(mitigator, summary_table), "\""),
     paste0(
       "treatment_type_title <- format_treatment_for_caption(\"",
       treatment_type,
