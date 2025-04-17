@@ -433,13 +433,6 @@ mitigators_and_mechanisms <- mitigators_and_mechanisms_treatment_lookup |>
   dplyr::pull(mitigator_or_mechanism)
 
 # Creating draft quarto reports ------------------------------------------------
-# Whilst testing have limited to just one mitigator:
-mitigators_and_mechanisms <- c("frail_elderly_high",
-                               "redirection_substitution",
-                               "emergency_elderly",
-                               "zero_los_no_procedure_adult",
-                               "efficiencies")
-
 invisible(purrr::map(
   mitigators_and_mechanisms,
   ~ create_draft_mitigator_qmd(
