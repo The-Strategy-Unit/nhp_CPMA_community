@@ -9,43 +9,43 @@ book:
   chapters:
     - index.qmd
     - summary_of_total_mitigation.qmd
-    - part: efficiencies.qmd
+    - part: mechanism_efficiencies.qmd
       chapters: 
-        - raid_ip.qmd
-        - emergency_elderly.qmd
-        - stroke_early_supported_discharge.qmd
-    - part: efficiencies_relocation.qmd
+        - mitigator_raid_ip.qmd
+        - mitigator_emergency_elderly.qmd
+        - mitigator_stroke_early_supported_discharge.qmd
+    - part: mechanism_efficiencies_relocation.qmd
       chapters: 
-        - virtual_wards_activity_avoidance_ari.qmd
-        - virtual_wards_activity_avoidance_heart_fai.qmd
-    - part: prevention.qmd
+        - mitigator_virtual_wards_activity_avoidance_ari.qmd
+        - mitigator_virtual_wards_activity_avoidance_heart_fai.qmd
+    - part: mechanism_prevention.qmd
       chapters: 
-        - alcohol_partially_attributable_acute.qmd
-        - alcohol_partially_attributable_chronic.qmd
-        - alcohol_wholly_attributable.qmd
-        - intentional_self_harm.qmd
-        - medically_unexplained_related_admissions.qmd
-        - raid_ae.qmd
-        - obesity_related_admissions.qmd
-        - smoking.qmd
+        - mitigator_alcohol_partially_attributable_acute.qmd
+        - mitigator_alcohol_partially_attributable_chronic.qmd
+        - mitigator_alcohol_wholly_attributable.qmd
+        - mitigator_intentional_self_harm.qmd
+        - mitigator_medically_unexplained_related_admissions.qmd
+        - mitigator_raid_ae.qmd
+        - mitigator_obesity_related_admissions.qmd
+        - mitigator_smoking.qmd
     - part: mechanism_redirection_substitution.qmd
       chapters: 
-        - zero_los_no_procedure_adult.qmd
-        - zero_los_no_procedure_child.qmd
-        - frail_elderly_intermediate.qmd
-        - frail_elderly_high.qmd
-        - ambulatory_care_conditions_acute.qmd
-        - ambulatory_care_conditions_chronic.qmd
-        - ambulatory_care_conditions_vaccine_preventable.qmd
-        - readmission_within_28_days.qmd
-        - eol_care_2_days.qmd
-        - eol_care_3_to_14_days.qmd
-        - falls_related_admissions.qmd
-        - medicines_related_admissions_explicit.qmd
-        - medicines_related_admissions_implicit_anti_diabetics.qmd
-        - medicines_related_admissions_implicit_benzodiasepines.qmd
-        - medicines_related_admissions_implicit_diurectics.qmd
-        - medicines_related_admissions_implicit_nsaids.qmd
+        - mitigator_zero_los_no_procedure_adult.qmd
+        - mitigator_zero_los_no_procedure_child.qmd
+        - mitigator_frail_elderly_intermediate.qmd
+        - mitigator_frail_elderly_high.qmd
+        - mitigator_ambulatory_care_conditions_acute.qmd
+        - mitigator_ambulatory_care_conditions_chronic.qmd
+        - mitigator_ambulatory_care_conditions_vaccine_preventable.qmd
+        - mitigator_readmission_within_28_days.qmd
+        - mitigator_eol_care_2_days.qmd
+        - mitigator_eol_care_3_to_14_days.qmd
+        - mitigator_falls_related_admissions.qmd
+        - mitigator_medicines_related_admissions_explicit.qmd
+        - mitigator_medicines_related_admissions_implicit_anti_diabetics.qmd
+        - mitigator_medicines_related_admissions_implicit_benzodiasepines.qmd
+        - mitigator_medicines_related_admissions_implicit_diurectics.qmd
+        - mitigator_medicines_related_admissions_implicit_nsaids.qmd
     - methods.qmd
     
 title-block-banner: "#f9bf07"
