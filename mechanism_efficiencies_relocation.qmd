@@ -1,4 +1,4 @@
-## Redirection/Substitution {#sec-redirection_substitution .unnumbered}
+## Efficiencies & Relocation {#sec-efficiencies_relocation .unnumbered}
 
 ```{r packages_and_options}
 library("flextable")
@@ -27,12 +27,12 @@ options(knitr.duplicate.label = "allow")
 ```
 
 ```{r global_variables}
-cohort <- "redirection_substitution"
-cohort_title <- "Redirection/Substitution"
+cohort <- "efficiencies_relocation"
+cohort_title <- "Efficiencies & Relocation"
 
-treatment_type <- "both"
+treatment_type <- "emergency"
 cohort_group <- "mechanism group"
-treatment_type_title <- format_treatment_for_caption("both")
+treatment_type_title <- format_treatment_for_caption("emergency")
 ```
 
 ```{r data}
@@ -102,7 +102,7 @@ knitr::knit_child(
 
 
 ```{r}
-overlap_numbers <- targets::tar_read(cohort_overlap_numbers_redirection) 
+overlap_numbers <- targets::tar_read(cohort_overlap_numbers_relocation) 
 ```
 
 ```{r}

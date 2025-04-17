@@ -90,14 +90,22 @@ get_cohort_overlap_section <- function(mitigator) {
 }
 
 get_cohort_title <- function(mitigator, summary) {
-  
-  if(check_if_mechanism(mitigator, summary)) {
+  if (check_if_mechanism(mitigator, summary)) {
+    if (mitigator == "efficiencies_relocation") {
+      mitigator <- mitigator |>
+        stringr::str_replace("_", " & ") |>
+        stringr::str_to_title()
+    } else if (mitigator == "redirection_substitution") {
+      mitigator <- mitigator |>
+        stringr::str_replace("_", "/") |>
+        stringr::str_to_title()
+    }
+    
     title <- mitigator |>
-      ifelse(mitigator=="efficiencies_relocation", 
-             stringr::str_replace("_", " & "),
-             stringr::str_replace("_", "/"))|>
       stringr::str_to_title()
-  } else {
+  }
+  
+  else {
     title <- summary |>
       dplyr::filter(mitigator_code == mitigator) |>
       dplyr::pull(mitigator_name)
@@ -425,13 +433,6 @@ mitigators_and_mechanisms <- mitigators_and_mechanisms_treatment_lookup |>
   dplyr::pull(mitigator_or_mechanism)
 
 # Creating draft quarto reports ------------------------------------------------
-# Whilst testing have limited to just one mitigator:
-mitigators_and_mechanisms <- c("frail_elderly_high",
-                               "redirection_substitution",
-                               "emergency_elderly",
-                               "zero_los_no_procedure_adult",
-                               "efficiencies")
-
 invisible(purrr::map(
   mitigators_and_mechanisms,
   ~ create_draft_mitigator_qmd(

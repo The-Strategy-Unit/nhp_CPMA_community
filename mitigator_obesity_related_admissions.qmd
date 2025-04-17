@@ -1,4 +1,4 @@
-## Redirection/Substitution {#sec-redirection_substitution .unnumbered}
+## Obesity Related Admissions {#sec-obesity_related_admissions .unnumbered}
 
 ```{r packages_and_options}
 library("flextable")
@@ -27,11 +27,11 @@ options(knitr.duplicate.label = "allow")
 ```
 
 ```{r global_variables}
-cohort <- "redirection_substitution"
-cohort_title <- "Redirection/Substitution"
+cohort <- "obesity_related_admissions"
+cohort_title <- "Obesity Related Admissions"
 
 treatment_type <- "both"
-cohort_group <- "mechanism group"
+cohort_group <- "cohort"
 treatment_type_title <- format_treatment_for_caption("both")
 ```
 
@@ -102,7 +102,8 @@ knitr::knit_child(
 
 
 ```{r}
-overlap_numbers <- targets::tar_read(cohort_overlap_numbers_redirection) 
+overlap_numbers <- targets::tar_read(total_cohort_numbers_2324) |>
+    filter(!!rlang::sym(cohort) == 1)
 ```
 
 ```{r}
@@ -115,6 +116,17 @@ knitr::knit_child(
     cat(sep = '\n')
 ```
 
+### Inclusion within other mitigable activity cohorts
+
+```{r}
+#| output: asis
+knitr::knit_child(
+        input = "child-dir/_child-overlap_inclusion-within-others.qmd",
+        envir = environment(),
+        quiet = TRUE
+        ) |>
+      cat(sep = '\n')
+```
 
 ### Most common cohort overlaps
 

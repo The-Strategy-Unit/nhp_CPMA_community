@@ -1,4 +1,4 @@
-## Redirection/Substitution {#sec-redirection_substitution .unnumbered}
+## Prevention {#sec-prevention .unnumbered}
 
 ```{r packages_and_options}
 library("flextable")
@@ -27,8 +27,8 @@ options(knitr.duplicate.label = "allow")
 ```
 
 ```{r global_variables}
-cohort <- "redirection_substitution"
-cohort_title <- "Redirection/Substitution"
+cohort <- "prevention"
+cohort_title <- "Prevention"
 
 treatment_type <- "both"
 cohort_group <- "mechanism group"
@@ -102,7 +102,7 @@ knitr::knit_child(
 
 
 ```{r}
-overlap_numbers <- targets::tar_read(cohort_overlap_numbers_redirection) 
+overlap_numbers <- targets::tar_read(cohort_overlap_numbers_prevention) 
 ```
 
 ```{r}

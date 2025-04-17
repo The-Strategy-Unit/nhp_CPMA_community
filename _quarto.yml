@@ -9,11 +9,45 @@ book:
   chapters:
     - index.qmd
     - summary_of_total_mitigation.qmd
+    - part: mechanism_efficiencies.qmd
+      chapters: 
+        - mitigator_raid_ip.qmd
+        - mitigator_emergency_elderly.qmd
+        - mitigator_stroke_early_supported_discharge.qmd
+    - part: mechanism_efficiencies_relocation.qmd
+      chapters: 
+        - mitigator_virtual_wards_activity_avoidance_ari.qmd
+        - mitigator_virtual_wards_activity_avoidance_heart_failure.qmd
+    - part: mechanism_prevention.qmd
+      chapters: 
+        - mitigator_alcohol_partially_attributable_acute.qmd
+        - mitigator_alcohol_partially_attributable_chronic.qmd
+        - mitigator_alcohol_wholly_attributable.qmd
+        - mitigator_intentional_self_harm.qmd
+        - mitigator_medically_unexplained_related_admissions.qmd
+        - mitigator_raid_ae.qmd
+        - mitigator_obesity_related_admissions.qmd
+        - mitigator_smoking.qmd
     - part: mechanism_redirection_substitution.qmd
       chapters: 
+        - mitigator_zero_los_no_procedure_adult.qmd
+        - mitigator_zero_los_no_procedure_child.qmd
+        - mitigator_frail_elderly_intermediate.qmd
         - mitigator_frail_elderly_high.qmd
+        - mitigator_ambulatory_care_conditions_acute.qmd
+        - mitigator_ambulatory_care_conditions_chronic.qmd
+        - mitigator_ambulatory_care_conditions_vaccine_preventable.qmd
+        - mitigator_readmission_within_28_days.qmd
+        - mitigator_eol_care_2_days.qmd
+        - mitigator_eol_care_3_to_14_days.qmd
+        - mitigator_falls_related_admissions.qmd
+        - mitigator_medicines_related_admissions_explicit.qmd
+        - mitigator_medicines_related_admissions_implicit_anti_diabetics.qmd
+        - mitigator_medicines_related_admissions_implicit_benzodiasepines.qmd
+        - mitigator_medicines_related_admissions_implicit_diurectics.qmd
+        - mitigator_medicines_related_admissions_implicit_nsaids.qmd
     - methods.qmd
-
+    
 title-block-banner: "#f9bf07"
 title-block-banner-color: "#333739"
 format:
