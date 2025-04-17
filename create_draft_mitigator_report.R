@@ -90,14 +90,22 @@ get_cohort_overlap_section <- function(mitigator) {
 }
 
 get_cohort_title <- function(mitigator, summary) {
-  
-  if(check_if_mechanism(mitigator, summary)) {
+  if (check_if_mechanism(mitigator, summary)) {
+    if (mitigator == "efficiencies_relocation") {
+      mitigator <- mitigator |>
+        stringr::str_replace("_", " & ") |>
+        stringr::str_to_title()
+    } else if (mitigator == "redirection_substitution") {
+      mitigator <- mitigator |>
+        stringr::str_replace("_", "/") |>
+        stringr::str_to_title()
+    }
+    
     title <- mitigator |>
-      ifelse(mitigator=="efficiencies_relocation", 
-             stringr::str_replace("_", " & "),
-             stringr::str_replace("_", "/"))|>
       stringr::str_to_title()
-  } else {
+  }
+  
+  else {
     title <- summary |>
       dplyr::filter(mitigator_code == mitigator) |>
       dplyr::pull(mitigator_name)
