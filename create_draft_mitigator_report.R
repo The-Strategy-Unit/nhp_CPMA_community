@@ -93,7 +93,9 @@ get_cohort_title <- function(mitigator, summary) {
   
   if(check_if_mechanism(mitigator, summary)) {
     title <- mitigator |>
-      stringr::str_replace("_", " & ") |>
+      ifelse(mitigator=="efficiencies_relocation", 
+             stringr::str_replace("_", " & "),
+             stringr::str_replace("_", "/"))|>
       stringr::str_to_title()
   } else {
     title <- summary |>

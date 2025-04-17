@@ -508,6 +508,8 @@ generate_venn_diagram<-function(data, activity_type){
       Prevention = which(data1$Prevention=="1"),
       Relocation = which(data1$Relocation=="1")
     )
+      
+      cat_names<-c("Redirection/\nSubstitution", "Prevention", "Relocation & Efficiencies")
      
   }
   else{
@@ -518,12 +520,15 @@ generate_venn_diagram<-function(data, activity_type){
       Relocation = which(data1$Relocation=="1"),
       Efficiencies= which(data1$Efficiencies=="1")
     )
+      
+      cat_names<-c("Redirection/\nSubstitution", "Prevention", "Relocation & Efficiencies", "Efficiencies")
     
   } 
   
   rm(data1)
   
-  ggVennDiagram(venn_data, label_alpha = 0, label_size = 2.8) +
+  ggVennDiagram(venn_data, category.names=cat_names,
+                label_alpha = 0, label_size = 2.8, set_size=3.9) +
     scale_fill_distiller(palette = "Spectral") +
     scale_x_continuous(expand=c(0.1,0.1))+
     theme(legend.position="none",
