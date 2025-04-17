@@ -1,4 +1,4 @@
-## Redirection & Substitution {#sec-redirection_substitution .unnumbered}
+## Redirection/Substitution {#sec-redirection_substitution .unnumbered}
 
 ```{r packages_and_options}
 library("flextable")
@@ -28,9 +28,10 @@ options(knitr.duplicate.label = "allow")
 
 ```{r global_variables}
 cohort <- "redirection_substitution"
-cohort_title <- "Redirection & Substitution"
+cohort_title <- "Redirection/Substitution"
 
 treatment_type <- "both"
+cohort_group <- "mechanism group"
 treatment_type_title <- format_treatment_for_caption("both")
 ```
 
@@ -99,7 +100,6 @@ knitr::knit_child(
 
 ## Cohort overlap
 
-### Number and proportion within multiple other cohorts
 
 ```{r}
 overlap_numbers <- targets::tar_read(cohort_overlap_numbers_redirection) 
@@ -142,7 +142,6 @@ knitr::knit_child(
 
 ## Trend Analysis
 
-### England
 
 ```{r}
 #| output: asis
@@ -154,7 +153,7 @@ knitr::knit_child(
   cat(sep = '\n')
 ```
 
-### ICB
+### Integrated Care Board
 
 ```{r}
 #| output: asis

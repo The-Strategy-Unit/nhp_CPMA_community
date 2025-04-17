@@ -29,10 +29,10 @@ options(knitr.duplicate.label = "allow")
 ```{r global_variables}
 cohort <- "frail_elderly_high"
 cohort_title <- "Admissions of Frail Older People (High Frailty Risk)"
-cohort_group<- "cohort"
+
 treatment_type <- "emergency"
+cohort_group <- "cohort"
 treatment_type_title <- format_treatment_for_caption("emergency")
-activity_type_label<-"admission/beddays"
 ```
 
 ```{r data}
@@ -100,7 +100,6 @@ knitr::knit_child(
 
 ## Cohort overlap
 
-### Number and proportion within multiple other cohorts
 
 ```{r}
 overlap_numbers <- targets::tar_read(total_cohort_numbers_2324) |>
@@ -155,7 +154,6 @@ knitr::knit_child(
 
 ## Trend Analysis
 
-### England
 
 ```{r}
 #| output: asis
@@ -167,7 +165,7 @@ knitr::knit_child(
   cat(sep = '\n')
 ```
 
-### ICB
+### Integrated Care Board
 
 ```{r}
 #| output: asis
