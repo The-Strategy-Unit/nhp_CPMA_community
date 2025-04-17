@@ -1,0 +1,191 @@
+## Alcohol Related Admissions (Chronic Conditions - Partially Attributable) {#sec-alcohol_partially_attributable_chronic .unnumbered}
+
+```{r packages_and_options}
+library("flextable")
+library("tidyr")
+library("dplyr")
+library("ggplot2")
+library("StrategyUnitTheme")
+library("forcats")
+library("ComplexUpset")
+library("scales")
+library("targets")
+library("plotly")
+library("patchwork")
+library("DT")
+
+source("R/captions.R")
+source("R/general.R")
+source("R/descriptive_analyses.R")
+source("R/comparative_analyses.R")
+source("R/Functions for cohort overlap.R")
+source("R/Functions for trend analysis.R")
+source("R/manipulating_mitigators_and_mechanisms.R")
+
+options(scipen = 999)
+options(knitr.duplicate.label = "allow")
+```
+
+```{r global_variables}
+cohort <- "alcohol_partially_attributable_chronic"
+cohort_title <- "Alcohol Related Admissions (Chronic Conditions - Partially Attributable)"
+
+treatment_type <- "both"
+cohort_group <- "cohort"
+treatment_type_title <- format_treatment_for_caption("both")
+```
+
+```{r data}
+#| output: false
+mitigator_summary_table <- readxl::read_excel("summary_mitigators_table.xlsx") |>
+  dplyr::mutate(mechanism = snakecase::to_snake_case(mechanism))
+
+england_age_sex_standardised_rates_episodes <- tar_read(england_age_sex_standardised_rates_episodes) |>
+    filter(cohorts == cohort)
+
+england_age_sex_standardised_rates_beddays <- tar_read(england_age_sex_standardised_rates_beddays) |>
+    filter(cohorts == cohort)
+
+total_beddays_admissions <- targets::tar_read(total_beddays_admissions)
+
+icb_23_shp <- sf::st_read("https://services1.arcgis.com/ESMARspQHYMw9BZ9/arcgis/rest/services/Integrated_Care_Boards_April_2023_EN_BGC/FeatureServer/0/query?outFields=*&where=1%3D1&f=geojson") |>
+    janitor::clean_names() |>
+    dplyr::mutate(icb23nm = simplify_icb_name(icb23nm))
+```
+
+```{r including_activity_types}
+include_admissions <- check_include_admissions(cohort, mitigator_summary_table)
+include_beddays <- check_include_beddays(cohort)
+include_admissions_and_beddays <- include_admissions & include_beddays
+activity_type_label <- get_activity_type_label(include_admissions, include_beddays)
+```
+
+`r get_mitigator_description(cohort)`
+
+```{r}
+#| output: asis
+knitr::knit_child(
+      input = "child-dir/_child-overview.qmd",
+      envir = environment(),
+      quiet = TRUE
+    ) |>
+      cat(sep = '\n')
+```
+
+## Descriptive Analysis
+
+### Patient Characteristics
+
+```{r}
+#| output: asis
+knitr::knit_child(
+              input = "child-dir/_child-descriptive_patient-characteristics.qmd",
+              envir = environment(),
+              quiet = TRUE
+             ) |>
+            cat(sep = '\n')
+```
+
+### Admission Characteristics
+
+```{r}
+#| output: asis
+knitr::knit_child(
+    input = "child-dir/_child-descriptive_admission-characteristics.qmd",
+    envir = environment(),
+    quiet = TRUE
+  ) |>
+  cat(sep = '\n')
+```
+
+## Cohort overlap
+
+
+```{r}
+overlap_numbers <- targets::tar_read(total_cohort_numbers_2324) |>
+    filter(!!rlang::sym(cohort) == 1)
+```
+
+```{r}
+#| output: asis
+knitr::knit_child(
+      input = "child-dir/_child-overlap_number-within-others.qmd",
+      envir = environment(),
+      quiet = TRUE
+      ) |>
+    cat(sep = '\n')
+```
+
+### Inclusion within other mitigable activity cohorts
+
+```{r}
+#| output: asis
+knitr::knit_child(
+        input = "child-dir/_child-overlap_inclusion-within-others.qmd",
+        envir = environment(),
+        quiet = TRUE
+        ) |>
+      cat(sep = '\n')
+```
+
+### Most common cohort overlaps
+
+```{r}
+#| output: asis
+knitr::knit_child(
+      input = "child-dir/_child-overlap_most-common.qmd",
+      envir = environment(),
+      quiet = TRUE
+      ) |>
+    cat(sep = '\n')
+```
+
+## Comparative Analysis
+
+```{r}
+#| output: asis
+knitr::knit_child(
+                  input = "child-dir/_child-comparative.qmd",
+                  envir = environment(),
+                  quiet = TRUE
+                ) |>
+                  cat(sep = '\n')
+```
+
+## Trend Analysis
+
+
+```{r}
+#| output: asis
+knitr::knit_child(
+    input = "child-dir/_child-trends_england.qmd",
+    envir = environment(),
+    quiet = TRUE
+    ) |>
+  cat(sep = '\n')
+```
+
+### Integrated Care Board
+
+```{r}
+#| output: asis
+knitr::knit_child(
+    input = "child-dir/_child-trends_icb.qmd",
+    envir = environment(),
+    quiet = TRUE
+    ) |>
+  cat(sep = '\n')
+```
+
+### Local Authority
+
+```{r}
+#| output: asis
+knitr::knit_child(
+    input = "child-dir/_child-trends_local-authority.qmd",
+    envir = environment(),
+    quiet = TRUE
+    ) |>
+  cat(sep = '\n')
+```
+
