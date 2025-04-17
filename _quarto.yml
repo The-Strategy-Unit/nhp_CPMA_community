@@ -17,7 +17,7 @@ book:
     - part: mechanism_efficiencies_relocation.qmd
       chapters: 
         - mitigator_virtual_wards_activity_avoidance_ari.qmd
-        - mitigator_virtual_wards_activity_avoidance_heart_fai.qmd
+        - mitigator_virtual_wards_activity_avoidance_heart_failure.qmd
     - part: mechanism_prevention.qmd
       chapters: 
         - mitigator_alcohol_partially_attributable_acute.qmd
