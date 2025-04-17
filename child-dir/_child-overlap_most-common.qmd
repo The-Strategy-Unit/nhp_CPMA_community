@@ -2,7 +2,7 @@
 As an alternative to Venn diagrams Upset plots are used to show the largest groups (largest single cohorts/overlaps between cohorts).
 
 ```{r}
-if(cohort_title %in% c("Efficiencies")) {
+if(cohort_title %in% c("Efficiencies", "Efficiencies & Relocation")) {
 most_common_cohort_text<-""
  } else{
 most_common_cohort_text<-"The 15 most common cohort combinations for the `r cohort_title` cohort are shown. All cohort combinations together will add to 100%."
