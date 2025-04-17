@@ -38,7 +38,7 @@ cat("##### Admissions")
 ```{r, fig.width=7, fig.height=3}
 #| eval: !expr include_admissions
 #| label: fig-number_trends_spells_england
-#| fig-cap: !expr get_caption_trends(cohort_title, "number", "admissions", "England")
+#| fig-cap: !expr get_caption_trends(cohort_title, "number", cohort_group, "admissions", "England")
 plot_of_number_over_time(number_percentage_over_time, episodes)
 ```
 
@@ -51,7 +51,7 @@ cat("##### Beddays")
 ```{r, fig.width=7, fig.height=3}
 #| eval: !expr include_beddays
 #| label: fig-number_trends_beddays_england
-#| fig-cap: !expr get_caption_trends(cohort_title, "number", "beddays", "England")
+#| fig-cap: !expr get_caption_trends(cohort_title, "number", cohort_group, "beddays", "England")
 plot_of_number_over_time(number_percentage_over_time, beddays)
 ```
 
@@ -76,7 +76,7 @@ cat("##### Admissions")
 ```{r, fig.width=7, fig.height=3}
 #| eval: !expr include_admissions
 #| label: fig-percent_trends_spells_england
-#| fig-cap: !expr get_caption_trends(cohort_title, "perc", "admissions", "England")
+#| fig-cap: !expr get_caption_trends(cohort_title, "perc", cohort_group, "admissions", "England")
 plot_of_percentage_over_time(
   number_percentage_over_time |>
     filter(!is.na(percentage_episodes)),
@@ -93,7 +93,7 @@ cat("##### Beddays")
 ```{r, fig.width=7, fig.height=3}
 #| eval: !expr include_beddays
 #| label: fig-percent_trends_beddays_england
-#| fig-cap: !expr get_caption_trends(cohort_title, "perc", "beddays", "England")
+#| fig-cap: !expr get_caption_trends(cohort_title, "perc", cohort_group, "beddays", "England")
 plot_of_percentage_over_time(
   number_percentage_over_time |>
     filter(!is.na(percentage_beddays)),
@@ -120,7 +120,7 @@ cat("##### Admissions")
 ```{r, fig.width=7, fig.height=3}
 #| eval: !expr include_admissions
 #| label: fig-stardardised_trends_spells_england
-#| fig-cap: !expr get_caption_trends(cohort_title, "SR", "admissions", "England")
+#| fig-cap: !expr get_caption_trends(cohort_title, "SR", cohort_group, "admissions", "England")
 plot_of_standardised_rates_over_time(england_age_sex_standardised_rates_episodes)
 ```
 
@@ -133,7 +133,7 @@ cat("##### Beddays")
 ```{r, fig.width=7, fig.height=3}
 #| eval: !expr include_beddays
 #| label: fig-stardardised_trends_beddays_england
-#| fig-cap: !expr get_caption_trends(cohort_title, "SR", "beddays", "England")
+#| fig-cap: !expr get_caption_trends(cohort_title, "SR", cohort_group, "beddays", "England")
 plot_of_standardised_rates_over_time(england_age_sex_standardised_rates_beddays)
 ```
 

@@ -1,4 +1,4 @@
-In this section, the number and percentage of mitigable activity for the `r cohort_title` cohort are shown by patient characteristics: age, ethnic category, Index of Multiple Deprivation (IMD) decile and sex. Crude rates per 100,000 population are also provided for context.
+In this section, the number and percentage of mitigable activity for the `r cohort_title` `r cohort_group` are shown by patient characteristics: age, ethnic category, Index of Multiple Deprivation (IMD) decile and sex. Crude rates per 100,000 population are also provided for context.
 
 :::panel-tabset
 ```{r}

@@ -3,7 +3,7 @@ Many of the `r activity_type_label` meet the criteria to be included in more tha
 
 ### Number and proportion within multiple other cohorts
 
-For the `r cohort_title` activity the percentage and number of `r activity_type_label` included in multiple other mitigable cohorts is shown. 
+For the `r cohort_title` `r cohort_group` the percentage and number of `r activity_type_label` included in multiple mitigable cohorts is shown. 
 
 ```{r}
 if(cohort_title %in% c("Efficiencies","Stroke Early Supported Discharge", "Admissions with Mental Health Comorbidities", "Emergency Admission of Older People", "Admission With No Overnight Stay and No Procedure (Children)", "Admission With No Overnight Stay and No Procedure (Adults)")) {

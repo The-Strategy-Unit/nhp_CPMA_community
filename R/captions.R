@@ -256,8 +256,9 @@ get_caption_upset_plots <- function(cohort, activity_type){
 #'
 #' @return A string.
 get_caption_activity_vs_perc_change <- function(cohort,
+                                                cohort_group,
                                                 activity_type) {
-  caption <- glue::glue("The standardised rate of {cohort} {activity_type} (in 2018/19) versus the percentage change in {activity_type} between 2018/19 and 2023/24 for ICBs.")
+  caption <- glue::glue("The standardised rate of {activity_type} for the {cohort} {cohort_group} (in 2018/19) versus the percentage change in {activity_type} between 2018/19 and 2023/24 for ICBs.")
   
   return(caption)
 }
@@ -287,7 +288,7 @@ get_caption_la_trends <- function(cohort,
 #' @param geography Either `"England"`, `"icb"` or `"la"`.
 #'
 #' @return A string.
-get_caption_trends <- function(cohort, metric, activity_type, geography) {
+get_caption_trends <- function(cohort, metric, cohort_group, activity_type, geography) {
   
   metric <- format_metric_for_caption(metric) |>
     stringr::str_to_lower()
@@ -298,7 +299,7 @@ get_caption_trends <- function(cohort, metric, activity_type, geography) {
     glue::glue("by {format_geography_for_caption(geography)}")
   }
   
-  caption <- glue::glue("The {metric} of {activity_type} for the {cohort} cohort {geography} over the last 9 years.")
+  caption <- glue::glue("The {metric} of {activity_type} for the {cohort} {cohort_group} {geography} over the last 9 years.")
   
   return(caption)
 }
@@ -311,14 +312,20 @@ get_caption_trends <- function(cohort, metric, activity_type, geography) {
 #'
 #' @return A string.
 get_caption_trends_percentage_change <- function(cohort, 
-                                                 metric, 
+                                                 metric,
+                                                 cohort_group,
                                                  activity_type, 
                                                  treatment_type = NULL) {
-  metric <- format_metric_for_caption(metric, activity_type, treatment_type) |>
+  metric1 <- format_metric_for_caption(metric, activity_type, treatment_type) |>
     stringr::str_to_lower()
   
-  caption <- glue::glue("The percentage change in the {metric} of {cohort} {activity_type} by ICB between 2018/19 and 2023/24.")
-  
+  if(metric=="prop"){
+  caption <- glue::glue("The percentage change in the {metric1} for the {cohort} {cohort_group} by ICB between 2018/19 and 2023/24.")
+  }else{
+    caption <- glue::glue("The percentage change in the {metric1} of {activity_type} for the {cohort} {cohort_group} by ICB between 2018/19 and 2023/24.")
+  }
+    
+    
   return(caption)
 }
 

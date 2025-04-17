@@ -22,7 +22,7 @@ cat("##### Admissions")
 ```{r, fig.width=5, fig.height=3}
 #| eval: !expr include_admissions
 #| label: fig-number_trends_spells_icb
-#| fig-cap: !expr get_caption_trends(cohort_title, "number", "admissions", "icb") 
+#| fig-cap: !expr get_caption_trends(cohort_title, "number", cohort_group, "admissions", "icb") 
 plotting_icb_over_time(number_percentage_over_time |> 
                          filter(!is.na(icb_2024_name)) |>
                          mutate(activity = episodes),
@@ -34,7 +34,7 @@ plotting_icb_over_time(number_percentage_over_time |>
 ```{r, fig.height=6, fig.width=8}
 #| eval: !expr include_admissions
 #| label: fig-percent_change_number_spells
-#| fig-cap: !expr get_caption_trends_percentage_change(cohort_title, "number", "admissions")
+#| fig-cap: !expr get_caption_trends_percentage_change(cohort_title, "number",cohort_group, "admissions")
 
 england_average_numbers_episodes <- calculating_england_average_numbers(number_percentage_over_time, episodes)
 
@@ -57,7 +57,7 @@ cat("##### Beddays")
 ```{r, fig.width=5, fig.height=3}
 #| eval: !expr include_beddays
 #| label: fig-number_trends_beddays_icb
-#| fig-cap: !expr get_caption_trends(cohort_title, "number", "beddays", "icb")
+#| fig-cap: !expr get_caption_trends(cohort_title, "number", cohort_group, "beddays", "icb")
 plotting_icb_over_time(number_percentage_over_time |> 
                          filter(!is.na(icb_2024_name)) |>
                          mutate(activity = beddays),
@@ -69,7 +69,7 @@ plotting_icb_over_time(number_percentage_over_time |>
 ```{r, fig.height=6, fig.width=8}
 #| eval: !expr include_beddays
 #| label: fig-percent_change_number_beddays
-#| fig-cap: !expr get_caption_trends_percentage_change(cohort_title, "number", "beddays") 
+#| fig-cap: !expr get_caption_trends_percentage_change(cohort_title, "number",cohort_group, "beddays") 
 
 england_average_numbers_beddays <- calculating_england_average_numbers(number_percentage_over_time, beddays)
 
@@ -104,7 +104,7 @@ cat("##### Admissions")
 ```{r, fig.width=5, fig.height=3}
 #| eval: !expr include_admissions
 #| label: fig-percent_trends_spells_icb
-#| fig-cap: !expr get_caption_trends(cohort_title, "percentage", "admissions", "icb")
+#| fig-cap: !expr get_caption_trends(cohort_title, "percentage", cohort_group, "admissions", "icb")
 plotting_icb_over_time(
  number_percentage_over_time |> 
  filter(!is.na(icb_2024_name)) |>
@@ -119,7 +119,7 @@ plotting_icb_over_time(
 ```{r, fig.height=6, fig.width=8}
 #| eval: !expr include_admissions
 #| label: fig-percent_change_percent_spells
-#| fig-cap: !expr get_caption_trends_percentage_change(cohort_title, "prop", "admissions", treatment_type) 
+#| fig-cap: !expr get_caption_trends_percentage_change(cohort_title, "prop", cohort_group, "admissions", treatment_type) 
 
 england_average_percentage_episodes <- calculating_england_average_percentage(
   number_percentage_over_time |> 
@@ -146,7 +146,7 @@ cat("##### Beddays")
 ```{r, fig.width=5, fig.height=3}
 #| eval: !expr include_beddays
 #| label: fig-percent_trends_beddays_icb
-#| fig-cap: !expr get_caption_trends(cohort_title, "percentage", "beddays", "icb")
+#| fig-cap: !expr get_caption_trends(cohort_title, "percentage", cohort_group, "beddays", "icb")
 plotting_icb_over_time(
   number_percentage_over_time |> 
     filter(!is.na(icb_2024_name)) |>
@@ -161,7 +161,7 @@ plotting_icb_over_time(
 ```{r, fig.height=6, fig.width=8}
 #| eval: !expr include_beddays
 #| label: fig-percent_change_percent_beddays
-#| fig-cap: !expr get_caption_trends_percentage_change(cohort_title, "prop", "beddays", treatment_type) 
+#| fig-cap: !expr get_caption_trends_percentage_change(cohort_title, "prop", cohort_group, "beddays", treatment_type) 
 
 england_average_percentage_beddays <- calculating_england_average_percentage(
   number_percentage_over_time |>
@@ -198,7 +198,7 @@ cat("##### Admissions")
 ```{r, fig.width=5, fig.height=3}
 #| eval: !expr include_admissions
 #| label: fig-stardardised_trends_spells_icb
-#| fig-cap: !expr get_caption_trends(cohort_title, "SR", "admissions", "icb")
+#| fig-cap: !expr get_caption_trends(cohort_title, "SR", cohort_group, "admissions", "icb")
 plotting_icb_over_time(
   (icb_age_sex_standardised_rates_episodes |>
       filter(cohorts == cohort) |>
@@ -213,7 +213,7 @@ plotting_icb_over_time(
 ```{r, fig.height=6, fig.width=8}
 #| eval: !expr include_admissions
 #| label: fig-percent_change_standardised_spells
-#| fig-cap: !expr get_caption_trends_percentage_change(cohort_title, "SR", "admissions") 
+#| fig-cap: !expr get_caption_trends_percentage_change(cohort_title, "SR",cohort_group, "admissions") 
 
 england_average_standardised_episodes <- calculating_england_average_standardised(england_age_sex_standardised_rates_episodes)
 
@@ -237,7 +237,7 @@ cat("##### Beddays")
 ```{r, fig.width=5, fig.height=3}
 #| eval: !expr include_beddays
 #| label: fig-stardardised_trends_beddays_icb
-#| fig-cap: !expr get_caption_trends(cohort_title, "SR", "beddays", "icb")
+#| fig-cap: !expr get_caption_trends(cohort_title, "SR", cohort_group, "beddays", "icb")
 plotting_icb_over_time(
   (icb_age_sex_standardised_rates_beddays |>
       filter(cohorts == cohort) |>
@@ -252,7 +252,7 @@ plotting_icb_over_time(
 ```{r, fig.height=6, fig.width=8}
 #| eval: !expr include_beddays
 #| label: fig-percent_change_standardised_beddays
-#| fig-cap: !expr get_caption_trends_percentage_change(cohort_title, "SR", "beddays") 
+#| fig-cap: !expr get_caption_trends_percentage_change(cohort_title, "SR", cohort_group,"beddays") 
 england_average_standardised_beddays <- calculating_england_average_standardised(england_age_sex_standardised_rates_beddays)
 
 plotting_percentage_change_over_time_by_icb(
@@ -290,7 +290,7 @@ cat("##### Admissions")
 ```{r, fig.width=5, fig.height=4}
 #| eval: !expr include_admissions
 #| label: fig-activity_vs_rate_of_change_episodes_icb
-#| fig-cap: !expr get_caption_activity_vs_perc_change(cohort_title, "admissions") 
+#| fig-cap: !expr get_caption_activity_vs_perc_change(cohort_title,  cohort_group, "admissions") 
 plotting_total_activity_vs_percentage_change(
   icb_age_sex_standardised_rates_episodes, 
   icb_2024_name)
@@ -305,7 +305,7 @@ cat("##### Beddays")
 ```{r, fig.width=5, fig.height=4}
 #| eval: !expr include_beddays
 #| label: fig-activity_vs_rate_of_change_beddays_icb
-#| fig-cap: !expr get_caption_activity_vs_perc_change(cohort_title, "beddays")
+#| fig-cap: !expr get_caption_activity_vs_perc_change(cohort_title,  cohort_group, "beddays")
 plotting_total_activity_vs_percentage_change(
   icb_age_sex_standardised_rates_beddays, 
   icb_2024_name)

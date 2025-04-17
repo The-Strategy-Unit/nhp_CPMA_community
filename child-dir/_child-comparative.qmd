@@ -1,4 +1,4 @@
-This analysis is to explore how potentially mitigable activity for the `r cohort_title` cohort varies by Integrated Care Board and Local Authority.
+This analysis is to explore how potentially mitigable activity for the `r cohort_title` `r cohort_group` varies by Integrated Care Board and Local Authority.
 
 ### Integrated Care Board
 
