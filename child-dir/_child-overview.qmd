@@ -12,7 +12,7 @@ if(include_admissions) {
     dplyr::pull(perc)
   
   admissions_statement <- glue::glue(
-    "{admissions_number} potentially mitigable admissions accounting for {admissions_perc}% of {treatment_type_title} admissions"
+    "{admissions_perc}% ({admissions_number}) of {treatment_type_title} admissions"
   )
 } else {
   admissions_statement <- ""
@@ -29,7 +29,7 @@ if (include_beddays) {
     dplyr::pull(perc)
   
   beddays_statement <- glue::glue(
-    "{beddays_number} potentially mitigable beddays accounting for {beddays_perc}% of {treatment_type_title} beddays"
+    "{beddays_perc}% ({beddays_number}) of {treatment_type_title} beddays"
   )
 } else {
   beddays_statement <- ""
@@ -42,7 +42,7 @@ mechanism_statement <- ifelse(check_if_mechanism(cohort, mitigator_summary_table
                               "")
 ```
 
-In 2023/24, there were `r statement` for the `r cohort_title` cohort. `r mechanism_statement`
+In 2023/24, `r statement` met the criteria for inclusion in the `r cohort_title` mitigator cohort. `r mechanism_statement`
 
 ```{r}
 #| output: asis

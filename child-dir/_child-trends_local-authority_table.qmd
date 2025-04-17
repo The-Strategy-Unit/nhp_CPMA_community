@@ -1,0 +1,12 @@
+```{r}
+la_age_sex_standardised_rates_over_time <- tar_read_raw(glue::glue("la_age_sex_standardised_rates_{rename_admissions_as_episodes(activity_type)}_over_time"))
+
+la_table <- generating_la_table(la_age_sex_standardised_rates_over_time,
+                                cohort)
+```
+
+```{r}
+#| label: tbl-local_authority_over_time
+#| tbl-cap: !expr get_caption_la_trends(cohort_title, activity_type) 
+create_dt(la_table)
+```
