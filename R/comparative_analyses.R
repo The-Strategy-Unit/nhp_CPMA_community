@@ -245,10 +245,10 @@ get_summary_by_icb_bar <- function(data, metric, cohort, england_value) {
 #'
 #' @param data The output of `get_summary_by_icb()`.
 #' @param boundaries The ICB shapefile.
-#' @param metric Either `"total_count"`, `"perc"` or `"rate"`.
+#' @param metric Either `"total_count"`, `"perc"` or `"value"`.
 #'
-#' @return A map.
-get_summary_by_icb_map <- function(data, boundaries, metric) {
+#' @return A ggplot map.
+get_summary_by_icb_ggplot <- function(data, boundaries, metric) {
   metric_title <- get_metric_title(metric)
   
   plot <- boundaries |>
@@ -260,6 +260,19 @@ get_summary_by_icb_map <- function(data, boundaries, metric) {
     ggplot2::geom_sf() +
     ggplot2::theme_void() +
     ggplot2::labs(fill = metric_title)
+  
+  return(plot)
+}
+
+#' Adds plotly to the output of `get_summary_by_icb_ggplot()`.
+#'
+#' @param data The output of `get_summary_by_icb()`.
+#' @param boundaries The ICB shapefile.
+#' @param metric Either `"total_count"`, `"perc"` or `"value"`.
+#'
+#' @return A plotly map.
+get_summary_by_icb_map <- function(data, boundaries, metric) {
+  plot <- get_summary_by_icb_ggplot(data, boundaries, metric)
   
   plot <- plotly::ggplotly(plot, tooltip = "tooltip") |>
     plotly::style(hoveron = "metrics")
