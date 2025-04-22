@@ -4,5 +4,5 @@ The aim of this work is to understand the scale, trends, and regional variations
 
 The report was produced by [The Strategy Unit](https://www.strategyunitwm.nhs.uk/), and was funded by NHS England.
 
-If you have any questions or queries regarding this report please email us at strategy.unit@nhs.net.
+If you have any questions or queries regarding this report please email us at [strategy.unit@nhs.net](mailto:strategy.unit@nhs.net?subject=NHP%20Community%20Mitigators%20Report).
 
