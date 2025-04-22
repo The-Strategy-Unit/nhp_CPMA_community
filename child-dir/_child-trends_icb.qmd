@@ -1,11 +1,11 @@
-
-
 Note: Low numbers of `r activity_type_label` for Frimley ICB in 2022/23 reflect an issue with data submissions for this period. 
 
 ```{r}
-icb_age_sex_standardised_rates_episodes <- tar_read(icb_age_sex_standardised_rates_episodes)
+standardised_rates_episodes <- tar_read(icb_age_sex_standardised_rates_episodes) |>
+  filter(cohorts == cohort)
 
-icb_age_sex_standardised_rates_beddays <- tar_read(icb_age_sex_standardised_rates_beddays)
+standardised_rates_beddays <- tar_read(icb_age_sex_standardised_rates_beddays) |>
+  filter(cohorts == cohort)
 ```
 
 ::: panel-tabset
@@ -200,8 +200,7 @@ cat("##### Admissions")
 #| label: fig-stardardised_trends_spells_icb
 #| fig-cap: !expr get_caption_trends(cohort_title, "SR", cohort_group, "admissions", "icb")
 plotting_icb_over_time(
-  (icb_age_sex_standardised_rates_episodes |>
-      filter(cohorts == cohort) |>
+  (standardised_rates_episodes |>
       mutate(activity = value)
   ),
   'Standardised rate per 100,000'
@@ -218,8 +217,7 @@ plotting_icb_over_time(
 england_average_standardised_episodes <- calculating_england_average_standardised(england_age_sex_standardised_rates_episodes)
 
 plotting_percentage_change_over_time_by_icb(
-  icb_age_sex_standardised_rates_episodes |>
-    filter(cohorts == cohort),
+  standardised_rates_episodes,
   value,
   icb_2024_name,
   england_average_standardised_episodes$change,
@@ -239,8 +237,7 @@ cat("##### Beddays")
 #| label: fig-stardardised_trends_beddays_icb
 #| fig-cap: !expr get_caption_trends(cohort_title, "SR", cohort_group, "beddays", "icb")
 plotting_icb_over_time(
-  (icb_age_sex_standardised_rates_beddays |>
-      filter(cohorts == cohort) |>
+  (standardised_rates_beddays |>
       mutate(activity = value)
   ),
   'Standardised rate per 100,000'
@@ -256,8 +253,7 @@ plotting_icb_over_time(
 england_average_standardised_beddays <- calculating_england_average_standardised(england_age_sex_standardised_rates_beddays)
 
 plotting_percentage_change_over_time_by_icb(
-  icb_age_sex_standardised_rates_beddays |>
-    filter(cohorts == cohort),
+  standardised_rates_beddays,
   value,
   icb_2024_name,
   england_average_standardised_beddays$change,
@@ -292,7 +288,7 @@ cat("##### Admissions")
 #| label: fig-activity_vs_rate_of_change_episodes_icb
 #| fig-cap: !expr get_caption_activity_vs_perc_change(cohort_title,  cohort_group, "admissions") 
 plotting_total_activity_vs_percentage_change(
-  icb_age_sex_standardised_rates_episodes, 
+  standardised_rates_episodes, 
   icb_2024_name)
 ```
 
@@ -307,7 +303,7 @@ cat("##### Beddays")
 #| label: fig-activity_vs_rate_of_change_beddays_icb
 #| fig-cap: !expr get_caption_activity_vs_perc_change(cohort_title,  cohort_group, "beddays")
 plotting_total_activity_vs_percentage_change(
-  icb_age_sex_standardised_rates_beddays, 
+  standardised_rates_beddays, 
   icb_2024_name)
 ```
 
