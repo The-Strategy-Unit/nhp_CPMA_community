@@ -72,7 +72,7 @@ The 29 mitigators and the mechanisms they belong to are shown in the chart below
 
 ## Mitigable activity
 
-The numbers of admissions and beddays give the potentially mitigable activity for England in 2023/24, for each mechanism of mitigation group and in total.
+The number of admissions and beddays for potentially mitigable activity for England in 2023/24 for each mechanism of mitigation group is presented below. Redirection/Substitution has the greatest number of potentially mitigable admissions and Efficiencies has the greatest number of potentially mitigable beddays.
 
 ```{r}
 total_mitigator_activity <- numbers_over_time_total_mitigation |>
