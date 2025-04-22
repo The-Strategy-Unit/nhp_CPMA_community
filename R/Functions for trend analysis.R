@@ -425,7 +425,7 @@ calculating_england_average_standardised<-function(data){
 
 # Plot of total starting activity vs percentage change over the last 5 years
 
-plotting_total_activity_vs_percentage_change<-function(data, geography){
+plotting_total_activity_vs_percentage_change_ggplot<-function(data, geography){
   
   geo_name<-deparse(substitute(geography))
   
@@ -464,8 +464,15 @@ plotting_total_activity_vs_percentage_change<-function(data, geography){
     geom_vline(xintercept = mean(plot_data$`2018/19`), linetype="dashed", color = "#ec6555")+
    coord_cartesian(xlim =c(min(plot_data$`2018/19`)-1, max(plot_data$`2018/19`)), ylim = c((min(plot_data$change))*1.05 , (max(plot_data$change))*1.05))
 
-  ggplotly(p, tooltip="text", width=660, height=450 )
+  return(p)
   
+}
+
+plotting_total_activity_vs_percentage_change<-function(data, geography){
+  
+  p <- plotting_total_activity_vs_percentage_change_ggplot(data, geography)
+  
+  ggplotly(p, tooltip="text", width=660, height=450 )
 }
 
 generating_la_table<-function(data, cohort){
