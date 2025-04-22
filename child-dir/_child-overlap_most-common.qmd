@@ -5,7 +5,7 @@ As an alternative to Venn diagrams Upset plots are used to show the largest grou
 if(cohort_title %in% c("Efficiencies", "Efficiencies & Relocation")) {
 most_common_cohort_text<-""
  } else{
-most_common_cohort_text<-"The 15 most common cohort combinations for the `r cohort_title` cohort are shown. All cohort combinations together will add to 100%."
+most_common_cohort_text<-glue::glue("The 15 most common cohort combinations for the {cohort_title} cohort are shown. All cohort combinations together will add to 100%.")
   }
 
 ```
