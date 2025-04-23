@@ -130,7 +130,8 @@ plot_upset_plot<-function(dataset, mitigator_table, activity_type){
     mutate(percentage=janitor::round_half_up((activity/total_activity)*100,0))|>
     slice_max(activity,n=15)|>
     arrange(desc(activity))|>
-    mutate(id=row_number())
+    mutate(id=row_number())|>
+    mutate(activity=janitor::round_half_up(activity,0))
   
   numbers_in_each_cohort<-data|>
     gather(groups, values, -activity)|>
@@ -200,6 +201,7 @@ plot_upset_plot_mechanism_group<-function(dataset, mitigator_table, activity_typ
   plot_data<-data|>
     mutate(total_activity=sum(activity))|>
     mutate(percentage=janitor::round_half_up((activity/total_activity)*100,0))|>
+    mutate(activity=janitor::round_half_up(activity,0))|>
     slice_max(activity,n=15)|>
     arrange(desc(activity))|>
     mutate(id=row_number())
@@ -287,7 +289,10 @@ plotting_barchart_summary_of_overlaps<-function(data, cohort_name, activity_type
     mutate(mitigator_name=factor(mitigator_name, unique(mitigator_name)))|>
     mutate(mitigator_name=fct_relevel(mitigator_name, cohort_name2 ))|>
     arrange(mitigator_name)|>
-    mutate(colour=ifelse(cohort==cohort_name, "#000000", ifelse(number==0, "#686f73" , "#ec6555" )))
+    mutate(colour=ifelse(cohort==cohort_name, "#000000", ifelse(number==0, "#686f73" , "#ec6555" )))|>
+    mutate(number=janitor::round_half_up(number,0))|>
+    mutate(number_label=ifelse(number>1000, scales::comma(number), ifelse(number<=10 & number>0, "<=10", number)))
+
   
   name<-deparse(substitute(activity_type))
   
@@ -397,7 +402,11 @@ plotting_barchart_number_of_cohorts<-function(data, activity_type){
   }
   
   data2<- data2 |>
-    mutate(percentage=janitor::round_half_up(activity/(sum(activity))*100,1))
+    mutate(percentage=janitor::round_half_up(activity/(sum(activity))*100,1))|>
+    mutate(activity=janitor::round_half_up(activity,0))|>
+    mutate(number_label=ifelse(activity>1000, scales::comma(activity), ifelse(activity<=10 & activity>0, "<=10", activity)))
+  
+  
   
   data2|>
     ggplot(aes(x=number_of_cohorts, y=activity))+
@@ -408,7 +417,7 @@ plotting_barchart_number_of_cohorts<-function(data, activity_type){
     labs(y="Number",
          x="No. of other cohorts the activity is part of",
          title=NULL)+
-    geom_text(aes(label=paste0(scales::comma(activity), ' \n(',percentage, '%)')), vjust=-0.2, size=2.7)+
+    geom_text(aes(label=paste0(number_label, ' \n(',percentage, '%)')), vjust=-0.2, size=2.7)+
     scale_y_continuous(limits=c(0, max(data2$activity)*1.2), expand=c(0,0), labels = label_comma())
   
   
@@ -420,19 +429,21 @@ plotting_barchart_number_of_cohorts_for_mechanism_group<-function(data, activity
  data2<- data|>
     mutate(number_of_cohorts=ifelse(number_of_cohorts>4, "5+", number_of_cohorts))|>
     summarise(activity=sum({{activity_type}}), .by=c(number_of_cohorts))|>
-    mutate(percentage=janitor::round_half_up(activity/(sum(activity))*100,1))
-  
+    mutate(percentage=janitor::round_half_up(activity/(sum(activity))*100,1))|>
+   mutate(activity=janitor::round_half_up(activity,0))|>
+   mutate(number_label=ifelse(activity>1000, scales::comma(activity), ifelse(activity<=10 & activity>0, "<=10", activity)))
+ 
   
   data2|>
-    ggplot(aes(x=number_of_cohorts, y=activity))+
+    ggplot(aes(x=as.factor(number_of_cohorts), y=activity))+
     geom_bar(stat="identity" , fill=factor(ifelse(data2$number_of_cohorts=="0","#686f73","#f9bf07")))+
     su_theme()+
     theme(axis.text=element_text(size=11),
           axis.title=element_text(size=12))+
     labs(y="Number",
-         x="No. of other cohorts the activity is part of",
+         x="No. of cohorts the activity is part of",
          title=NULL)+
-    geom_text(aes(label=paste0(scales::comma(activity), ' \n(',percentage, '%)')), vjust=-0.2, size=2.7)+
+    geom_text(aes(label=paste0(number_label, ' \n(',percentage, '%)')), vjust=-0.2, size=2.7)+
     scale_y_continuous(limits=c(0, max(data2$activity)*1.2), expand=c(0,0), labels = label_comma())
   
 }
@@ -598,7 +609,7 @@ dataset|>
   labs(y=NULL,
        x=NULL,
        title=title)+ 
-  geom_text(aes(label=paste0(percentage,  '% (',scales::comma(number), ')')), hjust=-0.05, size=2.7)+
+  geom_text(aes(label=paste0(percentage,  '% (',number_label, ')')), hjust=-0.05, size=2.7)+
   scale_y_continuous(limits=c(0, 124), expand=c(0,0), labels = label_comma())+
   coord_fixed(ratio=ratio_number)+
   coord_flip() 
