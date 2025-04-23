@@ -25,7 +25,8 @@ cat("##### Admissions")
 #| fig-cap: !expr get_caption_trends(cohort_title, "number", cohort_group, "admissions", "icb") 
 plotting_icb_over_time(number_percentage_over_time |> 
                          filter(!is.na(icb_2024_name)) |>
-                         mutate(activity = episodes),
+                         mutate(activity = episodes)|>
+                         arrange(year),
                        'Number')
 ```
 
@@ -60,7 +61,8 @@ cat("##### Beddays")
 #| fig-cap: !expr get_caption_trends(cohort_title, "number", cohort_group, "beddays", "icb")
 plotting_icb_over_time(number_percentage_over_time |> 
                          filter(!is.na(icb_2024_name)) |>
-                         mutate(activity = beddays),
+                         mutate(activity = beddays)|>
+                         arrange(year),
                        'Number')
 ```
 
@@ -108,8 +110,9 @@ cat("##### Admissions")
 plotting_icb_over_time(
  number_percentage_over_time |> 
  filter(!is.na(icb_2024_name)) |>
-    mutate(activity = percentage_episodes) |>
-    filter(!is.na(activity)),
+    mutate(activity = percentage_episodes)|>
+    filter(!is.na(activity))|>
+   arrange(year),
   'Percentage'
 )
 ```
@@ -147,11 +150,14 @@ cat("##### Beddays")
 #| eval: !expr include_beddays
 #| label: fig-percent_trends_beddays_icb
 #| fig-cap: !expr get_caption_trends(cohort_title, "percentage", cohort_group, "beddays", "icb")
+
+
 plotting_icb_over_time(
   number_percentage_over_time |> 
     filter(!is.na(icb_2024_name)) |>
     mutate(activity = percentage_beddays) |>
-    filter(!is.na(activity)),
+    filter(!is.na(activity))|>
+    arrange(year),
   'Percentage'
 )
 ```
@@ -287,9 +293,11 @@ cat("##### Admissions")
 #| eval: !expr include_admissions
 #| label: fig-activity_vs_rate_of_change_episodes_icb
 #| fig-cap: !expr get_caption_activity_vs_perc_change(cohort_title,  cohort_group, "admissions") 
+
+
 plotting_total_activity_vs_percentage_change(
-  standardised_rates_episodes, 
-  icb_2024_name)
+  standardised_rates_episodes)
+
 ```
 
 ```{r}
@@ -303,8 +311,8 @@ cat("##### Beddays")
 #| label: fig-activity_vs_rate_of_change_beddays_icb
 #| fig-cap: !expr get_caption_activity_vs_perc_change(cohort_title,  cohort_group, "beddays")
 plotting_total_activity_vs_percentage_change(
-  standardised_rates_beddays, 
-  icb_2024_name)
+  standardised_rates_beddays)
+
 ```
 
 ```{r}
