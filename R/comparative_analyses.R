@@ -173,6 +173,14 @@ get_summary_by_geography <- function(data,
 get_summary_by_geography_table <- function(data, activity_type, treatment_type) {
   if(activity_type == "admissions") {
     activity_type <- "episodes"
+    
+    max_total_count <- data |>
+      dplyr::summarise(max(total_count)) |> 
+      dplyr::pull()
+    
+    data <- data |>
+      small_number_suppression("total_count") |>
+      dplyr::mutate(total_count = factor(total_count, levels = c("<=10", 1:max_total_count)))
   }
   
   table <- data |>

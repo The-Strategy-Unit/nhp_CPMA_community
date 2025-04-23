@@ -208,3 +208,34 @@ simplify_icb_name <- function(column) {
   
   return(simplified)
 }
+
+#' Suppress small numbers in descriptive analysis.
+#'
+#' @param data A dataframe.
+#' @param number_column A string of the column name with numbers that may need
+#' suppressing.
+#' @param limit An integer. Default is 10.
+small_number_suppression <- function(data, number_column, limit = 10) {
+  suppressed <- data |>
+    dplyr::mutate(!!rlang::sym(number_column) := ifelse(
+      !!rlang::sym(number_column) <= limit & !!rlang::sym(number_column) != 0,
+      glue::glue("<={limit}"),
+      !!rlang::sym(number_column)
+    ))
+  
+  count <- suppressed |>
+    dplyr::filter(stringr::str_detect(!!rlang::sym(number_column), "<=")) |>
+    nrow()
+  
+  suppressed <- if (count == 0) {
+    suppressed
+  } else if (count == 1) {
+    suppressed |>
+      dplyr::select(-perc)
+  } else if (count > 1) {
+    suppressed |>
+      dplyr::mutate(perc := ifelse(stringr::str_detect(!!rlang::sym(number_column), "<="), "-", perc))
+  }
+  
+  return(suppressed)
+}

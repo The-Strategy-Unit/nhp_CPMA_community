@@ -138,7 +138,7 @@ get_perc_by_group <- function(mitigator,
     order_levels_of_factors() |>
     dplyr::arrange(dplyr::across(1)) |>
     mutate(number=janitor::round_half_up(number,0))  |>   
-    dplyr::rename(!!rlang::sym(activity_type) := number)                                                         
+    dplyr::rename(!!rlang::sym(activity_type) := number) 
   
   return(summary)
 }
@@ -179,6 +179,12 @@ get_perc_by_group_plot <- function(data, col_name, activity_type) {
 #' targets::tar_read(perc_episodes_frail_age) |>
 #'   get_table_perc()}
 get_table_perc <- function(data) {
+  
+  if("admissions" %in% names(perc_patient_characteristic)){
+    data <- data |>
+      small_number_suppression("admissions")
+  }
+  
   table <- data |>
     dplyr::rename_with( ~ format_as_title(.)) |> 
     get_table() |>
@@ -392,8 +398,6 @@ get_perc_by_los_table <- function(data) {
   
   return(table)
 }
-
-
 
 #' Get the total number of beddays and admissions by emergency, elective and 
 #' both.
