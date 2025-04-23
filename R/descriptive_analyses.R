@@ -182,7 +182,7 @@ get_table_perc <- function(data) {
   
   if("admissions" %in% names(perc_patient_characteristic)){
     data <- data |>
-      small_number_suppression_descriptive()
+      small_number_suppression("admissions")
   }
   
   table <- data |>
