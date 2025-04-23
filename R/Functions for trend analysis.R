@@ -173,8 +173,8 @@ data_number_percentage_over_time_icb<-function(data1, data2, mitigator, treatmen
               beddays=sum(beddays),
               .by=c(icb_2024_name, year, fyear))|>
     left_join(denominator_data, by=c("fyear", "icb_2024_name"))|>
-    mutate(percentage_episodes=janitor::round_half_up((episodes/total_episodes)*100,1),
-           percentage_beddays=janitor::round_half_up((beddays/total_beddays)*100,1))|>
+    mutate(percentage_episodes=janitor::round_half_up((episodes/total_episodes)*100,2),
+           percentage_beddays=janitor::round_half_up((beddays/total_beddays)*100,2))|>
   mutate(percentage_episodes=ifelse(is.nan(percentage_episodes), NA, percentage_episodes))|>
     mutate(percentage_beddays=ifelse(is.nan(percentage_beddays), NA, percentage_beddays))|>
     as.data.frame() |>
