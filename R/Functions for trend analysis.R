@@ -280,13 +280,12 @@ plotting_icb_over_time<-function(data, axis_title){
          footnote<-"")
   
  fig<- data2|>
-    mutate(activity=janitor::round_half_up(activity,0))|>
     group_by(icb_2024_name)|>
     highlight_key(~icb_2024_name) |>
     plot_ly( x = ~year, y = ~activity, type = 'scatter',  mode = 'lines', text=~icb_2024_name,  line = list(color = "#686f73"), width=660, height=300,
              hovertemplate = paste( "ICB: %{text}<br>",
                                     "Year: %{x}<br>",
-                                    "Rate: %{y}"))|>
+                                    "Value: %{y}"))|>
     highlight(~icb_2024_name, on = "plotly_click", off="plotly_doubleclick", dynamic=FALSE)|>
     layout(
       shapes = list(
@@ -468,9 +467,9 @@ plotting_total_activity_vs_percentage_change_ggplot<-function(data, geography){
   
 }
 
-plotting_total_activity_vs_percentage_change<-function(data, geography){
-  
-  p <- plotting_total_activity_vs_percentage_change_ggplot(data, geography)
+plotting_total_activity_vs_percentage_change<-function(data){
+
+  p <- plotting_total_activity_vs_percentage_change_ggplot(data, icb_2024_name)
   
   ggplotly(p, tooltip="text", width=660, height=450 )
 }
