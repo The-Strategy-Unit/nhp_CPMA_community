@@ -2,25 +2,34 @@
 
 #' Convert a dataframe into a datatable.
 #'
-#' @param A dataframe.
+#' @param df A dataframe.
 #'
 #' @return A table.
-create_dt <- function(x) {
+create_dt <- function(df) {
+  # Identify the factor columns
+  factor_cols <- sapply(df, is.factor)
+  if (any(factor_cols)) {
+    # Create a list of column definitions for factor columns
+    factor_defs <- do.call(c, unname(Map(
+      function(orig, lvl)
+        list(
+          list(targets = orig, orderData = lvl),
+          list(targets = lvl, visible = FALSE)
+        ),
+      which(factor_cols) - 1,
+      ncol(df) + seq_len(sum(factor_cols)) - 1
+    )))
+    df <- cbind(df, lapply(df[, factor_cols, drop = FALSE], function(z)
+      match(z, levels(z))))
+  } else
+    factor_defs <- NULL
+  
+  # Create the datatable with column definitions
   DT::datatable(
-    x,
+    df,
+    options = list(orderClasses = TRUE, columnDefs = factor_defs),
     rownames = FALSE,
-    options = list(
-      dom = "Blfrtip",
-      lengthChange = FALSE,
-      autoWidth = TRUE,
-      #paging = FALSE,
-      bInfo = FALSE,
-      class = 'cell-border stripe',
-      columnDefs = list(list(
-        className = 'dt-left', targets = 0
-      )),
-      lengthMenu = list(c(10, 25, 50, -1), c(10, 25, 50, "All"))
-    )
+    class = 'cell-border stripe'
   )
 }
 
@@ -209,12 +218,14 @@ simplify_icb_name <- function(column) {
   return(simplified)
 }
 
-#' Suppress small numbers in descriptive analysis.
+#' Suppress small numbers in descriptive analyses or comparative LA table.
 #'
 #' @param data A dataframe.
 #' @param number_column A string of the column name with numbers that may need
 #' suppressing.
 #' @param limit An integer. Default is 10.
+#'
+#' @return A dataframe.
 small_number_suppression <- function(data, number_column, limit = 10) {
   suppressed <- data |>
     dplyr::mutate(!!rlang::sym(number_column) := ifelse(
