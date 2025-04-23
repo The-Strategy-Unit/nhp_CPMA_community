@@ -218,12 +218,14 @@ simplify_icb_name <- function(column) {
   return(simplified)
 }
 
-#' Suppress small numbers in descriptive analysis.
+#' Suppress small numbers in descriptive analyses or comparative LA table.
 #'
 #' @param data A dataframe.
 #' @param number_column A string of the column name with numbers that may need
 #' suppressing.
 #' @param limit An integer. Default is 10.
+#'
+#' @return A dataframe.
 small_number_suppression <- function(data, number_column, limit = 10) {
   suppressed <- data |>
     dplyr::mutate(!!rlang::sym(number_column) := ifelse(
