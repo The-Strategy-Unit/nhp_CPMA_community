@@ -3,15 +3,37 @@ perc_los <- targets::tar_read_raw(glue::glue("perc_los_{cohort}"))
 ```
 
 ```{r}
+if(activity_type == "admissions") {
+  check_suppression <- perc_los |>
+    small_number_suppression_descriptive() |>
+    dplyr::filter(stringr::str_detect(admissions, "<=")) |>
+    nrow()
+  
+  suppression_statement <- if (check_suppression > 0) {
+    " Note: small numbers have been suppressed."
+  } else {
+    ""
+  }
+} else {
+  suppression_statement <- ""
+}
+
+caption <- glue::glue(
+  "{get_caption_by_group('perc', cohort_title, activity_type, 'los', treatment_type)}{suppression_statement}"
+  
+)
+```
+
+```{r}
 #| label: tbl-perc_los
-#| tbl-cap: !expr get_caption_by_group("perc", cohort_title, "admissions", "los", treatment_type)
+#| tbl-cap: !expr caption
 perc_los |>
   get_perc_by_los_table()
 ```
 
 ```{r}
 #| label: fig-perc_los
-#| fig-cap: !expr get_caption_by_group("perc", cohort_title, "admissions", "los", treatment_type)
+#| fig-cap: !expr caption
 perc_los |>
   get_perc_by_los_plot()
 ```

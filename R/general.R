@@ -208,3 +208,32 @@ simplify_icb_name <- function(column) {
   
   return(simplified)
 }
+
+#' Suppress small numbers in descriptive analysis.
+#'
+#' @param data A dataframe.
+#' @param limit An integer. Default is 10.
+small_number_suppression_descriptive <- function(data, limit = 10) {
+  suppressed <- data |>
+    dplyr::mutate(admissions := ifelse(
+      admissions <= limit & admissions != 0,
+      glue::glue("<={limit}"),
+      admissions
+    ))
+  
+  count <- suppressed |>
+    dplyr::filter(stringr::str_detect(admissions, "<=")) |>
+    nrow()
+  
+  suppressed <- if (count == 0) {
+    suppressed
+  } else if (count == 1) {
+    suppressed |>
+      dplyr::select(perc)
+  } else if (count > 1) {
+    suppressed |>
+      dplyr::mutate(perc := ifelse(stringr::str_detect(admissions, "<="), "-", perc))
+  }
+  
+  return(suppressed)
+}
