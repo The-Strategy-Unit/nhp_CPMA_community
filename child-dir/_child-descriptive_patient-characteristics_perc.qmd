@@ -1,29 +1,7 @@
 ```{r}
-if(activity_type == "admissions") {
-  check_suppression <- perc_patient_characteristic |>
-    small_number_suppression_descriptive() |>
-    dplyr::filter(stringr::str_detect(admissions, "<=")) |>
-    nrow()
-  
-  suppression_statement <- if (check_suppression > 0) {
-    " Note: small numbers have been suppressed."
-  } else {
-    ""
-  }
-} else {
-  suppression_statement <- ""
-}
-
-caption <- glue::glue(
-  "{get_caption_by_group('perc', cohort_title, activity_type, group_title, treatment_type)}{suppression_statement}"
-  
-)
-```
-
-```{r}
 #| output: asis
 #| label: tbl-perc_patient_characteristic
-#| tbl-cap: !expr caption
+#| tbl-cap: !expr get_caption_by_group('perc', cohort_title, activity_type, group_title, treatment_type)
 perc_patient_characteristic |>
   get_table_perc() 
 ```
@@ -31,7 +9,7 @@ perc_patient_characteristic |>
 ```{r}
 #| output: asis
 #| label: fig-perc_patient_characteristic
-#| fig-cap: !expr caption
+#| fig-cap: !expr get_caption_by_group('perc', cohort_title, activity_type, group_title, treatment_type)
 perc_patient_characteristic |>
   get_perc_by_group_plot(patient_characteristic_col_name, activity_type)
 ```
