@@ -634,6 +634,50 @@ get_rates_versus_perc_change_plots <- function(
   return(final)
 }
 
+# Table of percentage change numbers-----------------------------------------------------
+
+numbers_over_time<-tar_read(numbers_over_time)
+denominator_over_time<-tar_read(denominator_over_time)
+
+
+number_percentage_data<-numbers_over_time|>
+  left_join(denominator_over_time, by=c("age_range", "sex", "year", "icb", "icb_2024_name"))|>
+  summarise(episodes=janitor::round_half_up(sum(episodes, na.rm=TRUE),0),
+            beddays=janitor::round_half_up(sum(beddays, na.rm=TRUE),0),
+            total_episodes=sum(total_episodes_all, na.rm=TRUE),
+            total_beddays=sum(total_beddays_all, na.rm=TRUE),
+            .by=c(cohorts, year))|>
+  filter(year!="2014/15")|>
+  mutate(percentage_episodes=janitor::round_half_up((episodes/total_episodes)*100,1),
+         percentage_beddays=janitor::round_half_up((beddays/total_beddays)*100,1))|>
+  as.data.frame()|>
+  filter(year=="2023/24"| year=="2018/19")|>
+  select(-total_episodes, -total_beddays)|>
+  pivot_longer(  cols = c(episodes, beddays, percentage_episodes, percentage_beddays),
+                 names_to = "activity",
+                 values_to = "value")|>
+  pivot_wider(names_from=year, values_from=value)|>
+  mutate(change=janitor::round_half_up(((`2023/24`-`2018/19`)/`2018/19`)*100,1))|>
+  select(-`2023/24`, -`2018/19`)|>
+  pivot_wider(names_from=activity, values_from=change)
+
+england_age_sex_standardised_rates_episodes <- tar_read(england_age_sex_standardised_rates_episodes)|>
+  mutate(activity_type="episode_SR")
+
+england_age_sex_standardised_rates_beddays <- tar_read(england_age_sex_standardised_rates_beddays)|>
+  mutate(activity_type="bedday_SR")
+
+SR_data<-rbind(england_age_sex_standardised_rates_episodes, england_age_sex_standardised_rates_beddays) |>
+  filter(year=="2023/24"| year=="2018/19")|>
+  select(year, cohorts, value, activity_type)|>
+  pivot_wider(names_from=year, values_from=value)|>
+  mutate(change=janitor::round_half_up(((`2023/24`-`2018/19`)/`2018/19`)*100,1))  |>
+  select(-`2023/24`, -`2018/19`)|>
+  pivot_wider(names_from=activity_type, values_from=change)
+
+table_percent_change_over_time_england<-number_percentage_data |>
+  left_join(SR_data, by=c("cohorts"))
+
 # Plots ------------------------------------------------------------------------
 # Below are some examples. All arguments can be changed as stated in comments 
 # next to them. LOS is admissions only, but otherwise all functions can be used 
