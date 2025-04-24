@@ -482,8 +482,11 @@ generating_la_table<-function(data, cohort){
     spread(key=year, value=value) |>
     rename(`Local Authority`=laname23)|>
     mutate(`Percentage Change`=janitor::round_half_up(((`2023/24`-`2018/19`)/`2018/19`)*100,1))|>
-    as.data.frame()
-  
+    as.data.frame() |>
+    mutate(across(2:8, ~replace_na(as.character(.), "-")))|>
+    mutate(across(2:7, ~factor(., levels = c("-", 1:10000000))))
+   
+
   return(table_data)
   
 }
