@@ -758,7 +758,7 @@ Those ICBs in the lower left quadrant (shaded in green) could be considered as p
 #| label: fig-activity_vs_rate_of_change_episodes
 #| fig-cap: The standardised rate of potentially mitigable admissions (in 2018/19) versus the percentage change in admissions between 2018/19 and 2023/24 for ICBs. 
 
-plotting_total_activity_vs_percentage_change(icb_age_sex_standardised_rates_episodes_total_mitigation, icb_2024_name)
+plotting_total_activity_vs_percentage_change(icb_age_sex_standardised_rates_episodes_total_mitigation)
 
 
 ```
@@ -769,7 +769,7 @@ plotting_total_activity_vs_percentage_change(icb_age_sex_standardised_rates_epis
 #| label: fig-activity_vs_rate_of_change_beddays
 #| fig-cap: The standardised rate of potentially mitigable beddays (in 2018/19) versus the percentage change in beddays between 2018/19 and 2023/24 for ICBs. 
 #| 
-plotting_total_activity_vs_percentage_change(icb_age_sex_standardised_rates_beddays_total_mitigation, icb_2024_name)
+plotting_total_activity_vs_percentage_change(icb_age_sex_standardised_rates_beddays_total_mitigation)
 
 
 ```
