@@ -8,7 +8,9 @@ For the `r cohort_title` `r cohort_group` the percentage and number of `r activi
 ```{r}
 if(cohort_title %in% c("Efficiencies","Stroke Early Supported Discharge", "Admissions with Mental Health Comorbidities", "Emergency Admission of Older People", "Admission With No Overnight Stay and No Procedure (Children)", "Admission With No Overnight Stay and No Procedure (Adults)")) {
 admission_bedday_difference<-""
- } else{
+} else if(cohort_title %in% c("Efficiencies & Relocation")){
+admission_bedday_difference<-"In this mechanism group there are only 2 mitigator cohorts, which do not overlap."   
+ }else{
 admission_bedday_difference<-"There are some differences between cohort overlap for admissions and beddays, this is because efficiency mitigators are not included in admissions data as they do not impact the number of admissions, but are included in the beddays data as they influence length of stay."
   }
 
