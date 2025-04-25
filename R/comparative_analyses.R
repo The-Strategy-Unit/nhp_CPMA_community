@@ -165,38 +165,9 @@ get_summary_by_geography <- function(data,
   return(wrangled)
 }
 
-small_number_suppression_comparative <- function(data, 
-                                                 activity_type) {
-  if(activity_type == "admissions") {
-    activity_type <- "episodes"
-    
-    min_total_count <- data |>
-      dplyr::summarise(min(total_count)) |> 
-      dplyr::pull()
-    
-    max_total_count <- data |>
-      dplyr::summarise(max(total_count)) |> 
-      dplyr::pull()
-    
-    data <- data |>
-      small_number_suppression("total_count") 
-    
-    if(sum(stringr::str_detect(data$total_count, "<=")) > 0) {
-      data <- data |>
-        dplyr::mutate(
-          total_count = factor(total_count, 
-                               levels = c("<=10", 
-                                          min_total_count:max_total_count)))
-    }
-    
-  }
-  
-  return(data)
-}
-
 #' Format the summary by ICB / LA as a table.
 #'
-#' @param data The output of `get_summary_by_geography()`.
+#' @param data The output of `small_number_suppression_comparative()`.
 #' @param activity_type Either `"admissions"` or `"beddays"`.
 #' @param treatment_type Either `"emergency"` or `"elective"`.
 get_summary_by_geography_table <- function(data, activity_type, treatment_type) {
@@ -306,4 +277,39 @@ get_summary_by_icb_map <- function(data, boundaries, metric) {
     plotly::style(hoveron = "metrics")
   
   return(plot)
+}
+
+#' Apply number suppression to comparative tables.
+#'
+#' @param data The output of `get_summary_by_geography()`.
+#' @param activity_type Either `"admissions"` or `"beddays"`.
+#'
+#' @return A dataframe.
+small_number_suppression_comparative <- function(data, 
+                                                 activity_type) {
+  if(activity_type == "admissions") {
+    activity_type <- "episodes"
+    
+    min_total_count <- data |>
+      dplyr::summarise(min(total_count)) |> 
+      dplyr::pull()
+    
+    max_total_count <- data |>
+      dplyr::summarise(max(total_count)) |> 
+      dplyr::pull()
+    
+    data <- data |>
+      small_number_suppression("total_count") 
+    
+    if(sum(stringr::str_detect(data$total_count, "<=")) > 0) {
+      data <- data |>
+        dplyr::mutate(
+          total_count = factor(total_count, 
+                               levels = c("<=10", 
+                                          min_total_count:max_total_count)))
+    }
+    
+  }
+  
+  return(data)
 }
