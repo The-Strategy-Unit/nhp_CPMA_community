@@ -167,22 +167,13 @@ get_summary_by_geography <- function(data,
 
 #' Format the summary by ICB / LA as a table.
 #'
-#' @param data The output of `get_summary_by_geography()`.
+#' @param data The output of `small_number_suppression_comparative()`.
 #' @param activity_type Either `"admissions"` or `"beddays"`.
 #' @param treatment_type Either `"emergency"` or `"elective"`.
 get_summary_by_geography_table <- function(data, activity_type, treatment_type) {
-  if(activity_type == "admissions") {
-    activity_type <- "episodes"
-    
-    max_total_count <- data |>
-      dplyr::summarise(max(total_count)) |> 
-      dplyr::pull()
-    
-    data <- data |>
-      small_number_suppression("total_count") |>
-      dplyr::mutate(total_count = factor(total_count, levels = c("<=10", 1:max_total_count)))
-  }
   
+  activity_type <- rename_admissions_as_episodes(activity_type)
+    
   table <- data |>
     dplyr::select(
       dplyr::any_of(c(
@@ -190,12 +181,12 @@ get_summary_by_geography_table <- function(data, activity_type, treatment_type) 
       )),
       !!rlang::sym(glue::glue("mitigable {activity_type}")) := total_count,
       glue::glue("total_{activity_type}_{treatment_type}"),
-      perc,
+      dplyr::any_of("perc"), # may be dropped in `small_number_suppression()`
       total_pop,
       standardised_rate = value
     ) |>
     dplyr::arrange(dplyr::pick(1)) |>
-    dplyr::mutate(dplyr::across(is.numeric, 
+    dplyr::mutate(dplyr::across(is.numeric,
                                 ~ prettyNum(., big.mark = ","))) |>
     dplyr::rename_with(~ format_as_title(.)) |>
     create_dt()
@@ -282,8 +273,43 @@ get_summary_by_icb_ggplot <- function(data, boundaries, metric) {
 get_summary_by_icb_map <- function(data, boundaries, metric) {
   plot <- get_summary_by_icb_ggplot(data, boundaries, metric)
   
-  plot <- plotly::ggplotly(plot, tooltip = "tooltip") |>
-    plotly::style(hoveron = "metrics")
+  # plot <- plotly::ggplotly(plot, tooltip = "tooltip") |>
+  #   plotly::style(hoveron = "metrics")
   
   return(plot)
+}
+
+#' Apply number suppression to comparative tables.
+#'
+#' @param data The output of `get_summary_by_geography()`.
+#' @param activity_type Either `"admissions"` or `"beddays"`.
+#'
+#' @return A dataframe.
+small_number_suppression_comparative <- function(data, 
+                                                 activity_type) {
+  if(activity_type == "admissions") {
+    activity_type <- "episodes"
+    
+    min_total_count <- data |>
+      dplyr::summarise(min(total_count)) |> 
+      dplyr::pull()
+    
+    max_total_count <- data |>
+      dplyr::summarise(max(total_count)) |> 
+      dplyr::pull()
+    
+    data <- data |>
+      small_number_suppression("total_count") 
+    
+    if(sum(stringr::str_detect(data$total_count, "<=")) > 0) {
+      data <- data |>
+        dplyr::mutate(
+          total_count = factor(total_count, 
+                               levels = c("<=10", 
+                                          min_total_count:max_total_count)))
+    }
+    
+  }
+  
+  return(data)
 }

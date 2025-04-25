@@ -2,9 +2,11 @@ Potentially mitigable activity varies by Integrated Care Board (ICB). Below the 
 
 ```{r}
 #| output: false
-if(include_admissions) {
-  summary_icb_admissions <- targets::tar_read_raw(glue::glue("summary_icb_admissions_{cohort}"))
-  
+summary_icb_admissions <- targets::tar_read_raw(glue::glue("summary_icb_admissions_{cohort}"))
+
+summary_icb_beddays <- targets::tar_read_raw(glue::glue("summary_icb_beddays_{cohort}"))
+
+if (include_admissions) {
   standardised_rates_admissions <- england_age_sex_standardised_rates_episodes
   
   number_icb_map_admissions <- summary_icb_admissions |>
@@ -17,9 +19,7 @@ if(include_admissions) {
     get_summary_by_icb_map(icb_23_shp, "value")
 }
 
-if(include_beddays) {
-  summary_icb_beddays <- targets::tar_read_raw(glue::glue("summary_icb_beddays_{cohort}"))
-  
+if (include_beddays) {
   standardised_rates_beddays <- england_age_sex_standardised_rates_beddays
   
   number_icb_map_beddays <- summary_icb_beddays |>
@@ -343,12 +343,21 @@ cat("##### Admissions")
 ```
 
 ```{r}
+summary_icb_suppressed <- summary_icb_admissions |>
+  small_number_suppression_comparative("admissions")
+  
+number_suppressed <- summary_icb_suppressed |>
+  dplyr::filter(stringr::str_detect(total_count, "<=")) |>
+  nrow()
+```
+
+```{r}
 #| eval: !expr include_admissions
 #| include: !expr include_admissions # for table caption
 #| label: tbl-rate_icb_admissions
-#| tbl-cap: !expr get_caption_by_geography_table(cohort_title, "admissions", treatment_type, "icb")
+#| tbl-cap: !expr get_caption_by_geography_table(cohort_title, "admissions", treatment_type, "icb", number_suppressed)
 get_summary_by_geography_table(
-  summary_icb_admissions,
+  summary_icb_suppressed,
   "admissions", 
   treatment_type)
 ```
@@ -357,6 +366,11 @@ get_summary_by_geography_table(
 #| output: asis
 #| eval: !expr include_admissions_and_beddays
 cat("##### Beddays")
+```
+
+```{r}
+summary_icb_suppressed <- summary_icb_beddays |>
+  small_number_suppression_comparative("beddays")
 ```
 
 ```{r}

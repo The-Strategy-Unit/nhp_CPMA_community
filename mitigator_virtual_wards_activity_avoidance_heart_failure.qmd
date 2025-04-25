@@ -48,7 +48,7 @@ england_age_sex_standardised_rates_beddays <- tar_read(england_age_sex_standardi
 
 total_beddays_admissions <- targets::tar_read(total_beddays_admissions)
 
-icb_23_shp <- sf::st_read("https://services1.arcgis.com/ESMARspQHYMw9BZ9/arcgis/rest/services/Integrated_Care_Boards_April_2023_EN_BGC/FeatureServer/0/query?outFields=*&where=1%3D1&f=geojson") |>
+icb_23_shp <- sf::st_read("https://services1.arcgis.com/ESMARspQHYMw9BZ9/arcgis/rest/services/Integrated_Care_Boards_April_2023_EN_BSC/FeatureServer/0/query?outFields=*&where=1%3D1&f=geojson") |>
     janitor::clean_names() |>
     dplyr::mutate(icb23nm = simplify_icb_name(icb23nm))
 ```
