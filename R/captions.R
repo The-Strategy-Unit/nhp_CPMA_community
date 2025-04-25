@@ -136,7 +136,8 @@ get_caption_by_geography <- function(cohort, metric, activity_type, treatment_ty
 get_caption_by_geography_table <- function(cohort, 
                                            activity_type, 
                                            treatment_type,
-                                           geography) {
+                                           geography,
+                                           number_suppressed = 0) {
   
   treatment_type <- format_treatment_for_caption(treatment_type)
   
@@ -150,8 +151,12 @@ get_caption_by_geography_table <- function(cohort,
     all <- ""
   }
   
-  caption <- glue::glue("The number of {all}mitigable {activity_type}, the percentage by {treatment_type} {activity_type} and the age and sex standardised rates per 100,000 population{cohort} by {geography} in 2023-24.")
-  
+  caption <- if(number_suppressed == 0) {
+    glue::glue("The number of {all}mitigable {activity_type}, the percentage by {treatment_type} {activity_type} and the age and sex standardised rates per 100,000 population{cohort} by {geography} in 2023-24.")
+  } else {
+    glue::glue("The number of {all}mitigable {activity_type} and the age and sex standardised rates per 100,000 population{cohort} by {geography} in 2023-24. The column for the percentage by {treatment_type} {activity_type} has been withheld due to small number suppression.")
+  }
+   
   return(caption)
   
 }
@@ -262,10 +267,6 @@ get_caption_activity_vs_perc_change <- function(cohort,
   
   return(caption)
 }
-
-
-
-
 
 #' Get caption for the local authority trends tables.
 #'
