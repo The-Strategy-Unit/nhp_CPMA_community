@@ -151,11 +151,11 @@ get_caption_by_geography_table <- function(cohort,
     all <- ""
   }
   
-  caption <- if(number_suppressed == 0) {
-    glue::glue("The number of {all}mitigable {activity_type}, the percentage by {treatment_type} {activity_type} and the age and sex standardised rates per 100,000 population{cohort} by {geography} in 2023-24.")
-  } else {
+  caption <- if(number_suppressed == 1) {
     glue::glue("The number of {all}mitigable {activity_type} and the age and sex standardised rates per 100,000 population{cohort} by {geography} in 2023-24. The column for the percentage by {treatment_type} {activity_type} has been withheld due to small number suppression.")
-  }
+  } else {
+  glue::glue("The number of {all}mitigable {activity_type}, the percentage by {treatment_type} {activity_type} and the age and sex standardised rates per 100,000 population{cohort} by {geography} in 2023-24.")
+  } 
    
   return(caption)
   
