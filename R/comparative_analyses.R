@@ -190,7 +190,7 @@ get_summary_by_geography_table <- function(data, activity_type, treatment_type) 
       )),
       !!rlang::sym(glue::glue("mitigable {activity_type}")) := total_count,
       glue::glue("total_{activity_type}_{treatment_type}"),
-      perc,
+      dplyr::any_of("perc"), # may be dropped in `small_number_suppression()`
       total_pop,
       standardised_rate = value
     ) |>
