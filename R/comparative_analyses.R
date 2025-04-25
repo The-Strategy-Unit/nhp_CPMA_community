@@ -273,8 +273,8 @@ get_summary_by_icb_ggplot <- function(data, boundaries, metric) {
 get_summary_by_icb_map <- function(data, boundaries, metric) {
   plot <- get_summary_by_icb_ggplot(data, boundaries, metric)
   
-  plot <- plotly::ggplotly(plot, tooltip = "tooltip") |>
-    plotly::style(hoveron = "metrics")
+  # plot <- plotly::ggplotly(plot, tooltip = "tooltip") |>
+  #   plotly::style(hoveron = "metrics")
   
   return(plot)
 }
