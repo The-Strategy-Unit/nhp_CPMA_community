@@ -187,7 +187,7 @@ This analysis is to explore how total potentially mitigable activity varies by I
 summary_icb_admissions_all <- targets::tar_read(summary_icb_admissions_all)
 summary_icb_beddays_all <- targets::tar_read(summary_icb_beddays_all)
 
-icb_23_shp <- sf::st_read("https://services1.arcgis.com/ESMARspQHYMw9BZ9/arcgis/rest/services/Integrated_Care_Boards_April_2023_EN_BGC/FeatureServer/0/query?outFields=*&where=1%3D1&f=geojson") |>
+icb_23_shp <- sf::st_read("https://services1.arcgis.com/ESMARspQHYMw9BZ9/arcgis/rest/services/Integrated_Care_Boards_April_2023_EN_BSC/FeatureServer/0/query?outFields=*&where=1%3D1&f=geojson") |>
   janitor::clean_names() |>
   dplyr::mutate(icb23nm = simplify_icb_name(icb23nm))
 
