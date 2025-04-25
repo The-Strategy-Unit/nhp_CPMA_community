@@ -2,8 +2,11 @@ Potentially mitigable activity varies by Integrated Care Board (ICB). Below the 
 
 ```{r}
 #| output: false
+summary_icb_admissions <- targets::tar_read_raw(glue::glue("summary_icb_admissions_{cohort}"))
+
+summary_icb_beddays <- targets::tar_read_raw(glue::glue("summary_icb_beddays_{cohort}"))
+
 if(include_admissions) {
-  summary_icb_admissions <- targets::tar_read_raw(glue::glue("summary_icb_admissions_{cohort}"))
   
   standardised_rates_admissions <- england_age_sex_standardised_rates_episodes
   
@@ -18,7 +21,6 @@ if(include_admissions) {
 }
 
 if(include_beddays) {
-  summary_icb_beddays <- targets::tar_read_raw(glue::glue("summary_icb_beddays_{cohort}"))
   
   standardised_rates_beddays <- england_age_sex_standardised_rates_beddays
   
@@ -343,7 +345,6 @@ cat("##### Admissions")
 ```
 
 ```{r}
-#| eval: !expr include_admissions
 summary_icb_suppressed <- summary_icb_admissions |>
   small_number_suppression_comparative("admissions")
   
@@ -370,8 +371,7 @@ cat("##### Beddays")
 ```
 
 ```{r}
-#| eval: !expr include_beddays
-summary_icb_suppressed <- summary_icb_admissions |>
+summary_icb_suppressed <- summary_icb_beddays |>
   small_number_suppression_comparative("beddays")
 ```
 
