@@ -646,7 +646,7 @@ number_percentage_data<-numbers_over_time|>
   mutate(total_beddays_all=total_beddays_emergency+total_beddays_elective)|>
   left_join(mitigators, by=c("cohorts"="mitigator_or_mechanism"))|>
   mutate(total_episodes_all=ifelse(treatment_type!="emergency"|is.na(treatment_type),total_episodes_all, total_episodes_emergency ))|>
-  mutate(total_beddays_all=ifelse(treatment_type!="emergency"|is.na(treatment_type), total_episodes_all, total_beddays_emergency ))|>
+  mutate(total_beddays_all=ifelse(treatment_type!="emergency"|is.na(treatment_type), total_beddays_all, total_beddays_emergency ))|>
   summarise(episodes=sum(episodes, na.rm=TRUE),
             beddays=sum(beddays, na.rm=TRUE),
             total_episodes=sum(total_episodes_all, na.rm=TRUE),
