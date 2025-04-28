@@ -150,17 +150,15 @@ data_number_percentage_over_time_icb<-function(data1, data2, mitigator, treatmen
     
     denominator_data<-data1|>
       filter(fyear!=201415)|>
-      summarise(total_episodes=sum(total_episodes_emergency),
-                total_beddays=sum( total_beddays_emergency),
-                .by=c(fyear, icb_2024_name))
+      mutate(total_episodes=total_episodes_emergency,
+                total_beddays= total_beddays_emergency)
     
   }
   else{
     denominator_data<-data1|>
       filter(fyear!=201415)|>
-      summarise(total_episodes=sum(total_episodes_all),
-                total_beddays=sum( total_beddays_all),
-                .by=c(fyear, icb_2024_name))
+      mutate(total_episodes=total_episodes_all,
+                total_beddays=total_beddays_all)
     
   }
   
@@ -169,12 +167,15 @@ data_number_percentage_over_time_icb<-function(data1, data2, mitigator, treatmen
   data2|>
     filter(cohorts==mitigator)|>
     filter(fyear!=201415)|>
+    select(-year)|>
+    left_join(denominator_data, by=c("sex", "age_range","fyear", "icb_2024_name"))|>
     summarise(episodes=sum(episodes),
               beddays=sum(beddays),
+              total_episodes=sum(total_episodes),
+              total_beddays=sum(total_beddays),
               .by=c(icb_2024_name, year, fyear))|>
-    left_join(denominator_data, by=c("fyear", "icb_2024_name"))|>
-    mutate(percentage_episodes=janitor::round_half_up((episodes/total_episodes)*100,2),
-           percentage_beddays=janitor::round_half_up((beddays/total_beddays)*100,2))|>
+    mutate(percentage_episodes=(episodes/total_episodes)*100,
+           percentage_beddays=(beddays/total_beddays)*100)|>
   mutate(percentage_episodes=ifelse(is.nan(percentage_episodes), NA, percentage_episodes))|>
     mutate(percentage_beddays=ifelse(is.nan(percentage_beddays), NA, percentage_beddays))|>
     as.data.frame() |>
@@ -263,6 +264,7 @@ plot_of_standardised_rates_over_time<-function(data){
 plotting_icb_over_time<-function(data, axis_title){
 
   data1<-data|>
+    mutate(activity=janitor::round_half_up(activity,3))|>
     mutate(icb_2024_name=stringr::str_remove(icb_2024_name, " Integrated Care Board"))|>
     mutate(icb_2024_name=stringr::str_remove(icb_2024_name, "NHS "))
   
@@ -341,7 +343,7 @@ calculating_change_over_time<-function(data, values, geography ){
 
 #Plotting change over time
 
-plotting_percentage_change_over_time_by_icb<-function(data, values, geography, eng_average, min_adjustment, max_adjustment ){
+plotting_percentage_change_over_time_by_icb<-function(data, values, geography, eng_average ){
  
 geo_name<-deparse(substitute(geography))
   
@@ -360,15 +362,15 @@ data1<-data
     geom_bar(stat="identity", fill=ifelse(change_over_time$change<0,  "#70C19A", "#F19388")) +
     geom_vline(xintercept=eng_average, linetype="dashed", 
                color = "black"   , size=0.4 )+
-    geom_text(aes(x=eng_average, label=paste0("England average\n (", eng_average, "%)"), y=nrow(change_over_time)+3), colour="black", vjust=1, hjust =-0.09, size=2.9)+
+    geom_text(aes(x=eng_average, label=paste0("England average\n (", eng_average, "%)"), y=nrow(change_over_time)+3), colour="black", vjust=1, hjust =-0.07, size=2.9)+
     su_theme()+
     theme(axis.text.y=element_text(size=8),
           axis.title=element_text(size=10))+
     labs(y=NULL,
          x="Percentage change",
          title=NULL)+
-    geom_label(aes(label=paste0(change, '%')), hjust=ifelse(change_over_time$change<0, 1.1, -0.1), size=2.3, label.size = 0)+
-    scale_x_continuous(expand=c(0.01,0.01), limits=c((min(change_over_time$change)*min_adjustment),(max(change_over_time$change)*max_adjustment)))
+    geom_label(aes(label=paste0(change, '%')), hjust=ifelse(change_over_time$change<0, 1, 0), size=2.3, label.size = 0)+
+    scale_x_continuous(expand=c(0.07,0.07) )
 
   
 }
@@ -400,7 +402,7 @@ data|>
     group_by(year)|>
         summarise(number=sum({{activity_type}}),
               total_number=sum({{denominator}}))|>
-    mutate(percentage=janitor::round_half_up((number/total_number)*100,1))|>
+    mutate(percentage=(number/total_number)*100)|>
     pivot_wider(names_from = c(year), values_from = percentage)|>
     summarise(`2018/19`=max(`2018/19`, na.rm=TRUE),
               `2023/24`=max(`2023/24`, na.rm=TRUE))|>

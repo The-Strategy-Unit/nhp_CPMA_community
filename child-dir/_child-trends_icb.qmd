@@ -43,9 +43,7 @@ plotting_percentage_change_over_time_by_icb(
   number_percentage_over_time |> filter(!is.na(icb_2024_name)),
   episodes,
   icb_2024_name ,
-  england_average_numbers_episodes$change,
-  1.6,
-  1.3
+  england_average_numbers_episodes$change
 )
 ```
 
@@ -79,9 +77,7 @@ plotting_percentage_change_over_time_by_icb(
   number_percentage_over_time |> filter(!is.na(icb_2024_name)),
   beddays,
   icb_2024_name,
-  england_average_numbers_beddays$change,
-  1.6,
-  1.3
+  england_average_numbers_beddays$change
 )
 ```
 
@@ -125,8 +121,8 @@ plotting_icb_over_time(
 #| fig-cap: !expr get_caption_trends_percentage_change(cohort_title, "prop", cohort_group, "admissions", treatment_type) 
 
 england_average_percentage_episodes <- calculating_england_average_percentage(
-  number_percentage_over_time |> 
-    filter(!is.na(total_episodes)),
+  number_percentage_over_time|> 
+   filter(!is.na(total_episodes)),
   episodes,
   total_episodes)
 
@@ -134,9 +130,7 @@ plotting_percentage_change_over_time_by_icb(
   number_percentage_over_time |> filter(!is.na(icb_2024_name)),
   percentage_episodes,
   icb_2024_name,
-  england_average_percentage_episodes$change,
-  1.6,
-  1.3
+  england_average_percentage_episodes$change
 )
 ```
 
@@ -179,9 +173,7 @@ plotting_percentage_change_over_time_by_icb(
   number_percentage_over_time |> filter(!is.na(icb_2024_name)),
   percentage_beddays,
   icb_2024_name,
-  england_average_percentage_beddays$change,
-  1.6,
-  1.3
+  england_average_percentage_beddays$change
 )
 ```
 
@@ -226,9 +218,7 @@ plotting_percentage_change_over_time_by_icb(
   standardised_rates_episodes,
   value,
   icb_2024_name,
-  england_average_standardised_episodes$change,
-  1.6,
-  1.7
+  england_average_standardised_episodes$change
 )
 ```
 
@@ -262,9 +252,7 @@ plotting_percentage_change_over_time_by_icb(
   standardised_rates_beddays,
   value,
   icb_2024_name,
-  england_average_standardised_beddays$change,
-  1.6,
-  1.6
+  england_average_standardised_beddays$change
 )
 ```
 

@@ -642,14 +642,19 @@ denominator_over_time<-tar_read(denominator_over_time)
 
 number_percentage_data<-numbers_over_time|>
   left_join(denominator_over_time, by=c("age_range", "sex", "year", "icb", "icb_2024_name"))|>
-  summarise(episodes=janitor::round_half_up(sum(episodes, na.rm=TRUE),0),
-            beddays=janitor::round_half_up(sum(beddays, na.rm=TRUE),0),
+  mutate(total_episodes_all=total_episodes_emergency+total_episodes_elective)|>
+  mutate(total_beddays_all=total_beddays_emergency+total_beddays_elective)|>
+  left_join(mitigators, by=c("cohorts"="mitigator_or_mechanism"))|>
+  mutate(total_episodes_all=ifelse(treatment_type!="emergency"|is.na(treatment_type),total_episodes_all, total_episodes_emergency ))|>
+  mutate(total_beddays_all=ifelse(treatment_type!="emergency"|is.na(treatment_type), total_episodes_all, total_beddays_emergency ))|>
+  summarise(episodes=sum(episodes, na.rm=TRUE),
+            beddays=sum(beddays, na.rm=TRUE),
             total_episodes=sum(total_episodes_all, na.rm=TRUE),
             total_beddays=sum(total_beddays_all, na.rm=TRUE),
             .by=c(cohorts, year))|>
   filter(year!="2014/15")|>
-  mutate(percentage_episodes=janitor::round_half_up((episodes/total_episodes)*100,1),
-         percentage_beddays=janitor::round_half_up((beddays/total_beddays)*100,1))|>
+  mutate(percentage_episodes=(episodes/total_episodes)*100,
+         percentage_beddays=(beddays/total_beddays)*100)|>
   as.data.frame()|>
   filter(year=="2023/24"| year=="2018/19")|>
   select(-total_episodes, -total_beddays)|>
