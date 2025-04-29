@@ -296,6 +296,8 @@ packages_and_options <- c(
   "",
   "options(scipen = 999)",
   "options(knitr.duplicate.label = \"allow\")",
+  "",
+  "knitr::knit_hooks$set(crop = knitr::hook_pdfcrop)",
   "```",
   ""
 )

@@ -24,6 +24,8 @@ source("R/manipulating_mitigators_and_mechanisms.R")
 
 options(scipen = 999)
 options(knitr.duplicate.label = "allow")
+
+knitr::knit_hooks$set(crop = knitr::hook_pdfcrop)
 ```
 
 ```{r global_variables}
