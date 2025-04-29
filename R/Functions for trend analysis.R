@@ -379,9 +379,8 @@ calculating_england_average_numbers<-function(data, activity_type){
   
   data|>
     filter(year=="2018/19"| year=="2023/24")|>
-    group_by(year)|>
-    summarise(number=sum({{activity_type}}))|>
-    pivot_wider(names_from = c(year), values_from = number)|>
+    summarise(number=sum({{activity_type}}), .by = year)|>
+    pivot_wider(names_from = year, values_from = number)|>
     summarise(`2018/19`=max(`2018/19`, na.rm=TRUE),
               `2023/24`=max(`2023/24`, na.rm=TRUE))|>
     mutate(change=janitor::round_half_up(((`2023/24`-`2018/19`)/`2018/19`)*100,1))
@@ -396,11 +395,10 @@ calculating_england_average_percentage<-function(data, activity_type, denominato
   
 data|>
     filter(year=="2018/19"| year=="2023/24")|>
-    group_by(year)|>
-        summarise(number=sum({{activity_type}}),
-              total_number=sum({{denominator}}))|>
+    summarise(number=sum({{activity_type}}),
+              total_number=sum({{denominator}}), .by = year)|>
     mutate(percentage=(number/total_number)*100)|>
-    pivot_wider(names_from = c(year), values_from = percentage)|>
+    pivot_wider(names_from = year, values_from = percentage)|>
     summarise(`2018/19`=max(`2018/19`, na.rm=TRUE),
               `2023/24`=max(`2023/24`, na.rm=TRUE))|>
     mutate(change=janitor::round_half_up(((`2023/24`-`2018/19`)/`2018/19`)*100,1))
