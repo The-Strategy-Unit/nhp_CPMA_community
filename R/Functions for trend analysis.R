@@ -188,22 +188,23 @@ data_number_percentage_over_time_icb<-function(data1, data2, mitigator, treatmen
 plot_of_number_over_time<-function(data,  activity_type){
   
   data2<-data|>
-    group_by(year)|>
-    summarise(activity=sum({{activity_type}}))
+    summarise(activity=sum({{activity_type}}), .by = year)
+  
+  max_number <- max(data2$activity)
   
   data2|>
     ggplot()+
     geom_line(aes(y=activity, x=year, group=1), linewidth=1.4)+
     geom_rect(aes(NULL,NULL,xmin="2019/20",xmax="2021/22"),
-              ymin=0,ymax=max(data2$activity)*1.1, fill="#686f73", size=0.5, alpha=0.01)+
-    annotate("text", x ="2020/21", y = max(data2$activity)*1.08, label = "COVID-19 pandemic", size=2.7)+
+              ymin=0,ymax=max_number*1.1, fill="#686f73", size=0.5, alpha=0.01)+
+    annotate("text", x ="2020/21", y = max_number*1.08, label = "COVID-19 pandemic", size=2.7)+
     su_theme()+
     theme(axis.text=element_text(size=10),
           axis.title.y=element_text(size=12))+
     labs(y="Number",
          x=NULL,
          title=NULL)+ 
-    scale_y_continuous(expand=c(0,0), limits=c(0,max(data2$activity)*1.1), labels = label_comma())
+    scale_y_continuous(expand=c(0,0), limits=c(0,max_number*1.1), labels = label_comma())
   
   
 }
@@ -213,24 +214,26 @@ plot_of_number_over_time<-function(data,  activity_type){
 plot_of_percentage_over_time<-function(data, activity_type, denominator){
   
 data1<-data|>
-  group_by(year)|>
   summarise(number=sum({{activity_type}}),
-            total_number=sum({{denominator}}))|>
+            total_number=sum({{denominator}}),
+            .by = year)|>
   mutate(percentage=janitor::round_half_up((number/total_number)*100,1))
+
+max_percentage <- max(data1$percentage)
 
 data1|>
     ggplot()+
     geom_line(aes(y=percentage, x=year, group=1), linewidth=1.4)+
   geom_rect(aes(NULL,NULL,xmin="2019/20",xmax="2021/22"),
-            ymin=0,ymax=max(data1$percentage*1.1), fill="#686f73", size=0.5, alpha=0.01)+
-  annotate("text", x ="2020/21", y = max(data1$percentage)*1.08, label = "COVID-19 pandemic", size=2.7)+
+            ymin=0,ymax=max(max_percentage)*1.1, fill="#686f73", size=0.5, alpha=0.01)+
+  annotate("text", x ="2020/21", y = max(max_percentage)*1.08, label = "COVID-19 pandemic", size=2.7)+
     su_theme()+
     theme(axis.text=element_text(size=10),
           axis.title.y=element_text(size=12))+
     labs(y="Percentage",
          x=NULL,
          title=NULL)+ 
-    scale_y_continuous(expand=c(0,0), limits=c(0,max(data1$percentage)*1.1), labels = label_comma())
+    scale_y_continuous(expand=c(0,0), limits=c(0,max(max_percentage)*1.1), labels = label_comma())
   
   
   
@@ -239,15 +242,15 @@ data1|>
 
 plot_of_standardised_rates_over_time<-function(data){
   
-  data1<-data 
+  max_value <- max(data$value)
   
-  data1|>    
+  data|>    
     ggplot(aes(y=value, x=year, group=1))+
     geom_ribbon(aes(ymin = lowercl, ymax = uppercl), fill = "#5881c1" )+
     geom_line(linewidth=1.4)+
     geom_rect(aes(NULL,NULL,xmin="2019/20",xmax="2021/22"),
-              ymin=0,ymax=max(data1$value*1.1), fill="#686f73", size=0.5, alpha=0.01)+
-    annotate("text", x ="2020/21", y = max(data1$value)*1.08, label = "COVID-19 pandemic", size=2.7)+
+              ymin=0,ymax=max_value*1.1, fill="#686f73", size=0.5, alpha=0.01)+
+    annotate("text", x ="2020/21", y = max_value*1.08, label = "COVID-19 pandemic", size=2.7)+
     su_theme()+
     theme(axis.text=element_text(size=10),
           axis.title.y=element_text(size=12))+
@@ -255,7 +258,7 @@ plot_of_standardised_rates_over_time<-function(data){
          x=NULL,
          title=NULL,
          caption = "Blue ribbon indicates the 95% confidence intervals")+ 
-    scale_y_continuous(expand=c(0,0), limits=c(0,max(data1$uppercl)*1.1), labels = label_comma())
+    scale_y_continuous(expand=c(0,0), limits=c(0,max(data$uppercl)*1.1), labels = label_comma())
   
   
   }
@@ -263,23 +266,23 @@ plot_of_standardised_rates_over_time<-function(data){
 
 plotting_icb_over_time<-function(data, axis_title){
 
-  data1<-data|>
-    mutate(activity=janitor::round_half_up(activity,3))|>
-    mutate(icb_2024_name=stringr::str_remove(icb_2024_name, " Integrated Care Board"))|>
-    mutate(icb_2024_name=stringr::str_remove(icb_2024_name, "NHS "))
+  data1 <- data |> 
+    dplyr::mutate(activity=janitor::round_half_up(activity,3),,
+                  icb_2024_name = simplify_icb_name(icb_2024_name))
   
-  
-  ifelse("lowercl" %in% names(data1), 
-         data2<-data1|>
-           mutate(lower_ci=janitor::round_half_up(lowercl,2))|>
-           mutate(upper_ci=janitor::round_half_up(uppercl,2)), 
-         data2<-data1|>
-           mutate(lower_ci=NA)|>
-           mutate(upper_ci=NA))
-  
-  ifelse("lowercl" %in% names(data1), 
-         footnote<-"Blue ribbon indicates the 95% confidence intervals", 
-         footnote<-"")
+  if("lowercl" %in% names(data1)) {
+    data2<-data1|>
+      mutate(lower_ci=janitor::round_half_up(lowercl,2))|>
+      mutate(upper_ci=janitor::round_half_up(uppercl,2))
+    
+    footnote<-"Blue ribbon indicates the 95% confidence intervals"
+  } else {
+    data2<-data1|>
+      mutate(lower_ci=NA)|>
+      mutate(upper_ci=NA)
+    
+    footnote<-""
+  }
   
  fig<- data2|>
     group_by(icb_2024_name)|>
@@ -345,15 +348,9 @@ calculating_change_over_time<-function(data, values, geography ){
 
 plotting_percentage_change_over_time_by_icb<-function(data, values, geography, eng_average ){
  
-geo_name<-deparse(substitute(geography))
-  
- if(geo_name=="icb_2024_name") {
-  data1<-data  |>
-  mutate(icb_2024_name=stringr::str_remove(icb_2024_name, " Integrated Care Board"))|>
-  mutate(icb_2024_name=stringr::str_remove(icb_2024_name, "NHS "))
- } else{
-data1<-data
- }
+  data1 <- data |> 
+    dplyr::mutate(dplyr::across(dplyr::any_of(c("icb_2024_name")),
+                                ~simplify_icb_name(.)))
   
   change_over_time<-calculating_change_over_time(data1, {{values}}, {{geography}})
   
@@ -382,9 +379,8 @@ calculating_england_average_numbers<-function(data, activity_type){
   
   data|>
     filter(year=="2018/19"| year=="2023/24")|>
-    group_by(year)|>
-    summarise(number=sum({{activity_type}}))|>
-    pivot_wider(names_from = c(year), values_from = number)|>
+    summarise(number=sum({{activity_type}}), .by = year)|>
+    pivot_wider(names_from = year, values_from = number)|>
     summarise(`2018/19`=max(`2018/19`, na.rm=TRUE),
               `2023/24`=max(`2023/24`, na.rm=TRUE))|>
     mutate(change=janitor::round_half_up(((`2023/24`-`2018/19`)/`2018/19`)*100,1))
@@ -399,11 +395,10 @@ calculating_england_average_percentage<-function(data, activity_type, denominato
   
 data|>
     filter(year=="2018/19"| year=="2023/24")|>
-    group_by(year)|>
-        summarise(number=sum({{activity_type}}),
-              total_number=sum({{denominator}}))|>
+    summarise(number=sum({{activity_type}}),
+              total_number=sum({{denominator}}), .by = year)|>
     mutate(percentage=(number/total_number)*100)|>
-    pivot_wider(names_from = c(year), values_from = percentage)|>
+    pivot_wider(names_from = year, values_from = percentage)|>
     summarise(`2018/19`=max(`2018/19`, na.rm=TRUE),
               `2023/24`=max(`2023/24`, na.rm=TRUE))|>
     mutate(change=janitor::round_half_up(((`2023/24`-`2018/19`)/`2018/19`)*100,1))
@@ -428,15 +423,9 @@ calculating_england_average_standardised<-function(data){
 
 plotting_total_activity_vs_percentage_change_ggplot<-function(data, geography){
   
-  geo_name<-deparse(substitute(geography))
-  
-  if(geo_name=="icb_2024_name") {
-    data1<-data  |>
-      mutate(icb_2024_name=stringr::str_remove(icb_2024_name, " Integrated Care Board"))|>
-      mutate(icb_2024_name=stringr::str_remove(icb_2024_name, "NHS "))
-  } else{
-    data1<-data
-  }
+  data1 <- data |> 
+    dplyr::mutate(dplyr::across(dplyr::any_of(c("icb_2024_name")),
+                                ~simplify_icb_name(.)))
   
   plot_data<-  data1|>
     filter(year=="2018/19"| year=="2023/24")|>
@@ -478,15 +467,25 @@ plotting_total_activity_vs_percentage_change<-function(data){
 
 generating_la_table<-function(data, cohort){
   
-  table_data<-data|>
-    filter(cohorts==cohort)|>
+  data<-data|>
+    filter(cohorts==cohort) 
+  
+  min_value <- data |>
+    dplyr::summarise(min = min(value, na.rm = TRUE)) |>
+    dplyr::pull()
+  
+  max_value <- data |>
+    dplyr::summarise(max = max(value, na.rm = TRUE)) |>
+    dplyr::pull()
+  
+  table_data<-data |>
     select(laname23, year, value)|>
     spread(key=year, value=value) |>
     rename(`Local Authority`=laname23)|>
     mutate(`Percentage Change`=janitor::round_half_up(((`2023/24`-`2018/19`)/`2018/19`)*100,1))|>
     as.data.frame() |>
     mutate(across(2:8, ~replace_na(as.character(.), "-")))|>
-    mutate(across(2:7, ~factor(., levels = c("-", 1:10000000))))
+    mutate(across(2:7, ~factor(., levels = c("-", min_value:max_value))))
    
 
   return(table_data)
