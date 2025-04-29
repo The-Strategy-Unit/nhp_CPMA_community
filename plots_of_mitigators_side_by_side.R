@@ -347,7 +347,7 @@ get_icb_map <- function(cohort,
                         shapefile = icb_23_shp) {
   map <- targets::tar_read_raw(
     glue::glue("summary_icb_{activity_type}_{cohort}")) |>
-    get_summary_by_icb_ggplot(icb_23_shp, metric) +
+    get_summary_by_icb_map(icb_23_shp, metric) +
     ggplot2::labs(title = cohort) +
     ggplot2::theme(legend.position = "none")
   

@@ -71,33 +71,6 @@ get_metric_title <- function(metric) {
   return(title)
 }
 
-#' Gets the ICB tooltip for the map.
-#'
-#' Used inside `get_summary_by_icb_map()` to format the tooltip text.
-#'
-#' @param data A dataframe.
-#' @param metric Either `"total_count"`, `"perc"` or `"rate"`.
-#'
-#' @return A dataframe.
-get_icb_tooltip <- function(data, metric) {
-  metric_title <- get_metric_title(metric)
-  
-  wrangled <- data |>
-    dplyr::rowwise() |>
-    dplyr::mutate(
-      metric_colour_label = ifelse(
-        metric == "perc",
-        glue::glue("{metric_colour}%"),
-        prettyNum(metric_colour, big.mark = ",")
-      ),
-      icb_name = stringr::str_remove(icb_2024_name, " Integrated Care Board"),
-      ICB = glue::glue("{icb_name} \n {metric_title}: {metric_colour_label}")
-    ) |>
-    dplyr::ungroup()
-  
-  return(wrangled)
-}
-
 #' Creates a note for the plots in `get_summary_by_icb_bar()`.
 #'
 #' @param metric_title The output of `get_metric_title()`.
@@ -244,35 +217,18 @@ get_summary_by_icb_bar <- function(data, metric, cohort, england_value) {
 #' @param metric Either `"total_count"`, `"perc"` or `"value"`.
 #'
 #' @return A ggplot map.
-get_summary_by_icb_ggplot <- function(data, boundaries, metric) {
+get_summary_by_icb_map <- function(data, boundaries, metric) {
   metric_title <- get_metric_title(metric)
   
   plot <- boundaries |>
     dplyr::rename(icb_2024_name = icb23nm) |>
     dplyr::left_join(data, by = "icb_2024_name") |>
     dplyr::rename(metric_colour = !!rlang::sym(metric)) |>
-    get_icb_tooltip(metric) |>
-    ggplot2::ggplot(ggplot2::aes(fill = metric_colour, tooltip = ICB))  +
+    ggplot2::ggplot(ggplot2::aes(fill = metric_colour))  +
     ggplot2::scale_fill_continuous(trans = 'reverse') +
     ggplot2::geom_sf() +
     ggplot2::theme_void() +
     ggplot2::labs(fill = metric_title)
-  
-  return(plot)
-}
-
-#' Adds plotly to the output of `get_summary_by_icb_ggplot()`.
-#'
-#' @param data The output of `get_summary_by_icb()`.
-#' @param boundaries The ICB shapefile.
-#' @param metric Either `"total_count"`, `"perc"` or `"value"`.
-#'
-#' @return A plotly map.
-get_summary_by_icb_map <- function(data, boundaries, metric) {
-  plot <- get_summary_by_icb_ggplot(data, boundaries, metric)
-  
-  # plot <- plotly::ggplotly(plot, tooltip = "tooltip") |>
-  #   plotly::style(hoveron = "metrics")
   
   return(plot)
 }
