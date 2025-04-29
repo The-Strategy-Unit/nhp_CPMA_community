@@ -266,23 +266,23 @@ plot_of_standardised_rates_over_time<-function(data){
 
 plotting_icb_over_time<-function(data, axis_title){
 
-  data1<-data|>
-    mutate(activity=janitor::round_half_up(activity,3))|>
-    mutate(icb_2024_name=stringr::str_remove(icb_2024_name, " Integrated Care Board"))|>
-    mutate(icb_2024_name=stringr::str_remove(icb_2024_name, "NHS "))
+  data1 <- data |> 
+    dplyr::mutate(activity=janitor::round_half_up(activity,3),,
+                  icb_2024_name = simplify_icb_name(icb_2024_name))
   
-  
-  ifelse("lowercl" %in% names(data1), 
-         data2<-data1|>
-           mutate(lower_ci=janitor::round_half_up(lowercl,2))|>
-           mutate(upper_ci=janitor::round_half_up(uppercl,2)), 
-         data2<-data1|>
-           mutate(lower_ci=NA)|>
-           mutate(upper_ci=NA))
-  
-  ifelse("lowercl" %in% names(data1), 
-         footnote<-"Blue ribbon indicates the 95% confidence intervals", 
-         footnote<-"")
+  if("lowercl" %in% names(data1)) {
+    data2<-data1|>
+      mutate(lower_ci=janitor::round_half_up(lowercl,2))|>
+      mutate(upper_ci=janitor::round_half_up(uppercl,2))
+    
+    footnote<-"Blue ribbon indicates the 95% confidence intervals"
+  } else {
+    data2<-data1|>
+      mutate(lower_ci=NA)|>
+      mutate(upper_ci=NA)
+    
+    footnote<-""
+  }
   
  fig<- data2|>
     group_by(icb_2024_name)|>
@@ -348,15 +348,9 @@ calculating_change_over_time<-function(data, values, geography ){
 
 plotting_percentage_change_over_time_by_icb<-function(data, values, geography, eng_average ){
  
-geo_name<-deparse(substitute(geography))
-  
- if(geo_name=="icb_2024_name") {
-  data1<-data  |>
-  mutate(icb_2024_name=stringr::str_remove(icb_2024_name, " Integrated Care Board"))|>
-  mutate(icb_2024_name=stringr::str_remove(icb_2024_name, "NHS "))
- } else{
-data1<-data
- }
+  data1 <- data |> 
+    dplyr::mutate(dplyr::across(dplyr::any_of(c("icb_2024_name")),
+                                ~simplify_icb_name(.)))
   
   change_over_time<-calculating_change_over_time(data1, {{values}}, {{geography}})
   
@@ -431,15 +425,9 @@ calculating_england_average_standardised<-function(data){
 
 plotting_total_activity_vs_percentage_change_ggplot<-function(data, geography){
   
-  geo_name<-deparse(substitute(geography))
-  
-  if(geo_name=="icb_2024_name") {
-    data1<-data  |>
-      mutate(icb_2024_name=stringr::str_remove(icb_2024_name, " Integrated Care Board"))|>
-      mutate(icb_2024_name=stringr::str_remove(icb_2024_name, "NHS "))
-  } else{
-    data1<-data
-  }
+  data1 <- data |> 
+    dplyr::mutate(dplyr::across(dplyr::any_of(c("icb_2024_name")),
+                                ~simplify_icb_name(.)))
   
   plot_data<-  data1|>
     filter(year=="2018/19"| year=="2023/24")|>
