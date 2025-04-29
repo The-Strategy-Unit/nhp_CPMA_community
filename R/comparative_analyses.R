@@ -306,7 +306,8 @@ small_number_suppression_comparative <- function(data,
         dplyr::mutate(
           total_count = factor(total_count, 
                                levels = c("<=10", 
-                                          min_total_count:max_total_count)))
+                                          min_total_count:max_total_count)),
+          value = replace_na(as.character(value), "-"))
     }
     
   }
