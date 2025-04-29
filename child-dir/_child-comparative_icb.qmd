@@ -67,7 +67,14 @@ rm(england_value)
 number_icb_map_admissions
 ```
 
-`r get_caption_by_geography(cohort_title, "number", "admissions")`
+```{r}
+caption_number_admissions <- ifelse(
+  include_admissions,  
+  get_caption_by_geography(cohort_title, "number", "admissions"), 
+  "")
+```
+
+`r caption_number_admissions`
 
 :::
 
@@ -100,7 +107,14 @@ rm(england_value)
 number_icb_map_beddays
 ```
 
-`r get_caption_by_geography(cohort_title, "number", "beddays")`
+```{r}
+caption_number_beddays <- ifelse(
+  include_beddays,  
+  get_caption_by_geography(cohort_title, "number", "beddays"), 
+  "")
+```
+
+`r caption_number_beddays`
 
 :::
 
@@ -146,7 +160,17 @@ rm(england_value)
 perc_icb_map_admissions
 ```
 
-`r get_caption_by_geography(cohort_title, "perc", "admissions", treatment_type)`
+```{r}
+caption_perc_admissions <- ifelse(
+  include_admissions,  
+  get_caption_by_geography(cohort_title, 
+                           "perc", 
+                           "admissions",
+                           treatment_type), 
+  "")
+```
+
+`r caption_perc_admissions`
 
 :::
 
@@ -182,7 +206,17 @@ rm(england_value)
 perc_icb_map_beddays
 ```
 
-`r get_caption_by_geography(cohort_title, "perc", "beddays", treatment_type)`
+```{r}
+caption_perc_beddays <- ifelse(
+  include_beddays,  
+  get_caption_by_geography(cohort_title, 
+                           "perc", 
+                           "beddays",
+                           treatment_type), 
+  "")
+```
+
+`r caption_perc_beddays`
 
 :::
 
@@ -226,7 +260,16 @@ rm(england_value)
 rate_icb_map_admissions
 ```
 
-`r get_caption_by_geography(cohort_title, "rate", "admissions", treatment_type)`
+```{r}
+caption_rate_admissions <- ifelse(
+  include_admissions,  
+  get_caption_by_geography(cohort_title, 
+                           "rate", 
+                           "admissions"), 
+  "")
+```
+
+`r caption_rate_admissions`
 
 :::
 
@@ -260,7 +303,16 @@ rm(england_value)
 rate_icb_map_beddays
 ```
 
-`r get_caption_by_geography(cohort_title, "rate", "beddays", treatment_type)`
+```{r}
+caption_rate_beddays <- ifelse(
+  include_beddays,  
+  get_caption_by_geography(cohort_title, 
+                           "rate", 
+                           "beddays"), 
+  "")
+```
+
+`r caption_rate_beddays`
 
 :::
 
