@@ -83,7 +83,6 @@ get_icb_tooltip <- function(data, metric) {
   metric_title <- get_metric_title(metric)
   
   wrangled <- data |>
-    dplyr::rename(metric_colour = !!rlang::sym(metric)) |>
     dplyr::rowwise() |>
     dplyr::mutate(
       metric_colour_label = ifelse(
@@ -251,6 +250,7 @@ get_summary_by_icb_ggplot <- function(data, boundaries, metric) {
   plot <- boundaries |>
     dplyr::rename(icb_2024_name = icb23nm) |>
     dplyr::left_join(data, by = "icb_2024_name") |>
+    dplyr::rename(metric_colour = !!rlang::sym(metric)) |>
     get_icb_tooltip(metric) |>
     ggplot2::ggplot(ggplot2::aes(fill = metric_colour, tooltip = ICB))  +
     ggplot2::scale_fill_continuous(trans = 'reverse') +
