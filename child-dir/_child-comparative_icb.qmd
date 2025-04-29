@@ -44,7 +44,11 @@ cat("\n")
 cat("##### Admissions")
 ```
 
-::: {#fig-number_icb_admissions layout="[62, 38]"}
+```{r}
+#| output: asis
+#| eval: !expr include_admissions
+cat("::: {#fig-number_icb_admissions layout=\"[62, 38]\"}")
+```
 
 ```{r}
 #| eval: !expr include_admissions
@@ -76,7 +80,11 @@ caption_number_admissions <- ifelse(
 
 `r caption_number_admissions`
 
-:::
+```{r}
+#| output: asis
+#| eval: !expr include_admissions
+cat(":::")
+```
 
 ```{r}
 #| output: asis
@@ -84,7 +92,11 @@ caption_number_admissions <- ifelse(
 cat("##### Beddays")
 ```
 
-::: {#fig-number_icb_beddays layout="[62, 38]"}
+```{r}
+#| output: asis
+#| eval: !expr include_beddays
+cat("::: {#fig-number_icb_beddays layout=\"[62, 38]\"}")
+```
 
 ```{r}
 #| eval: !expr include_beddays
@@ -116,7 +128,11 @@ caption_number_beddays <- ifelse(
 
 `r caption_number_beddays`
 
-:::
+```{r}
+#| output: asis
+#| eval: !expr include_beddays
+cat(":::")
+```
 
 ```{r}
 #| output: asis
@@ -134,7 +150,11 @@ cat("\n")
 cat("##### Admissions")
 ```
 
-::: {#fig-perc_icb_admissions layout="[62, 38]"}
+```{r}
+#| output: asis
+#| eval: !expr include_admissions
+cat("::: {#fig-perc_icb_admissions layout=\"[62, 38]\"}")
+```
 
 ```{r}
 #| eval: !expr include_admissions
@@ -172,7 +192,11 @@ caption_perc_admissions <- ifelse(
 
 `r caption_perc_admissions`
 
-:::
+```{r}
+#| output: asis
+#| eval: !expr include_admissions
+cat(":::")
+```
 
 ```{r}
 #| output: asis
@@ -180,7 +204,11 @@ caption_perc_admissions <- ifelse(
 cat("##### Beddays")
 ```
 
-::: {#fig-perc_icb_beddays layout="[62, 38]"}
+```{r}
+#| output: asis
+#| eval: !expr include_beddays
+cat("::: {#fig-perc_icb_beddays layout=\"[62, 38]\"}")
+```
 
 ```{r}
 #| eval: !expr include_beddays
@@ -218,7 +246,11 @@ caption_perc_beddays <- ifelse(
 
 `r caption_perc_beddays`
 
-:::
+```{r}
+#| output: asis
+#| eval: !expr include_beddays
+cat(":::")
+```
 
 ```{r}
 #| output: asis
@@ -236,7 +268,11 @@ cat("\n")
 cat("##### Admissions")
 ```
 
-::: {#fig-rate_icb_admissions layout="[62, 38]"}
+```{r}
+#| output: asis
+#| eval: !expr include_admissions
+cat("::: {#fig-rate_icb_admissions layout=\"[62, 38]\"}")
+```
 
 ```{r}
 #| eval: !expr include_admissions
@@ -271,7 +307,11 @@ caption_rate_admissions <- ifelse(
 
 `r caption_rate_admissions`
 
-:::
+```{r}
+#| output: asis
+#| eval: !expr include_admissions
+cat(":::")
+```
 
 ```{r}
 #| output: asis
@@ -279,7 +319,11 @@ caption_rate_admissions <- ifelse(
 cat("##### Beddays")
 ```
 
-::: {#fig-rate_icb_beddays layout="[62, 38]"}
+```{r}
+#| output: asis
+#| eval: !expr include_beddays
+cat("::: {#fig-rate_icb_beddays layout=\"[62, 38]\"}")
+```
 
 ```{r}
 #| eval: !expr include_beddays
@@ -314,7 +358,11 @@ caption_rate_beddays <- ifelse(
 
 `r caption_rate_beddays`
 
-:::
+```{r}
+#| output: asis
+#| eval: !expr include_beddays
+cat(":::")
+```
 
 ```{r}
 #| output: asis
