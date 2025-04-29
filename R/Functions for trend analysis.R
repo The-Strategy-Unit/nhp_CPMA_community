@@ -478,15 +478,25 @@ plotting_total_activity_vs_percentage_change<-function(data){
 
 generating_la_table<-function(data, cohort){
   
-  table_data<-data|>
-    filter(cohorts==cohort)|>
+  data<-data|>
+    filter(cohorts==cohort) 
+  
+  min_value <- data |>
+    dplyr::summarise(min = min(value, na.rm = TRUE)) |>
+    dplyr::pull()
+  
+  max_value <- data |>
+    dplyr::summarise(max = max(value, na.rm = TRUE)) |>
+    dplyr::pull()
+  
+  table_data<-data |>
     select(laname23, year, value)|>
     spread(key=year, value=value) |>
     rename(`Local Authority`=laname23)|>
     mutate(`Percentage Change`=janitor::round_half_up(((`2023/24`-`2018/19`)/`2018/19`)*100,1))|>
     as.data.frame() |>
     mutate(across(2:8, ~replace_na(as.character(.), "-")))|>
-    mutate(across(2:7, ~factor(., levels = c("-", 1:10000000))))
+    mutate(across(2:7, ~factor(., levels = c("-", min_value:max_value))))
    
 
   return(table_data)
