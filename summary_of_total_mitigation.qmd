@@ -1,4 +1,4 @@
-# Potentially mitigable activity {#sec-summary .unnumbered}
+# Total potentially mitigable activity {#sec-summary .unnumbered}
 
 ```{r}
 library("flextable")
