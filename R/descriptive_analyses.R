@@ -378,7 +378,7 @@ get_perc_by_los_plot <- function(data) {
     StrategyUnitTheme::su_theme() +
     ggplot2::labs(
       x = "Length of stay range (days)",
-      y = glue::glue("Percentage of mitagable admissions")
+      y = glue::glue("Percentage of mitigable admissions")
     ) +
     ggplot2::scale_fill_manual(values = c('bars_color' = "#f9bf07"),
                                guide = 'none')
