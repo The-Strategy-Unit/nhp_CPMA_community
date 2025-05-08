@@ -1,4 +1,4 @@
-## Efficiencies & Relocation {#sec-efficiencies_relocation .unnumbered}
+## Mechanism: Efficiencies & Relocation {#sec-efficiencies_relocation .unnumbered}
 
 ```{r packages_and_options}
 library("flextable")

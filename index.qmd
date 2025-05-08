@@ -1,4 +1,4 @@
-# Preface {.unnumbered}
+# Preface & User guide {.unnumbered}
 
 The aim of this work is to understand the scale, trends, and regional variations of potentially mitigable hospital activity at national and sub-national levels.
 

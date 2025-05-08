@@ -1,4 +1,4 @@
-## Prevention {#sec-prevention .unnumbered}
+## Mechanism: Prevention {#sec-prevention .unnumbered}
 
 ```{r packages_and_options}
 library("flextable")

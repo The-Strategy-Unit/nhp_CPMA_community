@@ -1,4 +1,4 @@
-## Efficiencies {#sec-efficiencies .unnumbered}
+## Mechanism: Efficiencies {#sec-efficiencies .unnumbered}
 
 ```{r packages_and_options}
 library("flextable")
