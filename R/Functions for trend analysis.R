@@ -217,7 +217,7 @@ data1<-data|>
   summarise(number=sum({{activity_type}}),
             total_number=sum({{denominator}}),
             .by = year)|>
-  mutate(percentage=janitor::round_half_up((number/total_number)*100,1))
+  mutate(percentage=janitor::round_half_up((number/total_number)*100,2))
 
 max_percentage <- max(data1$percentage)
 
