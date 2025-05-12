@@ -224,8 +224,11 @@ get_rates_by_group <- function(mitigator,
     ) |>
     order_levels_of_factors() |>
     dplyr::arrange(dplyr::across(1)) |>
-    dplyr::mutate(dplyr::across(dplyr::where(is.numeric), ~janitor::round_half_up(., 0)),
-                  dplyr::across(1, ~ stringr::str_to_title(.))) |>
+    rowwise()|>
+    dplyr::mutate(value=ifelse(min(lowercl)<100, janitor::round_half_up(value,2), janitor::round_half_up(value,0) ),
+                  lowercl=ifelse(min(lowercl)<100, janitor::round_half_up(lowercl,2), janitor::round_half_up(lowercl,0) ),
+                  uppercl=ifelse(min(lowercl)<100, janitor::round_half_up(uppercl,2), janitor::round_half_up(uppercl,0) ))|>
+    dplyr::mutate(dplyr::across(1, ~ stringr::str_to_title(.))) |>
     dplyr::select({{col_name}}, number, pop, value, lowercl, uppercl)
   
   return(summary)
