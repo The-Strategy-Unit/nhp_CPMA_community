@@ -5,7 +5,9 @@ if(include_admissions) {
   admissions_number <- overview |>
     dplyr::filter(activity_type == "Admissions") |>
     dplyr::pull(`Mitigable activity`) |>
+   janitor::round_half_up(0)|>
     prettyNum(big.mark = ",", scientific = FALSE)
+
   
   admissions_perc <- overview |>
     dplyr::filter(activity_type == "Admissions") |>
@@ -22,6 +24,7 @@ if (include_beddays) {
   beddays_number <- overview |>
     dplyr::filter(activity_type == "Beddays") |>
     dplyr::pull(`Mitigable activity`) |>
+      janitor::round_half_up(0)|>
     prettyNum(big.mark = ",", scientific = FALSE)
   
   beddays_perc <- overview |>
