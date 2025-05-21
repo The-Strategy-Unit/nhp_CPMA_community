@@ -225,7 +225,9 @@ get_rates_by_group <- function(mitigator,
     order_levels_of_factors() |>
     dplyr::arrange(dplyr::across(1)) |>
     rowwise()|>
-    dplyr::mutate(value=ifelse(min(lowercl)<100, janitor::round_half_up(value,2), janitor::round_half_up(value,0) ),
+    dplyr::mutate(number= janitor::round_half_up(number,0),
+                  pop= janitor::round_half_up(pop,0),
+                  value=ifelse(min(lowercl)<100, janitor::round_half_up(value,2), janitor::round_half_up(value,0) ),
                   lowercl=ifelse(min(lowercl)<100, janitor::round_half_up(lowercl,2), janitor::round_half_up(lowercl,0) ),
                   uppercl=ifelse(min(lowercl)<100, janitor::round_half_up(uppercl,2), janitor::round_half_up(uppercl,0) ))|>
     dplyr::mutate(dplyr::across(1, ~ stringr::str_to_title(.))) |>

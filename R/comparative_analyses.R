@@ -20,6 +20,7 @@ get_england_value <- function(metric,
   if (metric == "total_count") {
     england_value <- data |>
       dplyr::summarise(mean = mean(total_count)) |>
+      mutate(mean=janitor::round_half_up(mean, 0))|>
       dplyr::pull()
   }
   
@@ -85,7 +86,7 @@ get_note_on_dashed_line <- function(metric_title, england_value) {
   symbol <- ifelse(metric_title == "Percentage", "%", "")
   
   note <- glue::glue(
-    "Dashed line is the {metric} for England 2023/24: {janitor::round_half_up(england_value, 2)}{symbol}."
+    "Dashed line is the {metric} for England 2023/24: {janitor::round_half_up(england_value, 2)}{symbol}"
   )
   
   return(note)
