@@ -427,6 +427,13 @@ plotting_total_activity_vs_percentage_change_ggplot<-function(data, geography){
     dplyr::mutate(dplyr::across(dplyr::any_of(c("icb_2024_name")),
                                 ~simplify_icb_name(.)))
   
+  geo_name<-deparse(substitute(geography))
+  if(geo_name=="icb_2024_name"){
+    area_label_text<-"ICB:"
+  } else{
+    area_label_text<-"Local Authority:"
+  }
+  
   plot_data<-  data1|>
     filter(year=="2018/19"| year=="2023/24")|>
     pivot_wider(names_from = c(year), values_from = value)|>
@@ -440,7 +447,7 @@ plotting_total_activity_vs_percentage_change_ggplot<-function(data, geography){
     mutate(geo_name=factor({{geography}}))
   
   p<- plot_data|>
-    ggplot(aes(x=`2018/19`, y=change, label=geo_name,  text = paste("ICB:", icb_2024_name, "<br>",
+    ggplot(aes(x=`2018/19`, y=change, label=geo_name,  text = paste( area_label_text, geo_name, "<br>",
                        "2018/19 Rate:", `2018/19`, "<br>",
                        "Percentage change:", change)))+
     annotate("rect", xmin =(min(plot_data$`2018/19`)-(min(plot_data$`2018/19`)*0.2)) , xmax = mean(plot_data$`2018/19`), ymin =min(plot_data$change)*4 , ymax = 0 , fill= "#c9e7d9")+ 
@@ -464,6 +471,66 @@ plotting_total_activity_vs_percentage_change<-function(data){
   
   ggplotly(p, tooltip="text", width=660, height=450 )
 }
+
+
+plotting_total_activity_vs_percentage_change_ggplot_LA<-function(data, geography){
+  
+  data1 <- data |> 
+    dplyr::mutate(dplyr::across(dplyr::any_of(c("icb_2024_name")),
+                                ~simplify_icb_name(.)))
+  
+  geo_name<-deparse(substitute(geography))
+  if(geo_name=="icb_2024_name"){
+    area_label_text<-"ICB:"
+  } else{
+    area_label_text<-"Local Authority:"
+  }
+  
+  plot_data<-  data1|>
+    filter(year=="2018/19"| year=="2023/24")|>
+    pivot_wider(names_from = c(year), values_from = value)|>
+    summarise(`2018/19`=max(`2018/19`, na.rm=TRUE),
+              `2023/24`=max(`2023/24`, na.rm=TRUE),
+              .by=c({{geography}}, color_group))|>
+    mutate(change=janitor::round_half_up(((`2023/24`-`2018/19`)/`2018/19`)*100,1))|>
+    filter(!is.nan(change))|>
+    filter(change!="-Inf")|>
+    arrange(change)|>
+    mutate(geo_name=factor({{geography}}))|>
+    mutate(color_group=relevel(factor(color_group, ordered = FALSE ), ref = "1"))
+  
+  p<- plot_data|>
+    ggplot(aes(x=`2018/19`, y=change, label=geo_name,  text = paste( area_label_text, geo_name, "<br>",
+                                                                     "2018/19 Rate:", `2018/19`, "<br>",
+                                                                     "Percentage change:", change)))+
+    annotate("rect", xmin =(min(plot_data$`2018/19`)-(min(plot_data$`2018/19`)*0.2)) , xmax = mean(plot_data$`2018/19`), ymin =min(plot_data$change)*4 , ymax = 0 , fill= "#c9e7d9")+ 
+    geom_point(colour="#f9bf07")+
+    geom_point(aes(group=color_group), color="#686f73",  data = ~ subset(., color_group == "1")) +
+    labs(x="Standardised rate for 2018/2019",
+         y= "% change between 2018/19 and 2023/24")+
+    su_theme()+
+    scale_colour_manual(values=c("#686f73", "#f9bf07"))+
+    theme(axis.title=element_text(size=12),
+          legend.position="none")+
+    geom_hline(yintercept=0, linetype="dashed", color = "#ec6555")+
+    geom_vline(xintercept = mean(plot_data$`2018/19`), linetype="dashed", color = "#ec6555")+
+    coord_cartesian(xlim =c(min(plot_data$`2018/19`)-1, max(plot_data$`2018/19`)), ylim = c((min(plot_data$change))*1.2 , (max(plot_data$change))*1.2))
+  
+  return(p)
+  
+}
+
+
+
+plotting_total_activity_vs_percentage_change_LA<-function(data){
+  
+  p <- plotting_total_activity_vs_percentage_change_ggplot_LA(data, laname23)
+  
+  ggplotly(p, tooltip="text", width=660, height=450 )
+}
+
+
+
 
 generating_la_table<-function(data, cohort){
   
