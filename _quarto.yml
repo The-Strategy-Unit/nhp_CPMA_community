@@ -8,7 +8,6 @@ book:
   date-format: "YYYY-MM-DD"
   chapters:
     - index.qmd
-   # - user_guide.qmd
     - summary_of_total_mitigation.qmd
     - part: mechanism_efficiencies.qmd
       chapters: 
