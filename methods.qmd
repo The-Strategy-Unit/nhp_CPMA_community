@@ -54,3 +54,11 @@ The mitigable activity is given as a proportion of either total emergency activi
 The age and sex standardised rates are the rate of admissions/beddays for the whole population of England, standardised to the England population from the 2021 census. 
 
 Where percentage changes over time are calculated, the changes are calculated for the most recent 5 years, 2018/19 to 2023/25. 
+
+## Limitations
+
+We are using routinely reported data and therefore there may be issues with data recording/submissions or just discrepancies with how activity is recorded in different providers, which may impact the results. There may also have been changes in how activity is recorded in different areas over time.
+
+The mitigator cohorts used are fairly broadly defined and we do not expect all activity within a cohort to be mitigable; it is likely that only a small proportion of the activity in each mitigator cohort will be truely mitigable.
+
+With this type of analysis there is a risk of post hoc rationalisation; many admissions may be necessary at the time due to a potential clinical risk but afterwards may appear to have been potentially avoidable.  
