@@ -2,7 +2,7 @@ project:
   type: book
 
 book:
-  title: "NHP Community Mitigators"
+  title: "Quantifying potentially mitigable activity: NHP community mitigators"
   author: "Anya Ferguson and Sarah Lucas"
   date: last-modified
   date-format: "YYYY-MM-DD"

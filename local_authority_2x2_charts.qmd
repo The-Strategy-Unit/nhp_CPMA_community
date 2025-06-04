@@ -3,7 +3,6 @@ title: "local_authority_2x2_charts"
 editor: visual
 ---
 
-
 ```{r packages_and_options}
 
 library("tidyr")
@@ -36,6 +35,7 @@ roi<-c("Adur", "Lichfield")
 ```
 
 ### Admissions
+
 ```{r}
 
 standardised_rates_episodes <- tar_read(la_age_sex_standardised_rates_episodes_over_time) |>
@@ -46,6 +46,7 @@ plotting_total_activity_vs_percentage_change_LA(standardised_rates_episodes)
 ```
 
 ### Beddays
+
 ```{r}
 
 standardised_rates_beddays <- tar_read(la_age_sex_standardised_rates_beddays_over_time) |>
