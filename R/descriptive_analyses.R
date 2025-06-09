@@ -180,7 +180,12 @@ get_perc_by_group_plot <- function(data, col_name, activity_type) {
 #'   get_table_perc()}
 get_table_perc <- function(data) {
   
-  if("admissions" %in% names(perc_patient_characteristic)){
+  if("beddays" %in% colnames(data)){
+    data <- data |>
+      small_number_suppression("beddays")
+  }
+  
+  else if("admissions" %in% colnames(data)){
     data <- data |>
       small_number_suppression("admissions")
   }
@@ -188,7 +193,9 @@ get_table_perc <- function(data) {
   table <- data |>
     dplyr::rename_with( ~ format_as_title(.)) |> 
     get_table() |>
-    flextable::delete_part(part = "footer")
+    flextable::delete_part(part = "footer")|>
+    align(part="all", align="left")
+  
   
   return(table)
 }
@@ -279,7 +286,9 @@ get_rates_by_group_table <- function(data) {
            uppercl=ifelse(number<=10, "-", as.character(uppercl)))|>
     dplyr::rename_with( ~ format_as_title(.)) |>
     get_table() |>
-    flextable::delete_part(part = "footer")
+    flextable::delete_part(part = "footer")|>
+    align(part="all", align="left")
+  
   
   return(table)
 }
