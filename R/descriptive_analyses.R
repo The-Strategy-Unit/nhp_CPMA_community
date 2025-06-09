@@ -273,6 +273,10 @@ get_rates_by_group_plot <- function(data, col_name) {
 #' get_rates_per_pop_table()}
 get_rates_by_group_table <- function(data) {
   table <- data |>
+    mutate(number=ifelse(number<=10, "<=10", as.character(number)),
+           value=ifelse(number<=10, "-", as.character(value)),
+           lowercl=ifelse(number<=10, "-", as.character(lowercl)),
+           uppercl=ifelse(number<=10, "-", as.character(uppercl)))|>
     dplyr::rename_with( ~ format_as_title(.)) |>
     get_table() |>
     flextable::delete_part(part = "footer")
