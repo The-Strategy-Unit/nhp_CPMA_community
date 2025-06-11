@@ -45,7 +45,7 @@ mechanism_statement <- ifelse(check_if_mechanism(cohort, mitigator_summary_table
                               "")
 ```
 
-In 2023/24, `r statement` met the criteria for inclusion in the `r cohort_title` mitigator cohort. `r mechanism_statement`
+In 2023/24, `r statement` met the criteria for inclusion in the `r cohort_title` mitigator cohort. Beddays are given as the overnight bed count, so those admitted and discharged on the same day will be recorded as having zero beddays. `r mechanism_statement`
 
 ```{r}
 #| output: asis
