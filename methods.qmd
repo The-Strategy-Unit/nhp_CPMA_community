@@ -8,7 +8,7 @@ The potentially mitigable activity for the 29 mitigator cohorts of interest is t
 
 Where data is given for Integrated Care Boards (ICBs) these are based on the 2024 ICBs. 
 
-Where data is given for  Local Authorities (LAs) these are the 2023 LAs; LA data is missing in approximately 1% of records.
+Where data is given for  Local Authorities (LAs) these are the 2023 LAs; LA data is missing in approximately 1% of records. The local authority is the local authority district of residence of the patient derived from the patient’s postcode. 
 
 Where Index of Multiple Deprivation (IMD) deciles are shown these are the 2019 values.  
 
