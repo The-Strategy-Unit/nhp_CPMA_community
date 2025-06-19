@@ -6,27 +6,30 @@ The report was produced by [The Strategy Unit](https://www.strategyunitwm.nhs.uk
 
 If you have any questions or queries regarding this report please email us at [strategy.unit\@nhs.net](mailto:strategy.unit@nhs.net?subject=NHP%20Community%20Mitigators%20Report).
 
-## Report structure
+## Overview of the report
+
+{{< video https://www.youtube.com/watch?v=egUhA9OtXyg >}}
+
+### Report structure
 
 This report allows users to explore potentially mitigable acute activity.
 
-1\) The initial chapter gives an overall summary of the [total potentially mitigable activity](summary_of_total_mitigation.qmd)
+1\) The initial chapter gives an overall summary of the [total potentially mitigable activity](summary_of_total_mitigation.qmd).
 
 2\) There are 4 mechanisms through which mitigation can occurs and for each of these there is a summary page:
 
 -   [Efficiencies](mechanism_efficiencies.qmd)
-
 -   [Efficiencies & Relocation](mechanism_efficiencies_relocation.qmd)
-
 -   [Prevention](mechanism_prevention.qmd)
-
 -   [Redirection/Substitution](mechanism_redirection_substitution.qmd)
 
-3\) Then there are individual pages for each of the 29 mitigators, which are divided up by their mechanism groups.
+3\) There are individual pages for each of the 29 mitigators, which are divided up by their mechanism groups.
 
-## What's included
+4\) There is also a page containing detailed [Methodology](methods.qmd).
 
-All of the pages follow the same format and contain sections for:
+### What's included
+
+The pages for potentially mitigable activity follow the same format and contain sections for:
 
 -   **Descriptive analysis** - to explore potentially mitigable activity by patient characteristics (age, ethnic category, Index of Multiple Deprivation decile and sex) and admission characteristics (length of stay and specialty).
 -   **Cohort overlap** - to understand where activity falls into more than one type of mitigator.
@@ -35,4 +38,4 @@ All of the pages follow the same format and contain sections for:
 
 Analyses for the number of admissions and number of beddays is presented. For Efficiency mitigators, analysis of admissions is not included since admissions for this cohort are not considered avoidable, but it is thought that the length of stays could be reduced so analysis of beddays is presented.
 
-There is also a page containing detailed [Methodology](methods.qmd).
+
