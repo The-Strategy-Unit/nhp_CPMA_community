@@ -48,6 +48,15 @@ book:
         - mitigator_medicines_related_admissions_implicit_nsaids.qmd
     - methods.qmd
     
+  page-footer:
+    center: 
+      - icon: github
+        href: https://github.com/The-Strategy-Unit/nhp_community_mitigators
+      - icon: envelope
+        href: mailto:strategy.unit@nhs.net?subject=NHP%20Community%20Mitigators%20Report
+      - icon: globe
+        href: https://www.strategyunitwm.nhs.uk/
+    
 title-block-banner: "#f9bf07"
 title-block-banner-color: "#333739"
 format:
