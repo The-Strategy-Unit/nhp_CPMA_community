@@ -1,4 +1,4 @@
-# Preface & User guide {.unnumbered}
+# Preface {.unnumbered}
 
 The aim of this work is to understand the scale, trends, and regional variations of potentially mitigable hospital activity at national and sub-national levels.
 
@@ -6,36 +6,64 @@ The report was produced by [The Strategy Unit](https://www.strategyunitwm.nhs.uk
 
 If you have any questions or queries regarding this report please email us at [strategy.unit\@nhs.net](mailto:strategy.unit@nhs.net?subject=NHP%20Community%20Mitigators%20Report).
 
-## Overview of the report
+## Introduction  
 
-{{< video https://www.youtube.com/watch?v=egUhA9OtXyg >}}
+In planning for the future, whether for sizing a new hospital or managing the overall pattern of service utilisation across a local health and care system, a judgement needs to be made about how demand and resultant activity will change over time.   
 
-### Report structure
+There are four broad components to this: 
 
-This report allows users to explore potentially mitigable acute activity.
+First, how will the size and make-up of the population change and how is that likely to convert into demand if nothing else changes (*demographic change*). 
 
-1\) The initial chapter gives an overall summary of the [total potentially mitigable activity](summary_of_total_mitigation.qmd).
+Second, whether we think that the average health needs for someone at a certain age today will be reduced or increased in the future due to changes in overall population health (*age-specific health status*).
 
-2\) There are 4 mechanisms through which mitigation can occurs and for each of these there is a summary page:
+Third, the extent to which other drivers of demand will impact …technology and clinical advancement; public/patient expectations; policy and standards; etc (*non-demographic growth*). 
 
--   [Efficiencies](mechanism_efficiencies.qmd)
--   [Efficiencies & Relocation](mechanism_efficiencies_relocation.qmd)
--   [Prevention](mechanism_prevention.qmd)
--   [Redirection/Substitution](mechanism_redirection_substitution.qmd)
+Fourth, how changes to the way we provide services might serve to change patterns of utilisation. In particular, how might different ways of working in 'the community' (including preventative approaches and greater use of technology) act to reduce demand for hospital treatment (*mitigation*).
 
-3\) There are individual pages for each of the 29 mitigators, which are divided up by their mechanism groups.
+The analysis in this report focuses on that fourth category and the element within it which relates to community alternatives - sometimes called the 'left shift' - and which is one of the three strategic shifts set for the NHS by the current Government ('from hospital to community').  
 
-4\) There is also a page containing detailed [Methodology](methods.qmd).
+## 'Potentially mitigable' – a key concept  
 
-### What's included
+For the New Hospitals programme Demand and Capacity model, we have brought together a suite of methods, grounded in published research and national and international practice, aimed at classifying groups of hospital activity as **'potentially mitigable'** or not (i.e. could be altered in some way by deliberate action). Ninety-two such categories have been identified, some large, some small. We have codified all of these and have brought together the evidence, the definitions and the analytical code to create a single, consistent basis for understanding and planning.  
 
-The pages for potentially mitigable activity follow the same format and contain sections for:
+Some of those categories are about mitigation, which drives greater efficiency internal to a hospital (e.g. increased day case rates; shift to virtual outpatients; enhanced recovery for elective care; stopping low-value procedures, etc). But a significant number (29) focus on avoiding predominantly emergency hospital admissions and bed use **through actions in community or primary care**. These are the focus of this report. 
 
--   **Descriptive analysis** - to explore potentially mitigable activity by patient characteristics (age, ethnic category, Index of Multiple Deprivation decile and sex) and admission characteristics (length of stay and specialty).
--   **Cohort overlap** - to understand where activity falls into more than one type of mitigator.
--   **Comparative analysis** - to explore how rates compare by Integrated Care Boards (ICB) and Local Authority (LA).
--   **Trends** - to explore how the potentially mitigable activity has changed over time in England and also at ICB and LA level.
+The current state of available evidence means that some of these categories of 'potentially mitigable activity' are broader in definition than would be ideal. What this means is that the total level of activity categorised as 'potentially mitigable' is large. Whilst activity can be classified as 'potentially mitigable', however, no one would suggest that [all]{.underline} such activity can or should be mitigated. For example, a potentially mitigable category is emergency admissions of people over 75 with a certain level of frailty. Whilst some of those admissions might be avoidable through various actions, some will be absolutely appropriate and necessary. For schemes using the NHP model, typically around 70% of acute bed days fitted into one or more categories of potentially mitigable activity, but at the conclusion of the modelling process, only around 15% of future activity was planned to be mitigated.  
 
-Analyses for the number of admissions and number of beddays is presented. For Efficiency mitigators, analysis of admissions is not included since admissions for this cohort are not considered avoidable, but it is thought that the length of stays could be reduced so analysis of beddays is presented.
+The cohorts of potentially mitigable activity are not mutually exclusive. Each cohort describes a potential mechanism for change, and many spells appear in more than one (particularly where one mechanism is admission avoidance, and another is length of stay reduction). The analysis in this report describes and quantifies the cohort overlap and care should be taken not to simply add the categories together (in the NHP D&C model, we avoid double double-counting effect through a model which works at patient record level for example). 
+
+## Putting the concept of 'potentially mitigable' activity into practice -the purpose of this report 
+
+Until we are ever in a position where the definition of 'potentially mitigable' can be made more precise, we will always rely on judgement when it comes to assessing [what proportion]{.underline} of potentially mitigable activity might be achieved over a particular time horizon In the NHP modelling process, trusts and their local system partners go through a deliberative process to set probabilistic assumptions for this, informed by comparative data on rates and trends, results from a National Expert Elicitation exercise and also access to the assumptions made by fellow schemes in the NHP. Typically, where a category is being targeted for mitigation, we find that somewhere between 5 and 40% of the potentially mitigable activity is judged attainable, though that varies by category, by underlying assumptions regarding resource availability and is also characterised by a high level of uncertainty  
+
+**But even if we don't know with any great confidence what proportion of potentially mitigable activity might be realised** (which must surely be a very high priority focus for ongoing research and evaluation of any future initiatives undertaken) **we can be reasonably confident that any successful mitigation [will]{.underline} impact on these categories of 'potentially mitigable' activity**. (Note- In conducting NHP modelling with 18 systems, we have not found any instances where activity targeted for mitigation in local plans doesn't fall within one or more of our potentially mitigable categories). 
+
+It is a simple fact that we can't measure avoided or 'left shifted' activity – it is a 'known unknown'. We must instead infer whether activity has been avoided through various methods. For specific schemes, this might be achieved through the use of carefully considered controls in impact analysis or through case note review. **But these methods are not feasible at a broader scale. For such broader assessment, our contention is that if 'left shift' is achieved, it must, by definition, be visible in reduced rates of 'potentially mitigable' activity**. Thus, understanding and comparing current rates of admission in categories of potentially mitigable activity provides insight that can inform prioritisation. Tracking trends can then provide an important high-level indicator of whether any 'left shift' is occurring for any particular geography, and comparative analysis can point to opportunities for learning where we see differential effects. **This is why we have produced this report.**
+
+## What the report provides 
+
+In this report, we apply our methods of identifying 'potentially mitigable' hospital activity to all NHS trusts in England. The report then allows users to explore potentially mitigable activity in greater depth; to understand patient and admission characteristics; to understand where activity falls into more than one type of mitigator; how rates compare by ICB and by Local Authority; and how they have changed over time. 
+
+We provide information for the 29 categories of potentially mitigable activity which impact on either or both admissions and bed days (predominantly emergency) and are amenable to interventions from other healthcare services, such as community services and primary care. Each of these categories of potentially mitigable activity falls under one of four 'mechanisms' for mitigation. These mechanisms are: i) Redirection/Substitution; ii) Prevention; iii) Relocation & Efficiencies; and iv) Efficiencies (seeking only reduction in bed days and not initial admissions). Our suite of reports provides summaries for each mechanism with further pages for each individual mitigator. 
+
+We hope that this report, and related research and tools, will help systems and their partners target their resources and interventions more effectively to both improve health and care, and achieve the aim of reducing pressure on hospitals. 
+
+The 29 categories of potentially mitigable activity and the mechanisms they belong to are shown in the chart below: 
+
+![Groupings of the mitgators by mechanism of mitigation groups. Activity avoidance mitigators in yellow impact the number of admissions and therefore also beddays. Efficiency mitigators in grey will impact length of stay, and so only affect beddays.](summary_flow_chart.png){#fig-summary_flow-chart}
+
+ 
+
+ 
+
+ 
+
+ 
+
+
+
+
+
+
 
 
