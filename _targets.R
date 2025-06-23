@@ -135,14 +135,16 @@ list(
   ),
   
   tar_target(
-    pop_by_imd_url,
-    r"{https://www.ons.gov.uk/file?uri=/peoplepopulationandcommunity/populationandmigration/populationprojections/adhocs/15363monthlypopulationsbyindexofmultipledeprivationimddecileenglandjanuary2019toaugust2022/monthlyimdpopulations.xlsx}"
-  ),
-  tar_target(
     pop_by_imd,
-    scrape_xls(pop_by_imd_url, sheet = "1", skip = 3) |>
-      dplyr::summarise(pop = sum(august_2022), .by = imd_decile) |>
-      dplyr::rename(imd19_decile = imd_decile)
+    wrangling_imd_population_by_icb(
+      "Z:/Strategic Analytics/Projects 2025/Describing and Quantifying the NHP mitigators/population_data/LSOA21_to_ICB.csv",
+      "Z:/Strategic Analytics/Projects 2025/Describing and Quantifying the NHP mitigators/population_data/LSOA11_to_LSOA21.csv",
+      "Z:/Strategic Analytics/Projects 2025/Describing and Quantifying the NHP mitigators/population_data/LSOA_pop.xlsx",
+      "Z:/Strategic Analytics/Projects 2025/Describing and Quantifying the NHP mitigators/population_data/LSOA_and_IMD.csv"
+    )|>
+      dplyr::filter(!is.na(icb24cdh))|>
+      summarise(pop=sum(total), .by=c(imd19_decile))
+  
   ),
   
   ## Standardised rates --------------------------------------------------------

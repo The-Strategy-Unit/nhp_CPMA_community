@@ -244,3 +244,39 @@ generating_england_age_sex_standardised_rates<-function(data, icb_pop, standard_
   }
   
   
+  wrangling_imd_population_by_icb<-function(lsoa_to_icb,
+                                            lsoa11_to_lsoa21,
+                                            lsoa_pop,
+                                            lsoa_imd){
+    
+    lsoa_to_icb_data<-read.csv(lsoa_to_icb)|>
+      clean_names()|>
+      select(lsoa21cd, icb24cdh)
+    
+    lsoa11_to_lsoa21_data<-read.csv(lsoa11_to_lsoa21)|>
+      clean_names()|>
+      select(lsoa11cd, lsoa21cd)
+    
+    lsoa_imd_data<-read.csv(lsoa_imd)|>
+      clean_names()|>
+      select(lsoa_code_2011, index_of_multiple_deprivation_imd_decile)
+    
+    lsoa_pop_data<-read_excel(lsoa_pop,
+                              sheet="Mid-2022 LSOA 2021",
+                              range = "A4:E35676")|>
+      clean_names()
+    
+    
+    data<-lsoa_to_icb_data|>
+      left_join(lsoa11_to_lsoa21_data, by=c("lsoa21cd"))|>
+      left_join(lsoa_imd_data, by=c("lsoa11cd"="lsoa_code_2011"))|>
+      left_join(lsoa_pop_data[,c("lsoa_2021_code", "total")], by=c("lsoa21cd"="lsoa_2021_code"))
+    
+    
+    data<-data|>
+      distinct(lsoa21cd, .keep_all = TRUE)|>
+      rename(imd19_decile=index_of_multiple_deprivation_imd_decile)
+    
+  }
+  
+  
