@@ -7,3 +7,5 @@ This analysis focuses on potentially mitigable activity that relates to communit
 Analysis was conducted to understand the scale, trends, and regional variations of potentially mitigable hospital activity at national and sub-national levels.
 
 The report can be found at: https://connect.strategyunitwm.nhs.uk/nhp/community_mitigators/
+
+An introductory video and user guide for the report can be viewed at:  https://www.youtube.com/watch?v=egUhA9OtXyg
