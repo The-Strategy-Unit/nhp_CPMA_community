@@ -242,9 +242,7 @@ get_summary_by_icb_map <- function(data, boundaries, metric) {
 #' @return A dataframe.
 small_number_suppression_comparative <- function(data, 
                                                  activity_type) {
-  if(activity_type == "admissions") {
-    activity_type <- "episodes"
-    
+
     min_total_count <- data |>
       dplyr::summarise(min(total_count)) |> 
       dplyr::pull()
@@ -264,8 +262,6 @@ small_number_suppression_comparative <- function(data,
                                           min_total_count:max_total_count)),
           value = replace_na(as.character(value), "-"))
     }
-    
-  }
-  
+
   return(data)
 }
