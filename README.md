@@ -4,7 +4,7 @@ In planning for the future, whether for sizing a new hospital or managing the ov
 
 This analysis focuses on potentially mitigable activity that relates to community alternatives - sometimes called the 'left shift' - and which is one of the three strategic shifts set for the NHS by the current Government ('from hospital to community').
 
-Analysis was conducted to understand the scale, trends, and regional variations of potentially mitigable hospital activity at national and sub-national levels. The repo contains the code required to run the analysis and generate the report in a quarto book format.
+Analysis was conducted to understand the scale, trends, and regional variations of potentially mitigable hospital activity at national and sub-national levels. This repo contains the code required to run the analyses and generate the report in a quarto book format.
 
 The report can be found at: https://connect.strategyunitwm.nhs.uk/nhp/community_mitigators/
 
