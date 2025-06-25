@@ -33,7 +33,7 @@ sc <- sparklyr::spark_connect(
 
 # Mitigator details ------------------------------------------------------------
 mitigator_summary_table <-
-  readxl::read_excel("summary_mitigators_table.xlsx") |>
+  readxl::read_excel("reference/summary_mitigators_table.xlsx") |>
   dplyr::mutate(mechanism = snakecase::to_snake_case(mechanism))|>
   dplyr::arrange(mitigator_name)
 
@@ -61,7 +61,7 @@ mitigators_and_mechanisms <- mitigators_and_mechanisms_treatment_lookup |>
 # Run the R scripts in the R/ folder with our custom functions:
 tar_source()
 
-# Tthe target list:
+# The target list:
 list(
   tar_target(mitigator_totals,
              get_mitigators_totals(mitigator_summary_table, numbers_over_time)),
@@ -73,7 +73,7 @@ list(
     )
   ),
   
-  tarchetypes::tar_file(my_filepath, "la_code_lookup.xlsx"),
+  tarchetypes::tar_file(my_filepath, "reference/la_code_lookup.xlsx"),
   tar_target(
     la_code_lookup,
     read_excel(my_filepath)
