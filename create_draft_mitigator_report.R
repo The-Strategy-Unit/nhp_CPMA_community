@@ -149,7 +149,7 @@ get_data_section <- function(mitigator, summary_table) {
   code <- c(
     "```{r data}",
     "#| output: false",
-    "mitigator_summary_table <- readxl::read_excel(\"summary_mitigators_table.xlsx\") |>
+    "mitigator_summary_table <- readxl::read_excel(\"reference/summary_mitigators_table.xlsx\") |>
   dplyr::mutate(mechanism = snakecase::to_snake_case(mechanism))",
     "",
     standardised_rates_episodes,
@@ -410,7 +410,7 @@ create_draft_mitigator_qmd <- function(mitigator,
 source("R/manipulating_mitigators_and_mechanisms.R")
 
 mitigator_summary_table <-
-  readxl::read_excel("summary_mitigators_table.xlsx") |>
+  readxl::read_excel("reference/summary_mitigators_table.xlsx") |>
   dplyr::mutate(mechanism = snakecase::to_snake_case(mechanism))
 
 mitigators <- mitigator_summary_table |>

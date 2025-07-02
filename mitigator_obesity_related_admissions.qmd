@@ -39,7 +39,7 @@ treatment_type_title <- format_treatment_for_caption("both")
 
 ```{r data}
 #| output: false
-mitigator_summary_table <- readxl::read_excel("summary_mitigators_table.xlsx") |>
+mitigator_summary_table <- readxl::read_excel("reference/summary_mitigators_table.xlsx") |>
   dplyr::mutate(mechanism = snakecase::to_snake_case(mechanism))
 
 england_age_sex_standardised_rates_episodes <- tar_read(england_age_sex_standardised_rates_episodes) |>
