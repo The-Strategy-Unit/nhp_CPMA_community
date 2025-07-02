@@ -2,7 +2,7 @@
 In this section, mitigable activity for the `r cohort_title` `r cohort_group` are shown by admission characteristics.
 
 ```{r}
-include_non_zero_admissions <- include_admissions & !check_if_zero_los_mitigator(cohort)
+include_non_zero_admissions <- include_beddays & !check_if_zero_los_mitigator(cohort)
 ```
 
 ```{r}
