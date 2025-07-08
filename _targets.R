@@ -381,6 +381,18 @@ list(
     )
   ),
   
+  ## Diagnoses -----------------------------------------------------------------
+  tarchetypes::tar_map(
+    list(
+      mitigator = rep(mitigators_and_mechanisms, 2),
+      activity_type = rep(c("admissions", "beddays"), each = 33)
+    ),
+    tar_target(
+      diagnosis,
+      get_top_ten(mitigator, activity_type, "diagnosis", specialty_key)
+    )
+  ),
+  
   ## Length of Stay -------------------------------------------------------------
   tarchetypes::tar_map(
     list(mitigator = mitigators_and_mechanisms),
