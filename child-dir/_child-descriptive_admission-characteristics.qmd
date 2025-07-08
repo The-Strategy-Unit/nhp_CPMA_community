@@ -40,14 +40,14 @@ cat("##### Admissions")
 
 ```{r}
 activity_type <- "admissions"
-specialty <- targets::tar_read_raw(glue::glue("specialty_{cohort}_{activity_type}"))
+top_ten <- targets::tar_read_raw(glue::glue("specialty_{cohort}_{activity_type}"))
 ```
 
 ```{r}
 #| eval: !expr include_admissions
 #| output: asis
 knitr::knit_child(
-              input = "child-dir/_child-descriptive_admission-characteristics_specialty.qmd",
+              input = "child-dir/_child-descriptive_admission-characteristics_top-ten.qmd",
               envir = environment(),
               quiet = TRUE
              ) |>
@@ -62,14 +62,72 @@ cat("##### Beddays")
 
 ```{r}
 activity_type <- "beddays"
-specialty <- targets::tar_read_raw(glue::glue("specialty_{cohort}_{activity_type}"))
+top_ten <- targets::tar_read_raw(glue::glue("specialty_{cohort}_{activity_type}"))
 ```
 
 ```{r}
 #| eval: !expr include_beddays
 #| output: asis
 knitr::knit_child(
-              input = "child-dir/_child-descriptive_admission-characteristics_specialty.qmd",
+              input = "child-dir/_child-descriptive_admission-characteristics_top-ten.qmd",
+              envir = environment(),
+              quiet = TRUE
+             ) |>
+            cat(sep = '\n')
+```
+
+```{r}
+#| output: asis
+#| eval: !expr include_admissions_and_beddays
+cat(":::")
+```
+
+```{r}
+#| output: asis
+#| eval: !expr include_non_zero_admissions
+cat("#### Primary diagnosis")
+```
+
+```{r}
+#| output: asis
+#| eval: !expr include_admissions_and_beddays
+cat("::: panel-tabset")
+cat("\n")
+cat("##### Admissions")
+```
+
+```{r}
+activity_type <- "admissions"
+top_ten <- targets::tar_read_raw(glue::glue("diagnosis_{cohort}_{activity_type}"))
+```
+
+```{r}
+#| eval: !expr include_admissions
+#| output: asis
+knitr::knit_child(
+              input = "child-dir/_child-descriptive_admission-characteristics_top-ten.qmd",
+              envir = environment(),
+              quiet = TRUE
+             ) |>
+            cat(sep = '\n')
+```
+
+```{r}
+#| output: asis
+#| eval: !expr include_admissions_and_beddays
+cat("##### Beddays")
+```
+
+```{r}
+activity_type <- "beddays"
+top_ten <- targets::tar_read_raw(glue::glue("diagnosis_{cohort}_{activity_type}"))
+```
+
+```{r}
+#| eval: !expr include_beddays
+#| output: asis
+knitr::knit_child(
+              input = "child-dir/_child-descriptive_admission-characteristics_top-ten.qmd",
               envir = environment(),
               quiet = TRUE
              ) |>
