@@ -293,20 +293,38 @@ get_rates_by_group_table <- function(data) {
   return(table)
 }
 
-# Top ten specialties ----------------------------------------------------------
-#' Get the top ten specialties for a mitigator or mechanism.
+# Top ten specialties/diagnoses ------------------------------------------------
+#' Get the top ten specialties/diagnoses for a mitigator or mechanism.
 #'
-#' @param key The specialty key.
 #' @param activity_type Either `"admissions"` or `"beddays"`.
 #' @param mitigator The mitigator or mechanism.
+#' @param group Either `"tretspef"` for specialty or `"diagnosis"` for diagnosis.
+#' @param key The specialty key.
 #'
 #' @return A dataframe.
-get_top_ten_specialties <- function(mitigator, key, activity_type) {
-  get_perc_by_group(mitigator, "tretspef", activity_type) |>
-    dplyr::left_join(key, by = c("tretspef" = "dd_code")) |>
+get_top_ten <- function(mitigator, activity_type, group, key = NULL) {
+  group = "tretspef"
+  
+  perc_by_group <- get_perc_by_group(mitigator, group, activity_type) 
+  
+  if(group == "tretspef"){
+    column_title <- "specialty"
+    
+    key <- key |>
+      dplyr::rename(tretspef = "dd_code")
+    
+    perc_by_group <- perc_by_group |>
+      dplyr::left_join(key, group)
+  } else {
+    column_title <- "diagnosis"
+  }
+  
+  top_ten <- perc_by_group |>
     dplyr::arrange(desc(perc)) |>
     dplyr::slice(1:10) |>
-    dplyr::select(specialty, {{activity_type}}, perc)
+    dplyr::select(column_title, {{activity_type}}, perc)
+  
+  return(top_ten)
 }
 
 #' Plot the top ten specialties for a mitigator or mechanism.

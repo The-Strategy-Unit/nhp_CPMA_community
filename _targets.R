@@ -377,7 +377,7 @@ list(
     ),
     tar_target(
       specialty,
-      get_top_ten_specialties(mitigator, specialty_key, activity_type)
+      get_top_ten(mitigator, activity_type, "tretspef", specialty_key)
     )
   ),
   
