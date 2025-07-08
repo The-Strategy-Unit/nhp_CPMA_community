@@ -118,6 +118,22 @@ get_table <- function(data) {
   return(table)
 }
 
+#' Get Databricks table name.
+#'
+#' @param group A string of the group that the table is for.
+#'
+#' @returns A string.
+get_table_name <- function(group){
+  
+  if(group == "diagnosis"){
+    table_name <- paste0("sl_af_describing_mitigators_", group)
+  } else {
+    table_name <- paste0("sl_af_describing_mitigators_final_2324_", group)
+  }
+  
+  return(table_name)
+}
+
 #' Order the levels of factor variables.
 #'
 #' If a dataframe contains one a column for imd19_decile, age_range or

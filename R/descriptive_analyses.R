@@ -38,7 +38,7 @@ get_overview_of_mitigator <- function(mitigator,
     dbplyr::in_catalog(
       "strategyunit",
       "default",
-      "sl_af_describing_mitigators_final_2324_sex"
+      get_table_name("sex")
     )
   ) |>
     filter_to_mitigator_or_mechanism(mitigator) |>
@@ -88,7 +88,7 @@ get_number_by_group <- function(mitigator,
                         dbplyr::in_catalog(
                           "strategyunit",
                           "default",
-                          paste0("sl_af_describing_mitigators_final_2324_", group)
+                          get_table_name(group)
                         )) |>
     filter_to_mitigator_or_mechanism(mitigator) |>
     dplyr::filter(!is.na(!!rlang::sym(col_name))) |> # exclude NULLs
@@ -303,7 +303,6 @@ get_rates_by_group_table <- function(data) {
 #'
 #' @return A dataframe.
 get_top_ten <- function(mitigator, activity_type, group, key = NULL) {
-  group = "tretspef"
   
   perc_by_group <- get_perc_by_group(mitigator, group, activity_type) 
   
@@ -447,7 +446,7 @@ get_total_beddays_admissions <- function(connection) {
     dbplyr::in_catalog(
       "strategyunit",
       "default",
-      "sl_af_describing_mitigators_final_2324_sex"
+      get_table_name("sex")
     )
   ) |>
     dplyr::select(dplyr::starts_with("total")) |>
