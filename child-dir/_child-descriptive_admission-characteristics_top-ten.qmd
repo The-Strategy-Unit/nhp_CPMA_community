@@ -1,0 +1,17 @@
+```{r}
+top_ten_caption <- get_caption_top_ten(cohort_title, activity_type, "diagnosis")
+```
+
+```{r}
+#| label: tbl-perc_top_ten
+#| tbl-cap: !expr top_ten_caption
+top_ten |>
+  get_table_perc() 
+```
+
+```{r}
+#| label: fig-perc_top_ten
+#| fig-cap: !expr top_ten_caption
+top_ten |>
+  get_top_ten_specialties_plot(activity_type)
+```
