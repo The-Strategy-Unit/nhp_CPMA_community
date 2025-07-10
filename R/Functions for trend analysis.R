@@ -167,13 +167,14 @@ data_number_percentage_over_time_icb<-function(data1, data2, mitigator, treatmen
   data2|>
     filter(cohorts==mitigator)|>
     filter(fyear!=201415)|>
-    select(-year)|>
-    left_join(denominator_data, by=c("sex", "age_range","fyear", "icb_2024_name"))|>
-    summarise(episodes=sum(episodes),
-              beddays=sum(beddays),
-              total_episodes=sum(total_episodes),
-              total_beddays=sum(total_beddays),
-              .by=c(icb_2024_name, year, fyear))|>
+    summarise(episodes=sum(episodes, na.rm=TRUE),
+              beddays=sum(beddays, na.rm=TRUE),
+              .by=c(icb_2024_name, fyear, year))|>
+    left_join(denominator_data|>
+                summarise(total_episodes=sum(total_episodes,na.rm=TRUE),
+                          total_beddays=sum(total_beddays,na.rm=TRUE),
+                          .by=c(icb_2024_name,fyear)
+                ), by=c("fyear", "icb_2024_name"))|>
     mutate(percentage_episodes=(episodes/total_episodes)*100,
            percentage_beddays=(beddays/total_beddays)*100)|>
   mutate(percentage_episodes=ifelse(is.nan(percentage_episodes), NA, percentage_episodes))|>

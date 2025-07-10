@@ -22,6 +22,12 @@ number_percentage_over_time <-  data_number_percentage_over_time_icb(
   numbers_over_time,
   cohort,
   treatment_type)
+
+
+
+
+
+
 ```
 
 ::: panel-tabset
