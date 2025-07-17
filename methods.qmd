@@ -6,7 +6,7 @@ All data on hospital activity are taken from the New Hospitals Programme (NHP) d
 
 The potentially mitigable activity for the 29 mitigator cohorts of interest is taken from the dataset used for the NHP Demand and Capacity Model. All activity that meets the criteria for potentially mitigable is included, but it should be noted that in practice only a proportion of this activity would be truly mitigable. The code used to define the potentially mitigable activity can be found here- <https://github.com/The-Strategy-Unit/nhp_data/tree/main/raw_data/mitigators/ip>
 
-Where data is given for Integrated Care Boards (ICBs) these are based on the 2024 ICBs. 
+Where data is given for Integrated Care Boards (ICBs) these are based on the 2024 ICBs. The ICB is determined based on the patient being resident within the ICB area, in records where the resident ICB field is empty the responsible ICB is used instead.
 
 Where data is given for  Local Authorities (LAs) these are the 2023 LAs; LA data is missing in approximately 1% of records. The local authority is the local authority district of residence of the patient derived from the patient’s postcode. 
 
