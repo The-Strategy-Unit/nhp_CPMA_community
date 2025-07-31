@@ -64,6 +64,26 @@ format_as_title <- function(col_name) {
   return(title)
 }
 
+#' Keeps only first three characters of diagnoses codes.
+#'
+#' @param data A dataframe.
+#' @param group A string of the group that the table is for. 
+#'
+#' @returns A dataframe.
+format_diagnoses_codes <- function(data, group){
+  
+  if(group == "diagnosis"){
+    formatted <- data |> 
+      dplyr::mutate(primary_diagnosis = stringr::str_sub(primary_diagnosis,
+                                                         start = 1,
+                                                         end = 3))
+  } else {
+    formatted <- data
+  }
+  
+  return(formatted)
+}
+
 #' Get the column name from the group.
 #'
 #' In Databricks, the grouped tables have a suffix to indicate the group, but

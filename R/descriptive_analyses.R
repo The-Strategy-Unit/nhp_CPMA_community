@@ -93,6 +93,7 @@ get_number_by_group <- function(mitigator,
     filter_to_mitigator_or_mechanism(mitigator) |>
     dplyr::filter(!is.na(!!rlang::sym(col_name))) |> # exclude NULLs
     dplyr::rename(admissions = episodes) |>
+    format_diagnoses_codes(group) |>
       # Although the column is called episodes, each row is the last episode in 
       # a spell. So renaming as admissions here to avoid confusion later.
     dplyr::summarise(number = sum(!!rlang::sym(activity_type)), 
@@ -309,6 +310,8 @@ get_top_ten <- function(mitigator, activity_type, group, key = NULL) {
   column_title <- get_col_name_from_group(group)
   
   if(group == "tretspef"){
+    column_title <- "specialty"
+    
     key <- key |>
       dplyr::rename(tretspef = "dd_code")
     
