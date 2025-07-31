@@ -89,6 +89,8 @@ cat(":::")
 cat("#### Primary diagnosis")
 ```
 
+Note: Primary diagnoses have been grouped by the first three characters of the ICD10 codes.
+
 ```{r}
 #| output: asis
 #| eval: !expr include_admissions_and_beddays
