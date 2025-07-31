@@ -326,24 +326,32 @@ get_top_ten <- function(mitigator, activity_type, group, key) {
   return(top_ten)
 }
 
-#' Plot the top ten specialties for a mitigator or mechanism.
+#' Plot the top ten specialties/diagnoses for a mitigator or mechanism.
 #'
 #' @param data The output of `get_top_ten_specialties()`.
 #' @param activity_type Either `"admissions"` or `"beddays"`.
+#' @param group Either `"tretspef"` for specialty or `"diagnosis"` for diagnosis.
 #'
 #' @return A plot.
-get_top_ten_specialties_plot <- function(data, activity_type) {
+get_top_ten_plot <- function(data, activity_type, group) {
+  
+  if(group == "diagnosis"){
+    group <- "description"
+    y_title <- "Primary Diagnosis"
+  } else {
+    y_title <- "Specialty"
+  }
   
   plot <- data |>
     ggplot2::ggplot(ggplot2::aes(perc, 
-                                 reorder(specialty, perc),
+                                 reorder(!!rlang::sym(group), perc),
                                  fill = 'bars_color')) + 
     ggplot2::geom_col() +
     ggplot2::scale_fill_manual(values = c('bars_color' = "#f9bf07"), 
                                guide = 'none') +
     StrategyUnitTheme::su_theme() +
     ggplot2::labs(x = glue::glue("Percentage of mitigable {activity_type}"), 
-                  y = "Specialty")
+                  y = y_title)
   
   return(plot)
 }
