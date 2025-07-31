@@ -40,7 +40,8 @@ cat("##### Admissions")
 
 ```{r}
 activity_type <- "admissions"
-top_ten <- targets::tar_read_raw(glue::glue("specialty_{cohort}_{activity_type}"))
+group <- "specialty"
+top_ten <- targets::tar_read_raw(glue::glue("{group}_{cohort}_{activity_type}"))
 ```
 
 ```{r}
@@ -62,7 +63,7 @@ cat("##### Beddays")
 
 ```{r}
 activity_type <- "beddays"
-top_ten <- targets::tar_read_raw(glue::glue("specialty_{cohort}_{activity_type}"))
+top_ten <- targets::tar_read_raw(glue::glue("{group}_{cohort}_{activity_type}"))
 ```
 
 ```{r}
@@ -98,7 +99,8 @@ cat("##### Admissions")
 
 ```{r}
 activity_type <- "admissions"
-top_ten <- targets::tar_read_raw(glue::glue("diagnosis_{cohort}_{activity_type}"))
+group <- "diagnosis"
+top_ten <- targets::tar_read_raw(glue::glue("{group}_{cohort}_{activity_type}"))
 ```
 
 ```{r}
@@ -120,7 +122,7 @@ cat("##### Beddays")
 
 ```{r}
 activity_type <- "beddays"
-top_ten <- targets::tar_read_raw(glue::glue("diagnosis_{cohort}_{activity_type}"))
+top_ten <- targets::tar_read_raw(glue::glue("{group}_{cohort}_{activity_type}"))
 ```
 
 ```{r}
