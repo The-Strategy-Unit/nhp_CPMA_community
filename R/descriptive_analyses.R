@@ -306,22 +306,20 @@ get_top_ten <- function(mitigator, activity_type, group, key = NULL) {
   
   perc_by_group <- get_perc_by_group(mitigator, group, activity_type) 
   
+  column_title <- get_col_name_from_group(group)
+  
   if(group == "tretspef"){
-    column_title <- "specialty"
-    
     key <- key |>
       dplyr::rename(tretspef = "dd_code")
     
     perc_by_group <- perc_by_group |>
       dplyr::left_join(key, group)
-  } else {
-    column_title <- "diagnosis"
-  }
+  } 
   
   top_ten <- perc_by_group |>
     dplyr::arrange(desc(perc)) |>
     dplyr::slice(1:10) |>
-    dplyr::select(column_title, {{activity_type}}, perc)
+    dplyr::select({{column_title}}, {{activity_type}}, perc)
   
   return(top_ten)
 }

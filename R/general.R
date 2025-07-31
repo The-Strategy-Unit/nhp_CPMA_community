@@ -85,6 +85,8 @@ get_col_name_from_group <- function(group) {
     "imd19_decile"
   } else if (group == "los") {
     "los_range"
+  } else if (group == "diagnosis"){
+    "primary_diagnosis"
   } else {
     group
   }
