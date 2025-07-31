@@ -300,10 +300,10 @@ get_rates_by_group_table <- function(data) {
 #' @param activity_type Either `"admissions"` or `"beddays"`.
 #' @param mitigator The mitigator or mechanism.
 #' @param group Either `"tretspef"` for specialty or `"diagnosis"` for diagnosis.
-#' @param key The specialty key.
+#' @param key Key for specialty or diagnosis.
 #'
 #' @return A dataframe.
-get_top_ten <- function(mitigator, activity_type, group, key = NULL) {
+get_top_ten <- function(mitigator, activity_type, group, key) {
   
   perc_by_group <- get_perc_by_group(mitigator, group, activity_type) 
   
