@@ -137,7 +137,7 @@ get_perc_by_group <- function(mitigator,
     ) |>
     order_levels_of_factors() |>
     dplyr::arrange(dplyr::across(1)) |>
-    mutate(number=janitor::round_half_up(number,0))  |>   
+    dplyr::mutate(number = janitor::round_half_up(number,0))  |>   
     dplyr::rename(!!rlang::sym(activity_type) := number) 
   
   return(summary)
