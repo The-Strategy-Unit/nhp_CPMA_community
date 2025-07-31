@@ -382,6 +382,15 @@ list(
   ),
   
   ## Diagnoses -----------------------------------------------------------------
+  tar_target(
+    diagnosis_filename,
+    r"{Z:\Strategic Analytics\Projects 2025\Describing and Quantifying the NHP mitigators\population_data\ICD10_diagnosis_code_descriptions.csv}"
+  ),
+  tar_target(
+    diagnosis_key,
+    read.csv(diagnosis_filename) |>
+      janitor::clean_names()
+  ),
   tarchetypes::tar_map(
     list(
       mitigator = rep(mitigators_and_mechanisms, 2),
@@ -389,7 +398,7 @@ list(
     ),
     tar_target(
       diagnosis,
-      get_top_ten(mitigator, activity_type, "diagnosis", specialty_key)
+      get_top_ten(mitigator, activity_type, "diagnosis", diagnosis_key)
     )
   ),
   

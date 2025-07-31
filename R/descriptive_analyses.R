@@ -305,21 +305,20 @@ get_rates_by_group_table <- function(data) {
 #' @return A dataframe.
 get_top_ten <- function(mitigator, activity_type, group, key) {
   
-  perc_by_group <- get_perc_by_group(mitigator, group, activity_type) 
-  
-  column_title <- get_col_name_from_group(group)
-  
   if(group == "tretspef"){
     column_title <- "specialty"
-    
-    key <- key |>
-      dplyr::rename(tretspef = "dd_code")
-    
-    perc_by_group <- perc_by_group |>
-      dplyr::left_join(key, group)
-  } 
+    join <- group
+  } else {
+    column_title <- "description"
+    join <- "primary_diagnosis"
+  }
   
-  top_ten <- perc_by_group |>
+  key <- key |>
+    dplyr::rename(dplyr::any_of(c("tretspef" = "dd_code",
+                                  "primary_diagnosis" = "code")))
+  
+  top_ten <- get_perc_by_group(mitigator, group, activity_type) |>
+    dplyr::left_join(key, join) |>
     dplyr::arrange(desc(perc)) |>
     dplyr::slice(1:10) |>
     dplyr::select({{column_title}}, {{activity_type}}, perc)
