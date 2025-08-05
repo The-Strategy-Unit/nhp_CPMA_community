@@ -78,7 +78,7 @@ list(
     la_code_lookup,
     read_excel(my_filepath)
   ),
-
+  
   
   tar_target(
     icb_population_data,
@@ -86,6 +86,19 @@ list(
       "Z:/Strategic Analytics/Projects 2025/Describing and Quantifying the NHP mitigators/population_data/sapeicb202420112022.xlsx",
       "Z:/Strategic Analytics/Projects 2025/Describing and Quantifying the NHP mitigators/population_data/Integrated_Care_Boards_(December_2024)_Names_and_Codes_in_EN.csv"
     )
+  ),
+  
+  tar_target(
+    providers_population_data,
+    dplyr::tbl(
+      sc,
+      dbplyr::in_catalog("nhp", "reference", "provider_catchments")
+    ) |>
+      sparklyr::collect() |>
+      add_year_column() |>
+      add_age_range_column() |>
+      dplyr::summarise(pop = sum(count),
+                       .by = c(provider, fyear, year, age_range, sex))
   ),
   
   tar_target(
@@ -144,11 +157,10 @@ list(
     )|>
       dplyr::filter(!is.na(icb24cdh))|>
       summarise(pop=sum(total), .by=c(imd19_decile))
-  
+    
   ),
-  
-  ## Standardised rates --------------------------------------------------------
-  ### ICB ---------------------------------------------------------------------- 
+  # Standardised rates ---------------------------------------------------------
+  ## ICB ----------------------------------------------------------------------- 
   tar_target(
     icb_age_sex_standardised_rates_episodes,
     generating_icb_age_sex_standardised_rates(
@@ -191,7 +203,7 @@ list(
     )
   ),
   
-  ### England ------------------------------------------------------------------
+  ## England -------------------------------------------------------------------
   tar_target(
     england_age_sex_standardised_rates_episodes,
     generating_england_age_sex_standardised_rates(
@@ -236,7 +248,7 @@ list(
     )
   ),
   
-  ### LA -----------------------------------------------------------------------
+  ## LA ------------------------------------------------------------------------
   tar_target(
     la_age_sex_standardised_rates_episodes_over_time,
     generating_la_age_sex_standardised_rates_for_trends(
@@ -248,7 +260,7 @@ list(
       episodes
     )
   ),
-  
+
   tar_target(
     la_age_sex_standardised_rates_beddays_over_time,
     generating_la_age_sex_standardised_rates_for_trends(
@@ -261,11 +273,11 @@ list(
     )
   ),
 
-  
+
   tar_target(
     la_age_sex_standardised_rates_episodes_total_mitigation,
     generating_la_age_sex_standardised_rates_for_trends(
-      rbind(numbers_over_time_local_authority_total_mitigation_sex1, 
+      rbind(numbers_over_time_local_authority_total_mitigation_sex1,
             numbers_over_time_local_authority_total_mitigation_sex2)|>
         mutate(cohorts = "all"),
       NA,
@@ -273,12 +285,12 @@ list(
       la_population_data,
       standard_england_pop_2021_census,
       episodes
-      )
-    ),
+    )
+  ),
   tar_target(
     la_age_sex_standardised_rates_beddays_total_mitigation,
     generating_la_age_sex_standardised_rates_for_trends(
-      rbind(numbers_over_time_local_authority_total_mitigation_sex1, 
+      rbind(numbers_over_time_local_authority_total_mitigation_sex1,
             numbers_over_time_local_authority_total_mitigation_sex2)|>
         mutate(cohorts = "all"),
       NA,
@@ -288,6 +300,24 @@ list(
       beddays
     )
   ),
+  ## Provider ------------------------------------------------------------------
+  tar_target(
+    provider_age_sex_standardised_rates_episodes,
+    generating_provider_age_sex_standardised_rates(
+      providers_over_time,
+      providers_population_data,
+      standard_england_pop_2021_census,
+      "episodes")
+  ),
+  tar_target(
+    provider_age_sex_standardised_rates_beddays,
+    generating_provider_age_sex_standardised_rates(
+      providers_over_time,
+      providers_population_data,
+      standard_england_pop_2021_census,
+      "beddays")
+  ),
+  
   # Descriptive analysis -------------------------------------------------------
   ## Overview of mitigator -----------------------------------------------------
   tar_target(total_beddays_admissions, get_total_beddays_admissions(sc)),
@@ -424,13 +454,13 @@ list(
     total_cohort_numbers_2324 |>
       filter(fyear == "202324")|>
       summarise(episodes=sum(episodes), beddays=sum(beddays), .by=c(alcohol_partially_attributable_acute,
-                                                                      alcohol_partially_attributable_chronic,
-                                                                      alcohol_wholly_attributable,
-                                                                      obesity_related_admissions,
-                                                                      smoking,
-                                                                      raid_ae,
-                                                                      intentional_self_harm,
-                                                                      medically_unexplained_related_admissions) )|>
+                                                                    alcohol_partially_attributable_chronic,
+                                                                    alcohol_wholly_attributable,
+                                                                    obesity_related_admissions,
+                                                                    smoking,
+                                                                    raid_ae,
+                                                                    intentional_self_harm,
+                                                                    medically_unexplained_related_admissions) )|>
       mutate(number_of_cohorts = rowSums(pick(1:8), na.rm = TRUE)) |>
       filter(number_of_cohorts!=0)
   ),
@@ -440,7 +470,7 @@ list(
     total_cohort_numbers_2324 |>
       filter(fyear == "202324")|>
       summarise(episodes=sum(episodes), beddays=sum(beddays), .by=c(virtual_wards_activity_avoidance_ari,
-                                                                      virtual_wards_activity_avoidance_heart_failure) )|>
+                                                                    virtual_wards_activity_avoidance_heart_failure) )|>
       mutate(number_of_cohorts = rowSums(pick(1:2), na.rm = TRUE)) |>
       filter(number_of_cohorts!=0)
   ),
@@ -450,8 +480,8 @@ list(
     total_cohort_numbers_2324 |>
       filter(fyear == "202324")|>
       summarise(episodes=sum(episodes), beddays=sum(beddays), .by=c(emergency_elderly,
-                                                                      stroke_early_supported_discharge,
-                                                                      raid_ip) )|>
+                                                                    stroke_early_supported_discharge,
+                                                                    raid_ip) )|>
       mutate(number_of_cohorts = rowSums(pick(1:3), na.rm = TRUE)) |>
       filter(number_of_cohorts!=0)
   ),
@@ -495,6 +525,19 @@ list(
       "sl_af_total_elective_emergency_activity",
       icb_population_data
     )
+  ),
+  
+  tar_target(
+    providers_over_time_sex1,
+    Formatting_providers_data_for_trends(1)),
+  tar_target(
+    providers_over_time_sex2,
+    Formatting_providers_data_for_trends(2)),
+  tar_target(
+    providers_over_time,
+    providers_over_time_sex1 |> 
+      rbind(providers_over_time_sex2) |>
+      dplyr::mutate(sex = as.character(sex))
   ),
   
   # Comparative analysis ---------------------------------------------------------
@@ -597,7 +640,58 @@ list(
       )
     )
   ),
-  ## For summary ---------------------------------------------------------------
+  ## Provider ------------------------------------------------------------------
+  tar_target(
+    total_beddays_admissions_by_provider,
+    dplyr::tbl(
+      sc,
+      dbplyr::in_catalog(
+        "strategyunit",
+        "default",
+        "total_elective_emergency_activity_Dx"
+      )
+    ) |>
+      sparklyr::collect() |>
+      dplyr::filter(fyear == 202324) |>
+      dplyr::select(dplyr::starts_with("total"), provider) |>
+      dplyr::summarise(dplyr::across(dplyr::starts_with("total"),
+                                     ~ sum(., na.rm = TRUE)),
+                       .by = provider) |>
+      sparklyr::collect() |>
+      dplyr::mutate(
+        total_episodes_both = total_episodes_emergency + total_episodes_elective,
+        total_beddays_both = total_beddays_emergency + total_beddays_elective
+      )),
+  tarchetypes::tar_map(
+    list(mitigator = mitigators_and_mechanisms),
+    tar_target(
+      summary_provider_admissions,
+      get_summary_by_geography(
+        provider_age_sex_standardised_rates_episodes,
+        mitigator,
+        total_beddays_admissions_by_provider,
+        "admissions",
+        "provider",
+        mitigators_and_mechanisms_treatment_lookup
+      )
+    )
+  ),
+  tarchetypes::tar_map(
+    list(mitigator = mitigators_and_mechanisms),
+    tar_target(
+      summary_provider_beddays,
+      get_summary_by_geography(
+        provider_age_sex_standardised_rates_beddays,
+        mitigator,
+        total_beddays_admissions_by_provider,
+        "beddays",
+        "provider",
+        mitigators_and_mechanisms_treatment_lookup
+      )
+    )
+  ),
+
+  # For summary ----------------------------------------------------------------
   
   tar_target(
     summary_icb_admissions_all,
