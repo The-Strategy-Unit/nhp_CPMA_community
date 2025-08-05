@@ -10,7 +10,7 @@ cat("##### Admissions")
 
 ```{r}
 activity_type <- "admissions"
-summary_la <- targets::tar_read_raw(glue::glue("summary_la_{activity_type}_{cohort}"))
+summary <- targets::tar_read_raw(glue::glue("summary_{geography}_{activity_type}_{cohort}"))
 ```
 
 ```{r}
@@ -32,7 +32,7 @@ cat("##### Beddays")
 
 ```{r}
 activity_type <- "beddays"
-summary_la <- targets::tar_read_raw(glue::glue("summary_la_{activity_type}_{cohort}"))
+summary <- targets::tar_read_raw(glue::glue("summary_{geography}_{activity_type}_{cohort}"))
 ```
 
 ```{r}
