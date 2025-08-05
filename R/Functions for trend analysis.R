@@ -16,7 +16,7 @@ Formatting_data_for_trends_analysis_denominator<-function(table, icb_pop){
               total_beddays_elective=sum(total_beddays_elective),
               total_episodes_all=sum(total_episodes_elective)+sum(total_episodes_emergency),
               total_beddays_all=sum(total_beddays_elective)+sum(total_beddays_emergency))|>
-    mutate(year=paste0(stringr::str_sub(fyear, 1, 4), "/", stringr::str_sub(fyear, 5, 6)))|>
+    add_year_column() |>
     collect()|>
     left_join(icb_pop[,c("icb24cdh", "icb_2024_name")]|>
                 distinct(icb24cdh, icb_2024_name), by=c("icb"="icb24cdh"))|>
@@ -52,7 +52,7 @@ Formatting_data_for_trends_analysis_cohorts <- function(table, icb_pop){
              cohorts)|>
     summarise(episodes=sum(episodes),
               beddays=sum(beddays))|>
-    mutate(year=paste0(stringr::str_sub(fyear, 1, 4), "/", stringr::str_sub(fyear, 5, 6)))|>
+    add_year_column() |>
     ungroup()|>
     as.data.frame()
   
@@ -82,7 +82,7 @@ numbers_over_time<- identify_whether_bedday_or_admissions_or_both(numbers_over_t
              icb_2024_name)|>
     summarise(episodes=sum(episodes),
               beddays=sum(beddays))|>
-    mutate(year=paste0(stringr::str_sub(fyear, 1, 4), "/", stringr::str_sub(fyear, 5, 6)))|>
+    add_year_column() |>
     ungroup()|>
     as.data.frame() 
   
@@ -109,7 +109,7 @@ Formatting_la_data_for_trends <- function(table, sex_group) {
     mutate_mechanism_columns() |> 
     gather(key="cohorts", value="value", -fyear, -age_range, -sex, -resladst_ons, -episodes, -beddays)|>
     filter(value==1)|>
-    mutate(year=paste0(stringr::str_sub(fyear, 1, 4), "/", stringr::str_sub(fyear, 5, 6)))
+    add_year_column()
  
   return(la_numbers_over_time)
 }
@@ -135,7 +135,7 @@ Formatting_la_data_for_trends_total_mitigation<-function(table, sex_group, la_po
              resladst_ons)|>
     summarise(episodes=sum(episodes),
               beddays=sum(beddays))|>
-    mutate(year=paste0(stringr::str_sub(fyear, 1, 4), "/", stringr::str_sub(fyear, 5, 6)))|>
+    add_year_column() |>
     ungroup()|>
     as.data.frame() 
   

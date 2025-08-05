@@ -34,6 +34,24 @@ add_age_range_column <- function(data) {
   
 }
 
+#' Adds new column for year by converting financial year from YYYYYY to YYYY/YY.
+#'
+#' @param data A dataframe with a column for `fyear`.
+#'
+#' @returns A dataframe.
+add_year_column <- function(data) {
+  wrangled <- data |>
+    dplyr::mutate(
+      year = paste0(
+        stringr::str_sub(fyear, 1, 4),
+        "/",
+        stringr::str_sub(fyear, 5, 6)
+      )
+    )
+  
+  return(wrangled)
+}
+
 #' Convert a dataframe into a datatable.
 #'
 #' @param df A dataframe.
