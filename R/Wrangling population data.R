@@ -10,26 +10,7 @@ wrangling_la_population_data<-function(data){
     filter(country=="E")
   
   la_population_data<-la_population_data|>
-    mutate(age_range=case_when(age>=0 & age<=4 ~ "0-4",
-                               age>=5 & age<=9 ~ "5-9",
-                               age>=10 & age<=14 ~ "10-14",
-                               age>=15 & age<=19 ~ "15-19",
-                               age>=20 & age<=24 ~ "20-24",
-                               age>=25 & age<=29 ~ "25-29",
-                               age>=30 & age<=34 ~ "30-34",
-                               age>=35 & age<=39 ~ "35-39",
-                               age>=40 & age<=44 ~ "40-44",
-                               age>=45 & age<=49 ~ "45-49",
-                               age>=50 & age<=54 ~ "50-54",
-                               age>=55 & age<=59 ~ "55-59",
-                               age>=60 & age<=64 ~ "60-64",
-                               age>=65 & age<=69 ~ "65-69",
-                               age>=70 & age<=74 ~ "70-74",
-                               age>=75 & age<=79 ~ "75-79",
-                               age>=80 & age<=84 ~ "80-84",
-                               age>=85 & age<=89 ~ "85-89",
-                               age>=90 ~ "90+")
-    )|>
+    add_age_range_column() |>
     select(-age, -country, -population_2011, -population_2012, -population_2013, -population_2014)|>
     mutate(sex=case_when(sex=="M"~ 1,
                          sex=="F" ~ 2))|>
@@ -70,26 +51,7 @@ extract_and_format_icb_population_data_by_yr<-function(data, sheet_name, year){
     mutate(sex=substr(age_sex_group, start=1, stop=1))|>
     select(-age_sex_group)|>
     mutate(age=as.numeric(age))|>
-    mutate(age_range=case_when(age>=0 & age<=4 ~ "0-4",
-                               age>=5 & age<=9 ~ "5-9",
-                               age>=10 & age<=14 ~ "10-14",
-                               age>=15 & age<=19 ~ "15-19",
-                               age>=20 & age<=24 ~ "20-24",
-                               age>=25 & age<=29 ~ "25-29",
-                               age>=30 & age<=34 ~ "30-34",
-                               age>=35 & age<=39 ~ "35-39",
-                               age>=40 & age<=44 ~ "40-44",
-                               age>=45 & age<=49 ~ "45-49",
-                               age>=50 & age<=54 ~ "50-54",
-                               age>=55 & age<=59 ~ "55-59",
-                               age>=60 & age<=64 ~ "60-64",
-                               age>=65 & age<=69 ~ "65-69",
-                               age>=70 & age<=74 ~ "70-74",
-                               age>=75 & age<=79 ~ "75-79",
-                               age>=80 & age<=84 ~ "80-84",
-                               age>=85 & age<=89 ~ "85-89",
-                               age>=90 ~ "90+")
-    )|>
+    add_age_range_column() |>
     summarise(icb_population=sum(population_number), .by=c(icb_2024_code, icb_2024_name, age_range, sex))|>
     mutate(fyear=year)|>
     mutate(sex=case_when(sex=="m"~ 1,
