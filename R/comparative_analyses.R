@@ -148,7 +148,9 @@ get_summary_by_geography_table <- function(data, activity_type, treatment_type) 
   table <- data |>
     dplyr::select(
       dplyr::any_of(c(
-        "icb" = "icb_2024_name", "local_authority" = "laname23"
+        "icb" = "icb_2024_name", 
+        "local_authority" = "laname23",
+        "provider"
       )),
       !!rlang::sym(glue::glue("mitigable {activity_type}")) := total_count,
       glue::glue("total_{activity_type}_{treatment_type}"),
