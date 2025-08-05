@@ -143,6 +143,43 @@ Formatting_la_data_for_trends_total_mitigation<-function(table, sex_group, la_po
   
 }
 
+Formatting_providers_data_for_trends <- function(sex_group) {
+  data <- dplyr::tbl(
+    sc,
+    dbplyr::in_catalog(
+      "strategyunit",
+      "default",
+      "sl_af_describing_mitigators_providers"
+    )
+  ) |>
+    dplyr::filter(fyear >= "201819", sex == sex_group) |>
+    sparklyr::collect()
+  
+  numbers_over_time <- data |>
+    identify_whether_bedday_or_admissions_or_both(6:34) |>
+    mutate(episodes = ifelse(activity_group == "beddays", 0, episodes)) |>   #avoid counting admissions for efficiency only activity
+    select(-activity_group, -number_of_cohorts, -icb, -sex) |>
+    mutate_mechanism_columns() |>
+    gather(
+      key = "cohorts",
+      value = "value",
+      -fyear,
+      -age_range,
+      -provider,
+      -episodes,
+      -beddays
+    ) |>
+    filter(value == 1) |>
+    group_by(age_range, fyear, provider, cohorts) |>
+    summarise(episodes = sum(episodes),
+              beddays = sum(beddays)) |>
+    add_year_column() |>
+    mutate(sex = sex_group) |>
+    ungroup()
+  
+  return(numbers_over_time)
+}
+
 # Calculating numbers and percentages over time
 data_number_percentage_over_time_icb<-function(data1, data2, mitigator, treatment_type){
   
@@ -533,7 +570,7 @@ plotting_total_activity_vs_percentage_change_LA<-function(data){
 
 
 
-generating_la_table<-function(data, cohort){
+generating_la_or_provider_table<-function(data, cohort){
   
   data<-data|>
     filter(cohorts==cohort) 
@@ -547,9 +584,9 @@ generating_la_table<-function(data, cohort){
     dplyr::pull()
   
   table_data<-data |>
-    select(laname23, year, value)|>
+    select(any_of(c("laname23", "provider")), year, value) |>
     spread(key=year, value=value) |>
-    rename(`Local Authority`=laname23)|>
+    rename(any_of(c("Local Authority"="laname23")))|>
     mutate(`Percentage Change`=janitor::round_half_up(((`2023/24`-`2018/19`)/`2018/19`)*100,1))|>
     as.data.frame() |>
     mutate(across(2:8, ~replace_na(as.character(.), "-")))|>

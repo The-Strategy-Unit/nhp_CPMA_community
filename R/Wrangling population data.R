@@ -204,7 +204,46 @@ generating_england_age_sex_standardised_rates<-function(data, icb_pop, standard_
     
     
   }
+ 
+generating_provider_age_sex_standardised_rates <- function(data,
+                                                           provider_pop,
+                                                           standard_pop,
+                                                           activity_type) {
+  expanded_data <- data |>
+    filter(fyear != 201415) |>
+    expand(age_range, sex, cohorts, year, provider)
   
+  standardised_data <- expanded_data |>
+    left_join(data[, c("provider",
+                       "year",
+                       "age_range",
+                       "sex",
+                       "cohorts",
+                       "episodes",
+                       "beddays")], 
+              by = c("provider", "year", "age_range", "sex", "cohorts")) |>
+    right_join(provider_pop[, c("provider", "year", "age_range", "sex", "pop")], 
+              by = c("provider", "year", "age_range", "sex")) |>
+    rename(provider_population = pop) |>
+    left_join(standard_pop, by = c("age_range", "sex")) |>
+    filter(!is.na(provider),
+           age_range != "NA") |>
+    mutate(episodes = ifelse(is.na(episodes), 0, episodes),
+           beddays = ifelse(is.na(beddays), 0, beddays)) |>
+    rename(activity = {{activity_type}}) |>
+    group_by(provider, year, cohorts) |>
+    PHEindicatormethods::calculate_dsr(
+      x = activity,
+      # observed number of events
+      n = provider_population,
+      # non-standard pops for each stratum
+      stdpop = pop
+    ) |>   # standard populations for England for each stratum
+    mutate(value = janitor::round_half_up(value, 0))
+  
+  return(standardised_data)
+  
+} 
   
   wrangling_imd_population_by_icb<-function(lsoa_to_icb,
                                             lsoa11_to_lsoa21,
