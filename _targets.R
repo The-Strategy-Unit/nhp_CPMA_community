@@ -333,7 +333,24 @@ list(
       "beddays") |>
       dplyr::left_join(provider_reference, "provider")
   ),
-  
+  tar_target(
+    provider_age_sex_standardised_rates_episodes_total_mitigation,
+    generating_provider_age_sex_standardised_rates(
+      providers_over_time_total_mitigation,
+      providers_population_data,
+      standard_england_pop_2021_census,
+      "episodes") |>
+      dplyr::left_join(provider_reference, "provider")
+  ),
+  tar_target(
+    provider_age_sex_standardised_rates_beddays_total_mitigation,
+    generating_provider_age_sex_standardised_rates(
+      providers_over_time_total_mitigation,
+      providers_population_data,
+      standard_england_pop_2021_census,
+      "beddays") |>
+      dplyr::left_join(provider_reference, "provider")
+  ),
   # Descriptive analysis -------------------------------------------------------
   ## Overview of mitigator -----------------------------------------------------
   tar_target(total_beddays_admissions, get_total_beddays_admissions(sc)),
@@ -555,7 +572,19 @@ list(
       rbind(providers_over_time_sex2) |>
       dplyr::mutate(sex = as.character(sex))
   ),
-  
+  tar_target(
+    providers_over_time_sex1_total_mitigation,
+    Formatting_providers_data_for_trends_total_mitigation(1)),
+  tar_target(
+    providers_over_time_sex2_total_mitigation,
+    Formatting_providers_data_for_trends_total_mitigation(2)),
+  tar_target(
+    providers_over_time_total_mitigation,
+    providers_over_time_sex1_total_mitigation |> 
+      rbind(providers_over_time_sex2_total_mitigation) |>
+      dplyr::mutate(sex = as.character(sex),
+                    cohorts = "all")
+  ),
   # Comparative analysis ---------------------------------------------------------
   ## ICB -----------------------------------------------------------------------
   tar_target(

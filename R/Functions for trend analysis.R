@@ -180,6 +180,32 @@ Formatting_providers_data_for_trends <- function(sex_group) {
   return(numbers_over_time)
 }
 
+Formatting_providers_data_for_trends_total_mitigation <- function(sex_group) {
+  data <- dplyr::tbl(
+    sc,
+    dbplyr::in_catalog(
+      "strategyunit",
+      "default",
+      "sl_af_describing_mitigators_providers"
+    )
+  ) |>
+    dplyr::filter(fyear >= "201819", sex == sex_group) |>
+    sparklyr::collect()
+  
+  numbers_over_time <- data |>
+    identify_whether_bedday_or_admissions_or_both(6:34) |>
+    mutate(episodes = ifelse(activity_group == "beddays", 0, episodes)) |>   #avoid counting admissions for efficiency only activity
+    select(-activity_group, -number_of_cohorts, -icb, -sex) |>
+    group_by(age_range, fyear, provider) |>
+    summarise(episodes = sum(episodes),
+              beddays = sum(beddays)) |>
+    add_year_column() |>
+    mutate(sex = sex_group) |>
+    ungroup()
+  
+  return(numbers_over_time)
+}
+
 # Calculating numbers and percentages over time
 data_number_percentage_over_time_icb<-function(data1, data2, mitigator, treatment_type){
   
