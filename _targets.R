@@ -100,6 +100,20 @@ list(
       dplyr::summarise(pop = sum(count),
                        .by = c(provider, fyear, year, age_range, sex))
   ),
+  tar_target(
+    provider_reference,
+    dplyr::tbl(
+      sc,
+      dbplyr::in_catalog("strategyunit", "default", "sl_af_providers_reference")
+    ) |>
+      sparklyr::collect() |>
+      dplyr::left_join(icb_population_data |>
+                         dplyr::select(icb24cdh, icb_2024_name) |>
+                         unique(), 
+                       by = c("main_icb" = "icb24cdh")) |>
+      dplyr::mutate(icb_2024_name = simplify_icb_name(icb_2024_name),
+                    org_name = simplify_provider_name(org_name))
+  ),
   
   tar_target(
     standard_england_pop_2021_census,
@@ -307,7 +321,8 @@ list(
       providers_over_time,
       providers_population_data,
       standard_england_pop_2021_census,
-      "episodes")
+      "episodes") |>
+      dplyr::left_join(provider_reference, "provider")
   ),
   tar_target(
     provider_age_sex_standardised_rates_beddays,
@@ -315,7 +330,8 @@ list(
       providers_over_time,
       providers_population_data,
       standard_england_pop_2021_census,
-      "beddays")
+      "beddays") |>
+      dplyr::left_join(provider_reference, "provider")
   ),
   
   # Descriptive analysis -------------------------------------------------------
@@ -503,22 +519,22 @@ list(
     numbers_over_time_local_authority_sex1,
     Formatting_la_data_for_trends("SL_AF_describing_mitigators_local_authority_by_yr", 1)
   ),
-  
+
   tar_target(
     numbers_over_time_local_authority_sex2,
     Formatting_la_data_for_trends("SL_AF_describing_mitigators_local_authority_by_yr", 2)
   ),
-  
+
   tar_target(
     numbers_over_time_local_authority_total_mitigation_sex1,
     Formatting_la_data_for_trends_total_mitigation("SL_AF_describing_mitigators_local_authority_by_yr", 1, la_population_data)
   ),
-  
+
   tar_target(
     numbers_over_time_local_authority_total_mitigation_sex2,
     Formatting_la_data_for_trends_total_mitigation("SL_AF_describing_mitigators_local_authority_by_yr", 2, la_population_data)
   ),
-  
+
   tar_target(
     denominator_over_time,
     Formatting_data_for_trends_analysis_denominator(
