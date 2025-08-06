@@ -270,6 +270,21 @@ simplify_icb_name <- function(column) {
   return(simplified)
 }
 
+#' Simplify provider names.
+#'
+#' @param column The provider name column.
+#'
+#' @return A column of simplified provider names.
+simplify_provider_name <- function(column) {
+  simplified <- column |>
+    stringr::str_to_title() |>
+    stringr::str_replace_all(c(" Nhs" = " NHS ",
+                               " Foundation" = "F",
+                               " Trust" = "T"))
+  
+  return(simplified)
+}
+
 #' Suppress small numbers in descriptive analyses or comparative LA table.
 #'
 #' @param data A dataframe.
