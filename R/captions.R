@@ -32,7 +32,7 @@ format_geography_for_caption <- function(geography) {
   } else if (geography == "la") {
     "Local Authority"
   } else if (geography == "provider") {
-    "acute provider"
+    "acute NHS provider"
   } else {
     geography
   }
