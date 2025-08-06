@@ -584,13 +584,15 @@ generating_la_or_provider_table<-function(data, cohort){
     dplyr::pull()
   
   table_data<-data |>
-    select(any_of(c("laname23", "provider")), year, value) |>
+    select(any_of(c("Local Authority" = "laname23", 
+                    "Provider" = "org_name", 
+                    "ICB" = "icb_2024_name")),
+           year, value) |>
     spread(key=year, value=value) |>
-    rename(any_of(c("Local Authority"="laname23")))|>
     mutate(`Percentage Change`=janitor::round_half_up(((`2023/24`-`2018/19`)/`2018/19`)*100,1))|>
     as.data.frame() |>
-    mutate(across(2:8, ~replace_na(as.character(.), "-")))|>
-    mutate(across(2:7, ~factor(., levels = c("-", min_value:max_value))))
+    mutate(across(dplyr::starts_with("20"), ~replace_na(as.character(.), "-")))|>
+    mutate(across(dplyr::starts_with("20"), ~factor(., levels = c("-", min_value:max_value))))
    
 
   return(table_data)
