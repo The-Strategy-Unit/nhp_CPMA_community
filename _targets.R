@@ -777,6 +777,26 @@ list(
       "beddays",
       "ladcode23"
     )
+  ),
+  tar_target(
+    summary_provider_admissions_all,
+    get_summary_by_geography(
+      provider_age_sex_standardised_rates_episodes_total_mitigation,
+      "all",
+      total_beddays_admissions_by_provider,
+      "admissions",
+      "provider"
+    )
+  ),
+  tar_target(
+    summary_provider_beddays_all,
+    get_summary_by_geography(
+      provider_age_sex_standardised_rates_beddays_total_mitigation,
+      "all",
+      total_beddays_admissions_by_provider,
+      "beddays",
+      "provider"
+    )
   )
   
 )

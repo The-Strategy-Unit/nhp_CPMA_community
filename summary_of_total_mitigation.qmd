@@ -441,6 +441,30 @@ targets::tar_read(summary_la_beddays_all) |>
 
 :::
 
+### Acute provider
+
+To explore how potentially mitigable activity may vary between acute NHS providers the table below contains the number, percentage and age and sex standardised rates per 100,000 population of mitigable activity by acute NHS providers. Columns in the table can be ordered and specific providers and ICBs can be searched for.
+
+::: panel-tabset
+
+#### Admissions
+```{r}
+#| label: tbl-rate_provider_admissions_all
+#| tbl-cap: !expr get_caption_by_geography_table(cohort_title, "admissions", treatment_type, "provider")
+targets::tar_read(summary_provider_admissions_all) |>
+  get_summary_by_geography_table("episodes", treatment_type)
+```
+
+#### Beddays
+```{r}
+#| label: tbl-rate_provider_beddays_all
+#| tbl-cap: !expr get_caption_by_geography_table(cohort_title, "beddays", treatment_type, "provider")
+targets::tar_read(summary_provider_beddays_all) |>
+  get_summary_by_geography_table("beddays", treatment_type)
+```
+
+:::
+
 ## Trend Analysis
 
 We aim to understand whether there have been decreases, or increases, in potentially mitigable activity over time. We have considered total mitigable admissions and beddays over the past 9 years in England as a whole and for each ICB, including:
