@@ -348,6 +348,23 @@ trend_section <- c(
   "",
   "```{r}",
   "#| output: asis",
+  "geography <- \"la\"",
+  "",
+  "knitr::knit_child(
+    input = \"child-dir/_child-trends_local-authority.qmd\",
+    envir = environment(),
+    quiet = TRUE
+    ) |>
+  cat(sep = '\\n')",
+  "```",
+  "",
+  
+  "### Acute Provider",
+  "",
+  "```{r}",
+  "#| output: asis",
+  "geography <- \"provider\"",
+  "",
   "knitr::knit_child(
     input = \"child-dir/_child-trends_local-authority.qmd\",
     envir = environment(),

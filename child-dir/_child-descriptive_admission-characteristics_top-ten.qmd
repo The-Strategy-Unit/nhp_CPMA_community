@@ -1,0 +1,18 @@
+```{r}
+top_ten_caption <- get_caption_top_ten(cohort_title, activity_type, group)
+```
+
+```{r}
+#| label: tbl-perc_top_ten
+#| tbl-cap: !expr top_ten_caption
+top_ten |>
+  dplyr::rename(dplyr::any_of(c("Primary Diagnosis" = "description"))) |>
+  get_table_perc() 
+```
+
+```{r}
+#| label: fig-perc_top_ten
+#| fig-cap: !expr top_ten_caption
+top_ten |>
+  get_top_ten_plot(activity_type, group)
+```

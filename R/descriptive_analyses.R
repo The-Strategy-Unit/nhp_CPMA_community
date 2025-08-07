@@ -38,7 +38,7 @@ get_overview_of_mitigator <- function(mitigator,
     dbplyr::in_catalog(
       "strategyunit",
       "default",
-      "sl_af_describing_mitigators_final_2324_sex"
+      get_table_name("sex")
     )
   ) |>
     filter_to_mitigator_or_mechanism(mitigator) |>
@@ -88,11 +88,12 @@ get_number_by_group <- function(mitigator,
                         dbplyr::in_catalog(
                           "strategyunit",
                           "default",
-                          paste0("sl_af_describing_mitigators_final_2324_", group)
+                          get_table_name(group)
                         )) |>
     filter_to_mitigator_or_mechanism(mitigator) |>
     dplyr::filter(!is.na(!!rlang::sym(col_name))) |> # exclude NULLs
     dplyr::rename(admissions = episodes) |>
+    format_diagnoses_codes(group) |>
       # Although the column is called episodes, each row is the last episode in 
       # a spell. So renaming as admissions here to avoid confusion later.
     dplyr::summarise(number = sum(!!rlang::sym(activity_type)), 
@@ -137,7 +138,7 @@ get_perc_by_group <- function(mitigator,
     ) |>
     order_levels_of_factors() |>
     dplyr::arrange(dplyr::across(1)) |>
-    mutate(number=janitor::round_half_up(number,0))  |>   
+    dplyr::mutate(number = janitor::round_half_up(number,0))  |>   
     dplyr::rename(!!rlang::sym(activity_type) := number) 
   
   return(summary)
@@ -293,40 +294,64 @@ get_rates_by_group_table <- function(data) {
   return(table)
 }
 
-# Top ten specialties ----------------------------------------------------------
-#' Get the top ten specialties for a mitigator or mechanism.
+# Top ten specialties/diagnoses ------------------------------------------------
+#' Get the top ten specialties/diagnoses for a mitigator or mechanism.
 #'
-#' @param key The specialty key.
 #' @param activity_type Either `"admissions"` or `"beddays"`.
 #' @param mitigator The mitigator or mechanism.
+#' @param group Either `"tretspef"` for specialty or `"diagnosis"` for diagnosis.
+#' @param key Key for specialty or diagnosis.
 #'
 #' @return A dataframe.
-get_top_ten_specialties <- function(mitigator, key, activity_type) {
-  get_perc_by_group(mitigator, "tretspef", activity_type) |>
-    dplyr::left_join(key, by = c("tretspef" = "dd_code")) |>
+get_top_ten <- function(mitigator, activity_type, group, key) {
+  
+  if(group == "tretspef"){
+    column_title <- "specialty"
+    join <- group
+  } else {
+    column_title <- "description"
+    join <- "primary_diagnosis"
+  }
+  
+  key <- key |>
+    dplyr::rename(dplyr::any_of(c("tretspef" = "dd_code",
+                                  "primary_diagnosis" = "code")))
+  
+  top_ten <- get_perc_by_group(mitigator, group, activity_type) |>
+    dplyr::left_join(key, join) |>
     dplyr::arrange(desc(perc)) |>
     dplyr::slice(1:10) |>
-    dplyr::select(specialty, {{activity_type}}, perc)
+    dplyr::select({{column_title}}, {{activity_type}}, perc)
+  
+  return(top_ten)
 }
 
-#' Plot the top ten specialties for a mitigator or mechanism.
+#' Plot the top ten specialties/diagnoses for a mitigator or mechanism.
 #'
 #' @param data The output of `get_top_ten_specialties()`.
 #' @param activity_type Either `"admissions"` or `"beddays"`.
+#' @param group Either `"tretspef"` for specialty or `"diagnosis"` for diagnosis.
 #'
 #' @return A plot.
-get_top_ten_specialties_plot <- function(data, activity_type) {
+get_top_ten_plot <- function(data, activity_type, group) {
+  
+  if(group == "diagnosis"){
+    group <- "description"
+    y_title <- "Primary Diagnosis"
+  } else {
+    y_title <- "Specialty"
+  }
   
   plot <- data |>
     ggplot2::ggplot(ggplot2::aes(perc, 
-                                 reorder(specialty, perc),
+                                 reorder(!!rlang::sym(group), perc),
                                  fill = 'bars_color')) + 
     ggplot2::geom_col() +
     ggplot2::scale_fill_manual(values = c('bars_color' = "#f9bf07"), 
                                guide = 'none') +
     StrategyUnitTheme::su_theme() +
     ggplot2::labs(x = glue::glue("Percentage of mitigable {activity_type}"), 
-                  y = "Specialty")
+                  y = y_title)
   
   return(plot)
 }
@@ -429,7 +454,7 @@ get_total_beddays_admissions <- function(connection) {
     dbplyr::in_catalog(
       "strategyunit",
       "default",
-      "sl_af_describing_mitigators_final_2324_sex"
+      get_table_name("sex")
     )
   ) |>
     dplyr::select(dplyr::starts_with("total")) |>
