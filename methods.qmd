@@ -32,6 +32,16 @@ For crude rates by IMD decile, the Office of National Statistics Lower layer Sup
 
 For crude rates by ethnicity the Office of National Statistics Ethnic group, England and Wales: Census 2021 dataset was used - <https://www.ons.gov.uk/peoplepopulationandcommunity/culturalidentity/ethnicity/bulletins/ethnicgroupenglandandwales/census2021>. Data was recoded into [NHS ethnic categories](https://digital.nhs.uk/data-and-information/data-collections-and-data-sets/data-sets/mental-health-services-data-set/submit-data/data-quality-of-protected-characteristics-and-other-vulnerable-groups/ethnicity#how-to-collect-and-record-ethnicity-data). NULL and unknown values were excluded.
 
+## Providers
+
+In 2023/24, acute NHS providers account for `r mitigable_activity_acute_2324 |> dplyr::pull(perc_admissions)`% of potentially mitigable admissions and `r mitigable_activity_acute_2324 |> dplyr::pull(perc_beddays)`% of potentially mitigable beddays. Similar numbers were observed for years 2018/19 to 2022/23. Thus, analyses of potentially mitigable activity by provider are for acute NHS providers only.
+
+```{r}
+#| label: tbl-provider_type
+#| tbl-cap: Potentially mitigable activity by provider type in 2023/24.
+targets::tar_read(provider_type_2324_table)
+```
+
 ## Analysis
 
 The analysis uses the most recent year of data available, 2023/24, except for trends analysis where analysis includes data from the last 9 years.

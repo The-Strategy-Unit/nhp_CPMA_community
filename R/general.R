@@ -1,5 +1,57 @@
 # Functions used for general tasks, like creating tables.
 
+
+#' Adds a new column for age range.
+#'
+#' @param data A dataframe with an `age` column.
+#'
+#' @returns A dataframe.
+add_age_range_column <- function(data) {
+  wrangled <- data |>
+    dplyr::mutate(age_range = dplyr::case_when(
+      age >= 0 & age <= 4 ~ "0-4",
+      age >= 5 & age <= 9 ~ "5-9",
+      age >= 10 & age <= 14 ~ "10-14",
+      age >= 15 & age <= 19 ~ "15-19",
+      age >= 20 & age <= 24 ~ "20-24",
+      age >= 25 & age <= 29 ~ "25-29",
+      age >= 30 & age <= 34 ~ "30-34",
+      age >= 35 & age <= 39 ~ "35-39",
+      age >= 40 & age <= 44 ~ "40-44",
+      age >= 45 & age <= 49 ~ "45-49",
+      age >= 50 & age <= 54 ~ "50-54",
+      age >= 55 & age <= 59 ~ "55-59",
+      age >= 60 & age <= 64 ~ "60-64",
+      age >= 65 & age <= 69 ~ "65-69",
+      age >= 70 & age <= 74 ~ "70-74",
+      age >= 75 & age <= 79 ~ "75-79",
+      age >= 80 & age <= 84 ~ "80-84",
+      age >= 85 & age <= 89 ~ "85-89",
+      age >= 90 ~ "90+"
+    ))
+  
+  return(wrangled)
+  
+}
+
+#' Adds new column for year by converting financial year from YYYYYY to YYYY/YY.
+#'
+#' @param data A dataframe with a column for `fyear`.
+#'
+#' @returns A dataframe.
+add_year_column <- function(data) {
+  wrangled <- data |>
+    dplyr::mutate(
+      year = paste0(
+        stringr::str_sub(fyear, 1, 4),
+        "/",
+        stringr::str_sub(fyear, 5, 6)
+      )
+    )
+  
+  return(wrangled)
+}
+
 #' Convert a dataframe into a datatable.
 #'
 #' @param df A dataframe.
@@ -27,7 +79,11 @@ create_dt <- function(df) {
   # Create the datatable with column definitions
   DT::datatable(
     df,
-    options = list(orderClasses = TRUE, columnDefs = factor_defs),
+    extensions = "Buttons",
+    options = list(dom = "Blfrtip",
+                   orderClasses = TRUE, 
+                   columnDefs = factor_defs,
+                   buttons = c("csv")),
     rownames = FALSE,
     class = 'cell-border stripe'
   )
@@ -64,6 +120,29 @@ format_as_title <- function(col_name) {
   return(title)
 }
 
+#' Keeps only first three characters of diagnoses codes.
+#'
+#' @param data A dataframe.
+#' @param group A string of the group that the table is for. 
+#'
+#' @returns A dataframe.
+format_diagnoses_codes <- function(data, group) {
+  if (group == "diagnosis") {
+    formatted <- data |>
+      dplyr::mutate(primary_diagnosis = ifelse(
+        # want to use first three characters, but also to distinguish vaping from covid:
+        primary_diagnosis == "U07.0",
+        "U07.0", 
+        stringr::str_sub(primary_diagnosis, start = 1, end = 3)
+      ))
+    
+  } else {
+    formatted <- data
+  }
+  
+  return(formatted)
+}
+
 #' Get the column name from the group.
 #'
 #' In Databricks, the grouped tables have a suffix to indicate the group, but
@@ -85,6 +164,8 @@ get_col_name_from_group <- function(group) {
     "imd19_decile"
   } else if (group == "los") {
     "los_range"
+  } else if (group == "diagnosis"){
+    "primary_diagnosis"
   } else {
     group
   }
@@ -116,6 +197,22 @@ get_table <- function(data) {
     flextable::autofit()
   
   return(table)
+}
+
+#' Get Databricks table name.
+#'
+#' @param group A string of the group that the table is for.
+#'
+#' @returns A string.
+get_table_name <- function(group){
+  
+  if(group == "diagnosis"){
+    table_name <- paste0("sl_af_describing_mitigators_", group)
+  } else {
+    table_name <- paste0("sl_af_describing_mitigators_final_2324_", group)
+  }
+  
+  return(table_name)
 }
 
 #' Order the levels of factor variables.
@@ -214,6 +311,21 @@ simplify_icb_name <- function(column) {
   simplified <- column |>
     stringr::str_remove(" Integrated Care Board") |>
     stringr::str_remove("NHS ")
+  
+  return(simplified)
+}
+
+#' Simplify provider names.
+#'
+#' @param column The provider name column.
+#'
+#' @return A column of simplified provider names.
+simplify_provider_name <- function(column) {
+  simplified <- column |>
+    stringr::str_to_title() |>
+    stringr::str_replace_all(c(" Nhs" = " NHS ",
+                               " Foundation" = "F",
+                               " Trust" = "T"))
   
   return(simplified)
 }
