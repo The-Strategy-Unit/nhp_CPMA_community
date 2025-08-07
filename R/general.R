@@ -64,6 +64,29 @@ format_as_title <- function(col_name) {
   return(title)
 }
 
+#' Keeps only first three characters of diagnoses codes.
+#'
+#' @param data A dataframe.
+#' @param group A string of the group that the table is for. 
+#'
+#' @returns A dataframe.
+format_diagnoses_codes <- function(data, group) {
+  if (group == "diagnosis") {
+    formatted <- data |>
+      dplyr::mutate(primary_diagnosis = ifelse(
+        # want to use first three characters, but also to distinguish vaping from covid:
+        primary_diagnosis == "U07.0",
+        "U07.0", 
+        stringr::str_sub(primary_diagnosis, start = 1, end = 3)
+      ))
+    
+  } else {
+    formatted <- data
+  }
+  
+  return(formatted)
+}
+
 #' Get the column name from the group.
 #'
 #' In Databricks, the grouped tables have a suffix to indicate the group, but
@@ -85,6 +108,8 @@ get_col_name_from_group <- function(group) {
     "imd19_decile"
   } else if (group == "los") {
     "los_range"
+  } else if (group == "diagnosis"){
+    "primary_diagnosis"
   } else {
     group
   }
@@ -116,6 +141,22 @@ get_table <- function(data) {
     flextable::autofit()
   
   return(table)
+}
+
+#' Get Databricks table name.
+#'
+#' @param group A string of the group that the table is for.
+#'
+#' @returns A string.
+get_table_name <- function(group){
+  
+  if(group == "diagnosis"){
+    table_name <- paste0("sl_af_describing_mitigators_", group)
+  } else {
+    table_name <- paste0("sl_af_describing_mitigators_final_2324_", group)
+  }
+  
+  return(table_name)
 }
 
 #' Order the levels of factor variables.

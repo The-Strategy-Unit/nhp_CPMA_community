@@ -377,7 +377,33 @@ list(
     ),
     tar_target(
       specialty,
-      get_top_ten_specialties(mitigator, specialty_key, activity_type)
+      get_top_ten(mitigator, activity_type, "tretspef", specialty_key)
+    )
+  ),
+  
+  ## Diagnoses -----------------------------------------------------------------
+  tar_target(
+    diagnosis_filename,
+    r"{Z:\Strategic Analytics\Projects 2025\Describing and Quantifying the NHP mitigators\population_data\ICD10_diagnosis_code_descriptions.csv}"
+  ),
+  tar_target(
+    diagnosis_key,
+    read.csv(diagnosis_filename) |>
+      janitor::clean_names() |>
+      dplyr::mutate(description = dplyr::case_when(
+        # to make description more understandable
+        code == "U07.0" ~ "Vaping-related disorder", 
+        code %in% c("U07", "U08", "U09") ~ "COVID-19", 
+        .default = description))
+  ),
+  tarchetypes::tar_map(
+    list(
+      mitigator = rep(mitigators_and_mechanisms, 2),
+      activity_type = rep(c("admissions", "beddays"), each = 33)
+    ),
+    tar_target(
+      diagnosis,
+      get_top_ten(mitigator, activity_type, "diagnosis", diagnosis_key)
     )
   ),
   

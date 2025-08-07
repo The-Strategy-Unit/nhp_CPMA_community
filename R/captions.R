@@ -50,6 +50,8 @@ format_group_name_for_caption <- function(group) {
     group_formatted <- "Index of Multiple Deprivation (IMD) decile"
   } else if (group == "los") {
     group_formatted <- "Length of Stay (LOS) range"
+  } else if (group == "diagnosis"){
+    group_formatted <- "primary diagnoses"
   } else {
     group_formatted <- group
   }
@@ -207,10 +209,13 @@ get_caption_overview <- function(cohort, treatment_type) {
 #'
 #' @param cohort A string for the mitigator cohort.
 #' @param activity_type Either `"admissions"` or `"beddays"`.
+#' @param group Either `"specialties"` or `"diagnoses"`.
 #'
 #' @return A string.
-get_caption_top_ten_specialties <- function(cohort, activity_type) {
-  caption <- glue::glue("Top ten specialties of mitigable {activity_type} for {cohort} in 2023-24.")
+get_caption_top_ten <- function(cohort, activity_type, group) {
+  group <- format_group_name_for_caption(group)
+  
+  caption <- glue::glue("Top ten {group} of mitigable {activity_type} for {cohort} in 2023-24.")
   
   return(caption)
 }
