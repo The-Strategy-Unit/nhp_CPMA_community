@@ -27,7 +27,11 @@ create_dt <- function(df) {
   # Create the datatable with column definitions
   DT::datatable(
     df,
-    options = list(orderClasses = TRUE, columnDefs = factor_defs),
+    extensions = "Buttons",
+    options = list(dom = "Blfrtip",
+                   orderClasses = TRUE, 
+                   columnDefs = factor_defs,
+                   buttons = c("csv")),
     rownames = FALSE,
     class = 'cell-border stripe'
   )
