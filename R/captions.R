@@ -31,6 +31,8 @@ format_geography_for_caption <- function(geography) {
     "Integrated Care Board"
   } else if (geography == "la") {
     "Local Authority"
+  } else if (geography == "provider") {
+    "acute NHS provider"
   } else {
     geography
   }
@@ -279,9 +281,12 @@ get_caption_activity_vs_perc_change <- function(cohort,
 #' @param activity_type Either `"admissions"` or `"beddays"`.
 #'
 #' @return A string.
-get_caption_la_trends <- function(cohort,
-                                  activity_type) {
-  caption <- glue::glue("Table of the age and sex standardised rates of {cohort} {activity_type} per 100,000 population by Local Authority over the last 5 years, including the percentage change between 2018/19 and 2023/24.")
+get_caption_la_or_provider_trends <- function(cohort,
+                                              activity_type,
+                                              geography) {
+  geography <- format_geography_for_caption(geography)
+  
+  caption <- glue::glue("Table of the age and sex standardised rates of {cohort} {activity_type} per 100,000 population by {geography} over the last 5 years, including the percentage change between 2018/19 and 2023/24.")
   
   return(caption)
 }

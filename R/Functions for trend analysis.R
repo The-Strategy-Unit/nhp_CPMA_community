@@ -16,7 +16,7 @@ Formatting_data_for_trends_analysis_denominator<-function(table, icb_pop){
               total_beddays_elective=sum(total_beddays_elective),
               total_episodes_all=sum(total_episodes_elective)+sum(total_episodes_emergency),
               total_beddays_all=sum(total_beddays_elective)+sum(total_beddays_emergency))|>
-    mutate(year=paste0(stringr::str_sub(fyear, 1, 4), "/", stringr::str_sub(fyear, 5, 6)))|>
+    add_year_column() |>
     collect()|>
     left_join(icb_pop[,c("icb24cdh", "icb_2024_name")]|>
                 distinct(icb24cdh, icb_2024_name), by=c("icb"="icb24cdh"))|>
@@ -52,7 +52,7 @@ Formatting_data_for_trends_analysis_cohorts <- function(table, icb_pop){
              cohorts)|>
     summarise(episodes=sum(episodes),
               beddays=sum(beddays))|>
-    mutate(year=paste0(stringr::str_sub(fyear, 1, 4), "/", stringr::str_sub(fyear, 5, 6)))|>
+    add_year_column() |>
     ungroup()|>
     as.data.frame()
   
@@ -82,7 +82,7 @@ numbers_over_time<- identify_whether_bedday_or_admissions_or_both(numbers_over_t
              icb_2024_name)|>
     summarise(episodes=sum(episodes),
               beddays=sum(beddays))|>
-    mutate(year=paste0(stringr::str_sub(fyear, 1, 4), "/", stringr::str_sub(fyear, 5, 6)))|>
+    add_year_column() |>
     ungroup()|>
     as.data.frame() 
   
@@ -109,7 +109,7 @@ Formatting_la_data_for_trends <- function(table, sex_group) {
     mutate_mechanism_columns() |> 
     gather(key="cohorts", value="value", -fyear, -age_range, -sex, -resladst_ons, -episodes, -beddays)|>
     filter(value==1)|>
-    mutate(year=paste0(stringr::str_sub(fyear, 1, 4), "/", stringr::str_sub(fyear, 5, 6)))
+    add_year_column()
  
   return(la_numbers_over_time)
 }
@@ -135,12 +135,75 @@ Formatting_la_data_for_trends_total_mitigation<-function(table, sex_group, la_po
              resladst_ons)|>
     summarise(episodes=sum(episodes),
               beddays=sum(beddays))|>
-    mutate(year=paste0(stringr::str_sub(fyear, 1, 4), "/", stringr::str_sub(fyear, 5, 6)))|>
+    add_year_column() |>
     ungroup()|>
     as.data.frame() 
   
   return(la_numbers_over_time)
   
+}
+
+Formatting_providers_data_for_trends <- function(sex_group) {
+  data <- dplyr::tbl(
+    sc,
+    dbplyr::in_catalog(
+      "strategyunit",
+      "default",
+      "sl_af_describing_mitigators_providers"
+    )
+  ) |>
+    dplyr::filter(fyear >= "201819", sex == sex_group) |>
+    sparklyr::collect()
+  
+  numbers_over_time <- data |>
+    identify_whether_bedday_or_admissions_or_both(6:34) |>
+    mutate(episodes = ifelse(activity_group == "beddays", 0, episodes)) |>   #avoid counting admissions for efficiency only activity
+    select(-activity_group, -number_of_cohorts, -icb, -sex) |>
+    mutate_mechanism_columns() |>
+    gather(
+      key = "cohorts",
+      value = "value",
+      -fyear,
+      -age_range,
+      -provider,
+      -episodes,
+      -beddays
+    ) |>
+    filter(value == 1) |>
+    group_by(age_range, fyear, provider, cohorts) |>
+    summarise(episodes = sum(episodes),
+              beddays = sum(beddays)) |>
+    add_year_column() |>
+    mutate(sex = sex_group) |>
+    ungroup()
+  
+  return(numbers_over_time)
+}
+
+Formatting_providers_data_for_trends_total_mitigation <- function(sex_group) {
+  data <- dplyr::tbl(
+    sc,
+    dbplyr::in_catalog(
+      "strategyunit",
+      "default",
+      "sl_af_describing_mitigators_providers"
+    )
+  ) |>
+    dplyr::filter(fyear >= "201819", sex == sex_group) |>
+    sparklyr::collect()
+  
+  numbers_over_time <- data |>
+    identify_whether_bedday_or_admissions_or_both(6:34) |>
+    mutate(episodes = ifelse(activity_group == "beddays", 0, episodes)) |>   #avoid counting admissions for efficiency only activity
+    select(-activity_group, -number_of_cohorts, -icb, -sex) |>
+    group_by(age_range, fyear, provider) |>
+    summarise(episodes = sum(episodes),
+              beddays = sum(beddays)) |>
+    add_year_column() |>
+    mutate(sex = sex_group) |>
+    ungroup()
+  
+  return(numbers_over_time)
 }
 
 # Calculating numbers and percentages over time
@@ -533,7 +596,7 @@ plotting_total_activity_vs_percentage_change_LA<-function(data){
 
 
 
-generating_la_table<-function(data, cohort){
+generating_la_or_provider_table<-function(data, cohort){
   
   data<-data|>
     filter(cohorts==cohort) 
@@ -547,14 +610,20 @@ generating_la_table<-function(data, cohort){
     dplyr::pull()
   
   table_data<-data |>
-    select(laname23, year, value)|>
+    select(any_of(c("Local Authority" = "laname23", 
+                    "Provider" = "org_name", 
+                    "ICB" = "icb_2024_name")),
+           year, value) |>
     spread(key=year, value=value) |>
-    rename(`Local Authority`=laname23)|>
     mutate(`Percentage Change`=janitor::round_half_up(((`2023/24`-`2018/19`)/`2018/19`)*100,1))|>
     as.data.frame() |>
-    mutate(across(2:8, ~replace_na(as.character(.), "-")))|>
-    mutate(across(2:7, ~factor(., levels = c("-", min_value:max_value))))
-   
+    mutate(across(dplyr::starts_with("20"), ~replace_na(as.character(.), "-")))|>
+    mutate(across(dplyr::starts_with("20"), ~factor(., levels = c("-", min_value:max_value))))
+  
+  if("Provider" %in% names(table_data)) {
+    table_data <- table_data |> 
+      dplyr::rename("ICB (system)" = ICB)
+  } 
 
   return(table_data)
   

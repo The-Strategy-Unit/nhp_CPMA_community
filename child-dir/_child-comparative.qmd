@@ -14,8 +14,28 @@ knitr::knit_child(
 
 ### Local Authority
 
+To explore how potentially mitigable activity may vary between Local Authority (LA) the table below contains the number, percentage and age and sex standardised rates per 100,000 population of mitigable activity by LA. Columns in the table can be ordered and specific LAs can be searched for.
+
 ```{r}
 #| output: asis
+geography <- "la"
+
+knitr::knit_child(
+                  input = "child-dir/_child-comparative_local-authority.qmd",
+                  envir = environment(),
+                  quiet = TRUE
+                ) |>
+                  cat(sep = '\n')
+```
+
+### Acute Provider
+
+The table below contains the number, percentage and age and sex standardised rates per 100,000 population of mitigable activity by acute NHS providers. Columns in the table can be ordered and specific providers and the ICB system that the providers are aligned with can be searched for.
+
+```{r}
+#| output: asis
+geography <- "provider"
+
 knitr::knit_child(
                   input = "child-dir/_child-comparative_local-authority.qmd",
                   envir = environment(),
