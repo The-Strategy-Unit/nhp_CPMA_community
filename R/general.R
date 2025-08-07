@@ -70,13 +70,16 @@ format_as_title <- function(col_name) {
 #' @param group A string of the group that the table is for. 
 #'
 #' @returns A dataframe.
-format_diagnoses_codes <- function(data, group){
-  
-  if(group == "diagnosis"){
-    formatted <- data |> 
-      dplyr::mutate(primary_diagnosis = stringr::str_sub(primary_diagnosis,
-                                                         start = 1,
-                                                         end = 3))
+format_diagnoses_codes <- function(data, group) {
+  if (group == "diagnosis") {
+    formatted <- data |>
+      dplyr::mutate(primary_diagnosis = ifelse(
+        # want to use first three characters, but also to distinguish vaping from covid:
+        primary_diagnosis == "U07.0",
+        "U07.0", 
+        stringr::str_sub(primary_diagnosis, start = 1, end = 3)
+      ))
+    
   } else {
     formatted <- data
   }

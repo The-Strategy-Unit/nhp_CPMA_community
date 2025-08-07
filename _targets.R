@@ -389,7 +389,12 @@ list(
   tar_target(
     diagnosis_key,
     read.csv(diagnosis_filename) |>
-      janitor::clean_names()
+      janitor::clean_names() |>
+      dplyr::mutate(description = dplyr::case_when(
+        # to make description more understandable
+        code == "U07.0" ~ "Vaping-related disorder", 
+        code %in% c("U07", "U08", "U09") ~ "COVID-19", 
+        .default = description))
   ),
   tarchetypes::tar_map(
     list(
