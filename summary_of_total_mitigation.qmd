@@ -443,7 +443,7 @@ targets::tar_read(summary_la_beddays_all) |>
 
 ### Acute provider
 
-To explore how potentially mitigable activity may vary between acute NHS providers the table below contains the number, percentage and age and sex standardised rates per 100,000 population of mitigable activity by acute NHS providers. Columns in the table can be ordered and specific providers and ICBs can be searched for.
+To explore how potentially mitigable activity may vary between by acute NHS providers the table below contains the number, percentage and age and sex standardised rates per 100,000 population of mitigable activity by acute NHS providers. Columns in the table can be ordered and specific providers and the ICB system that the providers are aligned with can be searched for.
 
 ::: panel-tabset
 
@@ -872,7 +872,7 @@ DT::datatable(provider_episode_table)
 
 #### Beddays
 ```{r}
-#| label: table_local_authority_over_time_beddays
+#| label: table_provider_over_time_beddays
 #| tbl-cap: Table of the standardised rate of all potentially mitigable beddays by acute NHS provider over the last 5 years, including the percentage change between 2018/19 and 2023/24.  
 
 provider_age_sex_standardised_rates_beddays_total_mitigation <- tar_read(provider_age_sex_standardised_rates_beddays_total_mitigation)

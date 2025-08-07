@@ -1,5 +1,3 @@
-To explore how potentially mitigable activity may vary between Local Authority (LA) the table below contains the number, percentage and age and sex standardised rates per 100,000 population of mitigable activity by LA. Columns in the table can be ordered and specific LAs can be searched for.
-
 ```{r}
 #| output: asis
 #| eval: !expr include_admissions_and_beddays
