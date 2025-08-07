@@ -9,8 +9,13 @@ get_perc_los_over_time <- function(data, mitigator) {
 
   los_over_time <- data |>
     filter_to_mitigator_or_mechanism(mitigator) |>
+    dplyr::mutate(los_range2 = dplyr::case_when(
+      los_range %in% c("0", "1") ~ "0-1",
+      los_range %in% c("2", "3", "4-7") ~ "2-7",
+      los_range %in% c("15-21", "22+") ~ "15+",
+      .default = los_range)) |>
     dplyr::summarise(episodes = sum(episodes),
-                     .by = c(year, los_range)) |>
+                     .by = c(year, los_range2)) |>
     dplyr::mutate(
       perc = janitor::round_half_up(episodes * 100 / sum(episodes), 2),
       .by = year
@@ -43,8 +48,8 @@ get_perc_los_over_time_plot <- function(data, metric) {
     ggplot2::geom_line(ggplot2::aes(
       x = year,
       y = !!rlang::sym(column),
-      group = los_range,
-      col = los_range
+      group = los_range2,
+      col = los_range2
     ),
     size = 1) +
     ggplot2::geom_rect(
@@ -91,7 +96,7 @@ los_over_time <- dplyr::tbl(
 ) |>
   dplyr::filter(fyear >= "201819") |>
   sparklyr::collect() |>
-  dplyr::mutate(year = paste0(
+  dplyr::mutate(year = paste0( # change to add_year_col()
     stringr::str_sub(fyear, 1, 4),
     "/",
     stringr::str_sub(fyear, 5, 6)
@@ -99,7 +104,7 @@ los_over_time <- dplyr::tbl(
   dplyr::select(-fyear)
 
 
-d <- get_perc_los_over_time(los_over_time, "efficiency_relocation")
+d <- get_perc_los_over_time(los_over_time, "redirection_substitution") 
 d
 
 # In child-dir -----------------------------------------------------------------
