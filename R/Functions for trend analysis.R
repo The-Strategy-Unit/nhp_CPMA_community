@@ -619,7 +619,11 @@ generating_la_or_provider_table<-function(data, cohort){
     as.data.frame() |>
     mutate(across(dplyr::starts_with("20"), ~replace_na(as.character(.), "-")))|>
     mutate(across(dplyr::starts_with("20"), ~factor(., levels = c("-", min_value:max_value))))
-   
+  
+  if("Provider" %in% names(table_data)) {
+    table_data <- table_data |> 
+      dplyr::rename("ICB (system)" = ICB)
+  } 
 
   return(table_data)
   

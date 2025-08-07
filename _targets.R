@@ -735,7 +735,23 @@ list(
       )
     )
   ),
-
+  tar_target(
+    provider_type,
+    get_mitigation_by_provider_type(providers_over_time_total_mitigation,
+                                    provider_reference)
+  ),
+  tar_target(
+    provider_type_2324_table,
+    provider_type |>
+      dplyr::filter(year == "2023/24") |>
+      dplyr::select(org_type, admissions, perc_admissions, beddays, perc_beddays) |>
+      dplyr::arrange(org_type) |>
+      dplyr::rename("Provider Type" = org_type) |>
+      dplyr::rename_with( ~ format_as_title(.)) |> 
+      get_table() |>
+      flextable::delete_part(part = "footer") |>
+      flextable::align(part = "all", align = "left")
+  ),
   # For summary ----------------------------------------------------------------
   
   tar_target(
