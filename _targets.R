@@ -475,6 +475,26 @@ list(
     list(mitigator = mitigators_and_mechanisms),
     tar_target(perc_los, get_perc_by_los(mitigator))
   ),
+  tar_target(
+    los_over_time,
+    dplyr::tbl(
+      sc,
+      dbplyr::in_catalog(
+        "strategyunit",
+        "default",
+        "SL_AF_describing_mitigators_los_over_time"
+      )
+    ) |>
+      dplyr::filter(fyear >= "201819") |>
+      sparklyr::collect() |>
+      add_year_column() |>
+      dplyr::select(-fyear)
+  ),
+  tarchetypes::tar_map(
+    list(mitigator = mitigators_and_mechanisms),
+    tar_target(perc_los_trends, 
+               get_perc_by_los_trends(los_over_time, mitigator))
+  ),
   
   # Cohort analysis ------------------------------------------------------------
   
