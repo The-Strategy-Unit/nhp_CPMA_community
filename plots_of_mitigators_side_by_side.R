@@ -159,6 +159,32 @@ get_los_plots <- function(cohorts = mitigators_and_mechanisms,
   return(final)
 }
 
+get_los_trends_plots <- function(cohorts = mitigators_and_mechanisms,
+                                 summary_table = mitigator_summary_table) {
+  new_cohorts <- cohorts[check_include_admissions(cohorts, summary_table)
+                         & !check_if_zero_los_mitigator(cohorts)]
+  
+  plots <- purrr::map(
+    new_cohorts,
+    ~ targets::tar_read_raw(glue::glue("perc_los_trends_{.}")) |> # or whatever target called
+      get_perc_by_los_trends_plot("perc") +
+      ggplot2::labs(title = .) +
+      ggplot2::theme(axis.title.x = ggplot2::element_blank(),
+                     axis.text.x = ggplot2::element_blank(),
+                     axis.ticks.x = ggplot2::element_blank(),
+                     axis.title.y = ggplot2::element_blank(),
+                     axis.text.y = ggplot2::element_blank(),
+                     axis.ticks.y = ggplot2::element_blank(),
+                     legend.position = "none")
+  )
+  
+  final <- patchwork::wrap_plots(plots) +
+    patchwork::plot_annotation(
+      glue::glue("Percentage of admissions by LOS range over time"))
+  
+  return(final)
+}
+
 # Top ten specialty/diagnosis --------------------------------------------------
 get_top_ten_plots <- function(activity_type,
                               group,
@@ -693,6 +719,8 @@ get_patient_characteristic_plots("beddays",
                                  "rate") # rate/perc
 
 get_los_plots() # Only does admissions.
+
+get_los_trends_plots()
 
 get_top_ten_plots("admissions", 
                   "specialty") # specialty/diagnosis

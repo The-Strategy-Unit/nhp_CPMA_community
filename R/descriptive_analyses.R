@@ -429,15 +429,103 @@ get_perc_by_los_plot <- function(data) {
   return(plot)
 }
 
-#' Formats the output of `get_perc_by_los` into a table.
+#' Formats the output of `get_perc_by_los()` into a table.
 #'
-#' @param data The output of `get_perc_admissions_by_group()`.
+#' @param data The output of `get_perc_by_los()`.
 #'
 #' @return A table.
 get_perc_by_los_table <- function(data) {
   table <- data |>
     dplyr::select(los_range, admissions, perc) |>
     get_table_perc()
+  
+  return(table)
+}
+
+#' Get the percentage LOS over time.
+#'
+#' @param data The object `los_over_time`.
+#' @param mitigator The mitigator or mechanism.
+get_perc_by_los_trends <- function(data, mitigator) {
+  los_over_time <- data |>
+    filter_to_mitigator_or_mechanism(mitigator) |>
+    dplyr::mutate(
+      los_range2 = dplyr::case_when(
+        los_range %in% c("2", "3", "4-7") ~ "2-7",
+        los_range %in% c("15-21", "22+") ~ "15+",
+        .default = los_range
+      )
+    ) |>
+    dplyr::summarise(episodes = sum(episodes),
+                     .by = c(year, los_range2)) |>
+    dplyr::mutate(perc = janitor::round_half_up(episodes * 100 / sum(episodes), 2),
+                  .by = year) |>
+    order_levels_of_factors()
+  
+  return(los_over_time)
+  
+}
+
+#' Plot the number or percentage LOS over time.
+#'
+#' @param data The output of `get_perc_los_over_time()`.
+#'
+#' @returns A plot.
+get_perc_by_los_trends_plot <- function(data) {
+  
+  max_number <- data |>
+    dplyr::summarise(max = max(perc)) |>
+    dplyr::pull(max)
+  
+  plot <- data |>
+    ggplot2::ggplot() +
+    ggplot2::geom_line(ggplot2::aes(
+      x = year,
+      y = perc,
+      group = los_range2,
+      col = los_range2
+    ),
+    size = 1) +
+    ggplot2::geom_rect(
+      ggplot2::aes(NULL, NULL, xmin = "2019/20", xmax = "2021/22"),
+      ymin = 0,
+      ymax = max_number * 1.1,
+      fill = "#686f73",
+      size = 0.5,
+      alpha = 0.01
+    ) +
+    ggplot2::annotate(
+      "text",
+      x = "2020/21",
+      y = max_number * 1.08,
+      label = "COVID-19 pandemic",
+      size = 2.7
+    ) +
+    StrategyUnitTheme::su_theme() +
+    StrategyUnitTheme::scale_colour_su() +
+    ggplot2::labs(x = "", 
+                  y = "Percentage",
+                  col = "LOS range") +
+    ggplot2::scale_y_continuous(labels = scales::label_comma())
+  
+  return(plot)
+}
+
+#' Formats the output of `get_perc_by_los_trends()` into a table.
+#'
+#' @param data The output of `get_perc_by_los_trends()`.
+#'
+#' @return A table.
+get_perc_by_los_trends_table <- function(data) {
+  table <- data |>
+    dplyr::arrange(year, los_range2) |>
+    dplyr::select(year, los_range = los_range2, admissions = episodes, perc) |>
+    get_table_perc() |>
+    flextable::hline(i = 5, border = flextable::fp_border_default()) |>
+    flextable::hline(i = 10, border = flextable::fp_border_default()) |>
+    flextable::hline(i = 15, border = flextable::fp_border_default()) |>
+    flextable::hline(i = 20, border = flextable::fp_border_default()) |>
+    flextable::hline(i = 25, border = flextable::fp_border_default()) 
   
   return(table)
 }

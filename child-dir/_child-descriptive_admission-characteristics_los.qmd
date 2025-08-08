@@ -1,17 +1,50 @@
 ```{r}
 perc_los <- targets::tar_read_raw(glue::glue("perc_los_{cohort}"))
+perc_los_trends <- targets::tar_read_raw(glue::glue("perc_los_trends_{cohort}"))
+
+los_caption <- get_caption_by_group('perc', cohort_title, 'admissions', 'los', treatment_type)
+los_caption_trends <- glue::glue("{los_caption |> stringr::str_remove('in 2023/24 ') |> stringr::str_replace('range.', 'range')} over time.")
 ```
+
+:::panel-tabset
+
+### 2023/24
 
 ```{r}
 #| label: tbl-perc_los
-#| tbl-cap: !expr get_caption_by_group('perc', cohort_title, 'admissions', 'los', treatment_type)
+#| tbl-cap: !expr los_caption
 perc_los |>
   get_perc_by_los_table()
 ```
 
 ```{r}
 #| label: fig-perc_los
-#| fig-cap: !expr get_caption_by_group('perc', cohort_title, 'admissions', 'los', treatment_type)
+#| fig-cap: !expr los_caption
 perc_los |>
   get_perc_by_los_plot()
 ```
+
+### Trend
+
+Note: Length of stay ranges have been grouped differently here for trends compared to in the 2023/24 tab for clarity.
+
+::: panel-tabset
+
+#### Chart
+```{r}
+#| label: fig-perc_los_trends
+#| fig-cap: !expr los_caption_trends
+perc_los_trends |>
+  get_perc_by_los_trends_plot()
+```
+
+#### Table
+```{r}
+#| label: tbl-perc_los_trends
+#| tbl-cap: !expr los_caption_trends
+perc_los_trends |>
+  get_perc_by_los_trends_table()
+```
+
+:::
+:::
