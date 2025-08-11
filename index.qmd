@@ -51,3 +51,12 @@ We hope that this report, and related research and tools, will help systems and 
 The 29 categories of potentially mitigable activity and the mechanisms they belong to are shown in the chart below:
 
 ![Groupings of the mitgators by mechanism of mitigation groups. Activity avoidance mitigators in yellow impact the number of admissions and therefore also beddays. Efficiency mitigators in grey will impact length of stay, and so only affect beddays.](images/summary_flow_chart.png){#fig-summary_flow-chart}
+
+<br>
+
+| |
+|:------:|
+| This analysis was commissioned by NHSE and is made freely available for the benefit of systems and providers. <br> The work is not intended by NHSE or the Strategy Unit to provide a definitive analysis or prescribe a national approach to identifying potential for activity mitigation.  However, we believe that it offers valuable insights and that its consistency of approach opens up considerable benefits in terms of comparability and opportunities for learning. | 
+
+
+
