@@ -517,15 +517,25 @@ get_perc_by_los_trends_plot <- function(data) {
 #'
 #' @return A table.
 get_perc_by_los_trends_table <- function(data) {
+  number_unique_los <- data |>
+    dplyr::select(los_range2) |>
+    unique() |>
+    nrow()
+  
+  number_years <- data |>
+    dplyr::select(year) |>
+    unique() |>
+    nrow()
+  
   table <- data |>
     dplyr::arrange(year, los_range2) |>
     dplyr::select(year, los_range = los_range2, admissions = episodes, perc) |>
-    get_table_perc() |>
-    flextable::hline(i = 5, border = flextable::fp_border_default()) |>
-    flextable::hline(i = 10, border = flextable::fp_border_default()) |>
-    flextable::hline(i = 15, border = flextable::fp_border_default()) |>
-    flextable::hline(i = 20, border = flextable::fp_border_default()) |>
-    flextable::hline(i = 25, border = flextable::fp_border_default()) 
+    get_table_perc()
+  
+  for(j in 1:number_years) {
+    table <- table |>
+      flextable::hline(i = (j * number_unique_los), border = flextable::fp_border_default())
+  }
   
   return(table)
 }
