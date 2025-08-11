@@ -237,6 +237,9 @@ order_levels_of_factors <- function(data) {
       dplyr::across(dplyr::any_of("los_range2"), ~ factor(
         ., levels = c("0", "1", "2-7", "8-14", "15+")
       )),
+      dplyr::across(dplyr::any_of("los_range3"), ~ factor(
+        ., levels = c("0", "1", "2", "3-7", "8-14", "15+")
+      )),
       dplyr::across(dplyr::any_of("age_range"), ~ factor(
         .,
         levels = c(

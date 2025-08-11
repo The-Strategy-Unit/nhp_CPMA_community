@@ -460,6 +460,7 @@ get_perc_by_los_trends <- function(data, mitigator) {
                      .by = c(year, los_range2)) |>
     dplyr::mutate(perc = janitor::round_half_up(episodes * 100 / sum(episodes), 2),
                   .by = year) |>
+    rename_los_for_eol_care(mitigator) |>
     order_levels_of_factors()
   
   return(los_over_time)
@@ -473,6 +474,12 @@ get_perc_by_los_trends <- function(data, mitigator) {
 #' @returns A plot.
 get_perc_by_los_trends_plot <- function(data) {
   
+  los_range_column <- if("los_range3" %in% names(data)) {
+    "los_range3"
+  } else {
+    "los_range2"
+  }
+  
   max_number <- data |>
     dplyr::summarise(max = max(perc)) |>
     dplyr::pull(max)
@@ -482,8 +489,8 @@ get_perc_by_los_trends_plot <- function(data) {
     ggplot2::geom_line(ggplot2::aes(
       x = year,
       y = perc,
-      group = los_range2,
-      col = los_range2
+      group = !!rlang::sym(los_range_column),
+      col = !!rlang::sym(los_range_column)
     ),
     size = 1) +
     ggplot2::geom_rect(
@@ -517,8 +524,15 @@ get_perc_by_los_trends_plot <- function(data) {
 #'
 #' @return A table.
 get_perc_by_los_trends_table <- function(data) {
+  
+  los_range_column <- if("los_range3" %in% names(data)) {
+    "los_range3"
+  } else {
+    "los_range2"
+  }
+  
   number_unique_los <- data |>
-    dplyr::select(los_range2) |>
+    dplyr::select(!!rlang::sym(los_range_column)) |>
     unique() |>
     nrow()
   
@@ -528,8 +542,8 @@ get_perc_by_los_trends_table <- function(data) {
     nrow()
   
   table <- data |>
-    dplyr::arrange(year, los_range2) |>
-    dplyr::select(year, los_range = los_range2, admissions = episodes, perc) |>
+    dplyr::arrange(year, !!rlang::sym(los_range_column)) |>
+    dplyr::select(year, los_range = !!rlang::sym(los_range_column), admissions = episodes, perc) |>
     get_table_perc()
   
   for(j in 1:number_years) {
@@ -538,6 +552,24 @@ get_perc_by_los_trends_table <- function(data) {
   }
   
   return(table)
+}
+
+#' For eol_care mitigators, add los_range3 column.
+#'
+#' @param data A dataframe with a column for los_range2.
+#' @param cohort The mitigator / mechanism.
+#'
+#' @returns A dataframe.
+rename_los_for_eol_care <- function(data, cohort) {
+  if (cohort == "eol_care_2_days") {
+    data <- data |>
+      dplyr::mutate(los_range3 = stringr::str_replace(los_range2, "2-7", "2"))
+  } else if (cohort == "eol_care_3_to_14_days") {
+    data <- data |>
+      dplyr::mutate(los_range3 = stringr::str_replace(los_range2, "2-7", "3-7"))
+  }
+  
+  return(data)
 }
 
 #' Get the total number of beddays and admissions by emergency, elective and 
