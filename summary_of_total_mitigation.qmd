@@ -827,8 +827,7 @@ la_age_sex_standardised_rates_episodes_total_mitigation <- tar_read(la_age_sex_s
 
 la_episode_table <- generating_la_or_provider_table(
   la_age_sex_standardised_rates_episodes_total_mitigation,
-  cohort,
-  "la")
+  cohort)
 
 DT::datatable(la_episode_table)
 ```
@@ -843,8 +842,7 @@ la_age_sex_standardised_rates_beddays_total_mitigation <- tar_read(la_age_sex_st
 
 la_beddays_table <- generating_la_or_provider_table(
   la_age_sex_standardised_rates_beddays_total_mitigation,
-  cohort,
-  "la")
+  cohort)
 
 DT::datatable(la_beddays_table)
 ```
