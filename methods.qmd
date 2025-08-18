@@ -1,5 +1,9 @@
 # Methodology {#sec-methods .unnumbered}
 
+```{r}
+library(flextable)
+```
+
 ## Hospital activity data
 
 All data on hospital activity are taken from the New Hospitals Programme (NHP) demand and capacity model data, which is derived from the [Hospital Episode Statistics dataset](https://digital.nhs.uk/services/hospital-episode-statistics). 
@@ -34,7 +38,13 @@ For crude rates by ethnicity the Office of National Statistics Ethnic group, Eng
 
 ## Providers
 
-In 2023/24, acute NHS providers account for `r mitigable_activity_acute_2324 |> dplyr::pull(perc_admissions)`% of potentially mitigable admissions and `r mitigable_activity_acute_2324 |> dplyr::pull(perc_beddays)`% of potentially mitigable beddays. Similar numbers were observed for years 2018/19 to 2022/23. Thus, analyses of potentially mitigable activity by provider are for acute NHS providers only.
+```{r}
+providers_2324_acute <- targets::tar_read(provider_type) |>
+  dplyr::filter(year == "2023/24" & org_type == "Acute")
+```
+
+
+In 2023/24, acute NHS providers account for `r providers_2324_acute |> dplyr::pull(perc_admissions)`% of potentially mitigable admissions and `r providers_2324_acute |> dplyr::pull(perc_beddays)`% of potentially mitigable beddays. Similar numbers were observed for years 2018/19 to 2022/23. Thus, analyses of potentially mitigable activity by provider are for acute NHS providers only.
 
 ```{r}
 #| label: tbl-provider_type
