@@ -492,22 +492,10 @@ get_perc_by_los_trends_plot <- function(data) {
       group = !!rlang::sym(los_range_column),
       col = !!rlang::sym(los_range_column)
     ),
-    size = 1) +
-    ggplot2::geom_rect(
-      ggplot2::aes(NULL, NULL, xmin = "2019/20", xmax = "2021/22"),
-      ymin = 0,
-      ymax = max_number * 1.1,
-      fill = "#686f73",
-      size = 0.5,
-      alpha = 0.01
-    ) +
-    ggplot2::annotate(
-      "text",
-      x = "2020/21",
-      y = max_number * 1.08,
-      label = "COVID-19 pandemic",
-      size = 2.7
-    ) +
+    size = 1) 
+  
+  plot <- plot |>
+    add_covid_box_to_plot(max_number) +
     StrategyUnitTheme::su_theme() +
     StrategyUnitTheme::scale_colour_su() +
     ggplot2::labs(x = "", 
