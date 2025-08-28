@@ -563,6 +563,11 @@ rename_los_for_eol_care <- function(data, cohort) {
 }
 
 ## Average LOS -----------------------------------------------------------------
+#' A plot of the average LOS over time.
+#'
+#' @param data A dataframe of the average LOS over time.
+#'
+#' @returns A plot.
 get_avg_los_england_plot <- function(data){
   max_number <- data |>
     dplyr::summarise(max = max(avg_los)) |>
@@ -588,6 +593,92 @@ get_avg_los_england_plot <- function(data){
   return(plot)
 }
 
+#' Plotly plot of the average LOS over time for each ICB.
+#'
+#' @param data A dataframe of average LOS over time for each ICB.
+#'
+#' @returns A plot.
+get_avg_los_icb_plot <- function(data) {
+  
+  axis_title <- "Average Length of Stay"
+  
+  fig <- data |>
+    arrange(year) |>
+    group_by(icb_2024_name) |>
+    highlight_key( ~ icb_2024_name) |>
+    plot_ly(
+      x = ~ year,
+      y = ~ avg_los,
+      type = 'scatter',
+      mode = 'lines',
+      text =  ~ icb_2024_name,
+      line = list(color = "#686f73"),
+      width = 660,
+      height = 300,
+      hovertemplate = paste("ICB: %{text}<br>", "Year: %{x}<br>", "Value: %{y}")
+    ) |>
+    highlight( ~ icb_2024_name,
+               on = "plotly_click",
+               off = "plotly_doubleclick",
+               dynamic = FALSE) |>
+    layout(
+      shapes = list(
+        list(
+          type = "rect",
+          fillcolor = "#686f73",
+          line = list(color = "#686f73"),
+          opacity = 0.1,
+          x0 = "2019/20",
+          x1 = "2021/22",
+          xref = "x",
+          y0 = 0,
+          y1 = max(data$avg_los) * 1.1,
+          yref = "y"
+        )
+      ),
+      xaxis = list(
+        title = "",
+        showticklabels = TRUE,
+        showline = TRUE,
+        showgrid = F ,
+        linewidth = 1.6
+      ),
+      yaxis = list(
+        title = axis_title,
+        rangemode = "tozero",
+        showline = TRUE,
+        showgrid = F ,
+        linewidth = 1.6 ,
+        zeroline = FALSE,
+        tickformat = "digits",
+        anchor = "free",
+        shift = 100
+      ),
+      annotations =
+        list(
+          x = "2020/21",
+          y = max(data$avg_los) * 1.08,
+          text = "COVID-19 pandemic",
+          showarrow = F,
+          xref = 'x',
+          yref = 'y'
+        )
+    )
+  
+  fig2 <- fig |>
+    layout(
+      annotations = list(
+        x = 1,
+        y = -0.16,
+        text = "footnote",
+        showarrow = F,
+        xref = 'paper',
+        yref = 'paper'
+      )
+    )
+  
+  return(fig2)
+}
 
 # Total beddays and admissions -------------------------------------------------
 #' Get the total number of beddays and admissions by emergency, elective and 
