@@ -562,6 +562,33 @@ rename_los_for_eol_care <- function(data, cohort) {
   return(data)
 }
 
+## Average LOS -----------------------------------------------------------------
+get_avg_los_england_plot <- function(data){
+  max_number <- data |>
+    dplyr::summarise(max = max(avg_los)) |>
+    dplyr::pull(max)
+  
+  plot <- data |>
+    ggplot2::ggplot() +
+    ggplot2::geom_line(ggplot2::aes(
+      x = year,
+      y = avg_los,
+      group = mitigator
+    ),
+    size = 1) 
+  
+  plot <- plot |>
+    add_covid_box_to_plot(max_number) +
+    StrategyUnitTheme::su_theme() +
+    StrategyUnitTheme::scale_colour_su() +
+    ggplot2::labs(x = "", 
+                  y = "Average Length of Stay") +
+    ggplot2::scale_y_continuous(labels = scales::label_comma())
+  
+  return(plot)
+}
+
+
 # Total beddays and admissions -------------------------------------------------
 #' Get the total number of beddays and admissions by emergency, elective and 
 #' both.
