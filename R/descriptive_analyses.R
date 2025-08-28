@@ -358,6 +358,7 @@ get_top_ten_plot <- function(data, activity_type, group) {
 
 # Length of Stay ---------------------------------------------------------------
 
+## LOS percentage breakdowns ---------------------------------------------------
 #' Get the percentage of mitigable admissions for a mitigator or mechanism by a 
 #' group.
 #'
@@ -442,6 +443,7 @@ get_perc_by_los_table <- function(data) {
   return(table)
 }
 
+## LOS Trends ------------------------------------------------------------------
 #' Get the percentage LOS over time.
 #'
 #' @param data The object `los_over_time`.
@@ -560,6 +562,7 @@ rename_los_for_eol_care <- function(data, cohort) {
   return(data)
 }
 
+# Total beddays and admissions -------------------------------------------------
 #' Get the total number of beddays and admissions by emergency, elective and 
 #' both.
 #'
