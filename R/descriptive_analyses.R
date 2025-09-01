@@ -563,6 +563,11 @@ rename_los_for_eol_care <- function(data, cohort) {
 }
 
 ## Average LOS -----------------------------------------------------------------
+#' Get the average LOS over the years for England or by ICB.
+#'
+#' @param geography Either `"icb"` or `"england"`.
+#' @param mitigator The mitigator or mechanism.
+#' @param lookup A lookup of icb codes and names.
 get_average_los_trends <- function(geography, mitigator, lookup) {
   data <- dplyr::tbl(
     sc,
