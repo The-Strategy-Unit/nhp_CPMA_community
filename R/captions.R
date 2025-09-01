@@ -80,6 +80,8 @@ format_metric_for_caption <- function(metric,
     "Crude rate per 100,000 population"
   } else if (metric == "prop"){
     glue::glue("Proportion of {format_treatment_for_caption(treatment_type)} {activity_type}")
+  } else if (metric == "avg_los"){
+    glue::glue("Average length of stay")
   } else { 
     stringr::str_to_title(metric)
   }
