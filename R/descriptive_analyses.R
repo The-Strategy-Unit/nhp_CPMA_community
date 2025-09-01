@@ -563,6 +563,41 @@ rename_los_for_eol_care <- function(data, cohort) {
 }
 
 ## Average LOS -----------------------------------------------------------------
+get_average_los_trends <- function(geography, mitigator, lookup) {
+  data <- dplyr::tbl(
+    sc,
+    dbplyr::in_catalog(
+      "strategyunit",
+      "default",
+      "SL_AF_describing_mitigators_fyear"
+    )
+  ) |>
+    dplyr::filter(fyear >= 201819) |>
+    filter_to_mitigator_or_mechanism(mitigator) |>
+    add_year_column()
+  
+  if (geography == "icb") {
+    # ICB average LOS:
+    avg_los <- data |>
+      dplyr::summarise(
+        avg_los = sum(beddays, na.rm = TRUE) / sum(episodes, na.rm = TRUE),
+        .by = c(year, icb)
+      ) |>
+      sparklyr::collect() |>
+      dplyr::left_join(lookup, by = c("icb" = "icb24cdh")) |>
+      dplyr::select(icb_2024_name, year, avg_los)
+  } else {
+    # England average LOS:
+    avg_los <- data |>
+      dplyr::summarise(
+        avg_los = sum(beddays, na.rm = TRUE) / sum(episodes, na.rm = TRUE),
+        .by = year
+      ) |>
+      sparklyr::collect()
+  }
+  
+  return(avg_los)
+}
 #' A plot of the average LOS over time.
 #'
 #' @param data A dataframe of the average LOS over time.
@@ -578,7 +613,7 @@ get_avg_los_england_plot <- function(data){
     ggplot2::geom_line(ggplot2::aes(
       x = year,
       y = avg_los,
-      group = mitigator
+      group = 1
     ),
     size = 1) 
   
@@ -588,7 +623,8 @@ get_avg_los_england_plot <- function(data){
     StrategyUnitTheme::scale_colour_su() +
     ggplot2::labs(x = "", 
                   y = "Average Length of Stay") +
-    ggplot2::scale_y_continuous(labels = scales::label_comma())
+    ggplot2::scale_y_continuous(labels = scales::label_comma()) +
+    ggplot2::expand_limits(x = 0, y = 0)
   
   return(plot)
 }
