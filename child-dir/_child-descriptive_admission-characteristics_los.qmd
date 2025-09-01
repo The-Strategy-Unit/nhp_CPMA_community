@@ -3,11 +3,9 @@ perc_los <- targets::tar_read_raw(glue::glue("perc_los_{cohort}"))
 
 perc_los_trends_range <- targets::tar_read_raw(glue::glue("perc_los_trends_{cohort}"))
 
-avg_los_england <- targets::tar_read(avg_los_england) |>
-  dplyr::filter(mitigator == cohort) 
+avg_los_england <- targets::tar_read_raw(glue::glue("avg_los_trends_england_{cohort}"))
 
-avg_los_icb <- targets::tar_read(avg_los_icb) |>
-  dplyr::filter(mitigator == cohort) 
+avg_los_icb <- targets::tar_read_raw(glue::glue("avg_los_trends_icb_{cohort}"))
 ```
 
 ```{r}
