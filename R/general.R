@@ -141,7 +141,8 @@ format_as_title <- function(col_name) {
         "Total Beddays_elective" = "Total Elective Beddays",
         "Total Episodes_both" = "Total Admissions",
         "Total Beddays_both" = "Total Beddays",
-        "Mitigable Episodes" = "Mitigable Admissions"
+        "Mitigable Episodes" = "Mitigable Admissions",
+        "Avg Los" = "Average LOS"
       )
     )
   
