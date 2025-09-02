@@ -591,7 +591,8 @@ get_average_los_trends <- function(geography, mitigator, lookup) {
       dplyr::filter(!is.na(icb)) |>
       sparklyr::collect() |>
       dplyr::left_join(lookup, by = c("icb" = "icb24cdh")) |>
-      dplyr::select(icb_2024_name, year, avg_los)
+      dplyr::select(icb_2024_name, year, avg_los) |>
+      dplyr::mutate(icb_2024_name = simplify_icb_name(icb_2024_name))
   } else {
     # England average LOS:
     avg_los <- data |>
