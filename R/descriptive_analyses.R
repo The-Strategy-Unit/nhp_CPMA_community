@@ -358,6 +358,7 @@ get_top_ten_plot <- function(data, activity_type, group) {
 
 # Length of Stay ---------------------------------------------------------------
 
+## LOS percentage breakdowns ---------------------------------------------------
 #' Get the percentage of mitigable admissions for a mitigator or mechanism by a 
 #' group.
 #'
@@ -442,6 +443,7 @@ get_perc_by_los_table <- function(data) {
   return(table)
 }
 
+## LOS Trends ------------------------------------------------------------------
 #' Get the percentage LOS over time.
 #'
 #' @param data The object `los_over_time`.
@@ -492,22 +494,10 @@ get_perc_by_los_trends_plot <- function(data) {
       group = !!rlang::sym(los_range_column),
       col = !!rlang::sym(los_range_column)
     ),
-    size = 1) +
-    ggplot2::geom_rect(
-      ggplot2::aes(NULL, NULL, xmin = "2019/20", xmax = "2021/22"),
-      ymin = 0,
-      ymax = max_number * 1.1,
-      fill = "#686f73",
-      size = 0.5,
-      alpha = 0.01
-    ) +
-    ggplot2::annotate(
-      "text",
-      x = "2020/21",
-      y = max_number * 1.08,
-      label = "COVID-19 pandemic",
-      size = 2.7
-    ) +
+    size = 1) 
+  
+  plot <- plot |>
+    add_covid_box_to_plot(max_number) +
     StrategyUnitTheme::su_theme() +
     StrategyUnitTheme::scale_colour_su() +
     ggplot2::labs(x = "", 
@@ -572,6 +562,168 @@ rename_los_for_eol_care <- function(data, cohort) {
   return(data)
 }
 
+## Average LOS -----------------------------------------------------------------
+#' Get the average LOS over the years for England or by ICB.
+#'
+#' @param geography Either `"icb"` or `"england"`.
+#' @param mitigator The mitigator or mechanism.
+#' @param lookup A lookup of icb codes and names.
+get_average_los_trends <- function(geography, mitigator, lookup) {
+  data <- dplyr::tbl(
+    sc,
+    dbplyr::in_catalog(
+      "strategyunit",
+      "default",
+      "SL_AF_describing_mitigators_fyear"
+    )
+  ) |>
+    dplyr::filter(fyear >= 201819) |>
+    filter_to_mitigator_or_mechanism(mitigator) |>
+    add_year_column()
+  
+  if (geography == "icb") {
+    # ICB average LOS:
+    avg_los <- data |>
+      dplyr::summarise(
+        avg_los = sum(beddays, na.rm = TRUE) / sum(episodes, na.rm = TRUE),
+        .by = c(year, icb)
+      ) |>
+      dplyr::filter(!is.na(icb)) |>
+      sparklyr::collect() |>
+      dplyr::left_join(lookup, by = c("icb" = "icb24cdh")) |>
+      dplyr::select(icb_2024_name, year, avg_los)
+  } else {
+    # England average LOS:
+    avg_los <- data |>
+      dplyr::summarise(
+        avg_los = sum(beddays, na.rm = TRUE) / sum(episodes, na.rm = TRUE),
+        .by = year
+      ) |>
+      sparklyr::collect()
+  }
+  
+  return(avg_los)
+}
+#' A plot of the average LOS over time.
+#'
+#' @param data A dataframe of the average LOS over time.
+#'
+#' @returns A plot.
+get_avg_los_england_plot <- function(data){
+  max_number <- data |>
+    dplyr::summarise(max = max(avg_los)) |>
+    dplyr::pull(max)
+  
+  plot <- data |>
+    ggplot2::ggplot() +
+    ggplot2::geom_line(ggplot2::aes(
+      x = year,
+      y = avg_los,
+      group = 1
+    ),
+    size = 1) 
+  
+  plot <- plot |>
+    add_covid_box_to_plot(max_number) +
+    StrategyUnitTheme::su_theme() +
+    StrategyUnitTheme::scale_colour_su() +
+    ggplot2::labs(x = "", 
+                  y = "Average Length of Stay") +
+    ggplot2::scale_y_continuous(labels = scales::label_comma()) +
+    ggplot2::expand_limits(x = 0, y = 0)
+  
+  return(plot)
+}
+
+#' Plotly plot of the average LOS over time for each ICB.
+#'
+#' @param data A dataframe of average LOS over time for each ICB.
+#'
+#' @returns A plot.
+get_avg_los_icb_plot <- function(data) {
+  
+  axis_title <- "Average Length of Stay"
+  
+  fig <- data |>
+    arrange(year) |>
+    group_by(icb_2024_name) |>
+    dplyr::mutate(avg_los = janitor::round_half_up(avg_los, 2)) |>
+    highlight_key( ~ icb_2024_name) |>
+    plot_ly(
+      x = ~ year,
+      y = ~ avg_los,
+      type = 'scatter',
+      mode = 'lines',
+      text =  ~ icb_2024_name,
+      line = list(color = "#686f73"),
+      width = 660,
+      height = 300,
+      hovertemplate = paste("ICB: %{text}<br>", "Year: %{x}<br>", "Value: %{y}")
+    ) |>
+    highlight( ~ icb_2024_name,
+               on = "plotly_click",
+               off = "plotly_doubleclick",
+               dynamic = FALSE) |>
+    layout(
+      shapes = list(
+        list(
+          type = "rect",
+          fillcolor = "#686f73",
+          line = list(color = "#686f73"),
+          opacity = 0.1,
+          x0 = "2019/20",
+          x1 = "2021/22",
+          xref = "x",
+          y0 = 0,
+          y1 = max(data$avg_los) * 1.1,
+          yref = "y"
+        )
+      ),
+      xaxis = list(
+        title = "",
+        showticklabels = TRUE,
+        showline = TRUE,
+        showgrid = F ,
+        linewidth = 1.6
+      ),
+      yaxis = list(
+        title = axis_title,
+        rangemode = "tozero",
+        showline = TRUE,
+        showgrid = F ,
+        linewidth = 1.6 ,
+        zeroline = FALSE,
+        tickformat = "digits",
+        anchor = "free",
+        shift = 100
+      ),
+      annotations =
+        list(
+          x = "2020/21",
+          y = max(data$avg_los) * 1.08,
+          text = "COVID-19 pandemic",
+          showarrow = F,
+          xref = 'x',
+          yref = 'y'
+        )
+    )
+  
+  fig2 <- fig |>
+    layout(
+      annotations = list(
+        x = 1,
+        y = -0.16,
+        text = "footnote",
+        showarrow = F,
+        xref = 'paper',
+        yref = 'paper'
+      )
+    )
+  
+  return(fig2)
+}
+
+# Total beddays and admissions -------------------------------------------------
 #' Get the total number of beddays and admissions by emergency, elective and 
 #' both.
 #'

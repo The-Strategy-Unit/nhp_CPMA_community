@@ -72,14 +72,14 @@ list(
       "Z:/Strategic Analytics/Projects 2025/Describing and Quantifying the NHP mitigators/population_data/myebtablesenglandwales20112023.xlsx"
     )
   ),
-  
+
   tarchetypes::tar_file(my_filepath, "reference/la_code_lookup.xlsx"),
   tar_target(
     la_code_lookup,
     read_excel(my_filepath)
   ),
-  
-  
+
+
   tar_target(
     icb_population_data,
     wrangling_icb_population_data(
@@ -109,19 +109,19 @@ list(
       sparklyr::collect() |>
       dplyr::left_join(icb_population_data |>
                          dplyr::select(icb24cdh, icb_2024_name) |>
-                         unique(), 
+                         unique(),
                        by = c("main_icb" = "icb24cdh")) |>
       dplyr::mutate(icb_2024_name = simplify_icb_name(icb_2024_name),
                     org_name = simplify_provider_name(org_name))
   ),
-  
+
   tar_target(
     standard_england_pop_2021_census,
     formatting_standard_england_population(
       "Z:/Strategic Analytics/Projects 2025/Describing and Quantifying the NHP mitigators/population_data/2021 census data for England.csv"
     )
   ),
-  
+
   tar_target(
     pop_by_sex,
     icb_population_data |>
@@ -137,7 +137,7 @@ list(
       dplyr::filter(fyear == "2023/24") |>
       dplyr::summarise(pop = sum(icb_population), .by = age_range)
   ),
-  
+
   tarchetypes::tar_file(
     pop_by_ethnicity_url,
     r"{Z:\Strategic Analytics\Projects 2025\Describing and Quantifying the NHP mitigators\population_data\ethnicity_by_icb_2021.xlsx}"
@@ -160,7 +160,7 @@ list(
       dplyr::summarise(pop = sum(observation), .by = Ethnic_Category) |>
       dplyr::filter(Ethnic_Category != "NULL")
   ),
-  
+
   tar_target(
     pop_by_imd,
     wrangling_imd_population_by_icb(
@@ -171,10 +171,10 @@ list(
     )|>
       dplyr::filter(!is.na(icb24cdh))|>
       summarise(pop=sum(total), .by=c(imd19_decile))
-    
+
   ),
   # Standardised rates ---------------------------------------------------------
-  ## ICB ----------------------------------------------------------------------- 
+  ## ICB -----------------------------------------------------------------------
   tar_target(
     icb_age_sex_standardised_rates_episodes,
     generating_icb_age_sex_standardised_rates(
@@ -184,7 +184,7 @@ list(
       episodes
     )
   ),
-  
+
   tar_target(
     icb_age_sex_standardised_rates_beddays,
     generating_icb_age_sex_standardised_rates(
@@ -194,7 +194,7 @@ list(
       beddays
     )
   ),
-  
+
   tar_target(
     icb_age_sex_standardised_rates_episodes_total_mitigation,
     generating_icb_age_sex_standardised_rates(
@@ -205,7 +205,7 @@ list(
       episodes
     )
   ),
-  
+
   tar_target(
     icb_age_sex_standardised_rates_beddays_total_mitigation,
     generating_icb_age_sex_standardised_rates(
@@ -216,7 +216,7 @@ list(
       beddays
     )
   ),
-  
+
   ## England -------------------------------------------------------------------
   tar_target(
     england_age_sex_standardised_rates_episodes,
@@ -227,7 +227,7 @@ list(
       episodes
     )
   ),
-  
+
   tar_target(
     england_age_sex_standardised_rates_beddays,
     generating_england_age_sex_standardised_rates(
@@ -237,7 +237,7 @@ list(
       beddays
     )
   ),
-  
+
   tar_target(
     england_age_sex_standardised_rates_episodes_total_mitigation,
     generating_england_age_sex_standardised_rates(
@@ -249,7 +249,7 @@ list(
       episodes
     )
   ),
-  
+
   tar_target(
     england_age_sex_standardised_rates_beddays_total_mitigation,
     generating_england_age_sex_standardised_rates(
@@ -261,7 +261,7 @@ list(
       beddays
     )
   ),
-  
+
   ## LA ------------------------------------------------------------------------
   tar_target(
     la_age_sex_standardised_rates_episodes_over_time,
@@ -365,7 +365,7 @@ list(
       )
     )
   ),
-  
+
   ## Percentage breakdowns -----------------------------------------------------
   tarchetypes::tar_map(
     list(
@@ -377,7 +377,7 @@ list(
     ),
     tar_target(perc, get_perc_by_group(mitigator, group, activity_type))
   ),
-  
+
   ## Rates per 100,000 population ----------------------------------------------
   tarchetypes::tar_map(
     list(
@@ -389,7 +389,7 @@ list(
       get_rates_by_group(mitigator, "age", pop_by_age, activity_type)
     )
   ),
-  
+
   tarchetypes::tar_map(
     list(
       mitigator = rep(mitigators_and_mechanisms, 2),
@@ -400,7 +400,7 @@ list(
       get_rates_by_group(mitigator, "ethnicity", pop_by_ethnicity, activity_type)
     )
   ),
-  
+
   tarchetypes::tar_map(
     list(
       mitigator = rep(mitigators_and_mechanisms, 2),
@@ -411,7 +411,7 @@ list(
       get_rates_by_group(mitigator, "imd", pop_by_imd, activity_type)
     )
   ),
-  
+
   tarchetypes::tar_map(
     list(
       mitigator = rep(mitigators_and_mechanisms, 2),
@@ -422,7 +422,7 @@ list(
       get_rates_by_group(mitigator, "sex", pop_by_sex, activity_type)
     )
   ),
-  
+
   ## Specialty -----------------------------------------------------------------
   tar_target(
     specialty_url,
@@ -443,7 +443,7 @@ list(
       get_top_ten(mitigator, activity_type, "tretspef", specialty_key)
     )
   ),
-  
+
   ## Diagnoses -----------------------------------------------------------------
   tar_target(
     diagnosis_filename,
@@ -455,8 +455,8 @@ list(
       janitor::clean_names() |>
       dplyr::mutate(description = dplyr::case_when(
         # to make description more understandable
-        code == "U07.0" ~ "Vaping-related disorder", 
-        code %in% c("U07", "U08", "U09") ~ "COVID-19", 
+        code == "U07.0" ~ "Vaping-related disorder",
+        code %in% c("U07", "U08", "U09") ~ "COVID-19",
         .default = description))
   ),
   tarchetypes::tar_map(
@@ -469,7 +469,7 @@ list(
       get_top_ten(mitigator, activity_type, "diagnosis", diagnosis_key)
     )
   ),
-  
+
   ## Length of Stay -------------------------------------------------------------
   tarchetypes::tar_map(
     list(mitigator = mitigators_and_mechanisms),
@@ -492,23 +492,35 @@ list(
   ),
   tarchetypes::tar_map(
     list(mitigator = mitigators_and_mechanisms),
-    tar_target(perc_los_trends, 
+    tar_target(perc_los_trends,
                get_perc_by_los_trends(los_over_time, mitigator))
   ),
-  
+  tarchetypes::tar_map(
+    list(geography = rep(c("england", "icb"), each = 33),
+         mitigator = rep(mitigators_and_mechanisms, 2)),
+    tar_target(
+      avg_los_trends,
+      get_average_los_trends(geography, 
+                             mitigator, 
+                             icb_population_data |>
+                               dplyr::filter(fyear == "2023/24") |>
+                               dplyr::select(icb24cdh, icb_2024_name) |>
+                               unique()))
+  ),
+
   # Cohort analysis ------------------------------------------------------------
-  
+
   tar_target(
     total_cohort_numbers_2324,
     Formatting_data_for_cohort_overlap("sl_af_describing_mitigators_fyear") |>
       filter(fyear == "202324")
   ),
-  
+
   tar_target(
     cohort_overlap_numbers_redirection,
     total_cohort_numbers_2324 |>
       filter(fyear == "202324")|>
-      summarise(episodes=sum(episodes), beddays=sum(beddays), .by=c(ambulatory_care_conditions_acute,                           
+      summarise(episodes=sum(episodes), beddays=sum(beddays), .by=c(ambulatory_care_conditions_acute,
                                                                     ambulatory_care_conditions_chronic,
                                                                     ambulatory_care_conditions_vaccine_preventable,
                                                                     eol_care_2_days,
@@ -527,7 +539,7 @@ list(
       mutate(number_of_cohorts = rowSums(pick(1:16), na.rm = TRUE)) |>
       filter(number_of_cohorts!=0)
   ),
-  
+
   tar_target(
     cohort_overlap_numbers_prevention,
     total_cohort_numbers_2324 |>
@@ -543,7 +555,7 @@ list(
       mutate(number_of_cohorts = rowSums(pick(1:8), na.rm = TRUE)) |>
       filter(number_of_cohorts!=0)
   ),
-  
+
   tar_target(
     cohort_overlap_numbers_relocation,
     total_cohort_numbers_2324 |>
@@ -553,7 +565,7 @@ list(
       mutate(number_of_cohorts = rowSums(pick(1:2), na.rm = TRUE)) |>
       filter(number_of_cohorts!=0)
   ),
-  
+
   tar_target(
     cohort_overlap_numbers_efficiencies,
     total_cohort_numbers_2324 |>
@@ -564,20 +576,20 @@ list(
       mutate(number_of_cohorts = rowSums(pick(1:3), na.rm = TRUE)) |>
       filter(number_of_cohorts!=0)
   ),
-  
-  
+
+
   # Trends analysis -------------------------------------------------------------
-  
+
   tar_target(
     numbers_over_time,
     Formatting_data_for_trends_analysis_cohorts("sl_af_describing_mitigators_fyear" , icb_population_data)
   ),
-  
+
   tar_target(
     numbers_over_time_total_mitigation,
     Formatting_data_for_trends_analysis_total_mitigation("sl_af_describing_mitigators_fyear", icb_population_data)
   ),
-  
+
   tar_target(
     numbers_over_time_local_authority_sex1,
     Formatting_la_data_for_trends("SL_AF_describing_mitigators_local_authority_by_yr", 1)
@@ -605,7 +617,7 @@ list(
       icb_population_data
     )
   ),
-  
+
   tar_target(
     providers_over_time_sex1,
     Formatting_providers_data_for_trends(1)),
@@ -614,7 +626,7 @@ list(
     Formatting_providers_data_for_trends(2)),
   tar_target(
     providers_over_time,
-    providers_over_time_sex1 |> 
+    providers_over_time_sex1 |>
       rbind(providers_over_time_sex2) |>
       dplyr::mutate(sex = as.character(sex))
   ),
@@ -626,7 +638,7 @@ list(
     Formatting_providers_data_for_trends_total_mitigation(2)),
   tar_target(
     providers_over_time_total_mitigation,
-    providers_over_time_sex1_total_mitigation |> 
+    providers_over_time_sex1_total_mitigation |>
       rbind(providers_over_time_sex2_total_mitigation) |>
       dplyr::mutate(sex = as.character(sex),
                     cohorts = "all")
@@ -680,7 +692,7 @@ list(
       )
     )
   ),
-  
+
   ## LA ------------------------------------------------------------------------
   tar_target(
     total_beddays_admissions_by_la,
@@ -793,13 +805,13 @@ list(
       dplyr::select(org_type, admissions, perc_admissions, beddays, perc_beddays) |>
       dplyr::arrange(org_type) |>
       dplyr::rename("Provider Type" = org_type) |>
-      dplyr::rename_with( ~ format_as_title(.)) |> 
+      dplyr::rename_with( ~ format_as_title(.)) |>
       get_table() |>
       flextable::delete_part(part = "footer") |>
       flextable::align(part = "all", align = "left")
   ),
   # For summary ----------------------------------------------------------------
-  
+
   tar_target(
     summary_icb_admissions_all,
     get_summary_by_geography(
@@ -860,5 +872,5 @@ list(
       "provider"
     )
   )
-  
+
 )
