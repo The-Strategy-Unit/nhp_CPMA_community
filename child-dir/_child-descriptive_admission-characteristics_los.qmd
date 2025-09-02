@@ -23,11 +23,12 @@ los_caption_trends_range <- glue::glue("{los_caption |> stringr::str_remove('in 
 #| tbl-cap: !expr los_caption
 avg_los_england_2324 <- avg_los_england |>
   dplyr::filter(year == "2023/24") |>
-  dplyr::pull(avg_los)
+  dplyr::pull(avg_los) |>
+  janitor::round_half_up(2)
 
 perc_los |>
   get_perc_by_los_table() |>
-  flextable::add_footer_lines(glue::glue("Average length of stay in 2023/24: {avg_los_england_2324} days"))
+  flextable::add_footer_lines(glue::glue("Average LOS in 2023/24: {avg_los_england_2324} days"))
 ```
 
 ```{r}
