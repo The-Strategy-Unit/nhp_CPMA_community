@@ -2,7 +2,7 @@
 # Once drafts are created, we can tweak each file individually and add narrative.
 
 # Building blocks --------------------------------------------------------------
-source("R/general.R")
+source("R/00_general.R")
 
 ## Functions -------------------------------------------------------------------
 get_cohort_overlap_section <- function(mitigator) {
@@ -286,13 +286,13 @@ packages_and_options <- c(
   "library(\"patchwork\")",
   "library(\"DT\")",
   "",
-  "source(\"R/captions.R\")",
-  "source(\"R/general.R\")",
-  "source(\"R/descriptive_analyses.R\")",
-  "source(\"R/comparative_analyses.R\")",
-  "source(\"R/Functions for cohort overlap.R\")",
-  "source(\"R/Functions for trend analysis.R\")",
-  "source(\"R/manipulating_mitigators_and_mechanisms.R\")",
+  "source(\"R/00_general.R\")",
+  "source(\"R/02_descriptive-analyses.R\")",
+  "source(\"R/03_cohort-overlap.R\")",
+  "source(\"R/04_comparative-analyses.R\")",
+  "source(\"R/05_trend-analyses.R\")",
+  "source(\"R/06_manipulating-mitigators-and-mechanisms.R\")",
+  "source(\"R/07_captions.R\")",
   "",
   "options(scipen = 999)",
   "options(knitr.duplicate.label = \"allow\")",
@@ -424,7 +424,7 @@ create_draft_mitigator_qmd <- function(mitigator,
 
 # Mitigator details ------------------------------------------------------------
 # This is a copy of what's at the top of the targets pipeline
-source("R/manipulating_mitigators_and_mechanisms.R")
+source("R/06_manipulating-mitigators-and-mechanisms.R")
 
 mitigator_summary_table <-
   readxl::read_excel("reference/summary_mitigators_table.xlsx") |>
