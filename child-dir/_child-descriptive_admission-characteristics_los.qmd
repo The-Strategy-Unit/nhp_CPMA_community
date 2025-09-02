@@ -68,11 +68,22 @@ perc_los_trends_range |>
 
 #### England
 ```{r}
+#| label: tbl-perc_los_trends_avg_england
+#| tbl-cap: !expr get_caption_trends(cohort_title, "avg_los", cohort_group, "admissions", "england")
+avg_los_england |>
+  dplyr::arrange(year) |>
+  get_table_perc()
+```
+
+
+```{r}
 #| label: fig-perc_los_trends_avg_england
 #| fig-cap: !expr get_caption_trends(cohort_title, "avg_los", cohort_group, "admissions", "england")
 avg_los_england |>
   get_avg_los_england_plot()
 ```
+
+
 
 #### ICB
 ```{r}
