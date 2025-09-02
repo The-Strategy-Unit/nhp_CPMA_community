@@ -588,6 +588,7 @@ get_average_los_trends <- function(geography, mitigator, lookup) {
         avg_los = sum(beddays, na.rm = TRUE) / sum(episodes, na.rm = TRUE),
         .by = c(year, icb)
       ) |>
+      dplyr::filter(!is.na(icb)) |>
       sparklyr::collect() |>
       dplyr::left_join(lookup, by = c("icb" = "icb24cdh")) |>
       dplyr::select(icb_2024_name, year, avg_los)
@@ -646,6 +647,7 @@ get_avg_los_icb_plot <- function(data) {
   fig <- data |>
     arrange(year) |>
     group_by(icb_2024_name) |>
+    dplyr::mutate(avg_los = janitor::round_half_up(avg_los, 2)) |>
     highlight_key( ~ icb_2024_name) |>
     plot_ly(
       x = ~ year,
