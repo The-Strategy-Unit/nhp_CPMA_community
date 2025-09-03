@@ -13,7 +13,11 @@ los_caption <- get_caption_by_group('perc', cohort_title, 'admissions', 'los', t
 
 los_trends_range_caption <- glue::glue("{los_caption |> stringr::str_remove('in 2023/24 ') |> stringr::str_replace('range.', 'range')} over time.")
 
-avg_los_england_caption <- get_caption_trends(cohort_title, "avg_los", cohort_group, "admissions", "england")
+avg_los_england_caption <- get_caption_trends(cohort_title, "avg_los", cohort_group, "admissions", "england") |>
+  stringr::str_replace("the last 9 years", "time")
+
+avg_los_icb_caption <- get_caption_trends(cohort_title, "avg_los", cohort_group, "admissions", "icb")  |>
+  stringr::str_replace("the last 9 years", "time")
 ```
 
 :::panel-tabset
@@ -88,7 +92,7 @@ avg_los_england |>
 #### ICB
 ```{r}
 #| label: fig-perc_los_trends_avg_icb
-#| fig-cap: !expr get_caption_trends(cohort_title, "avg_los", cohort_group, "admissions", "icb")
+#| fig-cap: !expr avg_los_icb_caption
 avg_los_icb |>
   get_avg_los_icb_plot()
 ```
