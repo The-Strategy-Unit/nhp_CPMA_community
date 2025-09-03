@@ -5,10 +5,11 @@ In this section, mitigable activity for the `r cohort_title` `r cohort_group` ar
 include_non_zero_admissions <- include_beddays & !check_if_zero_los_mitigator(cohort)
 ```
 
+::: panel-tabset
+
 ```{r}
 #| output: asis
 #| eval: !expr include_non_zero_admissions
-cat("::: panel-tabset")
 cat("\n")
 cat("#### Length of Stay")
 ```
@@ -24,11 +25,7 @@ knitr::knit_child(
             cat(sep = '\n')
 ```
 
-```{r}
-#| output: asis
-#| eval: !expr include_non_zero_admissions
-cat("#### Specialty")
-```
+#### Specialty
 
 ```{r}
 #| output: asis
@@ -83,11 +80,7 @@ knitr::knit_child(
 cat(":::")
 ```
 
-```{r}
-#| output: asis
-#| eval: !expr include_non_zero_admissions
-cat("#### Primary diagnosis")
-```
+#### Primary diagnosis
 
 Note: Primary diagnoses have been grouped by the first three characters of the ICD10 codes.
 
@@ -144,8 +137,4 @@ knitr::knit_child(
 cat(":::")
 ```
 
-```{r}
-#| output: asis
-#| eval: !expr include_non_zero_admissions
-cat(":::")
-```
+:::
