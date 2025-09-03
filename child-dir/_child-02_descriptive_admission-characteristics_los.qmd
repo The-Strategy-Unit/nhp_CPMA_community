@@ -17,7 +17,7 @@ avg_los_england_caption <- get_caption_trends(cohort_title, "avg_los", cohort_gr
   stringr::str_replace("the last 9 years", "time")
 
 avg_los_icb_caption <- get_caption_trends(cohort_title, "avg_los", cohort_group, "admissions", "icb")  |>
-  stringr::str_replace("the last 9 years", "time")
+  stringr::str_replace("the last 9 years", "time") 
 ```
 
 :::panel-tabset
