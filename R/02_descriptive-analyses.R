@@ -709,19 +709,7 @@ get_avg_los_icb_plot <- function(data) {
         )
     )
   
-  fig2 <- fig |>
-    layout(
-      annotations = list(
-        x = 1,
-        y = -0.16,
-        text = "footnote",
-        showarrow = F,
-        xref = 'paper',
-        yref = 'paper'
-      )
-    )
-  
-  return(fig2)
+  return(fig)
 }
 
 # Total beddays and admissions -------------------------------------------------
