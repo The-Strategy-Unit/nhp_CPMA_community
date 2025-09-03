@@ -32,7 +32,7 @@ perc_patient_characteristic <- targets::tar_read_raw(glue::glue("perc_{patient_c
 #| eval: !expr include_admissions
 #| output: asis
 knitr::knit_child(
-              input = "child-dir/_child-descriptive_patient-characteristics_perc.qmd",
+              input = "child-dir/_child-02_descriptive_patient-characteristics_perc.qmd",
               envir = environment(),
               quiet = TRUE
              ) |>
@@ -55,7 +55,7 @@ perc_patient_characteristic <- targets::tar_read_raw(glue::glue("perc_{patient_c
 #| output: asis
 #| eval: !expr include_beddays
 knitr::knit_child(
-              input = "child-dir/_child-descriptive_patient-characteristics_perc.qmd",
+              input = "child-dir/_child-02_descriptive_patient-characteristics_perc.qmd",
               envir = environment(),
               quiet = TRUE
              ) |>
@@ -88,7 +88,7 @@ rates_patient_characteristic <-  targets::tar_read_raw(glue::glue("rates_{patien
 #| eval: !expr include_admissions
 #| output: asis
 knitr::knit_child(
-              input = "child-dir/_child-descriptive_patient-characteristics_rates.qmd",
+              input = "child-dir/_child-02_descriptive_patient-characteristics_rates.qmd",
               envir = environment(),
               quiet = TRUE
              ) |>
@@ -111,7 +111,7 @@ rates_patient_characteristic <-  targets::tar_read_raw(glue::glue("rates_{patien
 #| output: asis
 #| eval: !expr include_beddays
 knitr::knit_child(
-              input = "child-dir/_child-descriptive_patient-characteristics_rates.qmd",
+              input = "child-dir/_child-02_descriptive_patient-characteristics_rates.qmd",
               envir = environment(),
               quiet = TRUE
              ) |>

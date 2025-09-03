@@ -17,7 +17,7 @@ cat("#### Length of Stay")
 #| eval: !expr include_non_zero_admissions
 #| output: asis
 knitr::knit_child(
-              input = "child-dir/_child-descriptive_admission-characteristics_los.qmd",
+              input = "child-dir/_child-02_descriptive_admission-characteristics_los.qmd",
               envir = environment(),
               quiet = TRUE
              ) |>
@@ -48,7 +48,7 @@ top_ten <- targets::tar_read_raw(glue::glue("{group}_{cohort}_{activity_type}"))
 #| eval: !expr include_admissions
 #| output: asis
 knitr::knit_child(
-              input = "child-dir/_child-descriptive_admission-characteristics_top-ten.qmd",
+              input = "child-dir/_child-02_descriptive_admission-characteristics_top-ten.qmd",
               envir = environment(),
               quiet = TRUE
              ) |>
@@ -70,7 +70,7 @@ top_ten <- targets::tar_read_raw(glue::glue("{group}_{cohort}_{activity_type}"))
 #| eval: !expr include_beddays
 #| output: asis
 knitr::knit_child(
-              input = "child-dir/_child-descriptive_admission-characteristics_top-ten.qmd",
+              input = "child-dir/_child-02_descriptive_admission-characteristics_top-ten.qmd",
               envir = environment(),
               quiet = TRUE
              ) |>
@@ -109,7 +109,7 @@ top_ten <- targets::tar_read_raw(glue::glue("{group}_{cohort}_{activity_type}"))
 #| eval: !expr include_admissions
 #| output: asis
 knitr::knit_child(
-              input = "child-dir/_child-descriptive_admission-characteristics_top-ten.qmd",
+              input = "child-dir/_child-02_descriptive_admission-characteristics_top-ten.qmd",
               envir = environment(),
               quiet = TRUE
              ) |>
@@ -131,7 +131,7 @@ top_ten <- targets::tar_read_raw(glue::glue("{group}_{cohort}_{activity_type}"))
 #| eval: !expr include_beddays
 #| output: asis
 knitr::knit_child(
-              input = "child-dir/_child-descriptive_admission-characteristics_top-ten.qmd",
+              input = "child-dir/_child-02_descriptive_admission-characteristics_top-ten.qmd",
               envir = environment(),
               quiet = TRUE
              ) |>

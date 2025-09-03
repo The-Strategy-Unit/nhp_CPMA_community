@@ -15,7 +15,7 @@ cat("##### Admissions")
 activity_type <- "admissions"
 
 knitr::knit_child(
-  input = "child-dir/_child-trends_local-authority_table.qmd",
+  input = "child-dir/_child-05_trends_local-authority_table.qmd",
   envir = environment(),
   quiet = TRUE
   ) |>
@@ -35,7 +35,7 @@ cat("##### Beddays")
 activity_type <- "beddays"
 
 knitr::knit_child(
-  input = "child-dir/_child-trends_local-authority_table.qmd",
+  input = "child-dir/_child-05_trends_local-authority_table.qmd",
   envir = environment(),
   quiet = TRUE
   ) |>

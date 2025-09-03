@@ -38,7 +38,7 @@ get_cohort_overlap_section <- function(mitigator) {
       "```{r}",
       "#| output: asis",
       "knitr::knit_child(
-        input = \"child-dir/_child-overlap_inclusion-within-others.qmd\",
+        input = \"child-dir/_child-03_overlap_inclusion-within-others.qmd\",
         envir = environment(),
         quiet = TRUE
         ) |>
@@ -62,7 +62,7 @@ get_cohort_overlap_section <- function(mitigator) {
     "```{r}",
     "#| output: asis",
     "knitr::knit_child(
-      input = \"child-dir/_child-overlap_number-within-others.qmd\",
+      input = \"child-dir/_child-03_overlap_number-within-others.qmd\",
       envir = environment(),
       quiet = TRUE
       ) |>
@@ -77,7 +77,7 @@ get_cohort_overlap_section <- function(mitigator) {
     "```{r}",
     "#| output: asis",
     "knitr::knit_child(
-      input = \"child-dir/_child-overlap_most-common.qmd\",
+      input = \"child-dir/_child-03_overlap_most-common.qmd\",
       envir = environment(),
       quiet = TRUE
       ) |>
@@ -226,7 +226,7 @@ admission_characteristics_section <- c(
   "```{r}",
   "#| output: asis",
   "knitr::knit_child(
-    input = \"child-dir/_child-descriptive_admission-characteristics.qmd\",
+    input = \"child-dir/_child-02_descriptive_admission-characteristics.qmd\",
     envir = environment(),
     quiet = TRUE
   ) |>
@@ -239,7 +239,7 @@ comparative_section <- c(
   "```{r}",
   "#| output: asis",
   "knitr::knit_child(
-                  input = \"child-dir/_child-comparative.qmd\",
+                  input = \"child-dir/_child-04_comparative.qmd\",
                   envir = environment(),
                   quiet = TRUE
                 ) |>
@@ -262,7 +262,7 @@ overview_section <-  c(
   "```{r}",
   "#| output: asis",
   "knitr::knit_child(
-      input = \"child-dir/_child-overview.qmd\",
+      input = \"child-dir/_child-02_descriptive_overview.qmd\",
       envir = environment(),
       quiet = TRUE
     ) |>
@@ -308,7 +308,7 @@ patient_characteristics_section <- c(
   "```{r}",
   "#| output: asis",
   "knitr::knit_child(
-              input = \"child-dir/_child-descriptive_patient-characteristics.qmd\",
+              input = \"child-dir/_child-02_descriptive_patient-characteristics.qmd\",
               envir = environment(),
               quiet = TRUE
              ) |>
@@ -323,7 +323,7 @@ trend_section <- c(
   "```{r}",
   "#| output: asis",
   "knitr::knit_child(
-    input = \"child-dir/_child-trends_england.qmd\",
+    input = \"child-dir/_child-05_trends_england.qmd\",
     envir = environment(),
     quiet = TRUE
     ) |>
@@ -336,7 +336,7 @@ trend_section <- c(
   "```{r}",
   "#| output: asis",
   "knitr::knit_child(
-    input = \"child-dir/_child-trends_icb.qmd\",
+    input = \"child-dir/_child-05_trends_icb.qmd\",
     envir = environment(),
     quiet = TRUE
     ) |>
@@ -351,7 +351,7 @@ trend_section <- c(
   "geography <- \"la\"",
   "",
   "knitr::knit_child(
-    input = \"child-dir/_child-trends_local-authority.qmd\",
+    input = \"child-dir/_child-05_trends_local-authority.qmd\",
     envir = environment(),
     quiet = TRUE
     ) |>
@@ -366,7 +366,7 @@ trend_section <- c(
   "geography <- \"provider\"",
   "",
   "knitr::knit_child(
-    input = \"child-dir/_child-trends_local-authority.qmd\",
+    input = \"child-dir/_child-05_trends_local-authority.qmd\",
     envir = environment(),
     quiet = TRUE
     ) |>

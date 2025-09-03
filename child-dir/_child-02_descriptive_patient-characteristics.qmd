@@ -5,7 +5,7 @@ In this section, the number and percentage of mitigable activity for the `r coho
 #| output: asis
 patient_characteristic <- "age"
 
-knitr::knit_child(input = "child-dir/_child-descriptive_patient-characteristics_panel-tabsets.qmd",
+knitr::knit_child(input = "child-dir/_child-02_descriptive_patient-characteristics_panel-tabsets.qmd",
                       envir = environment(),
                       quiet = TRUE) |>
       cat(sep = '\n')
@@ -15,7 +15,7 @@ knitr::knit_child(input = "child-dir/_child-descriptive_patient-characteristics_
 #| output: asis
 patient_characteristic <- "ethnicity"
 
-knitr::knit_child(input = "child-dir/_child-descriptive_patient-characteristics_panel-tabsets.qmd",
+knitr::knit_child(input = "child-dir/_child-02_descriptive_patient-characteristics_panel-tabsets.qmd",
                       envir = environment(),
                       quiet = TRUE) |>
       cat(sep = '\n')
@@ -25,7 +25,7 @@ knitr::knit_child(input = "child-dir/_child-descriptive_patient-characteristics_
 #| output: asis
 patient_characteristic <- "imd"
 
-knitr::knit_child(input = "child-dir/_child-descriptive_patient-characteristics_panel-tabsets.qmd",
+knitr::knit_child(input = "child-dir/_child-02_descriptive_patient-characteristics_panel-tabsets.qmd",
                       envir = environment(),
                       quiet = TRUE) |>
       cat(sep = '\n')
@@ -35,7 +35,7 @@ knitr::knit_child(input = "child-dir/_child-descriptive_patient-characteristics_
 #| output: asis
 patient_characteristic <- "sex"
 
-knitr::knit_child(input = "child-dir/_child-descriptive_patient-characteristics_panel-tabsets.qmd",
+knitr::knit_child(input = "child-dir/_child-02_descriptive_patient-characteristics_panel-tabsets.qmd",
                       envir = environment(),
                       quiet = TRUE) |>
       cat(sep = '\n')

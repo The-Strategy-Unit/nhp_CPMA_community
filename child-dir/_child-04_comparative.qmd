@@ -5,7 +5,7 @@ This analysis is to explore how potentially mitigable activity for the `r cohort
 ```{r}
 #| output: asis
 knitr::knit_child(
-                  input = "child-dir/_child-comparative_icb.qmd",
+                  input = "child-dir/_child-04_comparative_icb.qmd",
                   envir = environment(),
                   quiet = TRUE
                 ) |>
@@ -21,7 +21,7 @@ To explore how potentially mitigable activity may vary between Local Authority (
 geography <- "la"
 
 knitr::knit_child(
-                  input = "child-dir/_child-comparative_local-authority.qmd",
+                  input = "child-dir/_child-04_comparative_local-authority.qmd",
                   envir = environment(),
                   quiet = TRUE
                 ) |>
@@ -37,7 +37,7 @@ The table below contains the number, percentage and age and sex standardised rat
 geography <- "provider"
 
 knitr::knit_child(
-                  input = "child-dir/_child-comparative_local-authority.qmd",
+                  input = "child-dir/_child-04_comparative_local-authority.qmd",
                   envir = environment(),
                   quiet = TRUE
                 ) |>

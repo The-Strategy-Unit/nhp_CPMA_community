@@ -15,7 +15,7 @@ summary <- targets::tar_read_raw(glue::glue("summary_{geography}_{activity_type}
 #| output: asis
 #| eval: !expr include_admissions
 knitr::knit_child(
-                  input = "child-dir/_child-comparative_local-authority_table.qmd",
+                  input = "child-dir/_child-04_comparative_local-authority_table.qmd",
                   envir = environment(),
                   quiet = TRUE
                 ) |>
@@ -37,7 +37,7 @@ summary <- targets::tar_read_raw(glue::glue("summary_{geography}_{activity_type}
 #| output: asis
 #| eval: !expr include_beddays
 knitr::knit_child(
-                  input = "child-dir/_child-comparative_local-authority_table.qmd",
+                  input = "child-dir/_child-04_comparative_local-authority_table.qmd",
                   envir = environment(),
                   quiet = TRUE
                 ) |>
