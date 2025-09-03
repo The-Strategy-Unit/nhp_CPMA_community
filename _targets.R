@@ -9,6 +9,7 @@ tar_option_set(
     "dbplyr",
     "dplyr",
     "janitor",
+    "magick",
     "readxl",
     "sparklyr",
     "tibble",
