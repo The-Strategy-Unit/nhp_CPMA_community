@@ -86,10 +86,12 @@ add_year_column <- function(data) {
 #'
 #' @return A table.
 create_dt <- function(df) {
-  # Identify the factor columns
+  number_cols <- ncol(df)
+  # Identify the factor columns:
   factor_cols <- sapply(df, is.factor)
+  
   if (any(factor_cols)) {
-    # Create a list of column definitions for factor columns
+    # Create a list of column definitions for factor columns:
     factor_defs <- do.call(c, unname(Map(
       function(orig, lvl)
         list(
@@ -99,19 +101,29 @@ create_dt <- function(df) {
       which(factor_cols) - 1,
       ncol(df) + seq_len(sum(factor_cols)) - 1
     )))
+    
+    # Add columns to help with ordering:
     df <- cbind(df, lapply(df[, factor_cols, drop = FALSE], function(z)
       match(z, levels(z))))
   } else
     factor_defs <- NULL
   
-  # Create the datatable with column definitions
+  # Above adds hidden columns to help with ordering. So to ensure these hidden
+  # columns do not appear in downloaded csv, create a vector of the column
+  # numbers to keep:
+  visibleCols <- 0:(number_cols - 1)
+  
+  # Create the datatable with column definitions:
   DT::datatable(
     df,
     extensions = "Buttons",
     options = list(dom = "Blfrtip",
                    orderClasses = TRUE, 
                    columnDefs = factor_defs,
-                   buttons = c("csv")),
+                   buttons = list(
+                     list(extend = "csv", 
+                          exportOptions = list(columns = visibleCols))
+                   )),
     rownames = FALSE,
     class = 'cell-border stripe'
   )
