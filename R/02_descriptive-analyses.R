@@ -534,6 +534,7 @@ get_perc_by_los_trends_table <- function(data) {
   table <- data |>
     dplyr::arrange(year, !!rlang::sym(los_range_column)) |>
     dplyr::select(year, los_range = !!rlang::sym(los_range_column), admissions = episodes, perc) |>
+    dplyr::mutate(admissions = janitor::round_half_up(admissions, 0)) |>
     get_table_perc()
   
   for(j in 1:number_years) {
