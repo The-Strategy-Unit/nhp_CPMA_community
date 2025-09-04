@@ -270,11 +270,9 @@ get_summary_by_icb_map <- function(data, boundaries, metric) {
 #' Apply number suppression to comparative tables.
 #'
 #' @param data The output of `get_summary_by_geography()`.
-#' @param activity_type Either `"admissions"` or `"beddays"`.
 #'
 #' @return A dataframe.
-small_number_suppression_comparative <- function(data, 
-                                                 activity_type) {
+small_number_suppression_comparative <- function(data) {
 
     min_total_count <- data |>
       dplyr::summarise(min(total_count)) |> 

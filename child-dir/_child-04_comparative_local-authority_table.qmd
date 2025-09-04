@@ -1,6 +1,6 @@
 ```{r}
 summary_suppressed <- summary |>
-  small_number_suppression_comparative(activity_type)
+  small_number_suppression_comparative()
 
 number_suppressed <- summary_suppressed |>
   dplyr::filter(stringr::str_detect(total_count, "<=")) |>
