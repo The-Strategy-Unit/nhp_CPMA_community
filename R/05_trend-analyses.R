@@ -596,7 +596,7 @@ plotting_total_activity_vs_percentage_change_LA<-function(data){
 
 
 
-generating_la_or_provider_table<-function(data, cohort){
+generating_la_or_provider_table<-function(data, cohort, limit = 10){
   
   data<-data|>
     filter(cohorts==cohort) 
@@ -617,8 +617,14 @@ generating_la_or_provider_table<-function(data, cohort){
     spread(key=year, value=value) |>
     mutate(`Percentage Change`=janitor::round_half_up(((`2023/24`-`2018/19`)/`2018/19`)*100,1))|>
     as.data.frame() |>
+    mutate(across(dplyr::starts_with("20"), ~ifelse(. <= limit,
+                                                    glue::glue("<={limit}"),
+                                                    .))) |>
     mutate(across(dplyr::starts_with("20"), ~replace_na(as.character(.), "-")))|>
-    mutate(across(dplyr::starts_with("20"), ~factor(., levels = c("-", min_value:max_value))))
+    mutate(across(dplyr::starts_with("20"), ~factor(., levels = c("-", glue::glue("<={limit}"), min_value:max_value)))) |>
+    mutate(`Percentage Change` = ifelse(`2018/19` %in% c("-", glue::glue("<={limit}")) | `2023/24` %in% c("-", glue::glue("<={limit}")),
+                                        "-",
+                                        `Percentage Change`))
   
   if("Provider" %in% names(table_data)) {
     table_data <- table_data |> 
@@ -628,4 +634,5 @@ generating_la_or_provider_table<-function(data, cohort){
   return(table_data)
   
 }
+
 
