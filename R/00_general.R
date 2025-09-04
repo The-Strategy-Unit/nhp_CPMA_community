@@ -376,7 +376,7 @@ simplify_provider_name <- function(column) {
 small_number_suppression <- function(data, number_column, limit = 10) {
   suppressed <- data |>
     dplyr::mutate(!!rlang::sym(number_column) := ifelse(
-      !!rlang::sym(number_column) <= limit & !!rlang::sym(number_column) != 0,
+      !!rlang::sym(number_column) <= limit,
       glue::glue("<={limit}"),
       !!rlang::sym(number_column)
     ))
