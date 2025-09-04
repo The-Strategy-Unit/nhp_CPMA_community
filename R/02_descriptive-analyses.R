@@ -351,7 +351,8 @@ get_top_ten_plot <- function(data, activity_type, group) {
                                guide = 'none') +
     StrategyUnitTheme::su_theme() +
     ggplot2::labs(x = glue::glue("Percentage of mitigable {activity_type}"), 
-                  y = y_title)
+                  y = y_title) +
+    ggplot2::scale_y_discrete(labels = function(x) stringr::str_wrap(x, width = 40))
   
   return(plot)
 }
