@@ -7,7 +7,8 @@ top_ten_caption <- get_caption_top_ten(cohort_title, activity_type, group)
 #| tbl-cap: !expr top_ten_caption
 top_ten |>
   dplyr::rename(dplyr::any_of(c("Primary Diagnosis" = "description"))) |>
-  get_table_perc() 
+  get_table_perc() |>
+  width(j = 1, width = 5, unit = "in")
 ```
 
 ```{r}
