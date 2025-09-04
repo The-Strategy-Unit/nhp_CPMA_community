@@ -43,6 +43,7 @@ providers_2324_acute <- targets::tar_read(provider_type) |>
   dplyr::filter(year == "2023/24" & org_type == "Acute")
 ```
 
+Provider populations were estimated by multiplying the percentage of admissions to a provider from a local authority and that local authority's population, accounting for sex and age range. This method is similar to the one used and outlined in the [NHP Demand & Capacity model](https://connect.strategyunitwm.nhs.uk/nhp/project_information/modelling_methodology/demographic_modelling/demographic_modelling.html#hosp-catchments).
 
 In 2023/24, acute NHS providers account for `r providers_2324_acute |> dplyr::pull(perc_admissions)`% of potentially mitigable admissions and `r providers_2324_acute |> dplyr::pull(perc_beddays)`% of potentially mitigable beddays. Similar numbers were observed for years 2018/19 to 2022/23. Thus, analyses of potentially mitigable activity by provider are for acute NHS providers only.
 
