@@ -101,10 +101,17 @@ list(
       sparklyr::collect() |>
       add_year_column() |>
       add_age_range_column() |>
-      dplyr::summarise(
-        pop = sum(count),
-        .by = c(provider, fyear, year, age_range, sex)
-      )
+      left_join(la_population_data |>
+                  dplyr::mutate(sex = as.character(sex)),
+                by = c("year" = "fyear", 
+                       "area_code" = "ladcode23", 
+                       "sex", 
+                       "age_range")
+                ) |>
+      dplyr::mutate(provider_pop = pcnt * la_population) |>
+      dplyr::summarise(pop = sum(provider_pop, na.rm = TRUE) |>
+                         janitor::round_half_up(0), 
+                       .by = c(provider, year, age_range, sex))
   ),
   tar_target(
     provider_reference,
