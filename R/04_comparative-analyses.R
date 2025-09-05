@@ -191,7 +191,15 @@ get_summary_by_geography_table <- function(data, activity_type, treatment_type) 
     ) |>
     dplyr::arrange(dplyr::pick(1)) |>
     dplyr::mutate(dplyr::across(is.numeric,
-                                ~ prettyNum(., big.mark = ","))) |>
+                                ~ prettyNum(., big.mark = ","))) 
+  
+  # Temporarily removing SR from provider, since population numbers not right:
+  if("provider" %in% names(table)){
+    table <- table |>
+      dplyr::select(-total_pop, -standardised_rate)
+  }
+  
+  table <- table |>
     dplyr::rename_with(~ format_as_title(.)) |>
     create_dt()
   
