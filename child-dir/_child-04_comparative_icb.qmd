@@ -382,7 +382,7 @@ cat("##### Admissions")
 
 ```{r}
 summary_icb_suppressed <- summary_icb_admissions |>
-  small_number_suppression_comparative("admissions")
+  small_number_suppression_comparative()
   
 number_suppressed <- summary_icb_suppressed |>
   dplyr::filter(stringr::str_detect(total_count, "<=")) |>
@@ -408,7 +408,7 @@ cat("##### Beddays")
 
 ```{r}
 summary_icb_suppressed <- summary_icb_beddays |>
-  small_number_suppression_comparative("beddays")
+  small_number_suppression_comparative()
 ```
 
 ```{r}

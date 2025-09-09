@@ -2,7 +2,7 @@
 # Once drafts are created, we can tweak each file individually and add narrative.
 
 # Building blocks --------------------------------------------------------------
-source("R/general.R")
+source("R/00_general.R")
 
 ## Functions -------------------------------------------------------------------
 get_cohort_overlap_section <- function(mitigator) {
@@ -38,7 +38,7 @@ get_cohort_overlap_section <- function(mitigator) {
       "```{r}",
       "#| output: asis",
       "knitr::knit_child(
-        input = \"child-dir/_child-overlap_inclusion-within-others.qmd\",
+        input = \"child-dir/_child-03_overlap_inclusion-within-others.qmd\",
         envir = environment(),
         quiet = TRUE
         ) |>
@@ -62,7 +62,7 @@ get_cohort_overlap_section <- function(mitigator) {
     "```{r}",
     "#| output: asis",
     "knitr::knit_child(
-      input = \"child-dir/_child-overlap_number-within-others.qmd\",
+      input = \"child-dir/_child-03_overlap_number-within-others.qmd\",
       envir = environment(),
       quiet = TRUE
       ) |>
@@ -77,7 +77,7 @@ get_cohort_overlap_section <- function(mitigator) {
     "```{r}",
     "#| output: asis",
     "knitr::knit_child(
-      input = \"child-dir/_child-overlap_most-common.qmd\",
+      input = \"child-dir/_child-03_overlap_most-common.qmd\",
       envir = environment(),
       quiet = TRUE
       ) |>
@@ -226,7 +226,7 @@ admission_characteristics_section <- c(
   "```{r}",
   "#| output: asis",
   "knitr::knit_child(
-    input = \"child-dir/_child-descriptive_admission-characteristics.qmd\",
+    input = \"child-dir/_child-02_descriptive_admission-characteristics.qmd\",
     envir = environment(),
     quiet = TRUE
   ) |>
@@ -239,7 +239,7 @@ comparative_section <- c(
   "```{r}",
   "#| output: asis",
   "knitr::knit_child(
-                  input = \"child-dir/_child-comparative.qmd\",
+                  input = \"child-dir/_child-04_comparative.qmd\",
                   envir = environment(),
                   quiet = TRUE
                 ) |>
@@ -262,7 +262,7 @@ overview_section <-  c(
   "```{r}",
   "#| output: asis",
   "knitr::knit_child(
-      input = \"child-dir/_child-overview.qmd\",
+      input = \"child-dir/_child-02_descriptive_overview.qmd\",
       envir = environment(),
       quiet = TRUE
     ) |>
@@ -286,13 +286,13 @@ packages_and_options <- c(
   "library(\"patchwork\")",
   "library(\"DT\")",
   "",
-  "source(\"R/captions.R\")",
-  "source(\"R/general.R\")",
-  "source(\"R/descriptive_analyses.R\")",
-  "source(\"R/comparative_analyses.R\")",
-  "source(\"R/Functions for cohort overlap.R\")",
-  "source(\"R/Functions for trend analysis.R\")",
-  "source(\"R/manipulating_mitigators_and_mechanisms.R\")",
+  "source(\"R/00_general.R\")",
+  "source(\"R/02_descriptive-analyses.R\")",
+  "source(\"R/03_cohort-overlap.R\")",
+  "source(\"R/04_comparative-analyses.R\")",
+  "source(\"R/05_trend-analyses.R\")",
+  "source(\"R/06_manipulating-mitigators-and-mechanisms.R\")",
+  "source(\"R/07_captions.R\")",
   "",
   "options(scipen = 999)",
   "options(knitr.duplicate.label = \"allow\")",
@@ -308,7 +308,7 @@ patient_characteristics_section <- c(
   "```{r}",
   "#| output: asis",
   "knitr::knit_child(
-              input = \"child-dir/_child-descriptive_patient-characteristics.qmd\",
+              input = \"child-dir/_child-02_descriptive_patient-characteristics.qmd\",
               envir = environment(),
               quiet = TRUE
              ) |>
@@ -323,7 +323,7 @@ trend_section <- c(
   "```{r}",
   "#| output: asis",
   "knitr::knit_child(
-    input = \"child-dir/_child-trends_england.qmd\",
+    input = \"child-dir/_child-05_trends_england.qmd\",
     envir = environment(),
     quiet = TRUE
     ) |>
@@ -336,7 +336,7 @@ trend_section <- c(
   "```{r}",
   "#| output: asis",
   "knitr::knit_child(
-    input = \"child-dir/_child-trends_icb.qmd\",
+    input = \"child-dir/_child-05_trends_icb.qmd\",
     envir = environment(),
     quiet = TRUE
     ) |>
@@ -348,8 +348,25 @@ trend_section <- c(
   "",
   "```{r}",
   "#| output: asis",
+  "geography <- \"la\"",
+  "",
   "knitr::knit_child(
-    input = \"child-dir/_child-trends_local-authority.qmd\",
+    input = \"child-dir/_child-05_trends_local-authority.qmd\",
+    envir = environment(),
+    quiet = TRUE
+    ) |>
+  cat(sep = '\\n')",
+  "```",
+  "",
+  
+  "### Acute Provider",
+  "",
+  "```{r}",
+  "#| output: asis",
+  "geography <- \"provider\"",
+  "",
+  "knitr::knit_child(
+    input = \"child-dir/_child-05_trends_local-authority.qmd\",
     envir = environment(),
     quiet = TRUE
     ) |>
@@ -407,7 +424,7 @@ create_draft_mitigator_qmd <- function(mitigator,
 
 # Mitigator details ------------------------------------------------------------
 # This is a copy of what's at the top of the targets pipeline
-source("R/manipulating_mitigators_and_mechanisms.R")
+source("R/06_manipulating-mitigators-and-mechanisms.R")
 
 mitigator_summary_table <-
   readxl::read_excel("reference/summary_mitigators_table.xlsx") |>

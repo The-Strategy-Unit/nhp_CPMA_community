@@ -31,6 +31,8 @@ format_geography_for_caption <- function(geography) {
     "Integrated Care Board"
   } else if (geography == "la") {
     "Local Authority"
+  } else if (geography == "provider") {
+    "acute NHS provider"
   } else {
     geography
   }
@@ -50,6 +52,8 @@ format_group_name_for_caption <- function(group) {
     group_formatted <- "Index of Multiple Deprivation (IMD) decile"
   } else if (group == "los") {
     group_formatted <- "Length of Stay (LOS) range"
+  } else if (group == "diagnosis"){
+    group_formatted <- "primary diagnoses"
   } else {
     group_formatted <- group
   }
@@ -76,6 +80,8 @@ format_metric_for_caption <- function(metric,
     "Crude rate per 100,000 population"
   } else if (metric == "prop"){
     glue::glue("Proportion of {format_treatment_for_caption(treatment_type)} {activity_type}")
+  } else if (metric == "avg_los"){
+    glue::glue("Average length of stay")
   } else { 
     stringr::str_to_title(metric)
   }
@@ -207,10 +213,13 @@ get_caption_overview <- function(cohort, treatment_type) {
 #'
 #' @param cohort A string for the mitigator cohort.
 #' @param activity_type Either `"admissions"` or `"beddays"`.
+#' @param group Either `"specialties"` or `"diagnoses"`.
 #'
 #' @return A string.
-get_caption_top_ten_specialties <- function(cohort, activity_type) {
-  caption <- glue::glue("Top ten specialties of mitigable {activity_type} for {cohort} in 2023-24.")
+get_caption_top_ten <- function(cohort, activity_type, group) {
+  group <- format_group_name_for_caption(group)
+  
+  caption <- glue::glue("Top ten {group} of mitigable {activity_type} for {cohort} in 2023-24.")
   
   return(caption)
 }
@@ -274,9 +283,12 @@ get_caption_activity_vs_perc_change <- function(cohort,
 #' @param activity_type Either `"admissions"` or `"beddays"`.
 #'
 #' @return A string.
-get_caption_la_trends <- function(cohort,
-                                  activity_type) {
-  caption <- glue::glue("Table of the age and sex standardised rates of {cohort} {activity_type} per 100,000 population by Local Authority over the last 5 years, including the percentage change between 2018/19 and 2023/24.")
+get_caption_la_or_provider_trends <- function(cohort,
+                                              activity_type,
+                                              geography) {
+  geography <- format_geography_for_caption(geography)
+  
+  caption <- glue::glue("Table of the age and sex standardised rates of {cohort} {activity_type} per 100,000 population by {geography} over the last 5 years, including the percentage change between 2018/19 and 2023/24.")
   
   return(caption)
 }
@@ -294,7 +306,7 @@ get_caption_trends <- function(cohort, metric, cohort_group, activity_type, geog
   metric <- format_metric_for_caption(metric) |>
     stringr::str_to_lower()
   
-  geography <- if(geography == "England") {
+  geography <- if(stringr::str_to_lower(geography) == "england") {
     "in England"
   } else {
     glue::glue("by {format_geography_for_caption(geography)}")

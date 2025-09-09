@@ -1,0 +1,16 @@
+```{r}
+summary_suppressed <- summary |>
+  small_number_suppression_comparative()
+
+number_suppressed <- summary_suppressed |>
+  dplyr::filter(stringr::str_detect(total_count, "<=")) |>
+  nrow()
+```
+
+```{r}
+#| label: tbl-rate_la
+#| tbl-cap: !expr get_caption_by_geography_table(cohort_title, activity_type, treatment_type, geography, number_suppressed)
+summary_suppressed |>
+  get_summary_by_geography_table(activity_type,
+                                 treatment_type)
+```

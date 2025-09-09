@@ -1,5 +1,3 @@
-To explore how potentially mitigable activity may vary between Local Authority (LA) the table below contains the number, percentage and age and sex standardised rates per 100,000 population of mitigable activity by LA. Columns in the table can be ordered and specific LAs can be searched for.
-
 ```{r}
 #| output: asis
 #| eval: !expr include_admissions_and_beddays
@@ -10,14 +8,14 @@ cat("##### Admissions")
 
 ```{r}
 activity_type <- "admissions"
-summary_la <- targets::tar_read_raw(glue::glue("summary_la_{activity_type}_{cohort}"))
+summary <- targets::tar_read_raw(glue::glue("summary_{geography}_{activity_type}_{cohort}"))
 ```
 
 ```{r}
 #| output: asis
 #| eval: !expr include_admissions
 knitr::knit_child(
-                  input = "child-dir/_child-comparative_local-authority_table.qmd",
+                  input = "child-dir/_child-04_comparative_local-authority_table.qmd",
                   envir = environment(),
                   quiet = TRUE
                 ) |>
@@ -32,14 +30,14 @@ cat("##### Beddays")
 
 ```{r}
 activity_type <- "beddays"
-summary_la <- targets::tar_read_raw(glue::glue("summary_la_{activity_type}_{cohort}"))
+summary <- targets::tar_read_raw(glue::glue("summary_{geography}_{activity_type}_{cohort}"))
 ```
 
 ```{r}
 #| output: asis
 #| eval: !expr include_beddays
 knitr::knit_child(
-                  input = "child-dir/_child-comparative_local-authority_table.qmd",
+                  input = "child-dir/_child-04_comparative_local-authority_table.qmd",
                   envir = environment(),
                   quiet = TRUE
                 ) |>

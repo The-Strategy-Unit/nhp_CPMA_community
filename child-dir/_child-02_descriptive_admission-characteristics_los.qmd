@@ -1,0 +1,111 @@
+```{r}
+perc_los <- targets::tar_read_raw(glue::glue("perc_los_{cohort}"))
+
+perc_los_trends_range <- targets::tar_read_raw(glue::glue("perc_los_trends_{cohort}"))
+
+avg_los_england <- targets::tar_read_raw(glue::glue("avg_los_trends_england_{cohort}"))
+
+avg_los_icb <- targets::tar_read_raw(glue::glue("avg_los_trends_icb_{cohort}"))
+```
+
+```{r}
+los_caption <- get_caption_by_group('perc', cohort_title, 'admissions', 'los', treatment_type)
+
+los_trends_range_caption <- glue::glue("{los_caption |> stringr::str_remove('in 2023/24 ') |> stringr::str_replace('range.', 'range')} over time.")
+
+avg_los_england_caption <- get_caption_trends(cohort_title, "avg_los", cohort_group, "admissions", "england") |>
+  stringr::str_replace("the last 9 years", "time")
+
+avg_los_icb_caption <- get_caption_trends(cohort_title, "avg_los", cohort_group, "admissions", "icb")  |>
+  stringr::str_replace("the last 9 years", "time") 
+```
+
+:::panel-tabset
+
+### 2023/24
+
+```{r}
+#| label: tbl-perc_los
+#| tbl-cap: !expr los_caption
+avg_los_england_2324 <- avg_los_england |>
+  dplyr::filter(year == "2023/24") |>
+  dplyr::pull(avg_los) |>
+  janitor::round_half_up(2)
+
+perc_los |>
+  get_perc_by_los_table() |>
+  flextable::add_footer_lines(glue::glue("Average LOS in 2023/24: {avg_los_england_2324} days"))
+```
+
+```{r}
+#| label: fig-perc_los
+#| fig-cap: !expr los_caption
+perc_los |>
+  get_perc_by_los_plot()
+```
+
+### Trend - LOS range
+
+Note: Length of stay ranges have been grouped differently here for trends compared to in the 2023/24 tab for clarity.
+
+::: panel-tabset
+
+#### Chart
+```{r}
+#| label: fig-perc_los_trends_range
+#| fig-cap: !expr los_trends_range_caption
+perc_los_trends_range |>
+  get_perc_by_los_trends_plot()
+```
+
+#### Table
+```{r}
+#| label: tbl-perc_los_trends_range
+#| tbl-cap: !expr los_trends_range_caption
+perc_los_trends_range |>
+  get_perc_by_los_trends_table()
+```
+
+:::
+
+### Trend - average LOS
+
+::: panel-tabset
+
+#### England
+```{r}
+#| label: tbl-perc_los_trends_avg_england
+#| tbl-cap: !expr avg_los_england_caption
+avg_los_england |>
+  dplyr::arrange(year) |>
+  get_table_perc()
+```
+
+
+```{r}
+#| label: fig-perc_los_trends_avg_england
+#| fig-cap: !expr avg_los_england_caption
+avg_los_england |>
+  get_avg_los_england_plot()
+```
+
+#### ICB
+```{r}
+#| label: fig-perc_los_trends_avg_icb
+#| fig-cap: !expr avg_los_icb_caption
+avg_los_icb |>
+  get_avg_los_icb_plot()
+```
+
+```{r}
+#| label: fig-perc_los_trends_avg_icb_change
+#| fig-cap: !expr get_caption_trends_percentage_change(cohort_title, "avg_los", cohort_group, "admissions") 
+eng_average <- calculating_england_average_numbers(avg_los_england, avg_los) |>
+  dplyr::pull(change)
+
+plotting_percentage_change_over_time_by_icb(avg_los_icb, avg_los, icb_2024_name, eng_average)
+```
+
+:::
+
+:::

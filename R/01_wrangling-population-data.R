@@ -10,26 +10,7 @@ wrangling_la_population_data<-function(data){
     filter(country=="E")
   
   la_population_data<-la_population_data|>
-    mutate(age_range=case_when(age>=0 & age<=4 ~ "0-4",
-                               age>=5 & age<=9 ~ "5-9",
-                               age>=10 & age<=14 ~ "10-14",
-                               age>=15 & age<=19 ~ "15-19",
-                               age>=20 & age<=24 ~ "20-24",
-                               age>=25 & age<=29 ~ "25-29",
-                               age>=30 & age<=34 ~ "30-34",
-                               age>=35 & age<=39 ~ "35-39",
-                               age>=40 & age<=44 ~ "40-44",
-                               age>=45 & age<=49 ~ "45-49",
-                               age>=50 & age<=54 ~ "50-54",
-                               age>=55 & age<=59 ~ "55-59",
-                               age>=60 & age<=64 ~ "60-64",
-                               age>=65 & age<=69 ~ "65-69",
-                               age>=70 & age<=74 ~ "70-74",
-                               age>=75 & age<=79 ~ "75-79",
-                               age>=80 & age<=84 ~ "80-84",
-                               age>=85 & age<=89 ~ "85-89",
-                               age>=90 ~ "90+")
-    )|>
+    add_age_range_column() |>
     select(-age, -country, -population_2011, -population_2012, -population_2013, -population_2014)|>
     mutate(sex=case_when(sex=="M"~ 1,
                          sex=="F" ~ 2))|>
@@ -70,26 +51,7 @@ extract_and_format_icb_population_data_by_yr<-function(data, sheet_name, year){
     mutate(sex=substr(age_sex_group, start=1, stop=1))|>
     select(-age_sex_group)|>
     mutate(age=as.numeric(age))|>
-    mutate(age_range=case_when(age>=0 & age<=4 ~ "0-4",
-                               age>=5 & age<=9 ~ "5-9",
-                               age>=10 & age<=14 ~ "10-14",
-                               age>=15 & age<=19 ~ "15-19",
-                               age>=20 & age<=24 ~ "20-24",
-                               age>=25 & age<=29 ~ "25-29",
-                               age>=30 & age<=34 ~ "30-34",
-                               age>=35 & age<=39 ~ "35-39",
-                               age>=40 & age<=44 ~ "40-44",
-                               age>=45 & age<=49 ~ "45-49",
-                               age>=50 & age<=54 ~ "50-54",
-                               age>=55 & age<=59 ~ "55-59",
-                               age>=60 & age<=64 ~ "60-64",
-                               age>=65 & age<=69 ~ "65-69",
-                               age>=70 & age<=74 ~ "70-74",
-                               age>=75 & age<=79 ~ "75-79",
-                               age>=80 & age<=84 ~ "80-84",
-                               age>=85 & age<=89 ~ "85-89",
-                               age>=90 ~ "90+")
-    )|>
+    add_age_range_column() |>
     summarise(icb_population=sum(population_number), .by=c(icb_2024_code, icb_2024_name, age_range, sex))|>
     mutate(fyear=year)|>
     mutate(sex=case_when(sex=="m"~ 1,
@@ -242,7 +204,46 @@ generating_england_age_sex_standardised_rates<-function(data, icb_pop, standard_
     
     
   }
+ 
+generating_provider_age_sex_standardised_rates <- function(data,
+                                                           provider_pop,
+                                                           standard_pop,
+                                                           activity_type) {
+  expanded_data <- data |>
+    filter(fyear != 201415) |>
+    expand(age_range, sex, cohorts, year, provider)
   
+  standardised_data <- expanded_data |>
+    left_join(data[, c("provider",
+                       "year",
+                       "age_range",
+                       "sex",
+                       "cohorts",
+                       "episodes",
+                       "beddays")], 
+              by = c("provider", "year", "age_range", "sex", "cohorts")) |>
+    right_join(provider_pop[, c("provider", "year", "age_range", "sex", "pop")], 
+              by = c("provider", "year", "age_range", "sex")) |>
+    rename(provider_population = pop) |>
+    left_join(standard_pop, by = c("age_range", "sex")) |>
+    filter(!is.na(provider),
+           age_range != "NA") |>
+    mutate(episodes = ifelse(is.na(episodes), 0, episodes),
+           beddays = ifelse(is.na(beddays), 0, beddays)) |>
+    rename(activity = {{activity_type}}) |>
+    group_by(provider, year, cohorts) |>
+    PHEindicatormethods::calculate_dsr(
+      x = activity,
+      # observed number of events
+      n = provider_population,
+      # non-standard pops for each stratum
+      stdpop = pop
+    ) |>   # standard populations for England for each stratum
+    mutate(value = janitor::round_half_up(value, 0))
+  
+  return(standardised_data)
+  
+} 
   
   wrangling_imd_population_by_icb<-function(lsoa_to_icb,
                                             lsoa11_to_lsoa21,

@@ -1,0 +1,140 @@
+
+In this section, mitigable activity for the `r cohort_title` `r cohort_group` are shown by admission characteristics.
+
+```{r}
+include_non_zero_admissions <- include_beddays & !check_if_zero_los_mitigator(cohort)
+```
+
+::: panel-tabset
+
+```{r}
+#| output: asis
+#| eval: !expr include_non_zero_admissions
+cat("\n")
+cat("#### Length of Stay")
+```
+
+```{r}
+#| eval: !expr include_non_zero_admissions
+#| output: asis
+knitr::knit_child(
+              input = "child-dir/_child-02_descriptive_admission-characteristics_los.qmd",
+              envir = environment(),
+              quiet = TRUE
+             ) |>
+            cat(sep = '\n')
+```
+
+#### Specialty
+
+```{r}
+#| output: asis
+#| eval: !expr include_admissions_and_beddays
+cat("::: panel-tabset")
+cat("\n")
+cat("##### Admissions")
+```
+
+```{r}
+activity_type <- "admissions"
+group <- "specialty"
+top_ten <- targets::tar_read_raw(glue::glue("{group}_{cohort}_{activity_type}"))
+```
+
+```{r}
+#| eval: !expr include_admissions
+#| output: asis
+knitr::knit_child(
+              input = "child-dir/_child-02_descriptive_admission-characteristics_top-ten.qmd",
+              envir = environment(),
+              quiet = TRUE
+             ) |>
+            cat(sep = '\n')
+```
+
+```{r}
+#| output: asis
+#| eval: !expr include_admissions_and_beddays
+cat("##### Beddays")
+```
+
+```{r}
+activity_type <- "beddays"
+top_ten <- targets::tar_read_raw(glue::glue("{group}_{cohort}_{activity_type}"))
+```
+
+```{r}
+#| eval: !expr include_beddays
+#| output: asis
+knitr::knit_child(
+              input = "child-dir/_child-02_descriptive_admission-characteristics_top-ten.qmd",
+              envir = environment(),
+              quiet = TRUE
+             ) |>
+            cat(sep = '\n')
+```
+
+```{r}
+#| output: asis
+#| eval: !expr include_admissions_and_beddays
+cat(":::")
+```
+
+#### Primary diagnosis
+
+Note: Primary diagnoses have been grouped by the first three characters of the ICD10 codes.
+
+```{r}
+#| output: asis
+#| eval: !expr include_admissions_and_beddays
+cat("::: panel-tabset")
+cat("\n")
+cat("##### Admissions")
+```
+
+```{r}
+activity_type <- "admissions"
+group <- "diagnosis"
+top_ten <- targets::tar_read_raw(glue::glue("{group}_{cohort}_{activity_type}"))
+```
+
+```{r}
+#| eval: !expr include_admissions
+#| output: asis
+knitr::knit_child(
+              input = "child-dir/_child-02_descriptive_admission-characteristics_top-ten.qmd",
+              envir = environment(),
+              quiet = TRUE
+             ) |>
+            cat(sep = '\n')
+```
+
+```{r}
+#| output: asis
+#| eval: !expr include_admissions_and_beddays
+cat("##### Beddays")
+```
+
+```{r}
+activity_type <- "beddays"
+top_ten <- targets::tar_read_raw(glue::glue("{group}_{cohort}_{activity_type}"))
+```
+
+```{r}
+#| eval: !expr include_beddays
+#| output: asis
+knitr::knit_child(
+              input = "child-dir/_child-02_descriptive_admission-characteristics_top-ten.qmd",
+              envir = environment(),
+              quiet = TRUE
+             ) |>
+            cat(sep = '\n')
+```
+
+```{r}
+#| output: asis
+#| eval: !expr include_admissions_and_beddays
+cat(":::")
+```
+
+:::

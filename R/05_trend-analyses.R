@@ -16,7 +16,7 @@ Formatting_data_for_trends_analysis_denominator<-function(table, icb_pop){
               total_beddays_elective=sum(total_beddays_elective),
               total_episodes_all=sum(total_episodes_elective)+sum(total_episodes_emergency),
               total_beddays_all=sum(total_beddays_elective)+sum(total_beddays_emergency))|>
-    mutate(year=paste0(stringr::str_sub(fyear, 1, 4), "/", stringr::str_sub(fyear, 5, 6)))|>
+    add_year_column() |>
     collect()|>
     left_join(icb_pop[,c("icb24cdh", "icb_2024_name")]|>
                 distinct(icb24cdh, icb_2024_name), by=c("icb"="icb24cdh"))|>
@@ -52,7 +52,7 @@ Formatting_data_for_trends_analysis_cohorts <- function(table, icb_pop){
              cohorts)|>
     summarise(episodes=sum(episodes),
               beddays=sum(beddays))|>
-    mutate(year=paste0(stringr::str_sub(fyear, 1, 4), "/", stringr::str_sub(fyear, 5, 6)))|>
+    add_year_column() |>
     ungroup()|>
     as.data.frame()
   
@@ -82,7 +82,7 @@ numbers_over_time<- identify_whether_bedday_or_admissions_or_both(numbers_over_t
              icb_2024_name)|>
     summarise(episodes=sum(episodes),
               beddays=sum(beddays))|>
-    mutate(year=paste0(stringr::str_sub(fyear, 1, 4), "/", stringr::str_sub(fyear, 5, 6)))|>
+    add_year_column() |>
     ungroup()|>
     as.data.frame() 
   
@@ -109,7 +109,7 @@ Formatting_la_data_for_trends <- function(table, sex_group) {
     mutate_mechanism_columns() |> 
     gather(key="cohorts", value="value", -fyear, -age_range, -sex, -resladst_ons, -episodes, -beddays)|>
     filter(value==1)|>
-    mutate(year=paste0(stringr::str_sub(fyear, 1, 4), "/", stringr::str_sub(fyear, 5, 6)))
+    add_year_column()
  
   return(la_numbers_over_time)
 }
@@ -135,12 +135,75 @@ Formatting_la_data_for_trends_total_mitigation<-function(table, sex_group, la_po
              resladst_ons)|>
     summarise(episodes=sum(episodes),
               beddays=sum(beddays))|>
-    mutate(year=paste0(stringr::str_sub(fyear, 1, 4), "/", stringr::str_sub(fyear, 5, 6)))|>
+    add_year_column() |>
     ungroup()|>
     as.data.frame() 
   
   return(la_numbers_over_time)
   
+}
+
+Formatting_providers_data_for_trends <- function(sex_group) {
+  data <- dplyr::tbl(
+    sc,
+    dbplyr::in_catalog(
+      "strategyunit",
+      "default",
+      "sl_af_describing_mitigators_providers"
+    )
+  ) |>
+    dplyr::filter(fyear >= "201819", sex == sex_group) |>
+    sparklyr::collect()
+  
+  numbers_over_time <- data |>
+    identify_whether_bedday_or_admissions_or_both(6:34) |>
+    mutate(episodes = ifelse(activity_group == "beddays", 0, episodes)) |>   #avoid counting admissions for efficiency only activity
+    select(-activity_group, -number_of_cohorts, -icb, -sex) |>
+    mutate_mechanism_columns() |>
+    gather(
+      key = "cohorts",
+      value = "value",
+      -fyear,
+      -age_range,
+      -provider,
+      -episodes,
+      -beddays
+    ) |>
+    filter(value == 1) |>
+    group_by(age_range, fyear, provider, cohorts) |>
+    summarise(episodes = sum(episodes),
+              beddays = sum(beddays)) |>
+    add_year_column() |>
+    mutate(sex = sex_group) |>
+    ungroup()
+  
+  return(numbers_over_time)
+}
+
+Formatting_providers_data_for_trends_total_mitigation <- function(sex_group) {
+  data <- dplyr::tbl(
+    sc,
+    dbplyr::in_catalog(
+      "strategyunit",
+      "default",
+      "sl_af_describing_mitigators_providers"
+    )
+  ) |>
+    dplyr::filter(fyear >= "201819", sex == sex_group) |>
+    sparklyr::collect()
+  
+  numbers_over_time <- data |>
+    identify_whether_bedday_or_admissions_or_both(6:34) |>
+    mutate(episodes = ifelse(activity_group == "beddays", 0, episodes)) |>   #avoid counting admissions for efficiency only activity
+    select(-activity_group, -number_of_cohorts, -icb, -sex) |>
+    group_by(age_range, fyear, provider) |>
+    summarise(episodes = sum(episodes),
+              beddays = sum(beddays)) |>
+    add_year_column() |>
+    mutate(sex = sex_group) |>
+    ungroup()
+  
+  return(numbers_over_time)
 }
 
 # Calculating numbers and percentages over time
@@ -193,12 +256,12 @@ plot_of_number_over_time<-function(data,  activity_type){
   
   max_number <- max(data2$activity)
   
-  data2|>
+  plot <- data2|>
     ggplot()+
-    geom_line(aes(y=activity, x=year, group=1), linewidth=1.4)+
-    geom_rect(aes(NULL,NULL,xmin="2019/20",xmax="2021/22"),
-              ymin=0,ymax=max_number*1.1, fill="#686f73", size=0.5, alpha=0.01)+
-    annotate("text", x ="2020/21", y = max_number*1.08, label = "COVID-19 pandemic", size=2.7)+
+    geom_line(aes(y=activity, x=year, group=1), linewidth=1.4)
+  
+  plot <- plot |>
+    add_covid_box_to_plot(max_number) +
     su_theme()+
     theme(axis.text=element_text(size=10),
           axis.title.y=element_text(size=12))+
@@ -207,7 +270,7 @@ plot_of_number_over_time<-function(data,  activity_type){
          title=NULL)+ 
     scale_y_continuous(expand=c(0,0), limits=c(0,max_number*1.1), labels = label_comma())
   
-  
+  return(plot)
 }
 
 
@@ -222,12 +285,12 @@ data1<-data|>
 
 max_percentage <- max(data1$percentage)
 
-data1|>
+plot <- data1|>
     ggplot()+
-    geom_line(aes(y=percentage, x=year, group=1), linewidth=1.4)+
-  geom_rect(aes(NULL,NULL,xmin="2019/20",xmax="2021/22"),
-            ymin=0,ymax=max(max_percentage)*1.1, fill="#686f73", size=0.5, alpha=0.01)+
-  annotate("text", x ="2020/21", y = max(max_percentage)*1.08, label = "COVID-19 pandemic", size=2.7)+
+    geom_line(aes(y=percentage, x=year, group=1), linewidth=1.4)
+
+plot <- plot |>
+  add_covid_box_to_plot(max_percentage) +
     su_theme()+
     theme(axis.text=element_text(size=10),
           axis.title.y=element_text(size=12))+
@@ -235,8 +298,8 @@ data1|>
          x=NULL,
          title=NULL)+ 
     scale_y_continuous(expand=c(0,0), limits=c(0,max(max_percentage)*1.1), labels = label_comma())
-  
-  
+
+return(plot)
   
 }
 
@@ -245,13 +308,13 @@ plot_of_standardised_rates_over_time<-function(data){
   
   max_value <- max(data$value)
   
-  data|>    
+  plot <- data|>    
     ggplot(aes(y=value, x=year, group=1))+
     geom_ribbon(aes(ymin = lowercl, ymax = uppercl), fill = "#5881c1" )+
-    geom_line(linewidth=1.4)+
-    geom_rect(aes(NULL,NULL,xmin="2019/20",xmax="2021/22"),
-              ymin=0,ymax=max_value*1.1, fill="#686f73", size=0.5, alpha=0.01)+
-    annotate("text", x ="2020/21", y = max_value*1.08, label = "COVID-19 pandemic", size=2.7)+
+    geom_line(linewidth=1.4)
+  
+  plot <- plot |>
+    add_covid_box_to_plot(max_value) +
     su_theme()+
     theme(axis.text=element_text(size=10),
           axis.title.y=element_text(size=12))+
@@ -261,7 +324,7 @@ plot_of_standardised_rates_over_time<-function(data){
          caption = "Blue ribbon indicates the 95% confidence intervals")+ 
     scale_y_continuous(expand=c(0,0), limits=c(0,max(data$uppercl)*1.1), labels = label_comma())
   
-  
+  return(plot)
   }
   
 
@@ -533,7 +596,7 @@ plotting_total_activity_vs_percentage_change_LA<-function(data){
 
 
 
-generating_la_table<-function(data, cohort){
+generating_la_or_provider_table<-function(data, cohort, limit = 10){
   
   data<-data|>
     filter(cohorts==cohort) 
@@ -547,16 +610,29 @@ generating_la_table<-function(data, cohort){
     dplyr::pull()
   
   table_data<-data |>
-    select(laname23, year, value)|>
+    select(any_of(c("Local Authority" = "laname23", 
+                    "Provider" = "org_name", 
+                    "ICB" = "icb_2024_name")),
+           year, value) |>
     spread(key=year, value=value) |>
-    rename(`Local Authority`=laname23)|>
     mutate(`Percentage Change`=janitor::round_half_up(((`2023/24`-`2018/19`)/`2018/19`)*100,1))|>
     as.data.frame() |>
-    mutate(across(2:8, ~replace_na(as.character(.), "-")))|>
-    mutate(across(2:7, ~factor(., levels = c("-", min_value:max_value))))
-   
+    mutate(across(dplyr::starts_with("20"), ~ifelse(. <= limit,
+                                                    glue::glue("<={limit}"),
+                                                    .))) |>
+    mutate(across(dplyr::starts_with("20"), ~replace_na(as.character(.), "-")))|>
+    mutate(across(dplyr::starts_with("20"), ~factor(., levels = c("-", glue::glue("<={limit}"), min_value:max_value)))) |>
+    mutate(`Percentage Change` = ifelse(`2018/19` %in% c("-", glue::glue("<={limit}")) | `2023/24` %in% c("-", glue::glue("<={limit}")),
+                                        "-",
+                                        `Percentage Change`))
+  
+  if("Provider" %in% names(table_data)) {
+    table_data <- table_data |> 
+      dplyr::rename("ICB (system)" = ICB)
+  } 
 
   return(table_data)
   
 }
+
 

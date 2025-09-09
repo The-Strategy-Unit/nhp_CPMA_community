@@ -1,0 +1,15 @@
+```{r}
+if(geography == "la") {
+  rates_over_time <- tar_read_raw(glue::glue("la_age_sex_standardised_rates_{rename_admissions_as_episodes(activity_type)}_over_time"))
+} else {
+  rates_over_time <- tar_read_raw(glue::glue("provider_age_sex_standardised_rates_{rename_admissions_as_episodes(activity_type)}"))
+}
+
+table <- generating_la_or_provider_table(rates_over_time, cohort)
+```
+
+```{r}
+#| label: tbl-local_authority_over_time
+#| tbl-cap: !expr get_caption_la_or_provider_trends(cohort_title, activity_type, geography) 
+create_dt(table)
+```

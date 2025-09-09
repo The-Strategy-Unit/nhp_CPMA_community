@@ -38,7 +38,7 @@ get_overview_of_mitigator <- function(mitigator,
     dbplyr::in_catalog(
       "strategyunit",
       "default",
-      "sl_af_describing_mitigators_final_2324_sex"
+      get_table_name("sex")
     )
   ) |>
     filter_to_mitigator_or_mechanism(mitigator) |>
@@ -88,11 +88,12 @@ get_number_by_group <- function(mitigator,
                         dbplyr::in_catalog(
                           "strategyunit",
                           "default",
-                          paste0("sl_af_describing_mitigators_final_2324_", group)
+                          get_table_name(group)
                         )) |>
     filter_to_mitigator_or_mechanism(mitigator) |>
     dplyr::filter(!is.na(!!rlang::sym(col_name))) |> # exclude NULLs
     dplyr::rename(admissions = episodes) |>
+    format_diagnoses_codes(group) |>
       # Although the column is called episodes, each row is the last episode in 
       # a spell. So renaming as admissions here to avoid confusion later.
     dplyr::summarise(number = sum(!!rlang::sym(activity_type)), 
@@ -137,7 +138,7 @@ get_perc_by_group <- function(mitigator,
     ) |>
     order_levels_of_factors() |>
     dplyr::arrange(dplyr::across(1)) |>
-    mutate(number=janitor::round_half_up(number,0))  |>   
+    dplyr::mutate(number = janitor::round_half_up(number,0))  |>   
     dplyr::rename(!!rlang::sym(activity_type) := number) 
   
   return(summary)
@@ -293,46 +294,72 @@ get_rates_by_group_table <- function(data) {
   return(table)
 }
 
-# Top ten specialties ----------------------------------------------------------
-#' Get the top ten specialties for a mitigator or mechanism.
+# Top ten specialties/diagnoses ------------------------------------------------
+#' Get the top ten specialties/diagnoses for a mitigator or mechanism.
 #'
-#' @param key The specialty key.
 #' @param activity_type Either `"admissions"` or `"beddays"`.
 #' @param mitigator The mitigator or mechanism.
+#' @param group Either `"tretspef"` for specialty or `"diagnosis"` for diagnosis.
+#' @param key Key for specialty or diagnosis.
 #'
 #' @return A dataframe.
-get_top_ten_specialties <- function(mitigator, key, activity_type) {
-  get_perc_by_group(mitigator, "tretspef", activity_type) |>
-    dplyr::left_join(key, by = c("tretspef" = "dd_code")) |>
+get_top_ten <- function(mitigator, activity_type, group, key) {
+  
+  if(group == "tretspef"){
+    column_title <- "specialty"
+    join <- group
+  } else {
+    column_title <- "description"
+    join <- "primary_diagnosis"
+  }
+  
+  key <- key |>
+    dplyr::rename(dplyr::any_of(c("tretspef" = "dd_code",
+                                  "primary_diagnosis" = "code")))
+  
+  top_ten <- get_perc_by_group(mitigator, group, activity_type) |>
+    dplyr::left_join(key, join) |>
     dplyr::arrange(desc(perc)) |>
     dplyr::slice(1:10) |>
-    dplyr::select(specialty, {{activity_type}}, perc)
+    dplyr::select({{column_title}}, {{activity_type}}, perc)
+  
+  return(top_ten)
 }
 
-#' Plot the top ten specialties for a mitigator or mechanism.
+#' Plot the top ten specialties/diagnoses for a mitigator or mechanism.
 #'
 #' @param data The output of `get_top_ten_specialties()`.
 #' @param activity_type Either `"admissions"` or `"beddays"`.
+#' @param group Either `"tretspef"` for specialty or `"diagnosis"` for diagnosis.
 #'
 #' @return A plot.
-get_top_ten_specialties_plot <- function(data, activity_type) {
+get_top_ten_plot <- function(data, activity_type, group) {
+  
+  if(group == "diagnosis"){
+    group <- "description"
+    y_title <- "Primary Diagnosis"
+  } else {
+    y_title <- "Specialty"
+  }
   
   plot <- data |>
     ggplot2::ggplot(ggplot2::aes(perc, 
-                                 reorder(specialty, perc),
+                                 reorder(!!rlang::sym(group), perc),
                                  fill = 'bars_color')) + 
     ggplot2::geom_col() +
     ggplot2::scale_fill_manual(values = c('bars_color' = "#f9bf07"), 
                                guide = 'none') +
     StrategyUnitTheme::su_theme() +
     ggplot2::labs(x = glue::glue("Percentage of mitigable {activity_type}"), 
-                  y = "Specialty")
+                  y = y_title) +
+    ggplot2::scale_y_discrete(labels = function(x) stringr::str_wrap(x, width = 40))
   
   return(plot)
 }
 
 # Length of Stay ---------------------------------------------------------------
 
+## LOS percentage breakdowns ---------------------------------------------------
 #' Get the percentage of mitigable admissions for a mitigator or mechanism by a 
 #' group.
 #'
@@ -404,9 +431,9 @@ get_perc_by_los_plot <- function(data) {
   return(plot)
 }
 
-#' Formats the output of `get_perc_by_los` into a table.
+#' Formats the output of `get_perc_by_los()` into a table.
 #'
-#' @param data The output of `get_perc_admissions_by_group()`.
+#' @param data The output of `get_perc_by_los()`.
 #'
 #' @return A table.
 get_perc_by_los_table <- function(data) {
@@ -417,6 +444,277 @@ get_perc_by_los_table <- function(data) {
   return(table)
 }
 
+## LOS Trends ------------------------------------------------------------------
+#' Get the percentage LOS over time.
+#'
+#' @param data The object `los_over_time`.
+#' @param mitigator The mitigator or mechanism.
+get_perc_by_los_trends <- function(data, mitigator) {
+  los_over_time <- data |>
+    filter_to_mitigator_or_mechanism(mitigator) |>
+    dplyr::mutate(
+      los_range2 = dplyr::case_when(
+        los_range %in% c("2", "3", "4-7") ~ "2-7",
+        los_range %in% c("15-21", "22+") ~ "15+",
+        .default = los_range
+      )
+    ) |>
+    dplyr::summarise(episodes = sum(episodes),
+                     .by = c(year, los_range2)) |>
+    dplyr::mutate(perc = janitor::round_half_up(episodes * 100 / sum(episodes), 2),
+                  .by = year) |>
+    rename_los_for_eol_care(mitigator) |>
+    order_levels_of_factors()
+  
+  return(los_over_time)
+  
+}
+
+#' Plot the number or percentage LOS over time.
+#'
+#' @param data The output of `get_perc_los_over_time()`.
+#'
+#' @returns A plot.
+get_perc_by_los_trends_plot <- function(data) {
+  
+  los_range_column <- if("los_range3" %in% names(data)) {
+    "los_range3"
+  } else {
+    "los_range2"
+  }
+  
+  max_number <- data |>
+    dplyr::summarise(max = max(perc)) |>
+    dplyr::pull(max)
+  
+  plot <- data |>
+    ggplot2::ggplot() +
+    ggplot2::geom_line(ggplot2::aes(
+      x = year,
+      y = perc,
+      group = !!rlang::sym(los_range_column),
+      col = !!rlang::sym(los_range_column)
+    ),
+    size = 1) 
+  
+  plot <- plot |>
+    add_covid_box_to_plot(max_number) +
+    StrategyUnitTheme::su_theme() +
+    StrategyUnitTheme::scale_colour_su() +
+    ggplot2::labs(x = "", 
+                  y = "Percentage",
+                  col = "LOS range") +
+    ggplot2::scale_y_continuous(labels = scales::label_comma())
+  
+  return(plot)
+}
+
+#' Formats the output of `get_perc_by_los_trends()` into a table.
+#'
+#' @param data The output of `get_perc_by_los_trends()`.
+#'
+#' @return A table.
+get_perc_by_los_trends_table <- function(data) {
+  
+  los_range_column <- if("los_range3" %in% names(data)) {
+    "los_range3"
+  } else {
+    "los_range2"
+  }
+  
+  number_unique_los <- data |>
+    dplyr::select(!!rlang::sym(los_range_column)) |>
+    unique() |>
+    nrow()
+  
+  number_years <- data |>
+    dplyr::select(year) |>
+    unique() |>
+    nrow()
+  
+  table <- data |>
+    dplyr::arrange(year, !!rlang::sym(los_range_column)) |>
+    dplyr::select(year, los_range = !!rlang::sym(los_range_column), admissions = episodes, perc) |>
+    dplyr::mutate(admissions = janitor::round_half_up(admissions, 0)) |>
+    get_table_perc()
+  
+  for(j in 1:number_years) {
+    table <- table |>
+      flextable::hline(i = (j * number_unique_los), border = flextable::fp_border_default())
+  }
+  
+  return(table)
+}
+
+#' For eol_care mitigators, add los_range3 column.
+#'
+#' @param data A dataframe with a column for los_range2.
+#' @param cohort The mitigator / mechanism.
+#'
+#' @returns A dataframe.
+rename_los_for_eol_care <- function(data, cohort) {
+  if (cohort == "eol_care_2_days") {
+    data <- data |>
+      dplyr::mutate(los_range3 = stringr::str_replace(los_range2, "2-7", "2"))
+  } else if (cohort == "eol_care_3_to_14_days") {
+    data <- data |>
+      dplyr::mutate(los_range3 = stringr::str_replace(los_range2, "2-7", "3-7"))
+  }
+  
+  return(data)
+}
+
+## Average LOS -----------------------------------------------------------------
+#' Get the average LOS over the years for England or by ICB.
+#'
+#' @param geography Either `"icb"` or `"england"`.
+#' @param mitigator The mitigator or mechanism.
+#' @param lookup A lookup of icb codes and names.
+get_average_los_trends <- function(geography, mitigator, lookup) {
+  data <- dplyr::tbl(
+    sc,
+    dbplyr::in_catalog(
+      "strategyunit",
+      "default",
+      "SL_AF_describing_mitigators_fyear"
+    )
+  ) |>
+    dplyr::filter(fyear >= 201819) |>
+    filter_to_mitigator_or_mechanism(mitigator) |>
+    add_year_column()
+  
+  if (geography == "icb") {
+    # ICB average LOS:
+    avg_los <- data |>
+      dplyr::summarise(
+        avg_los = sum(beddays, na.rm = TRUE) / sum(episodes, na.rm = TRUE),
+        .by = c(year, icb)
+      ) |>
+      dplyr::filter(!is.na(icb)) |>
+      sparklyr::collect() |>
+      dplyr::left_join(lookup, by = c("icb" = "icb24cdh")) |>
+      dplyr::select(icb_2024_name, year, avg_los) |>
+      dplyr::mutate(icb_2024_name = simplify_icb_name(icb_2024_name))
+  } else {
+    # England average LOS:
+    avg_los <- data |>
+      dplyr::summarise(
+        avg_los = sum(beddays, na.rm = TRUE) / sum(episodes, na.rm = TRUE),
+        .by = year
+      ) |>
+      sparklyr::collect()
+  }
+  
+  return(avg_los)
+}
+#' A plot of the average LOS over time.
+#'
+#' @param data A dataframe of the average LOS over time.
+#'
+#' @returns A plot.
+get_avg_los_england_plot <- function(data){
+  max_number <- data |>
+    dplyr::summarise(max = max(avg_los)) |>
+    dplyr::pull(max)
+  
+  plot <- data |>
+    ggplot2::ggplot() +
+    ggplot2::geom_line(ggplot2::aes(
+      x = year,
+      y = avg_los,
+      group = 1
+    ),
+    size = 1) 
+  
+  plot <- plot |>
+    add_covid_box_to_plot(max_number) +
+    StrategyUnitTheme::su_theme() +
+    StrategyUnitTheme::scale_colour_su() +
+    ggplot2::labs(x = "", 
+                  y = "Average Length of Stay") +
+    ggplot2::scale_y_continuous(labels = scales::label_comma()) +
+    ggplot2::expand_limits(x = 0, y = 0)
+  
+  return(plot)
+}
+
+#' Plotly plot of the average LOS over time for each ICB.
+#'
+#' @param data A dataframe of average LOS over time for each ICB.
+#'
+#' @returns A plot.
+get_avg_los_icb_plot <- function(data) {
+  
+  axis_title <- "Average Length of Stay"
+  
+  fig <- data |>
+    arrange(year) |>
+    group_by(icb_2024_name) |>
+    dplyr::mutate(avg_los = janitor::round_half_up(avg_los, 2)) |>
+    highlight_key( ~ icb_2024_name) |>
+    plot_ly(
+      x = ~ year,
+      y = ~ avg_los,
+      type = 'scatter',
+      mode = 'lines',
+      text =  ~ icb_2024_name,
+      line = list(color = "#686f73"),
+      width = 660,
+      height = 300,
+      hovertemplate = paste("ICB: %{text}<br>", "Year: %{x}<br>", "Value: %{y}")
+    ) |>
+    highlight( ~ icb_2024_name,
+               on = "plotly_click",
+               off = "plotly_doubleclick",
+               dynamic = FALSE) |>
+    layout(
+      shapes = list(
+        list(
+          type = "rect",
+          fillcolor = "#686f73",
+          line = list(color = "#686f73"),
+          opacity = 0.1,
+          x0 = "2019/20",
+          x1 = "2021/22",
+          xref = "x",
+          y0 = 0,
+          y1 = max(data$avg_los) * 1.1,
+          yref = "y"
+        )
+      ),
+      xaxis = list(
+        title = "",
+        showticklabels = TRUE,
+        showline = TRUE,
+        showgrid = F ,
+        linewidth = 1.6
+      ),
+      yaxis = list(
+        title = axis_title,
+        rangemode = "tozero",
+        showline = TRUE,
+        showgrid = F ,
+        linewidth = 1.6 ,
+        zeroline = FALSE,
+        tickformat = "digits",
+        anchor = "free",
+        shift = 100
+      ),
+      annotations =
+        list(
+          x = "2020/21",
+          y = max(data$avg_los) * 1.08,
+          text = "COVID-19 pandemic",
+          showarrow = F,
+          xref = 'x',
+          yref = 'y'
+        )
+    )
+  
+  return(fig)
+}
+
+# Total beddays and admissions -------------------------------------------------
 #' Get the total number of beddays and admissions by emergency, elective and 
 #' both.
 #'
@@ -429,7 +727,7 @@ get_total_beddays_admissions <- function(connection) {
     dbplyr::in_catalog(
       "strategyunit",
       "default",
-      "sl_af_describing_mitigators_final_2324_sex"
+      get_table_name("sex")
     )
   ) |>
     dplyr::select(dplyr::starts_with("total")) |>

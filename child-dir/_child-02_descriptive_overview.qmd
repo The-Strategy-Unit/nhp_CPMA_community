@@ -51,7 +51,7 @@ In 2023/24, `r statement` met the criteria for inclusion in the `r cohort_title`
 #| output: asis
 #| eval: !expr check_if_mechanism(cohort, mitigator_summary_table)
 knitr::knit_child(
-  input = "child-dir/_child-overview_mitigator-totals.qmd",
+  input = "child-dir/_child-02_descriptive_overview_mitigator-totals.qmd",
   envir = environment(),
   quiet = TRUE
   ) |>

@@ -92,6 +92,31 @@ get_note_on_dashed_line <- function(metric_title, england_value) {
   return(note)
 }
 
+#' Title
+#'
+#' @param data 
+#' @param ref 
+#'
+#' @returns
+get_mitigation_by_provider_type <- function(data, ref) {
+  provider_type <- data |>
+    dplyr::left_join(ref, "provider") |>
+    dplyr::mutate(org_type = ifelse(startsWith(org_type, "ACUTE"), "ACUTE", org_type)) |>
+    dplyr::summarise(
+      admissions = sum(episodes),
+      beddays = sum(beddays),
+      .by = c(org_type, year)
+    ) |>
+    dplyr::mutate(
+      perc_admissions = janitor::round_half_up(admissions * 100 / sum(admissions), 2),
+      perc_beddays = janitor::round_half_up(beddays * 100 / sum(beddays), 2),
+      org_type = ifelse(is.na(org_type), "NA", stringr::str_to_title(org_type)),
+      .by = year
+    )
+  
+  return(provider_type)
+}
+
 #' Gets the number of mitigable admissions/beddays, the percentage over all 
 #' emergency/elective and the standardised rates per 100,000 population for a 
 #' mitigator/mechanism by ICB/LA.
@@ -133,6 +158,11 @@ get_summary_by_geography <- function(data,
                                 ~simplify_icb_name(.)))|>
     dplyr::mutate(total_count = round(total_count, 0))
   
+  if(geography == "provider") {
+    wrangled <- wrangled |> 
+      dplyr::rename("ICB (system)" = icb_2024_name)
+  }
+  
   return(wrangled)
 }
 
@@ -148,7 +178,10 @@ get_summary_by_geography_table <- function(data, activity_type, treatment_type) 
   table <- data |>
     dplyr::select(
       dplyr::any_of(c(
-        "icb" = "icb_2024_name", "local_authority" = "laname23"
+        "provider" = "org_name", 
+        "local_authority" = "laname23",
+        "icb" = "icb_2024_name",
+        "ICB (system)"
       )),
       !!rlang::sym(glue::glue("mitigable {activity_type}")) := total_count,
       glue::glue("total_{activity_type}_{treatment_type}"),
@@ -237,11 +270,9 @@ get_summary_by_icb_map <- function(data, boundaries, metric) {
 #' Apply number suppression to comparative tables.
 #'
 #' @param data The output of `get_summary_by_geography()`.
-#' @param activity_type Either `"admissions"` or `"beddays"`.
 #'
 #' @return A dataframe.
-small_number_suppression_comparative <- function(data, 
-                                                 activity_type) {
+small_number_suppression_comparative <- function(data) {
 
     min_total_count <- data |>
       dplyr::summarise(min(total_count)) |> 

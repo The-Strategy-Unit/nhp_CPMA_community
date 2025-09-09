@@ -35,7 +35,7 @@ get_treatment_type <- function(mitigator, lookup) {
 source("R/manipulating_mitigators_and_mechanisms.R")
 
 mitigator_summary_table <-
-  readxl::read_excel("summary_mitigators_table.xlsx") |>
+  readxl::read_excel("reference/summary_mitigators_table.xlsx") |>
   dplyr::mutate(mechanism = snakecase::to_snake_case(mechanism))
 
 mitigators <- mitigator_summary_table |>
@@ -159,10 +159,37 @@ get_los_plots <- function(cohorts = mitigators_and_mechanisms,
   return(final)
 }
 
-# Specialty --------------------------------------------------------------------
-get_specialty_plots <- function(activity_type,
-                                cohorts = mitigators_and_mechanisms,
-                                summary_table = mitigator_summary_table) {
+get_los_trends_plots <- function(cohorts = mitigators_and_mechanisms,
+                                 summary_table = mitigator_summary_table) {
+  new_cohorts <- cohorts[check_include_admissions(cohorts, summary_table)
+                         & !check_if_zero_los_mitigator(cohorts)]
+  
+  plots <- purrr::map(
+    new_cohorts,
+    ~ targets::tar_read_raw(glue::glue("perc_los_trends_{.}")) |> # or whatever target called
+      get_perc_by_los_trends_plot("perc") +
+      ggplot2::labs(title = .) +
+      ggplot2::theme(axis.title.x = ggplot2::element_blank(),
+                     axis.text.x = ggplot2::element_blank(),
+                     axis.ticks.x = ggplot2::element_blank(),
+                     axis.title.y = ggplot2::element_blank(),
+                     axis.text.y = ggplot2::element_blank(),
+                     axis.ticks.y = ggplot2::element_blank(),
+                     legend.position = "none")
+  )
+  
+  final <- patchwork::wrap_plots(plots) +
+    patchwork::plot_annotation(
+      glue::glue("Percentage of admissions by LOS range over time"))
+  
+  return(final)
+}
+
+# Top ten specialty/diagnosis --------------------------------------------------
+get_top_ten_plots <- function(activity_type,
+                              group,
+                              cohorts = mitigators_and_mechanisms,
+                              summary_table = mitigator_summary_table) {
   new_cohorts <- if (activity_type == "beddays") {
     cohorts[check_include_beddays(cohorts)]
   } else if (activity_type == "admissions") {
@@ -171,8 +198,8 @@ get_specialty_plots <- function(activity_type,
   
   plots <- purrr::map(
     new_cohorts,
-    ~ targets::tar_read_raw(glue::glue("specialty_{.}_{activity_type}")) |>
-      get_top_ten_specialties_plot(activity_type) +
+    ~ targets::tar_read_raw(glue::glue("{group}_{.}_{activity_type}")) |>
+      get_top_ten_plot(activity_type, group) +
       ggplot2::labs(title = .) +
       ggplot2::theme(axis.title.x = ggplot2::element_blank(),
                      axis.text.x = ggplot2::element_blank(),
@@ -184,7 +211,7 @@ get_specialty_plots <- function(activity_type,
   
   final <- patchwork::wrap_plots(plots) +
     patchwork::plot_annotation(
-      glue::glue("Percentage of admissions by Top Ten Specialties"))
+      glue::glue("Percentage of admissions by Top Ten {stringr::str_to_title(group)}"))
   
   return(final)
 }
@@ -693,7 +720,10 @@ get_patient_characteristic_plots("beddays",
 
 get_los_plots() # Only does admissions.
 
-get_specialty_plots("admissions")
+get_los_trends_plots()
+
+get_top_ten_plots("admissions", 
+                  "specialty") # specialty/diagnosis
 
 get_number_within_plots("admissions")
 
