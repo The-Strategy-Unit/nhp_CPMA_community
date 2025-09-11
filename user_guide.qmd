@@ -28,6 +28,8 @@ The pages for potentially mitigable activity follow the same format and contain 
 
 Analyses for the number of admissions and number of beddays is presented. For Efficiency mitigators, analysis of admissions is not included since admissions for this cohort are not considered avoidable, but it is thought that the length of stays could be reduced so analysis of beddays is presented.
 
+Note: The age and sex standardised rates of activity for some ICBs in 2023/24 may be affected by the changes in ICB boundaries that occurred in 2022. As the most recent ICB population data available is from June 2022 any boundary changes that occurred between STPs and ICBs in July 2022 are not reflected in our population data.
+
 ## Overview of the report
 
 {{< video https://www.youtube.com/watch?v=egUhA9OtXyg >}}
