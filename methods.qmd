@@ -6,9 +6,9 @@ library(flextable)
 
 ## Hospital activity data
 
-All data on hospital activity are taken from the New Hospitals Programme (NHP) demand and capacity model data, which is derived from the [Hospital Episode Statistics dataset](https://digital.nhs.uk/services/hospital-episode-statistics). 
+All data on hospital activity are taken from the New Hospitals Programme (NHP) demand and capacity model data, which is derived from the Hospital Episode Statistics dataset - <https://digital.nhs.uk/services/hospital-episode-statistics>. 
 
-The potentially mitigable activity for the 29 mitigator cohorts of interest is taken from the dataset used for the NHP Demand and Capacity Model. All activity that meets the criteria for potentially mitigable is included, but it should be noted that in practice only a proportion of this activity would be truly mitigable. The code used to define the potentially mitigable activity can be found here- <https://github.com/The-Strategy-Unit/nhp_data/tree/main/raw_data/mitigators/ip>
+The potentially mitigable activity for the 29 mitigator cohorts of interest is taken from the dataset used for the NHP Demand and Capacity Model. All activity that meets the criteria for potentially mitigable is included, but it should be noted that in practice only a proportion of this activity would be truly mitigable. The code used to define the potentially mitigable activity can be found here- <https://github.com/The-Strategy-Unit/nhp_data/tree/main/raw_data/mitigators/ip>.
 
 Where data is given for Integrated Care Boards (ICBs) these are based on the 2024 ICBs. The ICB is determined based on the patient being resident within the ICB area, in records where the resident ICB field is empty the responsible ICB is used instead.
 
@@ -27,14 +27,14 @@ Due to using the attributable fractions to the adjustment the activity within th
 
 ICB populations for each year are from the Office of National Statistics mid year population estimates -  <https://www.ons.gov.uk/peoplepopulationandcommunity/populationandmigration/populationestimates/datasets/clinicalcommissioninggroupmidyearpopulationestimates>. As 2023/24 ICB population data was not available the 2022/23 data was also used for 2023/24. Since the most recent ICB population data available is from June 2022, some boundary changes that occurred between STPs and ICBs in July 2022 are not reflected in our population data. This will result in some ICBs, where the boundaries have changed, having inaccurate standardised rates of activity.
 
-Local authority populations for each year are from the Office of National Statistics Estimates of the population for England and Wales dataset -  <https://www.ons.gov.uk/peoplepopulationandcommunity/populationandmigration/populationestimates/datasets/estimatesofthepopulationforenglandandwales>
+Local authority populations for each year are from the Office of National Statistics Estimates of the population for England and Wales dataset -  <https://www.ons.gov.uk/peoplepopulationandcommunity/populationandmigration/populationestimates/datasets/estimatesofthepopulationforenglandandwales>.
 
 The age and sex standardised rates are calculated using the ICB/LA populations, with the population data for England from the 2021 census used as the standard population - <https://www.ons.gov.uk/peoplepopulationandcommunity/populationandmigration/populationestimates/bulletins/populationandhouseholdestimatesenglandandwales/census2021>. In a small number of cases where age or sex is not recorded the data has been excluded from the standardised rates.
 
-For crude rates by IMD decile, the Office of National Statistics Lower layer Super Output Area population estimates for 2022 <https://www.ons.gov.uk/peoplepopulationandcommunity/populationandmigration/populationestimates/datasets/lowersuperoutputareamidyearpopulationestimates> were used and linked with the LSOA English indices of deprivation 2019
+For crude rates by IMD decile, the Office of National Statistics Lower layer Super Output Area population estimates for 2022 - <https://www.ons.gov.uk/peoplepopulationandcommunity/populationandmigration/populationestimates/datasets/lowersuperoutputareamidyearpopulationestimates> - were used and linked with the LSOA English indices of deprivation 2019 -
 <https://www.gov.uk/government/statistics/english-indices-of-deprivation-2019>. Using the LSOA11 to LSOA21 look-up  <https://geoportal.statistics.gov.uk/search?sort=Date%20Created%7Ccreated%7Cdesc&tags=LUP_EXACT_LSOA11_LSOA21>.
 
-For crude rates by ethnicity the Office of National Statistics Ethnic group, England and Wales: Census 2021 dataset was used - <https://www.ons.gov.uk/peoplepopulationandcommunity/culturalidentity/ethnicity/bulletins/ethnicgroupenglandandwales/census2021>. Data was recoded into [NHS ethnic categories](https://digital.nhs.uk/data-and-information/data-collections-and-data-sets/data-sets/mental-health-services-data-set/submit-data/data-quality-of-protected-characteristics-and-other-vulnerable-groups/ethnicity#how-to-collect-and-record-ethnicity-data). NULL and unknown values were excluded.
+For crude rates by ethnicity the Office of National Statistics Ethnic group, England and Wales: Census 2021 dataset was used - <https://www.ons.gov.uk/peoplepopulationandcommunity/culturalidentity/ethnicity/bulletins/ethnicgroupenglandandwales/census2021>. Data was recoded into NHS ethnic categories - <https://digital.nhs.uk/data-and-information/data-collections-and-data-sets/data-sets/mental-health-services-data-set/submit-data/data-quality-of-protected-characteristics-and-other-vulnerable-groups/ethnicity#how-to-collect-and-record-ethnicity-data>. NULL and unknown values were excluded.
 
 ## Providers
 
@@ -43,7 +43,7 @@ providers_2324_acute <- targets::tar_read(provider_type) |>
   dplyr::filter(year == "2023/24" & org_type == "Acute")
 ```
 
-Provider populations were estimated by multiplying the percentage of admissions to a provider from a local authority and that local authority's population, accounting for sex and age range. This method is similar to the one used and outlined in the NHP Demand & Capacity model: [https://connect.strategyunitwm.nhs.uk/nhp/project_information/modelling_methodology/demographic_modelling/demographic_modelling.html#hosp-catchments](https://connect.strategyunitwm.nhs.uk/nhp/project_information/modelling_methodology/demographic_modelling/demographic_modelling.html#hosp-catchments).
+Provider populations were estimated by multiplying the percentage of admissions to a provider from a local authority and that local authority's population, accounting for sex and age range. This method is similar to the one used and outlined in the NHP Demand & Capacity model - <https://connect.strategyunitwm.nhs.uk/nhp/project_information/modelling_methodology/demographic_modelling/demographic_modelling.html#hosp-catchments>.
 
 In 2023/24, acute NHS providers account for `r providers_2324_acute |> dplyr::pull(perc_admissions)`% of potentially mitigable admissions and `r providers_2324_acute |> dplyr::pull(perc_beddays)`% of potentially mitigable beddays. Similar numbers were observed for years 2018/19 to 2022/23. Thus, analyses of potentially mitigable activity by provider are for acute NHS providers only.
 
@@ -63,11 +63,9 @@ Where the activity for the cohort is given as a percentage of total activity, th
 
 ### Comparative analysis
 
-Maps of ICBS areas are plotted using the 2023 ICB shapefile, but 2024 ICB codes/names are used.
-ICB shapefile: <https://services1.arcgis.com/ESMARspQHYMw9BZ9/arcgis/rest/services/Integrated_Care_Boards_April_2023_EN_BGC/FeatureServer/0/query?outFields=*&where=1%3D1&f=geojson>
+Maps of ICBS areas are plotted using the 2023 ICB shapefile, but 2024 ICB codes/names are used. ICB shapefile - <https://services1.arcgis.com/ESMARspQHYMw9BZ9/arcgis/rest/services/Integrated_Care_Boards_April_2023_EN_BGC/FeatureServer/0/query?outFields=*&where=1%3D1&f=geojson>.
 
-Maps of Local Authority areas are plotted using the 2024 LA shapefile, but 2023 LA names/codes are used.
-LA shapefile: <https://geoportal.statistics.gov.uk/datasets/6a05f93297cf4a438d08e972099f54b9_0/explore>
+Maps of Local Authority areas are plotted using the 2024 LA shapefile, but 2023 LA names/codes are used. LA shapefile - <https://geoportal.statistics.gov.uk/datasets/6a05f93297cf4a438d08e972099f54b9_0/explore>.
 
 ### Trend analysis
 
