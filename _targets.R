@@ -61,6 +61,11 @@ mitigators_and_mechanisms_treatment_lookup <- mitigators |>
 mitigators_and_mechanisms <- mitigators_and_mechanisms_treatment_lookup |>
   dplyr::pull(mitigator_or_mechanism)
 
+# Population data folder -------------------------------------------------------
+# For SU colleagues, this folder can be found at: 
+  # "Z:/Strategic Analytics/Projects 2025/Describing and Quantifying the NHP mitigators/"
+folder <- "population_data/"
+
 # Run the R scripts in the R/ folder with our custom functions:
 tar_source()
 
@@ -76,7 +81,7 @@ list(
   tar_target(
     la_population_data,
     wrangling_la_population_data(
-      "Z:/Strategic Analytics/Projects 2025/Describing and Quantifying the NHP mitigators/population_data/myebtablesenglandwales20112023.xlsx"
+      glue::glue("{folder}myebtablesenglandwales20112023.xlsx")
     )
   ),
   tarchetypes::tar_file(la_code_lookup_filepath, "reference/la_code_lookup.xlsx"),
@@ -86,8 +91,8 @@ list(
   tar_target(
     icb_population_data,
     wrangling_icb_population_data(
-      "Z:/Strategic Analytics/Projects 2025/Describing and Quantifying the NHP mitigators/population_data/sapeicb202420112022.xlsx",
-      "Z:/Strategic Analytics/Projects 2025/Describing and Quantifying the NHP mitigators/population_data/Integrated_Care_Boards_(December_2024)_Names_and_Codes_in_EN.csv"
+      glue::glue("{folder}sapeicb202420112022.xlsx"),
+      glue::glue("{folder}Integrated_Care_Boards_(December_2024)_Names_and_Codes_in_EN.csv")
     )
   ),
   
@@ -140,7 +145,7 @@ list(
   tar_target(
     standard_england_pop_2021_census,
     formatting_standard_england_population(
-      "Z:/Strategic Analytics/Projects 2025/Describing and Quantifying the NHP mitigators/population_data/2021 census data for England.csv"
+      glue::glue("{folder}2021 census data for England.csv")
     )
   ),
   
@@ -164,7 +169,7 @@ list(
   ),
   tarchetypes::tar_file(
     pop_by_ethnicity_filepath,
-    r"{Z:\Strategic Analytics\Projects 2025\Describing and Quantifying the NHP mitigators\population_data\ethnicity_by_icb_2021.xlsx}"
+    glue::glue("{folder}ethnicity_by_icb_2021.xlsx")
   ),
   tar_target(
     pop_by_ethnicity,
@@ -187,10 +192,10 @@ list(
   tar_target(
     pop_by_imd,
     wrangling_imd_population_by_icb(
-      "Z:/Strategic Analytics/Projects 2025/Describing and Quantifying the NHP mitigators/population_data/LSOA21_to_ICB.csv",
-      "Z:/Strategic Analytics/Projects 2025/Describing and Quantifying the NHP mitigators/population_data/LSOA11_to_LSOA21.csv",
-      "Z:/Strategic Analytics/Projects 2025/Describing and Quantifying the NHP mitigators/population_data/LSOA_pop.xlsx",
-      "Z:/Strategic Analytics/Projects 2025/Describing and Quantifying the NHP mitigators/population_data/LSOA_and_IMD.csv"
+      glue::glue("{folder}LSOA21_to_ICB.csv"),
+      glue::glue("{folder}LSOA11_to_LSOA21.csv"),
+      glue::glue("{folder}LSOA_pop.xlsx"),
+      glue::glue("{folder}LSOA_and_IMD.csv")
     ) |>
       dplyr::filter(!is.na(icb24cdh)) |>
       summarise(pop = sum(total), .by = c(imd19_decile))
@@ -485,7 +490,7 @@ list(
   ## Diagnoses -----------------------------------------------------------------
   tar_target(
     diagnosis_filename,
-    r"{Z:\Strategic Analytics\Projects 2025\Describing and Quantifying the NHP mitigators\population_data\ICD10_diagnosis_code_descriptions.csv}"
+    glue::glue("{folder}ICD10_diagnosis_code_descriptions.csv")
   ),
   tar_target(
     diagnosis_key,
