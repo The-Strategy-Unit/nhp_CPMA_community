@@ -9,3 +9,11 @@ Analysis was conducted to understand the scale, trends, and regional variations 
 The report can be found at: https://connect.strategyunitwm.nhs.uk/nhp/community_mitigators/
 
 An introductory video and user guide for the report can be viewed at:  https://www.youtube.com/watch?v=egUhA9OtXyg
+
+## Overview of repo
+
+Data was first processed in Databricks. Notebooks in the `databricks notebook` folder are numbered according to the order in which they were run.
+
+The rest of the processing and analysis can be found in `_targets.R` with functions in the `R` folder. Functions have been split into files according to the analyses they were primarily related to and these files are numbered according to the layout of their corresponding sections in the final reports.
+
+`create-mitigator-reports.R` is a script to create the 29 mitigator and 4 mechanism quarto files. Each of these quarto files uses child documents to create the various sections of the report. These child documents can be found in the `child-dir` folder and are numbered to match the function files for convenience.
