@@ -21,10 +21,10 @@ This report allows users to explore potentially mitigable acute activity.
 
 The pages for potentially mitigable activity follow the same format and contain sections for:
   
-  -   **Descriptive analysis** - to explore potentially mitigable activity by patient characteristics (age, ethnic category, Index of Multiple Deprivation decile and sex) and admission characteristics (length of stay and specialty).
+  -   **Descriptive analysis** - to explore potentially mitigable activity by patient characteristics (age, ethnic category, Index of Multiple Deprivation decile and sex) and admission characteristics (length of stay, specialty and primary diagnosis).
 -   **Cohort overlap** - to understand where activity falls into more than one type of mitigator.
--   **Comparative analysis** - to explore how rates compare by Integrated Care Boards (ICB) and Local Authority (LA).
--   **Trends** - to explore how the potentially mitigable activity has changed over time in England and also at ICB and LA level.
+-   **Comparative analysis** - to explore how rates compare by Integrated Care Board (ICB), Local Authority (LA) and NHS acute provider.
+-   **Trends** - to explore how the potentially mitigable activity has changed over time in England and also at ICB, LA and NHS acute provider level.
 
 Analyses for the number of admissions and number of beddays is presented. For Efficiency mitigators, analysis of admissions is not included since admissions for this cohort are not considered avoidable, but it is thought that the length of stays could be reduced so analysis of beddays is presented.
 
