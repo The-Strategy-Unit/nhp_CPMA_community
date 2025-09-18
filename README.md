@@ -10,11 +10,7 @@ The report can be found at: https://connect.strategyunitwm.nhs.uk/nhp/community_
 
 An introductory video and user guide for the report can be viewed at: https://www.youtube.com/watch?v=egUhA9OtXyg
 
-<<<<<<< HEAD
 ## Overview of analysis pipeline
-=======
-## Overview of repository contents
->>>>>>> 4578d89e5624ab520df95441f204776d69000a95
 
 The following data was saved in the `population_data` folder:
 
