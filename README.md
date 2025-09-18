@@ -10,9 +10,9 @@ The report can be found at: https://connect.strategyunitwm.nhs.uk/nhp/community_
 
 An introductory video and user guide for the report can be viewed at: https://www.youtube.com/watch?v=egUhA9OtXyg
 
-## Overview of repo
+## Overview of analysis pipeline
 
-The `population_data` folder contains the following data:
+The following data was saved in the `population_data` folder:
 
 - `2021 census data for England.csv` - Population and household estimates, England and Wales: Census 2021.	<https://www.ons.gov.uk/peoplepopulationandcommunity/populationandmigration/populationestimates/bulletins/populationandhouseholdestimatesenglandandwales/census2021>
 - `ethnicity_by_icb_2021.xlsx` - Ethnic group in England and Wales
