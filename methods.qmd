@@ -8,7 +8,7 @@ library(flextable)
 
 All data on hospital activity are taken from the New Hospitals Programme (NHP) demand and capacity model data, which is derived from the Hospital Episode Statistics dataset - <https://digital.nhs.uk/services/hospital-episode-statistics>. 
 
-The potentially mitigable activity for the 29 mitigator cohorts of interest is taken from the dataset used for the NHP Demand and Capacity Model. All activity that meets the criteria for potentially mitigable is included, but it should be noted that in practice only a proportion of this activity would be truly mitigable. The code used to define the potentially mitigable activity can be found here- <https://github.com/The-Strategy-Unit/nhp_data/tree/main/raw_data/mitigators/ip>.
+The potentially mitigable activity for the 29 mitigator cohorts of interest is taken from the dataset used for the NHP Demand and Capacity Model. All activity that meets the criteria for potentially mitigable is included, but it should be noted that in practice only a proportion of this activity would be truly mitigable. The code used to define the potentially mitigable activity can be found here- <https://github.com/The-Strategy-Unit/nhp_data/tree/main/src/nhp/data/raw_data/mitigators/ip>.
 
 Where data is given for Integrated Care Boards (ICBs) these are based on the 2024 ICBs. The ICB is determined based on the patient being resident within the ICB area, in records where the resident ICB field is empty the responsible ICB is used instead.
 
@@ -20,7 +20,7 @@ Admissions are calculated, as per the NHP model, by using the last episode in a 
 
 The beddays for an admission are calculated based from the number of days between admission date and discharge date, so if a person was admitted and discharged on the same day the beddays for the admission would be counted as zero.
 
-For 4 mitigators (Alcohol related admissions (Acute conditions- partially attributable), Alcohol related admissions (Chronic conditions- partially attributable), Obesity related admissions and Smoking related admissions) it is considered that only a proportion of the activity included in these groups can be attributed to alcohol/obesity/smoking. For example, certain cancers/cardiovascular disease are included within this group, but only a proportion of those will be due to alcohol/obesity/smoking. Therefore, activity for these mitigators has been adjusted using the attributable fractions found here-  <https://github.com/The-Strategy-Unit/nhp_data/tree/main/raw_data/mitigators/reference_data>.
+For 4 mitigators (Alcohol related admissions (Acute conditions- partially attributable), Alcohol related admissions (Chronic conditions- partially attributable), Obesity related admissions and Smoking related admissions) it is considered that only a proportion of the activity included in these groups can be attributed to alcohol/obesity/smoking. For example, certain cancers/cardiovascular disease are included within this group, but only a proportion of those will be due to alcohol/obesity/smoking. Therefore, activity for these mitigators has been adjusted using the attributable fractions found here-  <https://github.com/The-Strategy-Unit/nhp_data/tree/main/src/nhp/data/raw_data/mitigators/reference_data>.
 Due to using the attributable fractions to the adjustment the activity within the mitigator groups there are possibly very slight discrepancies in the numbers within the report as a result of rounding the admissions and beddays to be whole numbers. 
 
 ## Population data 
