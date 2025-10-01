@@ -1,5 +1,5 @@
 
-This shows whether the activity within the `r cohort_title` `r cohort_group` is also included in other mitigator cohorts (overlapping mitigator cohorts shown in red). Where there is overlap the number and percentage of `r cohort_title`  activity that is also included within each of the other mitigator cohorts is shown. In some cases the percentage of overlap is very small and is shown as 0%; these mitigators are still coloured in red to indicate that there is an overlap, albeit very small. 
+This shows whether the activity within the `r cohort_title` `r cohort_group` is also included in other cohorts (overlapping cohorts shown in red). Where there is overlap the number and percentage of `r cohort_title`  activity that is also included within each of the other cohorts is shown. In some cases the percentage of overlap is very small and is shown as 0%; these cohorts are still coloured in red to indicate that there is an overlap, albeit very small. 
 
 ```{r}
 #| output: asis

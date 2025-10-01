@@ -232,7 +232,7 @@ get_caption_top_ten <- function(cohort, activity_type, group) {
 #'
 #' @return A string.
 get_caption_number_of_cohorts <- function(cohort, activity_type){
-  caption <- glue::glue("The number and percentage of mitigator cohorts that the {cohort} {activity_type} are a part of (2023/24).")
+  caption <- glue::glue("The number and percentage of cohorts that the {cohort} {activity_type} are a part of (2023/24).")
   
   return(caption)
 }
@@ -256,7 +256,7 @@ get_caption_summary_of_overlaps <- function(cohort, activity_type){
 #'
 #' @return A string.
 get_caption_upset_plots <- function(cohort, activity_type){
-  caption <- glue::glue("The 15 most common mitigator cohort overlaps for {cohort} {activity_type} (2023/24).")
+  caption <- glue::glue("The 15 most common cohort overlaps for {cohort} {activity_type} (2023/24).")
   
   return(caption)
 }

@@ -1,17 +1,17 @@
 
-Many of the `r activity_type_label` meet the criteria to be included in more than one mitigator cohort. Since these potential mitigator cohorts are not mutually exclusive there is a need to understand which cohorts overlap and the degree of overlap between the cohorts.
+Many of the `r activity_type_label` meet the criteria to be included in more than one cohort. Since these potentially mitigable activity cohorts are not mutually exclusive there is a need to understand which cohorts overlap and the degree of overlap between the cohorts.
 
 ### Number and proportion within multiple other cohorts
 
-For the `r cohort_title` `r cohort_group` the percentage and number of `r activity_type_label` included in multiple mitigable cohorts is shown. 
+For the `r cohort_title` `r cohort_group` the percentage and number of `r activity_type_label` included in multiple cohorts is shown. 
 
 ```{r}
 if(cohort_title %in% c("Efficiencies","Stroke Early Supported Discharge", "Admissions with Mental Health Comorbidities", "Emergency Admission of Older People", "Admission With No Overnight Stay and No Procedure (Children)", "Admission With No Overnight Stay and No Procedure (Adults)")) {
 admission_bedday_difference<-""
 } else if(cohort_title %in% c("Efficiencies & Relocation")){
-admission_bedday_difference<-"In this mechanism group there are only 2 mitigator cohorts, which do not overlap."   
+admission_bedday_difference<-"In this mechanism group there are only 2 cohorts, which do not overlap."   
  }else{
-admission_bedday_difference<-"There are some differences between cohort overlap for admissions and beddays, this is because efficiency mitigators are not included in admissions data as they do not impact the number of admissions, but are included in the beddays data as they influence length of stay."
+admission_bedday_difference<-"There are some differences between cohort overlap for admissions and beddays, this is because efficiency cohorts are not included in admissions data as they do not impact the number of admissions, but are included in the beddays data as they influence length of stay."
   }
 
 ```
@@ -24,8 +24,8 @@ caption_admissions <- get_caption_number_of_cohorts(cohort_title, "admissions")
 caption_beddays <- get_caption_number_of_cohorts(cohort_title, "beddays")
 
 if(check_if_mechanism(cohort, mitigator_summary_table)) {
-  caption_admissions <- glue::glue("{caption_admissions} It includes only admissions for mitigator cohorts within this {cohort_title} group.")
-  caption_beddays <- glue::glue("{caption_beddays} It includes only beddays for mitigator cohorts within this {cohort_title} group.")
+  caption_admissions <- glue::glue("{caption_admissions} It includes only admissions for cohorts within this {cohort_title} group.")
+  caption_beddays <- glue::glue("{caption_beddays} It includes only beddays for cohorts within this {cohort_title} group.")
 }
 ```
 

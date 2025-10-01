@@ -3,4 +3,4 @@ targets::tar_read(mitigator_totals) |>
   get_mitigators_in_a_mechanism_table(cohort)
 ```
 
-Note: The sum of all the individual mitigator activity in this table does not add up to the total potential mitigable activity for the mechanism. This is because much of the activity is included within multiple different mitigator cohorts and thus adding the total for each mitigator will lead to double counting of admissions and beddays.
+Note: The sum of all the activity for each individual cohort in this table does not add up to the total potential mitigable activity for the mechanism. This is because much of the activity is included within multiple different cohorts and thus adding the total for each cohort will lead to double counting of admissions and beddays.
