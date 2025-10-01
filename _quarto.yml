@@ -52,7 +52,7 @@ book:
   page-footer:
     center: 
       - icon: github
-        href: https://github.com/The-Strategy-Unit/nhp_community_mitigators
+        href: https://github.com/The-Strategy-Unit/nhp_CPMA_community
       - icon: envelope
         href: mailto:strategy.unit@nhs.net?subject=NHP%20Community%20Mitigators%20Report
       - icon: globe
