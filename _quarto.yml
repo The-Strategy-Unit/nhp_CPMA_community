@@ -2,7 +2,7 @@ project:
   type: book
 
 book:
-  title: "Quantifying potentially mitigable activity: NHP community mitigators"
+  title: "Quantifying potentially mitigable hospital activity: community specific categories"
   author: "Anya Ferguson and Sarah Lucas"
   date: last-modified
   date-format: "YYYY-MM-DD"

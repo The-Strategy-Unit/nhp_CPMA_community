@@ -6,14 +6,14 @@ This report allows users to explore potentially mitigable acute activity.
 
 1\) The initial chapter gives an overall summary of the [total potentially mitigable activity](summary_of_total_mitigation.qmd).
 
-2\) There are 4 mechanisms through which mitigation can occurs and for each of these there is a summary page:
+2\) There are 4 mechanisms through which mitigation can occur and for each of these there is a summary page:
   
   -   [Efficiencies](mechanism_efficiencies.qmd)
 -   [Efficiencies & Relocation](mechanism_efficiencies_relocation.qmd)
 -   [Prevention](mechanism_prevention.qmd)
 -   [Redirection/Substitution](mechanism_redirection_substitution.qmd)
 
-3\) There are individual pages for each of the 29 mitigators, which are divided up by their mechanism groups.
+3\) There are individual pages for each of the 29 categories of potentially mitigable activity, which are divided up by their mechanism groups.
 
 4\) There is also a page containing detailed [Methodology](methods.qmd).
 
@@ -22,11 +22,11 @@ This report allows users to explore potentially mitigable acute activity.
 The pages for potentially mitigable activity follow the same format and contain sections for:
   
   -   **Descriptive analysis** - to explore potentially mitigable activity by patient characteristics (age, ethnic category, Index of Multiple Deprivation decile and sex) and admission characteristics (length of stay, specialty and primary diagnosis).
--   **Cohort overlap** - to understand where activity falls into more than one type of mitigator.
+-   **Cohort overlap** - to understand where activity falls into more than one type of category of potentially mitigable activity.
 -   **Comparative analysis** - to explore how rates compare by Integrated Care Board (ICB), Local Authority (LA) and NHS acute provider.
 -   **Trends** - to explore how the potentially mitigable activity has changed over time in England and also at ICB, LA and NHS acute provider level.
 
-Analyses for the number of admissions and number of beddays is presented. For Efficiency mitigators, analysis of admissions is not included since admissions for this cohort are not considered avoidable, but it is thought that the length of stays could be reduced so analysis of beddays is presented.
+Analyses for the number of admissions and number of beddays is presented. For the Efficiency categories, analysis of admissions is not included since admissions for this cohort are not considered avoidable, but it is thought that the length of stays could be reduced so analysis of beddays is presented.
 
 Note: The age and sex standardised rates of activity for some ICBs in 2023/24 may be affected by the changes in ICB boundaries that occurred in 2022. As the most recent ICB population data available is from June 2022 any boundary changes that occurred between STPs and ICBs in July 2022 are not reflected in our population data.
 
