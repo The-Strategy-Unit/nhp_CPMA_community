@@ -25,7 +25,7 @@ Due to using the attributable fractions to adjust the activity within the cohort
 
 ## Population data 
 
-ICB populations for each year are from the Office of National Statistics mid year population estimates -  <https://www.ons.gov.uk/peoplepopulationandcommunity/populationandmigration/populationestimates/datasets/clinicalcommissioninggroupmidyearpopulationestimates>. As 2023/24 ICB population data was not available the 2022/23 data was also used for 2023/24. Since the most recent ICB population data available is from June 2022, some boundary changes that occurred between STPs and ICBs in July 2022 are not reflected in our population data. This will result in some ICBs, where the boundaries have changed, having inaccurate standardised rates of activity.
+ICB populations for each year are from the Office of National Statistics mid year population estimates and use the 2024 ICBs -  <https://www.ons.gov.uk/peoplepopulationandcommunity/populationandmigration/populationestimates/datasets/clinicalcommissioninggroupmidyearpopulationestimates>. 
 
 Local authority populations for each year are from the Office of National Statistics Estimates of the population for England and Wales dataset -  <https://www.ons.gov.uk/peoplepopulationandcommunity/populationandmigration/populationestimates/datasets/estimatesofthepopulationforenglandandwales>.
 
