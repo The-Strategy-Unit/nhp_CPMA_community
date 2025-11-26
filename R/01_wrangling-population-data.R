@@ -62,7 +62,7 @@ extract_and_format_icb_population_data_by_yr<-function(data, sheet_name, year){
 }
 
 #Function to merge data for all years and impute 2023/24 data
-wrangling_icb_population_data<-function(data, data2){
+wrangling_icb_population_data<-function(data, data_2023, data2){
   
   icb_population_2015<-extract_and_format_icb_population_data_by_yr(data,"Mid-2015 ICB 2024", "2015/16")
   icb_population_2016<-extract_and_format_icb_population_data_by_yr(data,"Mid-2016 ICB 2024", "2016/17")
@@ -72,11 +72,8 @@ wrangling_icb_population_data<-function(data, data2){
   icb_population_2020<-extract_and_format_icb_population_data_by_yr(data,"Mid-2020 ICB 2024", "2020/21")
   icb_population_2021<-extract_and_format_icb_population_data_by_yr(data,"Mid-2021 ICB 2024", "2021/22")
   icb_population_2022<-extract_and_format_icb_population_data_by_yr(data,"Mid-2022 ICB 2024", "2022/23")
-  
-  # Using 2022 data for 2023/24
-  icb_population_2023<-icb_population_2022|>
-    mutate(fyear="2023/24")
-  
+  icb_population_2023<-extract_and_format_icb_population_data_by_yr(data_2023,"Mid-2023 ICB 2024", "2023/24")
+
   # Combining populations for each year into on dataframe
   icb_population_data<-rbind(icb_population_2015,
                              icb_population_2016,
