@@ -92,6 +92,7 @@ list(
     icb_population_data,
     wrangling_icb_population_data(
       glue::glue("{folder}sapeicb202420112022.xlsx"),
+      glue::glue("{folder}icb_pop_2324.xlsx"),
       glue::glue("{folder}Integrated_Care_Boards_(December_2024)_Names_and_Codes_in_EN.csv")
     )
   ),
