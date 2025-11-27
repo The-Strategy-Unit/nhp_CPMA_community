@@ -25,7 +25,7 @@ Due to using the attributable fractions to adjust the activity within the cohort
 
 ## Population data 
 
-ICB populations for each year are from the Office of National Statistics mid year population estimates and are based on the 2024 ICB geographies -  <https://www.ons.gov.uk/peoplepopulationandcommunity/populationandmigration/populationestimates/datasets/clinicalcommissioninggroupmidyearpopulationestimates>. Since the population estimates are based on the current 2024 ICB geography, any historical changes in ICB boundaries may impact the calculated values in the report for time points prior to the boundary change.  
+ICB populations for each year are from the Office of National Statistics mid year population estimates and are based on the 2024 ICB geographies -  <https://www.ons.gov.uk/peoplepopulationandcommunity/populationandmigration/populationestimates/datasets/clinicalcommissioninggroupmidyearpopulationestimates>. Since the population estimates are based on the current 2024 ICB geography, any historical changes in ICB boundaries may affect the accuracy of the standardised rates in the report for time points prior to the boundary change.  
 
 Local authority populations for each year are from the Office of National Statistics Estimates of the population for England and Wales dataset -  <https://www.ons.gov.uk/peoplepopulationandcommunity/populationandmigration/populationestimates/datasets/estimatesofthepopulationforenglandandwales>.
 
